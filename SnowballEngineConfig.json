@@ -1,0 +1,30 @@
+{
+    "title": "Template",
+    "description": "SnowballEngine Project Template",
+    "id:": "com.SnowballEngine.Template",
+    "version": "1.0.0",
+    "author": {
+        "name": "",
+        "email": "",
+        "href": ""
+    },
+    "Fullscreen": false,
+    "Orientation": "portrait|landscape",
+    "EnableWebGL": true,
+    "KeepRunning": false,
+    "battery-plugin": false,
+    "camera-plugin": false,
+    "device-plugin": false,
+    "dialogs-plugin": false,
+    "file-plugin": false,
+    "geolocation-plugin": false,
+    "inappbrowser-plugin": false,
+    "media-plugin": false,
+    "media-capture-plugin": false,
+    "network-information-plugin": false,
+    "screen-orientation-plugin": false,
+    "splashscreen-plugin": false,
+    "statusbar-plugin": false,
+    "vibration-plugin": false,
+    "whitelist-plugin": false
+}

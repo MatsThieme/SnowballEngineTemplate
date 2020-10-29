@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title> </title>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        canvas {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        input {
+            position: absolute;
+            left: -1000px;
+            top: -1000px;
+            width: 100px;
+            height: 100px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="cordova.js"></script> <!-- for cordova / phonegap builds -->
+    <script src="build.js"></script> <!-- for production builds -->
+    <script type="module" src="Game.js"></script> <!-- for debug builds -->
+    <script>
+        const i = setInterval(() => {
+            if (window.Game) {
+                if (window.cordova) document.addEventListener('deviceready', () => new window.Game());
+                else new window.Game();
+                clearInterval(i);
+                delete window.Game;
+            }
+        }, 10);
+    </script>
+</body>
+
+</html>

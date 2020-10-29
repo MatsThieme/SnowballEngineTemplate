@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "init": "npm i && npm run newal",
+    "build": "node SEB",
+    "builddebug": "node SEB --d",
+    "newal": "node SEB --a",
+    "mnewal": "node SEB --m",
+    "server": "node debugserver dist"
+  },
+  "devDependencies": {
+    "@types/cordova": "^0.0.34",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
+}
