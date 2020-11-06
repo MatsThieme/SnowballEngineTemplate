@@ -14,5 +14,6 @@
 <p>npm run mnewal<p>
 
 
-<h4>Entry is src/SnowballEngine/Start.ts</h4>
-<h4>of the existing src/* files, only src/Game.ts is supposed to be edited</h4>
+<h4>Entry is src/SnowballEngine/Start.ts
+<br>
+Of the existing src/* files, only src/Game.ts is supposed to be edited</h4>
