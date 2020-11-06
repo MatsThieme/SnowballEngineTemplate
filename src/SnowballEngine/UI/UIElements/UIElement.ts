@@ -6,7 +6,6 @@ import { AlignH, AlignV } from '../../GameObject/Align.js';
 import { GameTime } from '../../GameTime.js';
 import { createSprite } from '../../Helpers.js';
 import { Input } from '../../Input/Input.js';
-import { InputType } from '../../Input/InputType.js';
 import { AABB } from '../../Physics/AABB.js';
 import { Vector2 } from '../../Vector2.js';
 import { UIElementType } from '../UIElementType.js';

@@ -1,9 +1,8 @@
 /**
  *
- * Placeholder definitions for SnowballEngineConfig.json values.
+ * SnowballEngineConfig.json values
  *
  */
-
 declare const project: {
     readonly title: string,
     readonly description: string,
@@ -23,6 +22,6 @@ declare const project: {
         readonly Orientation: 'default' | 'landscape' | 'portrait',
         readonly EnableWebGL: boolean,
         readonly KeepRunning: boolean,
-        readonly plugins: string[]
+        readonly plugins: ReadonlyArray<string>
     }
 };

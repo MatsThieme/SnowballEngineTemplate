@@ -1,7 +1,6 @@
 import { Vector2 } from '../Vector2.js';
 import { InputAxis } from './InputAxis.js';
 import { InputButton } from './InputButton.js';
-import { InputType } from './InputType.js';
 
 export class InputTouch {
     private _position: Vector2;

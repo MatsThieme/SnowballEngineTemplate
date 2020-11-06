@@ -1,6 +1,5 @@
 import { InputAxis } from './InputAxis.js';
 import { InputButton } from './InputButton.js';
-import { InputType } from './InputType.js';
 
 export class InputGamepad {
     private buttons: InputButton[];

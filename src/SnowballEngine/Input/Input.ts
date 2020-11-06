@@ -9,7 +9,7 @@ import { InputKeyboard } from './InputKeyboard.js';
 import { InputMapping } from './InputMapping.js';
 import { InputMouse } from './InputMouse.js';
 import { InputTouch } from './InputTouch.js';
-import { InputType } from './InputType.js';
+import './InputType.js';
 
 export class Input {
     public readonly touch: InputTouch;

@@ -1,6 +1,5 @@
 import { InputAxis } from './InputAxis.js';
 import { InputButton } from './InputButton.js';
-import { InputType } from './InputType.js';
 
 export class InputKeyboard {
     private keys: Map<string, InputButton>;
@@ -29,7 +28,7 @@ export class InputKeyboard {
     }
     public getAxis(key: string): InputAxis {
         if (key === undefined) return new InputAxis();
-        let match = <RegExpMatchArray>key.match(/^Axis\((\w*)\W*(\w*)\)$/);
+        let match = <RegExpMatchArray>key.match(/^Axis\((\w+)\W+(\w+)\)$/);
         if (match.length === 3 && this.getButton(match[1]) && this.getButton(match[2])) return new InputAxis((this.getButton(match[1]).down ? -1 : 0) + (this.getButton(match[2]).down ? 1 : 0));
         else return new InputAxis();
     }

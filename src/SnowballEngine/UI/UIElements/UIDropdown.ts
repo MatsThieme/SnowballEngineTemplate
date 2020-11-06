@@ -2,7 +2,6 @@ import { Asset } from '../../Assets/Asset.js';
 import { Client } from '../../Client.js';
 import { GameTime } from '../../GameTime.js';
 import { Input } from '../../Input/Input.js';
-import { InputType } from '../../Input/InputType.js';
 import { AABB } from '../../Physics/AABB.js';
 import { Vector2 } from '../../Vector2.js';
 import { UIElementType } from '../UIElementType.js';

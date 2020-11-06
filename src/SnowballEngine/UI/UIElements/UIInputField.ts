@@ -3,7 +3,6 @@ import { Client } from '../../Client.js';
 import { GameTime } from '../../GameTime.js';
 import { clamp } from '../../Helpers.js';
 import { Input } from '../../Input/Input.js';
-import { InputType } from '../../Input/InputType.js';
 import { UIElementType } from '../UIElementType.js';
 import { UIFont } from '../UIFont.js';
 import { UIMenu } from '../UIMenu.js';

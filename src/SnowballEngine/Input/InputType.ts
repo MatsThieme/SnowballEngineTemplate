@@ -1,20 +1,20 @@
-export enum InputType {
-    Interact,
-    Trigger,
-    TogglePauseMenu,
-    ToggleInventory,
-    Jump,
+const props = new Map<string, number>();
+const nums = new Map<number, string>();
 
-    MoveHorizontal,
-    MoveVertical,
-    PointerPosition,
-    p2,
-    Rotate,
-    MoveHorizontal1,
-    MoveVertical1,
+let counter = 0;
 
-    Jump1, 
+const handler = {
+    get: function (target: any, property: string) {
+        if (props.has(property)) return props.get(property);
+        if (!isNaN(<any>property)) return nums.get(parseInt(property));
 
-    Attack,
-    Attack1
+        props.set(property, counter);
+        nums.set(counter, property);
+
+        return counter++;
+    }
 };
+
+(<any>window).InputType = new Proxy({}, handler);
+
+export default {};

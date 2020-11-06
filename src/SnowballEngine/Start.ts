@@ -1,4 +1,7 @@
 import { Game } from '../Game.js';
+import * as it from './Input/InputType.js';
 
-if ((<any>window).cordova) document.addEventListener('deviceready', () => new Game());
+it.default; // load module
+
+if (window.cordova) document.addEventListener('deviceready', () => new Game());
 else new Game();
