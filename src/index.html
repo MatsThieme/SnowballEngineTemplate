@@ -29,19 +29,14 @@
 </head>
 
 <body>
-    <script src="cordova.js"></script> <!-- for cordova / phonegap builds -->
-    <script src="build.js"></script> <!-- for production builds -->
-    <script type="module" src="Game.js"></script> <!-- for debug builds -->
-    <script>
-        const i = setInterval(() => {
-            if (window.Game) {
-                if (window.cordova) document.addEventListener('deviceready', () => new window.Game());
-                else new window.Game();
-                clearInterval(i);
-                delete window.Game;
-            }
-        }, 10);
-    </script>
+    <!-- stores SnowballEngineConfig.json values in window.project -->
+    <script id="project-settings"></script>
+    <!-- for cordova / phonegap builds -->
+    <script src="cordova.js"></script>
+    <!-- for production builds -->
+    <script src="build.js"></script>
+    <!-- for debug builds -->
+    <script type="module" src="SnowballEngine/Start.js"></script>
 </body>
 
 </html>

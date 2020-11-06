@@ -1,32 +1,27 @@
-import { ProjectSettings } from './ProjectSettings.js';
-
 export class D {
     public static log(msg: any, logstack: boolean = false) {
-        if (!ProjectSettings.IsDevelopmentBuild) return;
+        if (!project.settings.IsDevelopmentBuild) return;
 
         const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (ProjectSettings.IsCordovaApp) alert(o);
+        if (window.cordova) alert(o);
         else console.log(o);
     }
     public static warn(msg: any, logstack: boolean = true) {
-        if (!ProjectSettings.IsDevelopmentBuild) return;
+        if (!project.settings.IsDevelopmentBuild) return;
 
         const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (ProjectSettings.IsCordovaApp) alert(o);
+        if (window.cordova) alert(o);
         else console.warn(o);
     }
     public static error(msg: any, logstack: boolean = true) {
-        if (!ProjectSettings.IsDevelopmentBuild) return;
+        if (!project.settings.IsDevelopmentBuild) return;
 
         const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (ProjectSettings.IsCordovaApp) alert(o);
-        else {
-            //console.error(o)
-            console.log(o)
-        };
+        if (window.cordova) alert(o);
+        else console.warn(o);
     }
     private static formatStack(stack: string = ''): string {
         return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || stack;

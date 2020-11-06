@@ -40,14 +40,7 @@ export class UIMenu {
     private readonly context: CanvasRenderingContext2D;
     public background?: Asset;
     private frame: UIFrame;
-    //public get background(): Asset | undefined {
-    //    D.log('jo');
-    //    return undefined;
-    //}
-    //public set background(val: Asset | undefined) {
-    //    D.log(val);
 
-    //}
     public localAlignH: AlignH;
     public localAlignV: AlignV;
     public alignH: AlignH;
@@ -56,12 +49,6 @@ export class UIMenu {
     private redraw: boolean;
 
     public updateHook?: (gameTime: GameTime, menu: this) => any;
-    ///*
-    // *
-    // * execute updateHook when this menu is disabled, useful for 
-    // * 
-    // */
-    //public updateDisabled?: boolean;
 
     public readonly scene: Scene;
     public readonly ui: UI;

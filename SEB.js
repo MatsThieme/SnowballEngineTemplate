@@ -1,5 +1,14 @@
+/**
+ * 
+ * SnowballEngineBuild
+ * 
+ */
+
+
 const { existsSync, readdirSync, readFileSync, statSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, copyFileSync, writeFileSync } = require('fs');
-const { resolve } = require('path');
+const { resolve, join, extname } = require('path');
+const { createServer } = require('http');
+const { readFile } = require('fs');
 
 const distPath = resolve('dist');
 const assetPath = resolve('Assets');
@@ -13,14 +22,22 @@ const assetListPath = resolve(assetPath, 'AssetList.json');
 const newAssetList = getProcessParameter('-newassetlist') || getProcessParameter('--a');
 const mergeAssetList = getProcessParameter('-mergenewassetlist') || getProcessParameter('--m');
 const debugBuild = getProcessParameter('-debug') || getProcessParameter('--d');
+const dserver = getProcessParameter('-server') || getProcessParameter('--s');
 
 const config = loadJSONFile(configPath);
+
+const port = 3000;
 
 
 start();
 
 
 async function start() {
+    if (dserver) {
+        serve(port);
+        return;
+    }
+
     const start = Date.now();
 
     if (newAssetList) {
@@ -56,6 +73,9 @@ function buildHTML() {
     let html = loadTextFile(htmlPath);
     html = html.replace(/<title>.*?<\/title>/, `<title>${config.title}</title>`);
     html = html.replace(/<meta name="description"[^\/]*?\/>/, config.description ? `<meta name="description" content="${config.description}" />` : '');
+
+    html = html.replace(/<script id="project-settings">.*?<\/script>/, `<script id="project-settings">window.project = JSON.parse(\`${JSON.stringify(config)}\`)</script>`);
+
     return html;
 }
 
@@ -73,7 +93,7 @@ async function build() {
         createHTML();
 
         await exec('npx tsc --build');
-        await exec('npx webpack ./ts-build/Game.js -o build.js', { cwd: distPath });
+        await exec('npx webpack ./ts-build/SnowballEngine/Start.js -o build.js', { cwd: distPath });
 
         deleteFolderRecursive(tscDistPath);
     } catch (error) {
@@ -231,3 +251,39 @@ function mergeAssetLists(...lists) {
 
 
 /* AssetList end */
+
+
+/* Debug server */
+function serve(port) {
+    createServer((request, response) => {
+        const contentType = getContentType(extname(request.url));
+
+        let path = join(__dirname, 'dist', request.url);
+
+        if (request.url === '/') path += 'index.html';
+
+        readFile(path, (error, content) => {
+            if (error) console.log(error.message);
+
+            response.setHeader('Content-Type', contentType);
+            response.end(content, 'utf-8');
+        });
+
+        console.log(request.url);
+    }).listen(port);
+
+    console.log('http://localhost:' + port);
+
+    function getContentType(extname) {
+        switch (extname) {
+            case '.js': return 'text/javascript';
+            case '.css': return 'text/css';
+            case '.json': return 'application/json';
+            case '.png': return 'image/png';
+            case '.jpg': return 'image/jpg';
+            case '.wav': return 'audio/wav';
+        }
+
+        return 'text/html';
+    }
+}

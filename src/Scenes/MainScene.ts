@@ -4,7 +4,7 @@ import { Scene } from '../SnowballEngine/SE.js';
 
 export async function MainScene(scene: Scene) {
     // add gameobjects to scene
-    scene.addGameObject('something', ExampleGameObjectPrefab);
+    await scene.addGameObject('something', ExampleGameObjectPrefab);
 
     // add a camera
     scene.addGameObject('Camera', CameraPrefab);

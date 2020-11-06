@@ -1,11 +1,10 @@
 {
   "scripts": {
-    "init": "npm i && npm run newal",
     "build": "node SEB",
     "builddebug": "node SEB --d",
     "newal": "node SEB --a",
     "mnewal": "node SEB --m",
-    "server": "node debugserver dist"
+    "server": "node SEB --s"
   },
   "devDependencies": {
     "@types/cordova": "^0.0.34",

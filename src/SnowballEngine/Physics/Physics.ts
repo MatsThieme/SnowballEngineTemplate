@@ -1,3 +1,4 @@
+import { Client } from '../Client.js';
 import { CircleCollider } from '../GameObject/Components/CircleCollider.js';
 import { ComponentType } from '../GameObject/Components/ComponentType.js';
 import { PolygonCollider } from '../GameObject/Components/PolygonCollider.js';
@@ -12,7 +13,7 @@ import { worker } from './CollisionWorker.js';
 export class Physics {
     public static gravity: Vector2 = new Vector2(0, -0.00981);
     public static timeScale: number = 1;
-    private static worker: AsyncWorker = new AsyncWorker(worker, navigator.hardwareConcurrency);
+    private static worker: AsyncWorker = new AsyncWorker(worker, Client.cpuThreads);
     private static ignoreCollisions: Map<number, 1 | undefined> = new Map();
     public static ignoreCollision(gameObject1: GameObject, gameObject2: GameObject, collide: boolean = false): void {
         const id = gameObject1.id > gameObject2.id ? (gameObject1.id << 16) + gameObject2.id : (gameObject2.id << 16) + gameObject1.id;

@@ -79,7 +79,12 @@ export abstract class UIElement {
         this.alignH = AlignH.Left;
         this.alignV = AlignV.Top;
 
-        Client.OnResize(this.draw.bind(this));
+        Client.OnResize(() => {
+            if (!this.menu.active) return;
+
+            if (this._resizeAABB) this.fitContent();
+            else this.draw();
+        });
     }
 
     /**
@@ -111,8 +116,6 @@ export abstract class UIElement {
         (<any>this).down = trigger.down && intersects;
 
         if (!this.sprite) this.draw();
-
-        //this.draw();
     }
 
     /**
@@ -126,7 +129,7 @@ export abstract class UIElement {
             const size = new Vector2();
 
             for (const val of (<any>this).values) {
-                const m = UIFont.measureText(val, UIFont.getCSSFontString(<string>this.font.data, this.fontSize));
+                const m = UIFont.measureText(val, UIFont.getCSSFontString(<string>this.font.data, this._fontSize));
                 if (m.x > size.x) size.x = m.x;
                 if (m.y > size.y) size.y = m.y;
             }
@@ -135,8 +138,9 @@ export abstract class UIElement {
         } else {
             if (this.label.length === 0) return;
 
-            const m = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this.fontSize));
-            this._aabb = new AABB(new Vector2(Math.max(m.x, 1) + this.padding.x * 2, Math.max(m.y, 1) + this.padding.y * 2), this._aabb.position);
+            const m = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this._fontSize));
+            if (this.label === 'Play') console.log(m.toString());
+            this._aabb = new AABB(new Vector2(m.x + this.padding.x * 2, m.y + this.padding.y * 2), this._aabb.position);
         }
 
         this.draw();

@@ -1,6 +1,5 @@
 setup:
-place current snowballengine source in src/SnowballEngine
-npm run init
+npm i
 
 build:
 npm run build

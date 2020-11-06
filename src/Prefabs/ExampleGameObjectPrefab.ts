@@ -6,5 +6,6 @@ export async function ExampleGameObjectPrefab(gameObject: GameObject) {
         texture.sprite = Assets.get('some image');
     });
 
+    // adding a behaviour will execute it's "Awake" method which is asynchronous
     await gameObject.addComponent(ExampleBehaviour);
 }

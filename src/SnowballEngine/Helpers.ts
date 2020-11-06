@@ -86,10 +86,24 @@ export function createSprite(f: (context: CanvasRenderingContext2D, canvas: HTML
     context.imageSmoothingEnabled = false;
     f(context, canvas);
 
-    return new Asset('', AssetType.Image, canvas);
+    return new Asset(canvas.toDataURL(), AssetType.Image, canvas);
 }
 
+/**
+ * 
+ * Returns a function which returns the elapsed time in milliseconds since stopwatch() was called.
+ * 
+ */
 export function stopwatch(): () => number {
     let start = performance.now();
-    return () => Math.round(performance.now() - start);
+    return () => performance.now() - start;
+}
+
+export function clearObject(object: object, setnull: boolean = false) {
+    Object.setPrototypeOf(object, null);
+
+    for (const key of Object.keys(object)) {
+        if (setnull) (<any>object)[key] = null
+        else delete (<any>object)[key];
+    }
 }

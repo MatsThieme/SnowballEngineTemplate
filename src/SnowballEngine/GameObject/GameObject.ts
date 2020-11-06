@@ -1,6 +1,7 @@
 import { D } from '../Debug.js';
 import { Transform } from '../GameObject/Components/Transform.js';
 import { GameTime } from '../GameTime.js';
+import { clearObject } from '../Helpers.js';
 import { Collision } from '../Physics/Collision.js';
 import { Scene } from '../Scene.js';
 import { Behaviour } from './Components/Behaviour.js';
@@ -65,12 +66,12 @@ export class GameObject {
      */
     public get rigidbody(): RigidBody {
         //try {
-            const rb = this.getComponent<RigidBody>(ComponentType.RigidBody) || this.getComponentInChildren<RigidBody>(ComponentType.RigidBody) || this.parent?.getComponent<RigidBody>(ComponentType.RigidBody);
-            if (!rb) {
-                this.components.push(new RigidBody(this))
-                return this.rigidbody;
-            }
-            return rb;
+        const rb = this.getComponent<RigidBody>(ComponentType.RigidBody) || this.getComponentInChildren<RigidBody>(ComponentType.RigidBody) || this.parent?.getComponent<RigidBody>(ComponentType.RigidBody);
+        if (!rb) {
+            this.components.push(new RigidBody(this))
+            return this.rigidbody;
+        }
+        return rb;
         //} catch (e) {
         //    console.log(e);
         //}
@@ -221,7 +222,7 @@ export class GameObject {
         if (!this.parent && this.active && this.hasCollider) this.rigidbody.update(gameTime, currentCollisions);
 
         for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if ((<any>b).__initialized__) await b.update(gameTime);
+            if (b.__initialized__) await b.update(gameTime);
         }
 
         if (!this.active) return;
@@ -243,23 +244,17 @@ export class GameObject {
         this.destroyed = true;
 
         try {
-            this.components.splice(0);
             this.children.forEach(c => c.destroy());
-            this.scene.destroyGameObject(this._name);
 
             (<any>this.scene).toDestroy.push(() => {
+                this.scene.destroyGameObject(this._name);
+
                 const i = this.parent?.children.findIndex(v => v.name === this.name);
                 if (i && i !== -1) this.parent?.children.splice(i, 1);
 
                 this.components.forEach(c => c.destroy());
 
-
-                Object.setPrototypeOf(this, null);
-
-                for (const key of Object.keys(this)) {
-                    if (key !== '_name')
-                        delete (<any>this)[key];
-                }
+                clearObject(this, true);
             });
         } catch (err) {
             D.error(this);

@@ -1,3 +1,4 @@
+import { clearObject } from '../../Helpers.js';
 import { GameObject } from '../GameObject.js';
 import { ComponentType } from './ComponentType.js';
 
@@ -35,11 +36,7 @@ export class Component {
         (<any>this.gameObject.scene).toDestroy.push(() => {
             this.gameObject.removeComponent(this.componentId);
 
-            Object.setPrototypeOf(this, null);
-
-            for (const key of Object.keys(this)) {
-                delete (<any>this)[key];
-            }
+            clearObject(this, true);
         });
     }
 }

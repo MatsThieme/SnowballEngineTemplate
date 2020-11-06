@@ -45,7 +45,6 @@ export * from './Physics/Line.js';
 export * from './Physics/Physics.js';
 export * from './Physics/PhysicsMaterial.js';
 export * from './Physics/Projection.js';
-export * from './ProjectSettings.js';
 export * from './Scene.js';
 export * from './SceneManager.js';
 export * from './SpriteAnimation.js';
