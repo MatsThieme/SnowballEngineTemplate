@@ -2,6 +2,11 @@
     "title": "Template",
     "description": "SnowballEngine Project Template",
     "version": "1.0.0",
+    "settings": {
+        "allowContextMenu": false,
+        "isDevelopmentBuild": true,
+        "createServerLog": true
+    },
     "cordova-settings": {
         "id": "com.SnowballEngine.Template",
         "author": {
@@ -14,9 +19,5 @@
         "EnableWebGL": true,
         "KeepRunning": false,
         "plugins": []
-    },
-    "settings": {
-        "allowContextMenu": false,
-        "IsDevelopmentBuild": true
     }
 }

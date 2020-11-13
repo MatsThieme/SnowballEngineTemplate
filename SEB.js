@@ -8,7 +8,7 @@ const { existsSync, readdirSync, readFileSync, statSync, lstatSync, rmdirSync, u
 const { resolve, join, extname } = require('path');
 const { createServer } = require('http');
 const { readFile } = require('fs');
-const { lookup } = require('mime-types');
+const { getType } = require('mime');
 
 const distPath = resolve('dist');
 const assetPath = resolve('Assets');
@@ -227,8 +227,7 @@ function createAssetList(path) {
         assetList.push({
             path: p,
             name: '',
-            type: getFileType(p),
-            mimeType: lookup(p)
+            type: getFileType(p)
         });
     }
 
@@ -244,7 +243,6 @@ function mergeAssetLists(...lists) {
                 if (o1.path === o2.path) {
                     exists = true;
                     o2.name = o1.name || o2.name;
-                    o2.mimeType = o1.mimeType || o2.mimeType;
                 }
             }
 
@@ -262,11 +260,11 @@ function mergeAssetLists(...lists) {
 /* Debug server */
 function serve(port) {
     createServer((request, response) => {
-        const contentType = getContentType(extname(request.url));
-
         let path = join(__dirname, 'dist', request.url);
 
         if (request.url === '/') path += 'index.html';
+
+        const contentType = getType(path);
 
         readFile(path, (error, content) => {
             if (error) console.log(error.message);
@@ -279,17 +277,4 @@ function serve(port) {
     }).listen(port);
 
     console.log('http://localhost:' + port);
-
-    function getContentType(extname) {
-        switch (extname) {
-            case '.js': return 'text/javascript';
-            case '.css': return 'text/css';
-            case '.json': return 'application/json';
-            case '.png': return 'image/png';
-            case '.jpg': return 'image/jpg';
-            case '.wav': return 'audio/wav';
-        }
-
-        return 'text/html';
-    }
 }

@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@types/cordova": "^0.0.34",
-    "mime-types": "^2.1.27",
+    "mime": "^2.4.6",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
