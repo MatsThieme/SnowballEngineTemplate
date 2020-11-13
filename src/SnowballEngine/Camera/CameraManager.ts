@@ -49,7 +49,7 @@ export class CameraManager {
             frames.push(...gameObject.getComponents<TileMap>(ComponentType.TileMap).reduce((t: Frame[], c) => { t.push(...(<Frame[]>c.currentFrame)); return t; }, []));
         }
 
-        frames = frames.filter(f => f).sort((a, b) => <number>a?.drawPriority - <number>b?.drawPriority);
+        frames = frames.filter(Boolean).sort((a, b) => <number>a?.drawPriority - <number>b?.drawPriority);
 
         this.cameras.forEach(camera => camera.update(<Frame[]>frames));
 

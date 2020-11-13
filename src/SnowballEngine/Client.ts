@@ -7,7 +7,7 @@ export class Client {
      * Measure the refresh rate of the active monitor for ms.
      * 
      */
-    private static async measureMaxRefreshRate(ms: number): Promise<number> {
+    private static async measureMonitorRefreshRate(ms: number): Promise<number> {
         let frames: number = 0;
         let handle = requestAnimationFrame(update);
 
@@ -29,32 +29,33 @@ export class Client {
      */
     public static resolution: Vector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
 
-    public static monitorRefreshRate: number = 144;
+    public static monitorRefreshRate: number = 0;
+
     public static aspectRatio: Vector2 = Client.resolution.clone.setLength(new Vector2(16, 9).magnitude);
 
-    public static requestFullscreen(element: HTMLElement): void {
-        triggerOnUserInputEvent(() => {
+    public static async requestFullscreen(element: HTMLElement): Promise<void> {
+        await triggerOnUserInputEvent(async () => {
             if (element.requestFullscreen) {
-                element.requestFullscreen();
+                await element.requestFullscreen();
             } else if ((<any>element).mozRequestFullScreen) { /* Firefox */
-                (<any>element).mozRequestFullScreen();
+                await (<any>element).mozRequestFullScreen();
             } else if ((<any>element).webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                (<any>element).webkitRequestFullscreen();
+                await (<any>element).webkitRequestFullscreen();
             } else if ((<any>element).msRequestFullscreen) { /* IE/Edge */
-                (<any>element).msRequestFullscreen();
+                await (<any>element).msRequestFullscreen();
             }
         });
     }
 
-    public static exitFullscreen(): void {
+    public static async exitFullscreen(): Promise<void> {
         if (document.exitFullscreen) {
-            document.exitFullscreen();
+            await document.exitFullscreen();
         } else if ((<any>document).mozCancelFullScreen) { /* Firefox */
-            (<any>document).mozCancelFullScreen();
+            await (<any>document).mozCancelFullScreen();
         } else if ((<any>document).webkitExitFullscreen) { /* Chrome, Safari and Opera */
-            (<any>document).webkitExitFullscreen();
+            await (<any>document).webkitExitFullscreen();
         } else if ((<any>document).msExitFullscreen) { /* IE/Edge */
-            (<any>document).msExitFullscreen();
+            await (<any>document).msExitFullscreen();
         }
     }
 
@@ -64,7 +65,11 @@ export class Client {
      * 
      */
     public static readonly cpuThreads: number = navigator.hardwareConcurrency;
-    private static async start() {
+
+    public static async start(): Promise<void> {
+        if (Client.monitorRefreshRate) return;
+        Client.monitorRefreshRate = 1;
+
         addEventListener('resize', () => {
             Client.resolution.x = window.innerWidth * window.devicePixelRatio;
             Client.resolution.y = window.innerHeight * window.devicePixelRatio;
@@ -74,12 +79,12 @@ export class Client {
             Client.onResizeCbs.forEach(cb => cb(Client));
         });
 
-        Client.monitorRefreshRate = await Client.measureMaxRefreshRate(1000);
+        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
     }
+
     private static readonly onResizeCbs: ((client: Client) => any)[] = [];
+
     public static OnResize(cb: (client: Client) => any): void {
         Client.onResizeCbs.push(cb);
     }
 }
-
-(<any>Client).start();

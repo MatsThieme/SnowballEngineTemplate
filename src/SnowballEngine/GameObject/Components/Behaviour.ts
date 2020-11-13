@@ -7,7 +7,7 @@ import { Component } from './Component.js';
 import { ComponentType } from './ComponentType.js';
 
 export abstract class Behaviour extends Component {
-    protected input: Input;
+    protected readonly input: Input;
     protected readonly scene: Scene;
     public readonly __initialized__: boolean;
     public constructor(gameObject: GameObject) {

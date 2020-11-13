@@ -43,13 +43,13 @@ export const average = (...numbers: number[]): number => numbers.reduce((t, c) =
  * @returns Returns Promise which resolves as result of callback.
  * 
  */
-export function triggerOnUserInputEvent<T>(cb: (...[]) => T, params: any[] = []): Promise<T> {
+export function triggerOnUserInputEvent<T>(cb: (...[]) => T | Promise<T>, params: any[] = []): Promise<T> {
     return new Promise((resolve, reject) => {
-        function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
+        async function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
             if (!e.isTrusted) return;
 
             try {
-                const result = cb(...params);
+                const result = await cb(...params);
                 resolve(result);
             }
             catch (error) {
@@ -80,6 +80,11 @@ export function interval(cb: (clear: () => void) => void, ms: number): void {
     const i = window.setInterval(() => cb(() => window.clearInterval(i)), ms);
 }
 
+/**
+ * 
+ * Create an Image Asset from a canvas.
+ * 
+ */
 export function createSprite(f: (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any, width: number = 100, height: number = 100): Asset {
     const canvas = Canvas(width, height);
     const context = canvas.getContext('2d')!;
@@ -99,6 +104,12 @@ export function stopwatch(): () => number {
     return () => performance.now() - start;
 }
 
+/**
+ * 
+ * Deletes properties and prototype.
+ * 
+ * @param setnull if true, properties will be set to null instead of deletion
+ */
 export function clearObject(object: object, setnull: boolean = false) {
     Object.setPrototypeOf(object, null);
 
@@ -106,4 +117,30 @@ export function clearObject(object: object, setnull: boolean = false) {
         if (setnull) (<any>object)[key] = null
         else delete (<any>object)[key];
     }
+}
+
+/**
+ * 
+ * internally used for InputType
+ * 
+ */
+export function createENUM<T>(): T {
+    const props = new Map<string, number>();
+    const nums = new Map<number, string>();
+
+    let counter = 0;
+
+    const handler = {
+        get: function (target: any, property: string) {
+            if (props.has(property)) return props.get(property);
+            if (!isNaN(<any>property)) return nums.get(parseInt(property));
+
+            props.set(property, counter);
+            nums.set(counter, property);
+
+            return counter++;
+        }
+    };
+
+    return <T>new Proxy({}, handler);
 }

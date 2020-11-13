@@ -1,6 +1,6 @@
 export class D {
     public static log(msg: any, logstack: boolean = false) {
-        if (!project.settings.IsDevelopmentBuild) return;
+        if (!project.settings.isDevelopmentBuild) return;
 
         const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -8,7 +8,7 @@ export class D {
         else console.log(o);
     }
     public static warn(msg: any, logstack: boolean = true) {
-        if (!project.settings.IsDevelopmentBuild) return;
+        if (!project.settings.isDevelopmentBuild) return;
 
         const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -16,7 +16,7 @@ export class D {
         else console.warn(o);
     }
     public static error(msg: any, logstack: boolean = true) {
-        if (!project.settings.IsDevelopmentBuild) return;
+        if (!project.settings.isDevelopmentBuild) return;
 
         const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -74,5 +74,9 @@ export class D {
         }
 
         return fmsg;
+    }
+
+    public static startDebugSession() {
+
     }
 }

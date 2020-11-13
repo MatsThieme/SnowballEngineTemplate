@@ -2,6 +2,8 @@ export * from './Angle.js';
 export * from './Assets/Asset.js';
 export * from './Assets/Assets.js';
 export * from './Assets/AssetType.js';
+export * from './Audio/AudioEffect.js';
+export * from './Audio/AudioMixer.js';
 export * from './Camera/CameraManager.js';
 export * from './Client.js';
 export * from './Color.js';

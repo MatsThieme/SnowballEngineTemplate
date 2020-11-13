@@ -138,7 +138,7 @@ export abstract class UIElement {
             if (this.label.length === 0) return;
 
             const m = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this._fontSize));
-            if (this.label === 'Play') console.log(m.toString());
+
             this._aabb = new AABB(new Vector2(m.x + this.padding.x * 2, m.y + this.padding.y * 2), this._aabb.position);
         }
 

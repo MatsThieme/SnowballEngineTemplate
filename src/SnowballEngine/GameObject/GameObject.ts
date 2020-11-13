@@ -65,17 +65,12 @@ export class GameObject {
      *
      */
     public get rigidbody(): RigidBody {
-        //try {
-        const rb = this.getComponent<RigidBody>(ComponentType.RigidBody) || this.getComponentInChildren<RigidBody>(ComponentType.RigidBody) || this.parent?.getComponent<RigidBody>(ComponentType.RigidBody);
+        const rb = this.getComponent<RigidBody>(ComponentType.RigidBody);
         if (!rb) {
             this.components.push(new RigidBody(this))
             return this.rigidbody;
         }
         return rb;
-        //} catch (e) {
-        //    console.log(e);
-        //}
-        //return <RigidBody>{};
     }
 
     /**
@@ -92,16 +87,24 @@ export class GameObject {
      * @param cb Callbacks are executed after component creation.
      * 
      */
-    public async addComponent<T extends Component>(type: new (gameObject: GameObject) => T, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> {
+    public addComponent<T extends Component>(type: new (gameObject: GameObject) => T, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> | null {
         const component = new type(this);
 
-        if (component.type !== ComponentType.Camera && component.type !== ComponentType.Transform && component.type !== ComponentType.RigidBody && component.type !== ComponentType.AudioListener && component.type !== ComponentType.TileMap ||
-            (component.type === ComponentType.RigidBody && this.getComponents(ComponentType.RigidBody).length === 0) ||
-            (component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0) ||
-            (component.type === ComponentType.Camera && this.getComponents(ComponentType.Camera).length === 0) ||
-            (component.type === ComponentType.AudioListener && !this.scene.audioListener) ||
-            (component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0))
+        if (component.type !== ComponentType.Camera &&
+            component.type !== ComponentType.Transform &&
+            component.type !== ComponentType.RigidBody &&
+            component.type !== ComponentType.AudioListener &&
+            component.type !== ComponentType.TileMap ||
+            component.type === ComponentType.RigidBody && this.getComponents(ComponentType.RigidBody).length === 0 ||
+            component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0 ||
+            component.type === ComponentType.Camera && this.getComponents(ComponentType.Camera).length === 0 ||
+            component.type === ComponentType.AudioListener && !this.scene.audioListener ||
+            component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0) {
             this.components.push(component);
+        } else if (component.type === ComponentType.Camera || component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap) {
+            component.destroy();
+            return null;
+        }
 
         if ((component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) && !this.rigidbody) this.addComponent(RigidBody);
 
@@ -111,21 +114,23 @@ export class GameObject {
 
         if (component.type === ComponentType.Camera) this.scene.cameraManager.mainCameraIndex = this.scene.cameraManager.cameras.push(<any>component) - 1;
 
-        if (cb) {
-            for (const c of cb) {
-                await c(component);
+        return new Promise(async resolve => {
+            if (cb) {
+                for (const c of cb) {
+                    await c(component);
+                }
             }
-        }
 
-        if (component.type === ComponentType.Behaviour) {
-            await (<any>component).awake();
-            if (this.scene.isRunning) {
-                await (<any>component).start();
-                (<any>component).__initialized__ = true;
+            if (component.type === ComponentType.Behaviour) {
+                await (<any>component).awake();
+                if (this.scene.isRunning) {
+                    await (<any>component).start();
+                    (<any>component).__initialized__ = true;
+                }
             }
-        }
 
-        return component;
+            resolve(component);
+        });
     }
 
     /**
@@ -133,10 +138,20 @@ export class GameObject {
      * Remove a component.
      * 
      */
-    public removeComponent<T extends Component>(component: T | number): void {
+    public removeComponent<T extends Component>(component: T | number): boolean {
+        if (!component) {
+            D.warn('Component undefined');
+            return false;
+        }
+
         const i = this.components.findIndex(v => v.componentId === (typeof component === 'number' ? component : component.componentId));
-        if (i === this.scene.audioListener?.componentId) delete (<any>this).scene.audioListener;
+
+        if (i === this.scene.audioListener?.componentId) console.log(this.scene.audioListener!.componentId);
+
+        if (i === this.scene.audioListener?.componentId) (<any>this).scene.audioListener = undefined;
         if (i !== -1) this.components.splice(i, 1)[0].destroy();
+
+        return true;
     }
 
     /**
@@ -240,13 +255,13 @@ export class GameObject {
      * 
      */
     public destroy(): void {
-        if (this.destroyed) return;
+        if (this.destroyed !== false) return;
         this.destroyed = true;
 
         try {
             this.children.forEach(c => c.destroy());
 
-            (<any>this.scene).toDestroy.push(() => {
+            const d = () => {
                 this.scene.destroyGameObject(this._name);
 
                 const i = this.parent?.children.findIndex(v => v.name === this.name);
@@ -255,7 +270,10 @@ export class GameObject {
                 this.components.forEach(c => c.destroy());
 
                 clearObject(this, true);
-            });
+            };
+
+            if (this.scene.isRunning) (<any>this.scene).toDestroy.push(d);
+            else d();
         } catch (err) {
             D.error(this);
         }

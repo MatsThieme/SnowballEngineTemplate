@@ -4,11 +4,11 @@
  * 
  */
 
-
 const { existsSync, readdirSync, readFileSync, statSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, copyFileSync, writeFileSync } = require('fs');
 const { resolve, join, extname } = require('path');
 const { createServer } = require('http');
 const { readFile } = require('fs');
+const { lookup } = require('mime-types');
 
 const distPath = resolve('dist');
 const assetPath = resolve('Assets');
@@ -40,7 +40,7 @@ async function start() {
 
     const start = Date.now();
 
-    if (newAssetList) {
+    if (newAssetList || mergeAssetList) {
         console.log('create asset list');
 
         let list = createAssetList(assetPath);
@@ -179,7 +179,11 @@ function listDir(dir, filelist = [], startDir = dir) {
     for (const file of readdirSync(dir)) {
         if (file === 'AssetList.json') continue;
         if (statSync(resolve(dir, file)).isDirectory()) listDir(resolve(dir, file), filelist, startDir);
-        else filelist.push(dir.substr(startDir.length) + file);
+        else {
+            const d = dir.substr(startDir.length + 1).replace(/\\/g, '/');
+            if (!d) filelist.push(file);
+            else filelist.push(d + '/' + file);
+        }
     }
 
     return filelist;
@@ -223,7 +227,8 @@ function createAssetList(path) {
         assetList.push({
             path: p,
             name: '',
-            type: getFileType(p)
+            type: getFileType(p),
+            mimeType: lookup(p)
         });
     }
 
@@ -239,6 +244,7 @@ function mergeAssetLists(...lists) {
                 if (o1.path === o2.path) {
                     exists = true;
                     o2.name = o1.name || o2.name;
+                    o2.mimeType = o1.mimeType || o2.mimeType;
                 }
             }
 

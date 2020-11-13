@@ -1,64 +1,95 @@
-import { triggerOnUserInputEvent } from '../../Helpers.js';
+import { Asset } from '../../Assets/Asset.js';
+import { AssetType } from '../../Assets/AssetType.js';
+import { AudioMixer } from '../../Audio/AudioMixer.js';
+import { D } from '../../Debug.js';
+import { clamp, triggerOnUserInputEvent } from '../../Helpers.js';
 import { GameObject } from '../GameObject.js';
+import { AudioListener } from './AudioListener.js';
 import { Component } from './Component.js';
 import { ComponentType } from './ComponentType.js';
 
 export class AudioSource extends Component {
-    public audio: HTMLAudioElement;
-    public mediaElement!: MediaElementAudioSourceNode;
-    public panNode!: StereoPannerNode;
-    public gainNode!: GainNode;
-    public readonly connected!: boolean;
+    public readonly node: PannerNode;
+    private readonly mediaElement: MediaElementAudioSourceNode;
+    private readonly audio: HTMLAudioElement;
+    private connected: boolean;
+    private _asset?: Asset;
+    private _volume!: number;
+    private _loop!: boolean;
+    private _mixer?: AudioMixer;
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioSource);
+
         this.audio = new Audio();
+        this.audio.autoplay = false;
+
+        this.volume = 0.5;
+        this.loop = false;
+
+        this.mediaElement = AudioListener.createMediaElement(this.audio);
+        this.node = AudioListener.createPanner();
+        this.mediaElement.connect(this.node);
+
+        this.node.panningModel = 'HRTF';
+        this.node.distanceModel = 'inverse';
+
 
         this.connected = false;
 
-        this.connectListener();
+        this.connect();
     }
 
-    /**
-     * 
-     * Connect audio to speakers, call only if connected == false
-     * 
-     */
-    public connectListener(): void {
-        const audioListener = this.gameObject.scene.audioListener;
+    public get mixer(): AudioMixer | undefined {
+        return this._mixer;
+    }
+    public set mixer(val: AudioMixer | undefined) {
+        this._mixer?.removeSource(this);
 
-        if (!audioListener) return;
+        this._mixer = val;
 
-        audioListener.addSource(this);
-
-        this.mediaElement = audioListener.createMediaElement(this.audio);
-        this.panNode = audioListener.createStereoPanner();
-        this.gainNode = audioListener.createGain();
-
-        this.mediaElement.connect(this.panNode).connect(this.gainNode);
-
-        (<any>this).connected = true;
+        this.connect();
     }
 
-    public disconnectListener(): void {
-        this.panNode.disconnect();
-        this.gainNode.disconnect();
-        this.mediaElement.disconnect();
+    public connect() {
+        if (this.connected) this.disconnect();
+
+        if (!this.asset) return;
+
+        const listener = this.gameObject.scene.audioListener;
+
+        if (!listener) return D.error('no listener');
+
+        if (this.mixer) this.mixer.addSource(this);
+        else this.node.connect(this.node.context.destination);
+
+        listener.addSource(this);
+
+        this.connected = true;
+    }
+
+    public disconnect() {
+        if (!this.connected) return;
+
+        this.node.disconnect();
 
         this.gameObject.scene.audioListener?.removeSource(this);
 
-        (<any>this).connected = false;
+        this.connected = false;
     }
 
-    /**
-     * 
-     * The audios source string.
-     * 
-     */
-    public get clip(): string {
-        return this.audio.src;
+    public get asset(): Asset | undefined {
+        return this._asset;
     }
-    public set clip(val: string) {
-        this.audio.src = './Assets/' + val;
+    public set asset(asset: Asset | undefined) {
+        if (asset) {
+            if (asset.type !== AssetType.Audio) {
+                D.error('asset.type !== AssetType.Audio');
+            } else {
+                this.audio.src = asset.url;
+
+                this._asset = asset;
+            }
+        }
     }
 
     /**
@@ -67,10 +98,10 @@ export class AudioSource extends Component {
      * 
      */
     public get loop(): boolean {
-        return this.audio.loop;
+        return this._loop;
     }
     public set loop(val: boolean) {
-        this.audio.loop = val;
+        this.audio.loop = this._loop = val;
     }
 
     /**
@@ -79,10 +110,10 @@ export class AudioSource extends Component {
      * 
      */
     public get volume(): number {
-        return this.audio.volume;
+        return this._volume;
     }
     public set volume(val: number) {
-        this.audio.volume = val;
+        this.audio.volume = this._volume = clamp(0, 1, val);
     }
 
     /**
@@ -90,8 +121,15 @@ export class AudioSource extends Component {
      * Play the audio clip.
      * 
      */
-    public play(): void {
-        triggerOnUserInputEvent(() => this.audio.play());
+    public async play(): Promise<void> {
+        if (!this.asset) return D.error('no audio clip set');
+
+        try {
+            await this.audio.play();
+        } catch {
+            await triggerOnUserInputEvent(async () => await this.audio.play());
+        }
+
     }
 
     /**
@@ -99,8 +137,14 @@ export class AudioSource extends Component {
      * Pause the audio clip.
      *
      */
-    public pause(): void {
-        triggerOnUserInputEvent(() => this.audio.pause());
+    public async pause(): Promise<void> {
+        if (!this.asset) return D.error('no audio clip set');
+
+        try {
+            await this.audio.pause();
+        } catch {
+            await triggerOnUserInputEvent(async () => await this.audio.pause());
+        }
     }
 
     /**
@@ -113,7 +157,7 @@ export class AudioSource extends Component {
     }
 
     public destroy(): void {
-        this.disconnectListener();
+        this.disconnect();
         super.destroy();
     }
 }

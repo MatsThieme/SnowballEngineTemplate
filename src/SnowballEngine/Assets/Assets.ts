@@ -1,3 +1,4 @@
+import { D } from '../../SnowballEngine/SE.js';
 import { interval } from '../Helpers.js';
 import { Asset } from './Asset.js';
 import { AssetType } from './AssetType.js';
@@ -29,7 +30,6 @@ export class Assets {
                 reject(error);
             }
 
-
             if (asset) {
                 Assets.assets.set(name || path, asset);
                 return resolve(asset);
@@ -38,7 +38,7 @@ export class Assets {
             reject(`asset not found ${path}`);
         });
     }
-    private static urlToAsset(url: string, type: AssetType, clone: boolean): Promise<Asset> {
+    private static urlToAsset(url: string, type: AssetType, clone: boolean = true): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
                 const img = new Image();
@@ -47,6 +47,7 @@ export class Assets {
                 img.src = url;
             } else if (type === AssetType.Audio) {
                 const audio = new Audio();
+                audio.preload = 'auto';
                 audio.addEventListener('canplaythrough', () => resolve(new Asset(url, type, audio, clone)));
                 audio.addEventListener('error', reject);
                 audio.src = url;
@@ -109,8 +110,15 @@ export class Assets {
         });
     }
     public static async loadFromAssetList(): Promise<void> {
-        const list = <Array<{ path: string, type: AssetType, name?: string, clone?: boolean }>>(await Assets.load('AssetList.json', AssetType.JSON)).data;
+        if (Assets.get('AssetList.json')) return;
 
-        await Promise.all(list.map(obj => Assets.load(obj.path, obj.type, obj.name || obj.path, obj.clone)));
+        try {
+            const list = <Array<{ path: string, type: AssetType, name?: string, clone?: boolean }>>(await Assets.load('AssetList.json', AssetType.JSON)).data;
+
+            await Promise.all(list.map(obj => Assets.load(obj.path, obj.type, obj.name || obj.path, obj.clone)));
+
+        } catch {
+            D.warn('No AssetList.json in Asset directory. It\'s recommended to use an AssetList.json.');
+        }
     }
 }

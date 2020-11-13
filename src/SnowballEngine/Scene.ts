@@ -140,10 +140,8 @@ export class Scene {
         }
 
         if (this.toDestroy.length) {
-            const s = stopwatch();
             this.toDestroy.forEach(d => d());
             this.toDestroy.splice(0);
-            console.log(s());
         }
 
 

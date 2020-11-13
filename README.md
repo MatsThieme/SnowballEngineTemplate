@@ -15,7 +15,7 @@ It manages scenes, game assets, simulates physics, renders assets, provides a si
 ### generate AssetList.json from Assets folder
 <pre>npm run newal</pre>
 
-#### generate AssetList.json from Assets folder and merge with existing AssetList.json
+### generate AssetList.json from Assets folder and merge with existing AssetList.json
 <pre>npm run mnewal</pre>
 
 <br>

@@ -3,7 +3,7 @@ import { GameObject } from '../GameObject.js';
 import { ComponentType } from './ComponentType.js';
 
 export class Component {
-    public gameObject: GameObject;
+    public readonly gameObject: GameObject;
     public readonly type: ComponentType;
     public readonly componentId: number = Component.nextId++;
     private static nextId: number = 0;
@@ -16,11 +16,12 @@ export class Component {
 
 
     /**
-     * 
+     *
+     * Called when the Component is removed from the GameObject.
      * Return false to cancel destoy.
-     * 
+     *
      */
-    protected onDestroy(component: Component): boolean {
+    protected onDestroy(): boolean {
         return true;
     }
 
@@ -30,13 +31,16 @@ export class Component {
      * 
      */
     public destroy(): void {
-        if (this.destroyed || !this.onDestroy(this)) return;
+        if (this.destroyed === false || !this.onDestroy()) return;
         this.destroyed = true;
 
-        (<any>this.gameObject.scene).toDestroy.push(() => {
+        const d = () => {
             this.gameObject.removeComponent(this.componentId);
 
             clearObject(this, true);
-        });
+        }
+
+        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene).toDestroy.push(d);
+        else d();
     }
 }

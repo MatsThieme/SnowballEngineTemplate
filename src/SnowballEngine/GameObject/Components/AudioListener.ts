@@ -1,52 +1,71 @@
-import { clamp, triggerOnUserInputEvent } from '../../Helpers.js';
+import { triggerOnUserInputEvent } from '../../Helpers.js';
 import { GameObject } from '../GameObject.js';
 import { AudioSource } from './AudioSource.js';
 import { Component } from './Component.js';
 import { ComponentType } from './ComponentType.js';
 
 export class AudioListener extends Component {
+    private static context: AudioContext;
+    public static node: GainNode;
     public volume: number;
     public maxDistance: number;
-    private context: AudioContext;
+    public cameraDistance: number;
     private sources: Map<number, AudioSource>;
-    public constructor(gameObject: GameObject, maxDistance: number = 20, volume: number = 1) {
+    public constructor(gameObject: GameObject, maxDistance: number = 20, volume: number = 1, cameraDistance: number = 5) {
         super(gameObject, ComponentType.AudioListener);
-        this.context = new AudioContext();
-        triggerOnUserInputEvent(() => this.context.resume());
+
         this.sources = new Map();
         this.volume = volume;
         this.maxDistance = maxDistance;
+        this.cameraDistance = cameraDistance;
+
+        for (const gO of this.gameObject.scene.getAllGameObjects()) {
+            for (const source of [...gO.getComponents(AudioSource)]) source.connect();
+        }
+    }
+    public static start() {
+        AudioListener.context = new AudioContext();
+        AudioListener.node = AudioListener.createGain();
+
+        AudioListener.node.connect(AudioListener.context.destination);
+
+        if (AudioListener.context.state === 'suspended') triggerOnUserInputEvent(() => AudioListener.context.resume());
+    }
+    public static createMediaElement(audio: HTMLAudioElement): MediaElementAudioSourceNode {
+        return AudioListener.context.createMediaElementSource(audio);
+    }
+    public static createPanner(): PannerNode {
+        return AudioListener.context.createPanner();
+    }
+    public static createGain(): GainNode {
+        return AudioListener.context.createGain();
+    }
+    public static createDelay(): DelayNode {
+        return AudioListener.context.createDelay();
     }
     public addSource(audioSource: AudioSource): void {
         this.sources.set(audioSource.componentId, audioSource);
-        audioSource.mediaElement.connect(this.context.destination);
     }
     public removeSource(audioSource: AudioSource): void {
         this.sources.delete(audioSource.componentId);
     }
-    public createMediaElement(audio: HTMLAudioElement): MediaElementAudioSourceNode {
-        return this.context.createMediaElementSource(audio);
-    }
-    public createStereoPanner(): StereoPannerNode {
-        return this.context.createStereoPanner();
-    }
-    public createGain(): GainNode {
-        return this.context.createGain();
-    }
-    private calcStereoPanning(audioSource: AudioSource): number {
-        return clamp(-1, 1, (Math.abs(this.gameObject.transform.position.x - audioSource.gameObject.transform.position.x)) / this.maxDistance * (audioSource.gameObject.transform.position.x > this.gameObject.transform.position.x ? 1 : -1));
-    }
-    private calcRelativeVolume(audioSource: AudioSource): number {
-        return clamp(0, 1, 1 - this.gameObject.transform.position.distance(audioSource.gameObject.transform.position) / this.maxDistance);
-    }
     public update(): void {
         for (const source of this.sources.values()) {
-            source.panNode.pan.value = this.calcStereoPanning(source);
-            source.gainNode.gain.value = this.calcRelativeVolume(source) * this.volume;
+            if (source.node) {
+                source.node.setPosition(source.gameObject.transform.position.x - this.gameObject.transform.position.x, source.gameObject.transform.position.y - this.gameObject.transform.position.y, this.cameraDistance);
+                source.node.maxDistance = this.maxDistance;
+            }
         }
+
+        AudioListener.node.gain.value = this.volume;
     }
     public destroy(): void {
+        for (const s of [...this.sources.values()]) {
+            s.disconnect();
+        }
+
         this.sources.clear();
-        this.context.close();
+
+        super.destroy();
     }
 }
