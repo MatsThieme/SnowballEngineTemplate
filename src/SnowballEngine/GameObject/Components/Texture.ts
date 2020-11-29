@@ -1,13 +1,13 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Frame } from '../../Camera/Frame.js';
-import { Vector2 } from '../../Vector2.js';
-import { AlignH, AlignV } from '../Align.js';
-import { Alignable } from '../Alignable.js';
-import { Drawable } from '../Drawable.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
-import { Sprite } from '../../Sprite.js';
+import { Asset } from '../../Assets/Asset';
+import { Frame } from '../../Camera/Frame';
+import { Vector2 } from '../../Vector2';
+import { AlignH, AlignV } from '../Align';
+import { Alignable } from '../Alignable';
+import { Drawable } from '../Drawable';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
+import { Sprite } from '../../Sprite';
 
 export class Texture extends Component implements Drawable, Alignable {
     public relativePosition: Vector2;

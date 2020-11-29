@@ -1,14 +1,14 @@
-import { Frame } from '../../Camera/Frame.js';
-import { GameTime } from '../../GameTime.js';
-import { SpriteAnimation } from '../../SpriteAnimation.js';
-import { Vector2 } from '../../Vector2.js';
-import { AlignH, AlignV } from '../Align.js';
-import { Alignable } from '../Alignable.js';
-import { Drawable } from '../Drawable.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
-import { Sprite } from '../../Sprite.js';
+import { Frame } from '../../Camera/Frame';
+import { GameTime } from '../../GameTime';
+import { SpriteAnimation } from '../../SpriteAnimation';
+import { Vector2 } from '../../Vector2';
+import { AlignH, AlignV } from '../Align';
+import { Alignable } from '../Alignable';
+import { Drawable } from '../Drawable';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
+import { Sprite } from '../../Sprite';
 
 export class AnimatedSprite extends Component implements Drawable, Alignable {
     public spriteAnimations: { [key: string]: SpriteAnimation };
@@ -30,8 +30,8 @@ export class AnimatedSprite extends Component implements Drawable, Alignable {
         const a = this.spriteAnimations[this._activeAnimation];
         return a ? new Frame(this.position, this.scaledSize, new Sprite(a.currentFrame), this.gameObject.transform.rotation, this.gameObject.drawPriority, 1) : undefined;
     }
-    public update(gameTime: GameTime): void {
-        this.spriteAnimations[this._activeAnimation]?.update(gameTime);
+    public update(): void {
+        this.spriteAnimations[this._activeAnimation]?.update();
     }
 
     /**

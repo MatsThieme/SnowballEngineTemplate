@@ -1,12 +1,12 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Client } from '../../Client.js';
-import { GameTime } from '../../GameTime.js';
-import { clamp } from '../../Helpers.js';
-import { Input } from '../../Input/Input.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIElement } from './UIElement.js';
+import { Asset } from '../../Assets/Asset';
+import { Client } from '../../Client';
+import { GameTime } from '../../GameTime';
+import { clamp } from '../../Helpers';
+import { Input } from '../../Input/Input';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIMenu } from '../UIMenu';
+import { UIElement } from './UIElement';
 
 export abstract class UIInputField extends UIElement {
     public focused: boolean;
@@ -26,12 +26,12 @@ export abstract class UIInputField extends UIElement {
         this.max = 999;
         this.focused = false;
     }
-    public async update(gameTime: GameTime): Promise<void> {
-        await super.update(gameTime);
+    public async update(): Promise<void> {
+        await super.update();
 
         if (this.label === '') this.label = this.value.toString();
 
-        if (this.input.getButton(InputType.Trigger).down && !this.down && this.focused) this.focused = false;
+        if (Input.getButton(InputType.Trigger).down && !this.down && this.focused) this.focused = false;
         else if (this.click) this.focused = true;
 
         if (this.focused) {

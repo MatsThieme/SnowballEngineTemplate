@@ -1,18 +1,19 @@
-import { Asset } from '../../Assets/Asset.js';
-import { AssetType } from '../../Assets/AssetType.js';
-import { Client } from '../../Client.js';
-import { D } from '../../Debug.js';
-import { AlignH, AlignV } from '../../GameObject/Align.js';
-import { GameTime } from '../../GameTime.js';
-import { createSprite } from '../../Helpers.js';
-import { Input } from '../../Input/Input.js';
-import { AABB } from '../../Physics/AABB.js';
-import { Vector2 } from '../../Vector2.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIFontSize } from '../UIFontSize.js';
-import { UIFrame } from '../UIFrame.js';
-import { UIMenu } from '../UIMenu.js';
+import { Asset } from '../../Assets/Asset';
+import { AssetType } from '../../Assets/AssetType';
+import { Client } from '../../Client';
+import { Color } from '../../Color';
+import { D } from '../../Debug';
+import { AlignH, AlignV } from '../../GameObject/Align';
+import { GameTime } from '../../GameTime';
+import { createSprite } from '../../Helpers';
+import { Input } from '../../Input/Input';
+import { AABB } from '../../Physics/AABB';
+import { Vector2 } from '../../Vector2';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIFontSize } from '../UIFontSize';
+import { UIFrame } from '../UIFrame';
+import { UIMenu } from '../UIMenu';
 
 export abstract class UIElement {
     private static nextID: number = 0;
@@ -47,14 +48,12 @@ export abstract class UIElement {
     protected abstract drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void;
 
     protected menu: UIMenu;
-    protected input: Input;
 
     public readonly type: UIElementType;
     public constructor(menu: UIMenu, input: Input, type: UIElementType, font: Asset = new Asset('', AssetType.Font, 'sans-serif')) {
         this.id = UIElement.nextID++;
 
         this.menu = menu;
-        this.input = input;
         this.type = type;
 
         this.hover = false;
@@ -65,7 +64,7 @@ export abstract class UIElement {
         this._label = '';
         this._fontSize = UIFontSize.Medium;
         this._active = true;
-        this._color = '#333';
+        this._color = Color.darkGrey.colorString;
         this._stroke = type !== UIElementType.Text;
         this._textShadow = 0;
         this._padding = new Vector2();
@@ -101,12 +100,12 @@ export abstract class UIElement {
      * Update down and click properties.
      * 
      */
-    public async update(gameTime: GameTime): Promise<void> {
+    public async update(): Promise<void> {
         if (!this.active) return;
 
-        const trigger = this.input.getButton(InputType.Trigger);
+        const trigger = Input.getButton(InputType.Trigger);
 
-        const p = this.input.getAxis(InputType.PointerPosition);
+        const p = Input.getAxis(InputType.PointerPosition);
 
         const intersects = this.aabbpx.intersectsPoint(p.v2);
 

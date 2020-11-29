@@ -1,35 +1,37 @@
+import { D } from '../Debug';
+import { interval, stopwatch } from '../Helpers';
+
+/**
+ * 
+ * postMessage in a webworker has to use this signature for the returned object: { status: 'failed' | 'finished' | 'progress', data: any }
+ * 
+ */
 export class AsyncWorker {
-    private url: string;
     public maxWorkers: number;
-    private workers: Worker[];
-    private queue: { data: any, resolve: (value?: any) => void, reject: (value?: any) => void }[];
-    public constructor(url: string, maxWorkers: number) {
+
+    private nextID: number;
+
+    private url: string;
+
+    private readonly workers: Worker[];
+    private readonly queue: { data: any, progress?: (data: any) => any, resolve: (value?: any) => void, reject: (value?: any) => void }[];
+
+    /**
+     *
+     * Milliseconds a worker should be destroyed after it finished a task.
+     * 
+     */
+    public expirationTime: number;
+    public constructor(url: string, maxWorkers: number = 1, expirationTime: number = 1000) {
         this.url = url;
+
         this.maxWorkers = maxWorkers;
+
         this.workers = [];
         this.queue = [];
-    }
-    private async work(): Promise<void> {
-        const worker = await this.getWorker();
-        if (!worker || worker.onmessage || worker.onerror || this.queue.length === 0) return;
 
-        const { data, resolve, reject } = this.queue.splice(0, 1)[0];
-
-        worker.isBusy = true;
-
-        worker.onerror = reject;
-        worker.onmessage = async e => {
-            worker.onmessage = worker.onerror = null;
-            resolve(e.data);
-            worker.isBusy = false;
-
-            if (this.queue.length >= this.maxWorkers && this.workers.length < this.maxWorkers) this.workers.push((await this.createWorker(1))[0]);
-
-            for (let i = 0; i < Math.min(this.queue.length, this.workers.length); i++)
-                this.work();
-        };
-
-        worker.postMessage(data);
+        this.nextID = 0;
+        this.expirationTime = expirationTime;
     }
 
     /**
@@ -37,49 +39,120 @@ export class AsyncWorker {
      * The resolved Promise will return the data returned by the worker.
      * 
      * @param data Data to pass to the worker.
+     * @param progress progress will be called when the worker sends a progress message: { status: 'progress', data: any }
      * 
      */
-    public task<T>(data: any): Promise<T> {
+    public task(data: any, progress?: (data: any) => any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.queue.push({ data, resolve, reject });
+            this.queue.push({ data, progress, resolve, reject });
             this.work();
         });
     }
-    private async getWorker(): Promise<Worker | void> {
-        const w = this.workers.filter(w => !w.isBusy);
 
-        if (w.length > 0) return w[~~(w.length * Math.random())];
+    private async work(): Promise<void> {
+        const worker = await this.getWorker();
+        if (!worker || worker.isBusy || this.queue.length === 0) return;
 
-        if ((this.workers.length || 0) < this.maxWorkers) return (await this.createWorker(1))[0];
+        worker.isBusy = true;
 
-        console.error('all workers are busy!');
-    }
-    public removeWorker(count: number): void {
-        this.workers.sort((a, b) => (<any>a.isBusy) - (<any>b.isBusy)).splice(0, Math.min(count, this.workers.length)).forEach(w => w.postMessage('close'));
-    }
-    public createWorker(count: number): Promise<Worker[]> {
-        return new Promise((resolve, reject) => {
-            const w: Worker[] = [];
+        const { data, progress, resolve, reject } = this.queue.splice(0, 1)[0];
 
-            let complete = 0;
-            for (let i = 0; i < count; i++) {
-                w[i] = <any>new Worker(this.url);
-                w[i].isBusy = false;
-                this.warmup(w[i]).then(() => {
-                    if (++complete === count) resolve(w);
+        let p = 0;
+
+        worker.onerror = reject;
+        worker.onmessage = async e => {
+            if (e.data.status === 'progress') {
+                if (progress) {
+                    p++;
+                    await progress(e.data?.data);
+                    p--;
+                }
+
+                return;
+            }
+
+            if (p !== 0) {
+                await new Promise<void>(resolve => {
+                    interval(clear => {
+                        if (p === 0) {
+                            clear();
+                            resolve();
+                        }
+                    }, 0.1);
                 });
             }
 
-            this.workers.push(...w);
-        });
+
+            if (e.data.status === 'failed') reject(e.data?.data);
+
+            if (e.data.status === 'finished') resolve(e.data?.data);
+
+            this.workerFinished(worker);
+        };
+
+        worker.postMessage(data);
     }
+
+    private async getWorker(): Promise<Worker | undefined> {
+        const w = this.workers.filter(w => !w.isBusy);
+
+        if (w.length > 0) return w[0];
+
+        if (this.workers.length < this.maxWorkers) return await this.createWorker();
+
+        return undefined;
+    }
+
+    private removeWorker(id: number): void {
+        const i = this.workers.findIndex(v => v.id === id);
+        if (i === -1) return;
+        this.workers.splice(i, 1)[0].terminate();
+    }
+
+    private async createWorker(): Promise<Worker> {
+        const worker = new Worker(this.url);
+
+        worker.isBusy = true;
+        worker.id = this.nextID++;
+
+        this.workers.push(worker);
+
+        await this.warmup(worker);
+
+        return worker;
+    }
+
+    private workerFinished(worker: Worker, work: boolean = true): void {
+        worker.onmessage = worker.onerror = null;
+        worker.isBusy = false;
+
+        const finished = worker.finished = performance.now();
+
+        setTimeout(() => {
+            if (!worker.isBusy && worker.finished === finished) {
+                this.removeWorker(worker.id);
+            }
+        }, this.expirationTime);
+
+
+        if (work) {
+            for (let i = 0; i < Math.min(this.queue.length, this.maxWorkers); i++) {
+                this.work();
+            }
+        }
+    }
+
     private warmup(worker: Worker): Promise<void> {
+        worker.isBusy = true;
+
         return new Promise((resolve, reject) => {
-            worker.postMessage(undefined);
             worker.onmessage = () => {
                 worker.onmessage = null;
+                this.workerFinished(worker, false);
                 resolve();
-            }
+            };
+
+            worker.postMessage(undefined);
         });
     }
 }

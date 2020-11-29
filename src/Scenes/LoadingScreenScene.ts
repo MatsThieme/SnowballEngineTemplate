@@ -1,6 +1,6 @@
-import { CameraPrefab } from '../Prefabs/CameraPrefab.js';
-import { LoadingScreenPrefab } from '../Prefabs/LoadingScreenPrefab.js';
-import { Scene } from '../SnowballEngine/SE.js';
+import { CameraPrefab } from '../Prefabs/CameraPrefab';
+import { LoadingScreenPrefab } from '../Prefabs/LoadingScreenPrefab';
+import { Scene } from '../SnowballEngine/SE';
 
 export function LoadingScreenScene(scene: Scene) {
     // add a camera

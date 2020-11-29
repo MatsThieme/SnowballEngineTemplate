@@ -1,6 +1,6 @@
-import { CameraPrefab } from '../Prefabs/CameraPrefab.js';
-import { ExampleGameObjectPrefab } from '../Prefabs/ExampleGameObjectPrefab.js';
-import { Scene } from '../SnowballEngine/SE.js';
+import { CameraPrefab } from '../Prefabs/CameraPrefab';
+import { ExampleGameObjectPrefab } from '../Prefabs/ExampleGameObjectPrefab';
+import { Scene } from '../SnowballEngine/SE';
 
 export async function MainScene(scene: Scene) {
     // add gameobjects to scene

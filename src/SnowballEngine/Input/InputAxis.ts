@@ -1,7 +1,7 @@
-import { Vector2 } from '../Vector2.js';
+import { Vector2 } from '../Vector2';
 
 export class InputAxis {
-    public values: number[];
+    public values: ReadonlyArray<number>;
     public constructor(values?: number | number[]) {
         if (!values) this.values = [0];
         else if (typeof values === 'number') this.values = [values];
@@ -14,6 +14,6 @@ export class InputAxis {
      * 
      */
     public get v2(): Vector2 {
-        return new Vector2(this.values[0], this.values[1]);
+        return new Vector2(this.values[0] || 0, this.values[1] || 0);
     }
 }

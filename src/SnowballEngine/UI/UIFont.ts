@@ -1,6 +1,6 @@
-import { Client } from '../Client.js';
-import { Vector2 } from '../Vector2.js';
-import { UIFontSize } from './UIFontSize.js';
+import { Client } from '../Client';
+import { Vector2 } from '../Vector2';
+import { UIFontSize } from './UIFontSize';
 
 export class UIFont {
     /**

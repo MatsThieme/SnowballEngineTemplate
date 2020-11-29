@@ -1,13 +1,13 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Client } from '../../Client.js';
-import { GameTime } from '../../GameTime.js';
-import { Input } from '../../Input/Input.js';
-import { AABB } from '../../Physics/AABB.js';
-import { Vector2 } from '../../Vector2.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIElement } from './UIElement.js';
+import { Asset } from '../../Assets/Asset';
+import { Client } from '../../Client';
+import { GameTime } from '../../GameTime';
+import { Input } from '../../Input/Input';
+import { AABB } from '../../Physics/AABB';
+import { Vector2 } from '../../Vector2';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIMenu } from '../UIMenu';
+import { UIElement } from './UIElement';
 
 export class UICheckbox extends UIElement {
     private _checked: boolean;
@@ -35,8 +35,8 @@ export class UICheckbox extends UIElement {
      * Update checked property.
      * 
      */
-    public async update(gameTime: GameTime): Promise<void> {
-        await super.update(gameTime);
+    public async update(): Promise<void> {
+        await super.update();
 
         if (this.click) {
             this.checked = !this._checked;

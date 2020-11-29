@@ -1,4 +1,4 @@
-import { clamp } from './Helpers.js';
+import { clamp, random } from './Helpers';
 
 export class Color {
     private r_: number;
@@ -63,10 +63,16 @@ export class Color {
     public static get black() {
         return new Color(0, 0, 0);
     }
+    public static get darkGrey() {
+        return new Color(51, 51, 51);
+    }
     public static get grey() {
         return new Color(128, 128, 128);
     }
     public static get white() {
         return new Color(255, 255, 255);
+    }
+    public static get random() {
+        return new Color(random(0, 255), random(0, 255), random(0, 255));
     }
 }

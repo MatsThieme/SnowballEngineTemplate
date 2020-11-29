@@ -1,5 +1,5 @@
-import { Frame } from '../Camera/Frame.js';
-import { Vector2 } from '../Vector2.js';
+import { Frame } from '../Camera/Frame';
+import { Vector2 } from '../Vector2';
 
 export interface Drawable {
     /**

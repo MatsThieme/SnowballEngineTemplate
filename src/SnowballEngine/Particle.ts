@@ -1,13 +1,13 @@
-import { Angle } from './Angle.js';
-import { Asset } from './Assets/Asset.js';
-import { Frame } from './Camera/Frame.js';
-import { D } from './Debug.js';
-import { ParticleSystem } from './GameObject/Components/ParticleSystem.js';
-import { Drawable } from './GameObject/Drawable.js';
-import { GameTime } from './GameTime.js';
-import { Sprite } from './Sprite.js';
-import { SpriteAnimation } from './SpriteAnimation.js';
-import { Vector2 } from './Vector2.js';
+import { Angle } from './Angle';
+import { Asset } from './Assets/Asset';
+import { Frame } from './Camera/Frame';
+import { D } from './Debug';
+import { ParticleSystem } from './GameObject/Components/ParticleSystem';
+import { Drawable } from './GameObject/Drawable';
+import { GameTime } from './GameTime';
+import { Sprite } from './Sprite';
+import { SpriteAnimation } from './SpriteAnimation';
+import { Vector2 } from './Vector2';
 
 export class Particle implements Drawable {
     public relativePosition: Vector2;
@@ -66,10 +66,10 @@ export class Particle implements Drawable {
      * Updates sprite animations and moves this.
      * 
      */
-    public update(gameTime: GameTime) {
-        this.rotation.degree += 360 / 1000 * gameTime.deltaTime * this.particleSystem.rotationSpeed;
-        this.relativePosition.add(this.velocity.clone.scale(gameTime.deltaTime));
-        if ('sprites' in this.sprite) this.sprite.update(gameTime);
+    public update() {
+        this.rotation.degree += 360 / 1000 * GameTime.deltaTime * this.particleSystem.rotationSpeed;
+        this.relativePosition.add(this.velocity.clone.scale(GameTime.deltaTime));
+        if ('sprites' in this.sprite) this.sprite.update();
     }
 
     /**

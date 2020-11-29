@@ -1,6 +1,6 @@
-import { clearObject } from '../../Helpers.js';
-import { GameObject } from '../GameObject.js';
-import { ComponentType } from './ComponentType.js';
+import { clearObject } from '../../Helpers';
+import { GameObject } from '../GameObject';
+import { ComponentType } from './ComponentType';
 
 export class Component {
     public readonly gameObject: GameObject;
@@ -40,7 +40,7 @@ export class Component {
             clearObject(this, true);
         }
 
-        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene).toDestroy.push(d);
+        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene).destroyCbs.push(d);
         else d();
     }
 }

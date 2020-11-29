@@ -4,9 +4,11 @@
  * 
  */
 export enum UIFontSize {
-    ExtraSmall = 1.5,
+    XXSmall = 0.8,
+    XSmall = 2,
     Small = 3,
-    Medium = 7,
-    Large = 13,
-    ExtraLarge = 20
+    Medium = 9,
+    Large = 13.5,
+    XLarge = 20,
+    XXLarge = 26
 }

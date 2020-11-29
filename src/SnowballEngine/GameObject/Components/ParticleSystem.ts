@@ -1,15 +1,15 @@
-import { Angle } from '../../Angle.js';
-import { Asset } from '../../Assets/Asset.js';
-import { Frame } from '../../Camera/Frame.js';
-import { GameTime } from '../../GameTime.js';
-import { Particle } from '../../Particle.js';
-import { SpriteAnimation } from '../../SpriteAnimation.js';
-import { Vector2 } from '../../Vector2.js';
-import { AlignH, AlignV } from '../Align.js';
-import { Drawable } from '../Drawable.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { Angle } from '../../Angle';
+import { Asset } from '../../Assets/Asset';
+import { Frame } from '../../Camera/Frame';
+import { GameTime } from '../../GameTime';
+import { Particle } from '../../Particle';
+import { SpriteAnimation } from '../../SpriteAnimation';
+import { Vector2 } from '../../Vector2';
+import { AlignH, AlignV } from '../Align';
+import { Drawable } from '../Drawable';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export class ParticleSystem extends Component implements Drawable {
     public distance: number;
@@ -54,14 +54,14 @@ export class ParticleSystem extends Component implements Drawable {
      * Move and emit particles.
      * 
      */
-    public update(gameTime: GameTime) {
-        this.timer += gameTime.deltaTime;
+    public update() {
+        this.timer += GameTime.deltaTime;
 
         if (this.sprites.length === 0) return;
 
         for (let i = this.particles.length - 1; i >= 0; i--) {
-            this.particles[i].update(gameTime);
-            if (this.particles[i].startTime + this.lifeTime < gameTime.now) this.particles.splice(i, 1);
+            this.particles[i].update();
+            if (this.particles[i].startTime + this.lifeTime < GameTime.now) this.particles.splice(i, 1);
         }
 
         while (this.timer >= this.emission && this.particles.length < this.maxParticles) {

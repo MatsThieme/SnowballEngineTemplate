@@ -4,8 +4,7 @@
     "version": "1.0.0",
     "settings": {
         "allowContextMenu": false,
-        "isDevelopmentBuild": true,
-        "createServerLog": true
+        "isDevelopmentBuild": true
     },
     "cordova-settings": {
         "id": "com.SnowballEngine.Template",

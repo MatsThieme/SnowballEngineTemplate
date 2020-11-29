@@ -1,42 +1,32 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-    <title> </title>
-    <meta charset="utf-8" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <style>
-        canvas {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        input {
-            position: absolute;
-            left: -1000px;
-            top: -1000px;
-            width: 100px;
-            height: 100px;
-            display: block;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- stores SnowballEngineConfig.json values in window.project -->
-    <script id="project-settings"></script>
-    <!-- for cordova / phonegap builds -->
-    <script src="cordova.js"></script>
-    <!-- for production builds -->
-    <script src="build.js"></script>
-    <!-- for debug builds -->
-    <script type="module" src="SnowballEngine/Start.js"></script>
-</body>
-
+    <head>
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <meta charset="utf8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <style>
+            canvas {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                overflow: hidden;
+                width: 100vw;
+                height: 100vh;
+            }
+    
+            input {
+                position: absolute;
+                left: -1000px;
+                top: -1000px;
+                width: 100px;
+                height: 100px;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- for cordova / phonegap builds -->
+        <script src="cordova.js"></script>
+    </body>
 </html>

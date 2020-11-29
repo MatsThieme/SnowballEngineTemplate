@@ -1,4 +1,4 @@
-import { D } from './Debug.js';
+import { D } from './Debug';
 
 export function Canvas(width: number, height: number): HTMLCanvasElement {
     const canvas = document.createElement('canvas');

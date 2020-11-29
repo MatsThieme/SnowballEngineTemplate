@@ -1,74 +1,86 @@
-import { Vector2 } from '../Vector2.js';
-import { InputAxis } from './InputAxis.js';
-import { InputButton } from './InputButton.js';
+import { Input } from './Input';
+import { InputAxis } from './InputAxis';
+import { InputButton } from './InputButton';
+import { InputDevice } from './InputDevice';
+import { InputEvent } from './InputEvent';
+import { InputEventTarget } from './InputEventTarget';
 
-export class InputTouch {
-    private _position: Vector2;
-    private _positions: Vector2[];
+export class InputTouch extends InputEventTarget {
+    private _positions: InputAxis[];
     private button: InputButton;
-    private listeners?: Map<string, Map<InputType, (button: InputButton, axis: InputAxis) => any>>;
-    public constructor(domElement: HTMLCanvasElement) {
+    private fireListener: boolean;
+
+    public constructor() {
+        super();
+
         this.button = new InputButton();
         this._positions = [];
-        this._position = new Vector2();
+        this.fireListener = false;
 
-        domElement.addEventListener('touchstart', this.onTouchStart.bind(this));
-        domElement.addEventListener('touchend', this.onTouchEnd.bind(this));
-        domElement.addEventListener('touchmove', this.onTouchMove.bind(this));
+        this.addListeners();
     }
-    private onTouchMove(e: TouchEvent): void {
+    private onTouchEvent(e: TouchEvent): void {
         e.preventDefault();
 
-        for (let i = 0; i < e.touches.length; i++) {
-            const item = e.touches.item(i)!;
-            this._positions[i] = new Vector2(item.clientX * window.devicePixelRatio, item.clientY * window.devicePixelRatio).round();
-        }
-
-        this._position = this._positions[0] || this._position;
-    }
-    private onTouchEnd(e: TouchEvent): void {
-        e.preventDefault();
-
-        this._positions = [];
+        this._positions.splice(0);
 
         for (let i = 0; i < e.touches.length; i++) {
-            const item = e.touches.item(i)!;
-            this._positions[i] = new Vector2(item.clientX * window.devicePixelRatio, item.clientY * window.devicePixelRatio).round();
+            const item = e.touches[i];
+            this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio), Math.round(item.clientY * window.devicePixelRatio)]);
         }
-
-        this._position = this._positions[0] || this._position;
 
         this.button.down = !!e.touches.length;
+
+        this.fireListener = true;
     }
-    private onTouchStart(e: TouchEvent): void {
-        e.preventDefault();
+    public getButton(index?: number): InputButton | undefined {
+        if (index === undefined) return undefined;
 
-        for (let i = 0; i < e.touches.length; i++) {
-            const item = e.touches.item(i)!;
-            this._positions[i] = new Vector2(item.clientX * window.devicePixelRatio, item.clientY * window.devicePixelRatio).round();
-        }
-
-        this._position = this._positions[0] || this._position;
-
-        this.button.down = !!e.touches.length;
-    }
-    public getButton(index: number): InputButton {
         return index === 0 ? this.button : new InputButton();
     }
-    public getAxis(index: number): InputAxis {
-        return index < this._positions.length ? new InputAxis([this._positions[index].x, this._positions[index].y]) : new InputAxis();
+    public getAxis(index?: number): Readonly<InputAxis> | undefined {
+        if (index === undefined) return undefined;
+
+        return this._positions[index];
     }
     public update(): void {
         this.button.update();
-    }
-    public addListener(cb: (button: InputButton, axis: InputAxis) => any, type: InputType = -1, id?: string) {
-        if (!this.listeners) this.listeners = new Map();
-        if (!this.listeners.get(id!)) this.listeners.set(id!, new Map());
 
-        //this.listeners.get(id!)?.set(type!, cb);
+        if (!this.fireListener) return;
 
+        for (const { cb, type } of this.listeners.values()) {
+            const btn = Input.inputMappingButtons.mouse[type];
+            const ax = Input.inputMappingAxes.mouse[type];
+
+            const e: InputEvent = {
+                type,
+                device: InputDevice.Keyboard,
+                axis: this.getAxis(ax!),
+                button: this.getButton(btn!)
+            }
+
+            if (!e.axis && !e.button) continue;
+
+            cb(e);
+        }
+
+        this.fireListener = false;
     }
-    public removeListener(id: string, type?: InputType) {
-        this.listeners?.delete(id);
+
+    private addListeners(): void {
+        window.addEventListener('touchstart', this.onTouchEvent.bind(this));
+        window.addEventListener('touchend', this.onTouchEvent.bind(this));
+        window.addEventListener('touchmove', this.onTouchEvent.bind(this));
+    }
+
+    private removeListeners(): void {
+        window.removeEventListener('touchstart', this.onTouchEvent.bind(this));
+        window.removeEventListener('touchend', this.onTouchEvent.bind(this));
+        window.removeEventListener('touchmove', this.onTouchEvent.bind(this));
+    }
+
+    public destroy(): void {
+        super.destroy();
+        this.removeListeners();
     }
 }

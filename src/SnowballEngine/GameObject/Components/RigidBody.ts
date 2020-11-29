@@ -1,13 +1,13 @@
-import { GameTime } from '../../GameTime.js';
-import { Collision } from '../../Physics/Collision.js';
-import { Physics } from '../../Physics/Physics.js';
-import { Vector2 } from '../../Vector2.js';
-import { GameObject } from '../GameObject.js';
-import { CircleCollider } from './CircleCollider.js';
-import { Collider } from './Collider.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
-import { PolygonCollider } from './PolygonCollider.js';
+import { GameTime } from '../../GameTime';
+import { Collision } from '../../Physics/Collision';
+import { Physics } from '../../Physics/Physics';
+import { Vector2 } from '../../Vector2';
+import { GameObject } from '../GameObject';
+import { CircleCollider } from './CircleCollider';
+import { Collider } from './Collider';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
+import { PolygonCollider } from './PolygonCollider';
 
 export class RigidBody extends Component {
     private static nextID: number = 0;
@@ -115,7 +115,7 @@ export class RigidBody extends Component {
      * Apply forces.
      * 
      */
-    public update(gameTime: GameTime, currentCollisions: Collision[]): void {
+    public update(currentCollisions: Collision[]): void {
         if (this.mass === 0 || !this.gameObject.active) return;
 
 
@@ -146,14 +146,14 @@ export class RigidBody extends Component {
         this.force.add(Physics.gravity);
 
 
-        this.velocity.add(this.force.clone.scale(this.invMass * gameTime.deltaTime * Physics.timeScale));
+        this.velocity.add(this.force.clone.scale(this.invMass * GameTime.deltaTime * Physics.timeScale));
         this.force = Vector2.zero;
 
-        this.angularVelocity += this.torque * this.invInertia * gameTime.deltaTime * Physics.timeScale;
+        this.angularVelocity += this.torque * this.invInertia * GameTime.deltaTime * Physics.timeScale;
         this.torque = 0;
 
 
-        if (!this.freezePosition) this.gameObject.transform.relativePosition.add(this.velocity.clone.scale(gameTime.deltaTime / 1000 * Physics.timeScale));
-        if (!this.freezeRotation) this.gameObject.transform.relativeRotation.radian += this.angularVelocity * gameTime.deltaTime / 1000 * Physics.timeScale;
+        if (!this.freezePosition) this.gameObject.transform.relativePosition.add(this.velocity.clone.scale(GameTime.deltaTime / 1000 * Physics.timeScale));
+        if (!this.freezeRotation) this.gameObject.transform.relativeRotation.radian += this.angularVelocity * GameTime.deltaTime / 1000 * Physics.timeScale;
     }
 }

@@ -1,12 +1,12 @@
-import { Asset } from '../../Assets/Asset.js';
-import { AssetType } from '../../Assets/AssetType.js';
-import { AudioMixer } from '../../Audio/AudioMixer.js';
-import { D } from '../../Debug.js';
-import { clamp, triggerOnUserInputEvent } from '../../Helpers.js';
-import { GameObject } from '../GameObject.js';
-import { AudioListener } from './AudioListener.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { Asset } from '../../Assets/Asset';
+import { AssetType } from '../../Assets/AssetType';
+import { AudioMixer } from '../../Audio/AudioMixer';
+import { D } from '../../Debug';
+import { clamp, triggerOnUserInputEvent } from '../../Helpers';
+import { GameObject } from '../GameObject';
+import { AudioListener } from './AudioListener';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export class AudioSource extends Component {
     public readonly node: PannerNode;
@@ -60,7 +60,7 @@ export class AudioSource extends Component {
         if (!listener) return D.error('no listener');
 
         if (this.mixer) this.mixer.addSource(this);
-        else this.node.connect(this.node.context.destination);
+        else this.node.connect(AudioListener.node);
 
         listener.addSource(this);
 
@@ -85,10 +85,12 @@ export class AudioSource extends Component {
             if (asset.type !== AssetType.Audio) {
                 D.error('asset.type !== AssetType.Audio');
             } else {
-                this.audio.src = asset.url;
+                this.audio.src = asset.path;
 
                 this._asset = asset;
             }
+
+            this.connect();
         }
     }
 

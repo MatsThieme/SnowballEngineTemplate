@@ -1,5 +1,5 @@
-import { ExampleBehaviour } from '../Behaviours/ExampleBehaviour.js';
-import { Assets, GameObject, Texture } from '../SnowballEngine/SE.js';
+import { ExampleBehaviour } from '../Behaviours/ExampleBehaviour';
+import { Assets, GameObject, Texture } from '../SnowballEngine/SE';
 
 export async function ExampleGameObjectPrefab(gameObject: GameObject) {
     gameObject.addComponent(Texture, texture => {

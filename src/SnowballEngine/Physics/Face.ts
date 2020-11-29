@@ -1,5 +1,5 @@
-import { Line } from './Line.js';
-import { Vector2 } from '../Vector2.js';
+import { Line } from './Line';
+import { Vector2 } from '../Vector2';
 
 export class Face {
     public v1: Vector2;

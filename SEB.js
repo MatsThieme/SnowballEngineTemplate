@@ -1,30 +1,24 @@
-/**
- * 
- * SnowballEngineBuild
- * 
- */
-
-const { existsSync, readdirSync, readFileSync, statSync, lstatSync, rmdirSync, unlinkSync, mkdirSync, copyFileSync, writeFileSync } = require('fs');
-const { resolve, join, extname } = require('path');
+const { writeFile, mkdir, readdir, exists, lstat, unlink, rmdir, copyFile, stat } = require('fs');
+const { resolve, join } = require('path');
 const { createServer } = require('http');
 const { readFile } = require('fs');
 const { getType } = require('mime');
+const webpack = require('webpack');
+const { promisify } = require('util');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const distPath = resolve('dist');
 const assetPath = resolve('Assets');
-const htmlPath = resolve('src/index.html');
 const configPath = resolve('SnowballEngineConfig.json');
 const distAssetPath = resolve(distPath, 'Assets');
-const distHtmlPath = resolve(distPath, 'index.html');
 const tscDistPath = resolve(distPath, 'ts-build');
-const assetListPath = resolve(assetPath, 'AssetList.json');
+const assetDBPath = resolve(assetPath, 'AssetDB.json');
 
-const newAssetList = getProcessParameter('-newassetlist') || getProcessParameter('--a');
-const mergeAssetList = getProcessParameter('-mergenewassetlist') || getProcessParameter('--m');
+const newAssetDB = getProcessParameter('-newassetdb') || getProcessParameter('--a');
+const mergeAssetDB = getProcessParameter('-mergenewassetdb') || getProcessParameter('--m');
 const debugBuild = getProcessParameter('-debug') || getProcessParameter('--d');
 const dserver = getProcessParameter('-server') || getProcessParameter('--s');
 
-const config = loadJSONFile(configPath);
 
 const port = 3000;
 
@@ -34,151 +28,134 @@ start();
 
 async function start() {
     if (dserver) {
-        serve(port);
+        serve(await getAvailablePort(port));
         return;
     }
 
     const start = Date.now();
 
-    if (newAssetList || mergeAssetList) {
-        console.log('create asset list');
+    if (!await promisify(exists)(configPath)) await writeJSONFile(configPath, { title: '', description: '' });
+    if (!await promisify(exists)(assetPath + '/InputMappingButtons.json')) await writeJSONFile(assetPath + '/InputMappingButtons.json', { touch: { Trigger: 0 }, keyboard: {}, mouse: { Trigger: 0 }, gamepad: {} });
+    if (!await promisify(exists)(assetPath + '/InputMappingAxes.json')) await writeJSONFile(assetPath + '/InputMappingAxes.json', { touch: { PointerPosition: 0 }, keyboard: {}, mouse: { PointerPosition: 0 }, gamepad: {} });
 
-        let list = createAssetList(assetPath);
 
-        if (mergeAssetList) {
-            console.log('merge asset lists');
-            list = mergeAssetLists(JSON.stringify(loadJSONFile(assetListPath)) || [], list)
+    const aDBExists = await promisify(exists)(assetDBPath);
+    if (newAssetDB || mergeAssetDB || !aDBExists) {
+        console.log('create asset db');
+
+        let db = await createAssetDB(assetPath);
+
+        if (mergeAssetDB) {
+            console.log('merge existing with new asset db');
+            db = mergeAssetDBs(JSON.stringify(await loadJSONFile(assetDBPath)) || '{}', db)
         }
 
-        console.log('write asset list');
-        writeFileSync(assetListPath, list);
+        console.log('write asset db');
+        await promisify(writeFile)(assetDBPath, db);
 
-        return;
+        if (aDBExists) return;
     }
 
-    if (debugBuild) {
-        console.log('start debug build');
-        await buildDebug();
-        console.log('debug build finished');
-    } else {
-        console.log('start build');
-        await build();
-        console.log('build finished');
-    }
+    console.log('start build');
+
+    await build();
+
+    console.log('build finished');
 
     console.log('in', (Date.now() - start) / 1000 + 's');
 }
 
-function buildHTML() {
-    let html = loadTextFile(htmlPath);
-    html = html.replace(/<title>.*?<\/title>/, `<title>${config.title}</title>`);
-    html = html.replace(/<meta name="description"[^\/]*?\/>/, config.description ? `<meta name="description" content="${config.description}" />` : '');
-
-    html = html.replace(/<script id="project-settings">.*?<\/script>/, `<script id="project-settings">window.project = JSON.parse(\`${JSON.stringify(config)}\`)</script>`);
-
-    return html;
-}
-
-function createHTML() {
-    if (config) writeFileSync(distHtmlPath, buildHTML());
-    else copyFileSync(htmlPath, distHtmlPath);
-}
-
 async function build() {
     try {
-        deleteFolderRecursive(distPath);
-        mkdirSync(distPath);
+        await deleteFolderRecursive(distPath);
+        await mkdirAsync(distPath);
 
-        copyFolderSync(assetPath, distAssetPath);
-        createHTML();
+        await copyFolder(assetPath, distAssetPath);
 
-        await exec('npx tsc --build');
-        await exec('npx webpack ./ts-build/SnowballEngine/Start.js -o build.js', { cwd: distPath });
+        await promisify(unlink)(distAssetPath + '/AssetDB.json');
+        await promisify(unlink)(distAssetPath + '/InputMappingButtons.json');
+        await promisify(unlink)(distAssetPath + '/InputMappingAxes.json');
 
-        deleteFolderRecursive(tscDistPath);
+        const config = await loadJSONFile(configPath);
+
+        const webpackConfig = require('./webpack.config.js');
+
+        webpackConfig.mode = debugBuild ? 'development' : 'production';
+        webpackConfig.devtool = debugBuild ? 'inline-source-map' : undefined;
+        webpackConfig.plugins = [new HtmlWebpackPlugin({
+            title: config.title,
+            meta: {
+                description: config.description,
+            },
+            template: './src/index.html'
+        })];
+
+        await new Promise(resolve => webpack(webpackConfig, (err, stats) => err || stats.hasErrors() ? console.log(err || stats.toString()) : resolve()));
+
+        await deleteFolderRecursive(tscDistPath);
     } catch (error) {
         console.log(error);
     }
 }
-
-async function buildDebug() {
-    try {
-        deleteFolderRecursive(distPath);
-        mkdirSync(distPath);
-
-        copyFolderSync(assetPath, distAssetPath);
-        createHTML();
-
-        await exec('npx tsc --build');
-
-        copyFolderSync(tscDistPath, distPath);
-
-        deleteFolderRecursive(tscDistPath);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 
 function getProcessParameter(name) {
     return process.argv.slice(2).includes(name);
 }
 
-function loadJSONFile(path) {
+async function loadJSONFile(path) {
     try {
-        return JSON.parse(loadTextFile(path));
+        return JSON.parse(await loadTextFile(path));
     } catch { }
 }
 
-function loadTextFile(path) {
+async function loadTextFile(path) {
     try {
-        return readFileSync(path, { encoding: 'utf8' });
+        return await promisify(readFile)(path, { encoding: 'utf8' });
     } catch { }
 }
 
-
-async function exec(command = '', options = {}, callback = (error, stdout, stderr) => undefined) {
-    return new Promise((resolve, reject) => {
-        const child = require('child_process').exec(command, options, callback);
-        child.on('error', e => { reject(e); child.kill(); });
-        child.on('exit', resolve);
-        child.stdout.on('data', data => ('' + data).includes('error') ? console.error(('' + data)) : '');
-        child.stderr.pipe(process.stdout);
-    });
+async function writeJSONFile(path, object) {
+    await promisify(writeFile)(path, JSON.stringify(object), { encoding: 'utf8' });
 }
 
-function copyFolderSync(from, to) { // https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js#answer-52338335
-    if (!existsSync(to)) mkdirSync(to);
-    for (const element of readdirSync(from)) {
-        if (lstatSync(resolve(from, element)).isFile()) {
-            copyFileSync(resolve(from, element), resolve(to, element));
+async function mkdirAsync(path) {
+    if (!await promisify(exists)(path)) await promisify(mkdir)(path);
+}
+
+
+async function copyFolder(from, to) { // https://stackoverflow.com/questions/13786160/copy-folder-recursively-in-node-js#answer-52338335
+    await mkdirAsync(to);
+    for (const element of await promisify(readdir)(from)) {
+        if ((await promisify(lstat)(resolve(from, element))).isFile()) {
+            await promisify(copyFile)(resolve(from, element), resolve(to, element));
         } else {
-            copyFolderSync(resolve(from, element), resolve(to, element));
+            await copyFolder(resolve(from, element), resolve(to, element));
         }
     }
 }
 
-function deleteFolderRecursive(path) { // https://stackoverflow.com/questions/18052762/remove-directory-which-is-not-empty#answer-32197381
-    if (existsSync(path)) {
-        for (const file of readdirSync(path)) {
+async function deleteFolderRecursive(path) { // https://stackoverflow.com/questions/18052762/remove-directory-which-is-not-empty#answer-32197381
+    if (await promisify(exists)(path)) {
+        for (const file of await promisify(readdir)(path)) {
             const curPath = resolve(path, file);
-            if (lstatSync(curPath).isDirectory()) {
-                deleteFolderRecursive(curPath);
+            if ((await promisify(lstat)(curPath)).isDirectory()) {
+                await deleteFolderRecursive(curPath);
             } else {
-                unlinkSync(curPath);
+                await promisify(unlink)(curPath);
             }
         }
-        rmdirSync(path);
+
+        await promisify(rmdir)(path);
     }
 }
 
 
-/* AssetList start */
+/* AssetDB start */
 
-function listDir(dir, filelist = [], startDir = dir) {
-    for (const file of readdirSync(dir)) {
-        if (file === 'AssetList.json') continue;
-        if (statSync(resolve(dir, file)).isDirectory()) listDir(resolve(dir, file), filelist, startDir);
+async function listDir(dir, filelist = [], startDir = dir) {
+    for (const file of await promisify(readdir)(dir)) {
+        if (file === 'AssetDB.json' || file === 'InputMappingButtons.json' || file === 'InputMappingAxes.json') continue;
+        if ((await promisify(stat)(resolve(dir, file))).isDirectory()) await listDir(resolve(dir, file), filelist, startDir);
         else {
             const d = dir.substr(startDir.length + 1).replace(/\\/g, '/');
             if (!d) filelist.push(file);
@@ -189,7 +166,7 @@ function listDir(dir, filelist = [], startDir = dir) {
     return filelist;
 }
 
-function getFileType(path) {
+function getAssetType(path) {
     const match = path.match(/.+\.(\w*)$/);
 
     if (match && match[1]) {
@@ -219,42 +196,45 @@ function getFileType(path) {
     return 4;
 }
 
-function createAssetList(path) {
-    const patharr = listDir(path);
-    const assetList = [];
+async function createAssetDB(path) {
+    const assetDB = {};
 
-    for (const p of patharr) {
-        assetList.push({
-            path: p,
+    for (const p of await listDir(path)) {
+        assetDB[p] = {
             name: '',
-            type: getFileType(p)
-        });
+            type: getAssetType(p),
+            mimeType: getType(p)
+        }
     }
 
-    return JSON.stringify(assetList);
+    return JSON.stringify(assetDB);
 }
 
-function mergeAssetLists(...lists) {
-    return JSON.stringify(lists.map(x => JSON.parse(x)).reduce((t, c) => {
-        for (const o1 of c) {
+function mergeAssetDBs(...dbs) {
+    return JSON.stringify(dbs.map(db => JSON.parse(db)).reduce((t, c) => {
+        for (const o1 in c) {
             let exists;
 
-            for (const o2 of t) {
-                if (o1.path === o2.path) {
+            for (const o2 in t) {
+                if (o1 === o2) {
                     exists = true;
-                    o2.name = o1.name || o2.name;
+
+                    for (const p in c[o1]) {
+                        t[o1][p] = c[o1][p] || t[o1][p];
+                    }
+
+                    break;
                 }
             }
 
-            if (!exists) t.push(o1);
+            if (!exists) t[o1] = c[o1];
         }
 
         return t;
-    }, []));
+    }, {}));
 }
 
-
-/* AssetList end */
+/* AssetDB end */
 
 
 /* Debug server */
@@ -277,4 +257,16 @@ function serve(port) {
     }).listen(port);
 
     console.log('http://localhost:' + port);
+}
+
+async function getAvailablePort(start = 0) {
+    for (let i = start; i < 65535; i++) {
+        if (await portAvailable(i)) return i;
+    }
+
+    return start;
+}
+
+function portAvailable(port) {
+    return new Promise(resolve => server = createServer().listen(port, () => resolve(true) || server.close()).on('error', () => resolve(false)));
 }

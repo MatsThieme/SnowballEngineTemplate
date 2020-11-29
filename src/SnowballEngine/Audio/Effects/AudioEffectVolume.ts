@@ -1,6 +1,6 @@
-import { D } from '../../Debug.js';
-import { AudioListener } from '../../GameObject/Components/AudioListener.js';
-import { AudioEffect } from '../AudioEffect.js';
+import { D } from '../../Debug';
+import { AudioListener } from '../../GameObject/Components/AudioListener';
+import { AudioEffect } from '../AudioEffect';
 
 export class AudioEffectVolume extends AudioEffect {
     public readonly node: GainNode;

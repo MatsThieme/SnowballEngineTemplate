@@ -1,18 +1,18 @@
-import { Angle } from '../../Angle.js';
-import { Asset } from '../../Assets/Asset.js';
-import { Assets } from '../../Assets/Assets.js';
-import { Frame } from '../../Camera/Frame.js';
-import { clamp } from '../../Helpers.js';
-import { AABB } from '../../Physics/AABB.js';
-import { PhysicsMaterial } from '../../Physics/PhysicsMaterial.js';
-import { Sprite } from '../../Sprite.js';
-import { Vector2 } from '../../Vector2.js';
-import { Drawable } from '../Drawable.js';
-import { GameObject } from '../GameObject.js';
-import { Camera } from './Camera.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
-import { Client } from '../../Client.js';
+import { Angle } from '../../Angle';
+import { Asset } from '../../Assets/Asset';
+import { Assets } from '../../Assets/Assets';
+import { Frame } from '../../Camera/Frame';
+import { clamp } from '../../Helpers';
+import { AABB } from '../../Physics/AABB';
+import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
+import { Sprite } from '../../Sprite';
+import { Vector2 } from '../../Vector2';
+import { Drawable } from '../Drawable';
+import { GameObject } from '../GameObject';
+import { Camera } from './Camera';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
+import { Client } from '../../Client';
 
 export class TileMap extends Component implements Drawable {
     public tileSize: Vector2;

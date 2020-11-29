@@ -1,8 +1,8 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Input } from '../../Input/Input.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIInputField } from './UIInputField.js';
+import { Asset } from '../../Assets/Asset';
+import { Input } from '../../Input/Input';
+import { UIElementType } from '../UIElementType';
+import { UIMenu } from '../UIMenu';
+import { UIInputField } from './UIInputField';
 
 export class UITextInputField extends UIInputField {
     public value: string;

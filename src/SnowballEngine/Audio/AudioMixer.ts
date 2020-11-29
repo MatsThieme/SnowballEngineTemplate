@@ -1,7 +1,7 @@
-import { AudioListener } from '../GameObject/Components/AudioListener.js';
-import { AudioSource } from '../GameObject/Components/AudioSource.js';
-import { clamp } from '../Helpers.js';
-import { AudioEffect } from './AudioEffect.js';
+import { AudioListener } from '../GameObject/Components/AudioListener';
+import { AudioSource } from '../GameObject/Components/AudioSource';
+import { clamp } from '../Helpers';
+import { AudioEffect } from './AudioEffect';
 
 export class AudioMixer {
     private static _mixers: Map<string, AudioMixer> = new Map();
@@ -77,14 +77,18 @@ export class AudioMixer {
      * 
      */
     public removeChild(mixer: AudioMixer | number): AudioMixer | undefined {
-        const m = this._mixers.splice(isNaN(<any>mixer) ? this._sources.findIndex(s => s.componentId === (<AudioMixer>mixer)._id) : <number>mixer, 1)[0];
+        const id = typeof mixer === 'number' ? mixer : this._sources.findIndex(s => s.componentId === mixer._id);
+
+        if (id === -1) return;
+
+        const m = this._mixers.splice(id, 1)[0];
         m?.disconnect();
 
         return m;
     }
 
 
-    public addEffect<T extends AudioEffect>(effect: new () => T, initializer: (effect: T) => any): AudioEffect {
+    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer: (effect: T) => any): AudioEffect {
         const reconnect = this._effects.length === 0;
 
         if (reconnect) this.disconnect();
@@ -108,12 +112,17 @@ export class AudioMixer {
      * 
      */
     public removeEffect(effect: AudioEffect | number): void {
+        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentId === effect._id);
+        if (id === -1) return;
+
         const reconnect = this._effects.length > 0;
 
         if (reconnect) this.disconnect();
 
         this.disconnectEffects();
-        this._sources.splice(isNaN(<any>effect) ? this._sources.findIndex(s => s.componentId === (<AudioEffect>effect)._id) : <number>effect, 1);
+
+        this._sources.splice(id, 1);
+
         this.connectEffects();
 
         if (reconnect) this.connect();
@@ -155,7 +164,6 @@ export class AudioMixer {
         this.connected = false;
     }
 
-
     public addSource(source: AudioSource): void {
         this._sources.push(source);
         source.node.connect(this._node);
@@ -167,9 +175,12 @@ export class AudioMixer {
      *
      */
     public removeSource(source: AudioSource | number): void {
+        const id = typeof source === 'number' ? source : this._sources.findIndex(s => s.componentId === source.componentId);
+        if (id === -1) return;
+
         this.disconnectSources();
 
-        this._sources.splice(isNaN(<any>source) ? this._sources.findIndex(s => s.componentId === (<AudioSource>source).componentId) : <number>source, 1);
+        this._sources.splice(id, 1);
 
         this.connectSources();
     }
@@ -180,5 +191,18 @@ export class AudioMixer {
 
     private disconnectSources(): void {
         this._sources.forEach(s => s.node.disconnect());
+    }
+
+    public destroy(): void {
+        this.disconnect();
+        this.disconnectEffects();
+        this.disconnectSources();
+
+    }
+
+    public static reset(): void {
+        for (const mixer of this._mixers.values()) {
+            mixer.destroy();
+        }
     }
 }

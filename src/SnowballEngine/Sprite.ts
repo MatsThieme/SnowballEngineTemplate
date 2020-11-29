@@ -1,6 +1,7 @@
-import { Vector2 } from './Vector2.js';
-import { Asset } from './Assets/Asset.js';
-import { AssetType } from './Assets/AssetType.js';
+import { Vector2 } from './Vector2';
+import { Asset } from './Assets/Asset';
+import { AssetType } from './Assets/AssetType';
+import { D } from './Debug';
 
 export class Sprite {
     /**

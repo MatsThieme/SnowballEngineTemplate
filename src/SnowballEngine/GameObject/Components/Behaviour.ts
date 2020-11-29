@@ -1,18 +1,16 @@
-import { GameTime } from '../../GameTime.js';
-import { Input } from '../../Input/Input.js';
-import { Collision } from '../../Physics/Collision.js';
-import { Scene } from '../../Scene.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { GameTime } from '../../GameTime';
+import { Input } from '../../Input/Input';
+import { Collision } from '../../Physics/Collision';
+import { Scene } from '../../Scene';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export abstract class Behaviour extends Component {
-    protected readonly input: Input;
     protected readonly scene: Scene;
     public readonly __initialized__: boolean;
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Behaviour);
-        this.input = gameObject.scene.input;
         this.scene = this.gameObject.scene;
         this.__initialized__ = false;
     }
@@ -36,7 +34,7 @@ export abstract class Behaviour extends Component {
      * Called once every frame.
      * 
      */
-    public async update(gameTime: GameTime): Promise<void> { }
+    public async update(): Promise<void> { }
 
     /**
      * 

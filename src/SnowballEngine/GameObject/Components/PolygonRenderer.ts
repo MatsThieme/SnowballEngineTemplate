@@ -1,12 +1,12 @@
-import { Frame } from '../../Camera/Frame.js';
-import { Canvas } from '../../Canvas.js';
-import { interval } from '../../Helpers.js';
-import { Sprite } from '../../Sprite.js';
-import { Vector2 } from '../../Vector2.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
-import { PolygonCollider } from './PolygonCollider.js';
+import { Frame } from '../../Camera/Frame';
+import { Canvas } from '../../Canvas';
+import { interval } from '../../Helpers';
+import { Sprite } from '../../Sprite';
+import { Vector2 } from '../../Vector2';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
+import { PolygonCollider } from './PolygonCollider';
 
 export class PolygonRenderer extends Component {
     private canvas: HTMLCanvasElement;

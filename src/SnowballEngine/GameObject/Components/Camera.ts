@@ -1,10 +1,10 @@
-import { Frame } from '../../Camera/Frame.js';
-import { Canvas } from '../../Canvas.js';
-import { AABB } from '../../Physics/AABB.js';
-import { Vector2 } from '../../Vector2.js';
-import { GameObject } from '../GameObject.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { Frame } from '../../Camera/Frame';
+import { Canvas } from '../../Canvas';
+import { AABB } from '../../Physics/AABB';
+import { Vector2 } from '../../Vector2';
+import { GameObject } from '../GameObject';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export class Camera extends Component {
     public resolution: Vector2;

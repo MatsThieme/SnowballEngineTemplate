@@ -1,4 +1,4 @@
-import { lerp } from './Helpers.js';
+import { lerp } from './Helpers';
 
 export class Noise {
     private vs: number[];

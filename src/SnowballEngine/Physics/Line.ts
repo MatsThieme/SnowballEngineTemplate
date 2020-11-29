@@ -1,4 +1,4 @@
-import { Vector2 } from '../Vector2.js';
+import { Vector2 } from '../Vector2';
 
 export class Line {
     public a: Vector2;

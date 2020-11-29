@@ -24,14 +24,13 @@ export class D {
         else console.warn(o);
     }
     private static formatStack(stack: string = ''): string {
-        return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || stack;
+        return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || D.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
     }
     private static formatStackFirefox(stack: string): string {
         return stack.split('\n').slice(1).map(line => {
             const match = line.match(/^(.*?)@http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)$/);
 
             return D.formatStackLine(match);
-
         }).filter(Boolean).join('\n');
     }
     private static formatStackChromium(stack: string): string {
@@ -39,10 +38,16 @@ export class D {
             const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
 
             return D.formatStackLine(match);
-
         }).filter(Boolean).join('\n');
     }
-    private static formatStackLine(match: RegExpMatchArray|null): string {
+    private static formatStackCordova(stack: string): string {
+        return stack.split('\n').slice(2).map(line => {
+            const match = line.trim().match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
+
+            return D.formatStackLine(match);
+        }).filter(Boolean).join('\n');
+    }
+    private static formatStackLine(match: RegExpMatchArray | null): string {
         if (!match) return '';
 
         const info = {
@@ -74,9 +79,5 @@ export class D {
         }
 
         return fmsg;
-    }
-
-    public static startDebugSession() {
-
     }
 }

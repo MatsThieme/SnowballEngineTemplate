@@ -1,14 +1,14 @@
-import { D } from '../Debug.js';
-import { Transform } from '../GameObject/Components/Transform.js';
-import { GameTime } from '../GameTime.js';
-import { clearObject } from '../Helpers.js';
-import { Collision } from '../Physics/Collision.js';
-import { Scene } from '../Scene.js';
-import { Behaviour } from './Components/Behaviour.js';
-import { Collider } from './Components/Collider.js';
-import { Component } from './Components/Component.js';
-import { ComponentType } from './Components/ComponentType.js';
-import { RigidBody } from './Components/RigidBody.js';
+import { D } from '../Debug';
+import { Transform } from '../GameObject/Components/Transform';
+import { GameTime } from '../GameTime';
+import { clearObject } from '../Helpers';
+import { Collision } from '../Physics/Collision';
+import { Scene } from '../Scene';
+import { Behaviour } from './Components/Behaviour';
+import { Collider } from './Components/Collider';
+import { Component } from './Components/Component';
+import { ComponentType } from './Components/ComponentType';
+import { RigidBody } from './Components/RigidBody';
 
 export class GameObject {
     private static nextID: number = 0;
@@ -87,7 +87,7 @@ export class GameObject {
      * @param cb Callbacks are executed after component creation.
      * 
      */
-    public addComponent<T extends Component>(type: new (gameObject: GameObject) => T, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> | null {
+    public addComponent<T extends Component>(type: Constructor<T>, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> | null {
         const component = new type(this);
 
         if (component.type !== ComponentType.Camera &&
@@ -123,7 +123,7 @@ export class GameObject {
 
             if (component.type === ComponentType.Behaviour) {
                 await (<any>component).awake();
-                if (this.scene.isRunning) {
+                if (this.scene.isRunning || this.scene.isStarting) {
                     await (<any>component).start();
                     (<any>component).__initialized__ = true;
                 }
@@ -159,7 +159,7 @@ export class GameObject {
      * Returns all components of type.
      * 
      */
-    public getComponents<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T[] {
+    public getComponents<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         return <T[]>this.components.filter((c: Component) => {
             if (typeof type === 'number') {
                 return c.type === type ||
@@ -167,7 +167,7 @@ export class GameObject {
                     type === ComponentType.Collider && (c.type === ComponentType.CircleCollider || c.type === ComponentType.PolygonCollider || c.type === ComponentType.TileMap)
             }
 
-            return c.constructor.name === type.name;
+            return c.constructor.name === type.name || c instanceof type;
         });
     }
 
@@ -176,7 +176,7 @@ export class GameObject {
      * Returns the first component of type.
      *
      */
-    public getComponent<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T | undefined {
+    public getComponent<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         for (const c of this.components) {
             if (typeof type === 'number') {
                 if (c.type === type ||
@@ -185,12 +185,12 @@ export class GameObject {
                 continue;
             }
 
-            if (c.constructor.name === type.name) return <T>c;
+            if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
         return;
     }
-    public getComponentsInChildren<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T[] {
+    public getComponentsInChildren<T extends Component>(type: Constructor<T> | ComponentType): T[] {
         const ret: T[] = [];
 
         for (const child of this.children) {
@@ -200,7 +200,7 @@ export class GameObject {
 
         return ret;
     }
-    public getComponentInChildren<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T | undefined {
+    public getComponentInChildren<T extends Component>(type: Constructor<T> | ComponentType): T | undefined {
         for (const child of this.children) {
             let c = child.getComponent(type);
             if (c) return c;
@@ -210,10 +210,10 @@ export class GameObject {
 
         return undefined;
     }
-    public getComponentsInParents<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T[] {
+    public getComponentsInParents<T extends Component>(type: Constructor<T> | ComponentType): T[] {
         return [...(this.parent?.getComponents(type) || []), ...(this.parent?.getComponentsInParents(type) || [])];
     }
-    public getComponentInParents<T extends Component>(type: (new (gameObject: GameObject) => T) | ComponentType): T | undefined {
+    public getComponentInParents<T extends Component>(type: Constructor<T> | ComponentType): T | undefined {
         return this.parent?.getComponent(type) || this.parent?.getComponentInParents(type);
     }
 
@@ -233,19 +233,19 @@ export class GameObject {
      * Update children, behaviours, ParticleSystem, AnimatedSprite and AudioListener.
      * 
      */
-    public async update(gameTime: GameTime, currentCollisions: Collision[]): Promise<void> {
-        if (!this.parent && this.active && this.hasCollider) this.rigidbody.update(gameTime, currentCollisions);
+    public async update(currentCollisions: Collision[]): Promise<void> {
+        if (!this.parent && this.active && this.hasCollider) this.rigidbody.update(currentCollisions);
 
         for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if (b.__initialized__) await b.update(gameTime);
+            if (b.__initialized__) await b.update();
         }
 
         if (!this.active) return;
 
-        this.children.forEach(c => c.update(gameTime, currentCollisions));
+        this.children.forEach(c => c.update(currentCollisions));
 
         for (const c of this.components) {
-            if (c.type === ComponentType.ParticleSystem || c.type === ComponentType.AnimatedSprite || c.type === ComponentType.AudioListener) (<any>c).update(gameTime);
+            if (c.type === ComponentType.ParticleSystem || c.type === ComponentType.AnimatedSprite || c.type === ComponentType.AudioListener) (<any>c).update();
         }
     }
 
@@ -272,7 +272,7 @@ export class GameObject {
                 clearObject(this, true);
             };
 
-            if (this.scene.isRunning) (<any>this.scene).toDestroy.push(d);
+            if (this.scene.isRunning) (<any>this.scene).destroyCbs.push(d);
             else d();
         } catch (err) {
             D.error(this);

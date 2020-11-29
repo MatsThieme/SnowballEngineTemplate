@@ -1,7 +1,7 @@
-import { Asset } from './Assets/Asset.js';
-import { AssetType } from './Assets/AssetType.js';
-import { Canvas } from './Canvas.js';
-import { D } from './Debug.js';
+import { Asset } from './Assets/Asset';
+import { AssetType } from './Assets/AssetType';
+import { Canvas } from './Canvas';
+import { D } from './Debug';
 
 /**
  * 
@@ -31,7 +31,7 @@ export const lerp = (a: number, b: number, t: number): number => a + (b - a) * t
  * Calculate the average of numbers.
  * 
  */
-export const average = (...numbers: number[]): number => numbers.reduce((t, c) => { t += c; return t; }) / numbers.length;
+export const average = (...numbers: number[]): number => numbers.reduce((t, c) => t + c, 0) / numbers.length;
 
 /**
  * 
@@ -43,7 +43,7 @@ export const average = (...numbers: number[]): number => numbers.reduce((t, c) =
  * @returns Returns Promise which resolves as result of callback.
  * 
  */
-export function triggerOnUserInputEvent<T>(cb: (...[]) => T | Promise<T>, params: any[] = []): Promise<T> {
+export function triggerOnUserInputEvent<T>(cb: (...args: any[]) => T | Promise<T>, ...params: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
         async function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
             if (!e.isTrusted) return;
@@ -100,7 +100,7 @@ export function createSprite(f: (context: CanvasRenderingContext2D, canvas: HTML
  * 
  */
 export function stopwatch(): () => number {
-    let start = performance.now();
+    const start = performance.now();
     return () => performance.now() - start;
 }
 
@@ -144,3 +144,10 @@ export function createENUM<T>(): T {
 
     return <T>new Proxy({}, handler);
 }
+
+export function random(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+}
+
+
+export const cantorPairingFunction = (a: number, b: number) => ((a + b) / 2) * (a + b + 1) + b;

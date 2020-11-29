@@ -1,5 +1,5 @@
-import { Asset } from './Assets/Asset.js';
-import { GameTime } from './GameTime.js';
+import { Asset } from './Assets/Asset';
+import { GameTime } from './GameTime';
 
 export class SpriteAnimation {
     public sprites: Asset[];
@@ -25,8 +25,8 @@ export class SpriteAnimation {
      * Adds the deltaTime to timer property.
      * 
      */
-    public update(gameTime: GameTime) {
-        this.timer += gameTime.deltaTime;
+    public update() {
+        this.timer += GameTime.deltaTime;
         this.timer %= this.sprites.length * this.swapTime;
     }
 

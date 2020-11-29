@@ -1,4 +1,4 @@
-import { AABB } from '../Physics/AABB.js';
+import { AABB } from '../Physics/AABB';
 
 export class UIFrame {
     public readonly aabb: AABB;

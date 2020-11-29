@@ -1,19 +1,17 @@
-import { Asset } from '../Assets/Asset.js';
-import { AssetType } from '../Assets/AssetType.js';
-import { Canvas } from '../Canvas.js';
-import { Client } from '../Client.js';
-import { GameTime } from '../GameTime.js';
-import { Input } from '../Input/Input.js';
-import { AABB } from '../Physics/AABB.js';
-import { Scene } from '../Scene.js';
-import { Vector2 } from '../Vector2.js';
-import { UIFrame } from './UIFrame.js';
-import { UIMenu } from './UIMenu.js';
+import { Asset } from '../Assets/Asset';
+import { AssetType } from '../Assets/AssetType';
+import { Canvas } from '../Canvas';
+import { Client } from '../Client';
+import { GameTime } from '../GameTime';
+import { Input } from '../Input/Input';
+import { AABB } from '../Physics/AABB';
+import { Scene } from '../Scene';
+import { Vector2 } from '../Vector2';
+import { UIFrame } from './UIFrame';
+import { UIMenu } from './UIMenu';
 
 export class UI {
     public menus: Map<string, UIMenu>;
-    public updateHook?: (gameTime: GameTime, ui: this) => any;
-    private input: Input;
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
     private scene: Scene;
@@ -21,9 +19,8 @@ export class UI {
     private lastMenusState: boolean[];
     public navigationHistoryMaxSize: number;
     private _font!: Asset;
-    public constructor(input: Input, scene: Scene) {
+    public constructor(scene: Scene) {
         this.menus = new Map();
-        this.input = input;
         this.canvas = Canvas(Client.resolution.x, Client.resolution.y);
         this.context = this.canvas.getContext('2d')!;
         this.scene = scene;
@@ -52,7 +49,7 @@ export class UI {
             return menu;
         }
 
-        const menu = new UIMenu(this.input, this.scene);
+        const menu = new UIMenu(Input, this.scene);
         this.menus.set(name, menu);
 
         if (cb) {
@@ -78,15 +75,14 @@ export class UI {
      * Draw this.menus to canvas.
      *
      */
-    public async update(gameTime: GameTime): Promise<void> {
+    public async update(): Promise<void> {
         if (this.canvas.width !== Client.resolution.x) this.canvas.width = Client.resolution.x;
         if (this.canvas.height !== Client.resolution.y) this.canvas.height = Client.resolution.y;
 
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        if (this.updateHook) await this.updateHook(gameTime, this);
 
-        await Promise.all([...this.menus.values()].map(m => m.active ? m.update(gameTime) : undefined));
+        await Promise.all([...this.menus.values()].map(m => m.active ? m.update() : undefined));
 
         for (const menu of this.menus.values()) {
             if (menu.active) {

@@ -1,4 +1,4 @@
-import { AlignH, AlignV, UIFontSize, UIMenu, UIText, Vector2 } from '../SnowballEngine/SE.js';
+import { AlignH, AlignV, UIFontSize, UIMenu, UIText, Vector2 } from '../SnowballEngine/SE';
 
 export function LoadingScreenPrefab(menu: UIMenu){
     menu.addUIElement(UIText, text => {

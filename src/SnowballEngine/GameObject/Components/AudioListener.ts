@@ -1,8 +1,8 @@
-import { triggerOnUserInputEvent } from '../../Helpers.js';
-import { GameObject } from '../GameObject.js';
-import { AudioSource } from './AudioSource.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { triggerOnUserInputEvent } from '../../Helpers';
+import { GameObject } from '../GameObject';
+import { AudioSource } from './AudioSource';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export class AudioListener extends Component {
     private static context: AudioContext;

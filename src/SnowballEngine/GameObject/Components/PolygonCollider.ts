@@ -1,13 +1,13 @@
-import { Face } from '../../Physics/Face.js';
-import { GameTime } from '../../GameTime.js';
-import { AABB } from '../../Physics/AABB.js';
-import { PhysicsMaterial } from '../../Physics/PhysicsMaterial.js';
-import { Projection } from '../../Physics/Projection.js';
-import { Vector2 } from '../../Vector2.js';
-import { AlignH, AlignV } from '../Align.js';
-import { GameObject } from '../GameObject.js';
-import { Collider } from './Collider.js';
-import { ComponentType } from './ComponentType.js';
+import { Face } from '../../Physics/Face';
+import { GameTime } from '../../GameTime';
+import { AABB } from '../../Physics/AABB';
+import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
+import { Projection } from '../../Physics/Projection';
+import { Vector2 } from '../../Vector2';
+import { AlignH, AlignV } from '../Align';
+import { GameObject } from '../GameObject';
+import { Collider } from './Collider';
+import { ComponentType } from './ComponentType';
 
 export class PolygonCollider extends Collider {
     protected _aabb: AABB;
@@ -168,7 +168,7 @@ export class PolygonCollider extends Collider {
      * Calculates vertices, faces, aabb.
      * 
      */
-    public async update(gameTime: GameTime): Promise<void> {
+    public async update(): Promise<void> {
         this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.relativeScale).rotateAroundTo(new Vector2(), this.gameObject.transform.relativeRotation).add(this.position));
         this.faces = this.calculateFaces(this.vertices);
         this.scaledSize = this.calculateSize(this.vertices);

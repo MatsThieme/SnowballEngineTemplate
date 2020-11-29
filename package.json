@@ -2,15 +2,19 @@
   "scripts": {
     "build": "node SEB",
     "builddebug": "node SEB --d",
-    "newal": "node SEB --a",
-    "mnewal": "node SEB --m",
+    "newadb": "node SEB --a",
+    "mnewadb": "node SEB --m",
     "server": "node SEB --s"
   },
   "devDependencies": {
     "@types/cordova": "^0.0.34",
+    "html-webpack-plugin": "^4.5.0",
     "mime": "^2.4.6",
-    "typescript": "^4.0.3",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.0.5",
+    "webpack": "^4.44.2"
+  },
+  "dependencies": {
+    "pixi.js": "^5.3.3"
   }
 }

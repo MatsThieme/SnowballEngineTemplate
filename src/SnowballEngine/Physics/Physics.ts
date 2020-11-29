@@ -1,14 +1,14 @@
-import { Client } from '../Client.js';
-import { CircleCollider } from '../GameObject/Components/CircleCollider.js';
-import { ComponentType } from '../GameObject/Components/ComponentType.js';
-import { PolygonCollider } from '../GameObject/Components/PolygonCollider.js';
-import { TileMap } from '../GameObject/Components/TileMap.js';
-import { GameObject } from '../GameObject/GameObject.js';
-import { Vector2 } from '../Vector2.js';
-import { AsyncWorker } from '../Worker/AsyncWorker.js';
-import { AABB } from './AABB.js';
-import { Collision } from './Collision.js';
-import { worker } from './CollisionWorker.js';
+import { Client } from '../Client';
+import { CircleCollider } from '../GameObject/Components/CircleCollider';
+import { ComponentType } from '../GameObject/Components/ComponentType';
+import { PolygonCollider } from '../GameObject/Components/PolygonCollider';
+import { TileMap } from '../GameObject/Components/TileMap';
+import { GameObject } from '../GameObject/GameObject';
+import { Vector2 } from '../Vector2';
+import { AsyncWorker } from '../Worker/AsyncWorker';
+import { AABB } from './AABB';
+import { Collision } from './Collision';
+import { worker } from './CollisionWorker';
 
 export class Physics {
     public static gravity: Vector2 = new Vector2(0, -0.00981);

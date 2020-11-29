@@ -1,7 +1,7 @@
-import { Angle } from '../Angle.js';
-import { clamp } from '../Helpers.js';
-import { Vector2 } from '../Vector2.js';
-import { Sprite } from '../Sprite.js';
+import { Angle } from '../Angle';
+import { clamp } from '../Helpers';
+import { Vector2 } from '../Vector2';
+import { Sprite } from '../Sprite';
 
 export class Frame {
     public readonly worldCordinates: Vector2;

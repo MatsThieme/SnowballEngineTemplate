@@ -1,8 +1,8 @@
-import { Angle } from '../../Angle.js';
-import { Vector2 } from '../../Vector2.js';
-import { Component } from '../Components/Component.js';
-import { ComponentType } from '../Components/ComponentType.js';
-import { GameObject } from '../GameObject.js';
+import { Angle } from '../../Angle';
+import { Vector2 } from '../../Vector2';
+import { Component } from '../Components/Component';
+import { ComponentType } from '../Components/ComponentType';
+import { GameObject } from '../GameObject';
 
 export class Transform extends Component {
     public relativePosition: Vector2;

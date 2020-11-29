@@ -1,49 +1,46 @@
-import { average } from './Helpers.js';
+import { average } from './Helpers';
 
 export class GameTime {
-    private _lastTime: number;
-    private _deltaTime: number;
-    private readonly t: number[];
-    private _clampDeltatime: number;
+    private static _lastTime: number = performance.now();
+    private static _deltaTime: number = 5;
+    private static readonly t: number[] = [];
+    private static _clampDeltatime: number = 10;
 
     /**
      * 
      * Clamp the delta time at peak values.
      * 
      */
-    public clampDeltatime: boolean;
-    public readonly start: number;
-    public constructor() {
-        this._lastTime = this.now;
-        this._deltaTime = 0;
-        this.start = this.now;
-        this._clampDeltatime = 10;
-        this.clampDeltatime = true;
-        this.t = [];
-    }
+    public static clampDeltatime: boolean = true;
 
     /**
      *
      * Returns duration of the last frame in milliseconds.
      * 
      */
-    public get deltaTime(): number {
-        return this._deltaTime;
+    public static get deltaTime(): number {
+        return GameTime._deltaTime;
     }
 
     /**
      * 
-     * Calculates and clamps the delta time.
+     * @internal
+     * 
+     * Calculates and clamps the delta time since last call.
      * 
      */
-    public update(): void {
-        if (this._lastTime) {
-            this._deltaTime = this.clampDeltatime ? Math.min(this.now - this._lastTime, this._clampDeltatime) : this.now - this._lastTime;
-            this.t.unshift(this.now - this._lastTime);
-        }
-        this._lastTime = this.now;
-        if (this.t.length >= 500) this.t.splice(500);
-        this._clampDeltatime = average(...this.t) * 1.25;
+    public static update(): void {
+        const d = GameTime.now - GameTime._lastTime;
+        GameTime._deltaTime = GameTime.clampDeltatime ? Math.min(d, GameTime._clampDeltatime) : d;
+        GameTime.t.unshift(d);
+
+        const avgDelta = average(...GameTime.t);
+
+        GameTime._clampDeltatime = avgDelta * 1.25;
+
+        GameTime.t.splice(~~(1000 / avgDelta));
+
+        GameTime._lastTime = GameTime.now;
     }
 
     /**
@@ -51,21 +48,7 @@ export class GameTime {
      * Returns the current time in milliseconds since January 1, 1970 00:00:00 UTC.
      * 
      */
-    public get now(): number {
+    public static get now(): number {
         return performance.now();
-    }
-
-    /*
-     *
-     * Returns the elapsed time in milliseconds since initialisation.
-     * 
-     */
-    public get sinceStart(): number {
-        return this.now - this.start;
-    }
-
-    public measureGameTime(): () => number {
-        let start = this.now;
-        return () => this.now - start;
     }
 }

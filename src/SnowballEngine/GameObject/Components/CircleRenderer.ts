@@ -1,11 +1,11 @@
-import { Frame } from '../../Camera/Frame.js';
-import { Canvas } from '../../Canvas.js';
-import { Sprite } from '../../Sprite.js';
-import { Vector2 } from '../../Vector2.js';
-import { GameObject } from '../GameObject.js';
-import { CircleCollider } from './CircleCollider.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { Frame } from '../../Camera/Frame';
+import { Canvas } from '../../Canvas';
+import { Sprite } from '../../Sprite';
+import { Vector2 } from '../../Vector2';
+import { GameObject } from '../GameObject';
+import { CircleCollider } from './CircleCollider';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export class CircleRenderer extends Component {
     private canvas: HTMLCanvasElement;

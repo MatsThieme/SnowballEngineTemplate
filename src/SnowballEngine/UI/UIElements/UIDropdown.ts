@@ -1,13 +1,13 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Client } from '../../Client.js';
-import { GameTime } from '../../GameTime.js';
-import { Input } from '../../Input/Input.js';
-import { AABB } from '../../Physics/AABB.js';
-import { Vector2 } from '../../Vector2.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIElement } from './UIElement.js';
+import { Asset } from '../../Assets/Asset';
+import { Client } from '../../Client';
+import { GameTime } from '../../GameTime';
+import { Input } from '../../Input/Input';
+import { AABB } from '../../Physics/AABB';
+import { Vector2 } from '../../Vector2';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIMenu } from '../UIMenu';
+import { UIElement } from './UIElement';
 
 export class UIDropdown extends UIElement {
     private _values: string[];
@@ -22,14 +22,14 @@ export class UIDropdown extends UIElement {
         this.extendUpward = false;
         this.extended = false;
     }
-    public async update(gameTime: GameTime): Promise<void> {
-        await super.update(gameTime);
+    public async update(): Promise<void> {
+        await super.update();
 
         if (this.click) {
             const a = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
             const b = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
 
-            const pointerPos = new Vector2(this.input.getAxis(InputType.PointerPosition).values[0], this.input.getAxis(InputType.PointerPosition).values[1]);
+            const pointerPos = new Vector2(Input.getAxis(InputType.PointerPosition).values[0], Input.getAxis(InputType.PointerPosition).values[1]);
             const buttonSize = new Vector2(this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x), (this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y)) / (1 + this._values.length)).round();
 
             if (this.extended) {
@@ -49,7 +49,7 @@ export class UIDropdown extends UIElement {
                 this.extended = true;
                 this.draw();
             }
-        } else if (this.input.getButton(InputType.Trigger).down && !this.input.getButton(InputType.Trigger).clicked) this.extended = false;
+        } else if (Input.getButton(InputType.Trigger).down && !Input.getButton(InputType.Trigger).clicked) this.extended = false;
     }
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);

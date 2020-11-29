@@ -1,14 +1,14 @@
-import { GameTime } from '../../GameTime.js';
-import { AABB } from '../../Physics/AABB.js';
-import { Collision } from '../../Physics/Collision.js';
-import { PhysicsMaterial } from '../../Physics/PhysicsMaterial.js';
-import { Vector2 } from '../../Vector2.js';
-import { AlignH, AlignV } from '../Align.js';
-import { Alignable } from '../Alignable.js';
-import { GameObject } from '../GameObject.js';
-import { Behaviour } from './Behaviour.js';
-import { Component } from './Component.js';
-import { ComponentType } from './ComponentType.js';
+import { GameTime } from '../../GameTime';
+import { AABB } from '../../Physics/AABB';
+import { Collision } from '../../Physics/Collision';
+import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
+import { Vector2 } from '../../Vector2';
+import { AlignH, AlignV } from '../Align';
+import { Alignable } from '../Alignable';
+import { GameObject } from '../GameObject';
+import { Behaviour } from './Behaviour';
+import { Component } from './Component';
+import { ComponentType } from './ComponentType';
 
 export abstract class Collider extends Component implements Alignable {
     private static nextID: number = 0;
@@ -22,7 +22,7 @@ export abstract class Collider extends Component implements Alignable {
     public isTrigger: boolean;
     protected abstract _area: number;
     protected abstract _aabb: AABB;
-    
+
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Collider, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density: number = 1, alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger: boolean = false) {
         super(gameObject, type);
         this.relativePosition = relativePosition;
@@ -64,7 +64,7 @@ export abstract class Collider extends Component implements Alignable {
         const align = new Vector2(this.alignH === AlignH.Left ? size.x / 2 : this.alignH === AlignH.Right ? -size.x / 2 : 0, this.alignV === AlignV.Top ? -size.y / 2 : this.alignV === AlignV.Bottom ? size.y / 2 : 0);
         return align;
     }
-    public abstract async update(gameTime: GameTime): Promise<void>;
+    public abstract update(): Promise<void>;
 
     /**
      * 

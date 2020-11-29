@@ -1,5 +1,5 @@
-import { Collider } from '../GameObject/Components/Collider.js';
-import { Vector2 } from '../Vector2.js';
+import { Collider } from '../GameObject/Components/Collider';
+import { Vector2 } from '../Vector2';
 
 export class AABB {
     public readonly size: Vector2;

@@ -12,11 +12,14 @@ It manages scenes, game assets, simulates physics, renders assets, provides a si
 ### debug build
 <pre>npm run builddebug</pre>
 
-### generate AssetList.json from Assets folder
-<pre>npm run newal</pre>
+### generate AssetDB.json from Assets folder
+<pre>npm run newadb</pre>
 
-### generate AssetList.json from Assets folder and merge with existing AssetList.json
-<pre>npm run mnewal</pre>
+### generate AssetDB.json from Assets folder and merge with existing AssetDB.json
+<pre>npm run mnewadb</pre>
+
+### start debug server
+<pre>npm run server</pre>
 
 <br>
 
@@ -55,9 +58,9 @@ SceneManager
 
 ### The main file 'Game.ts' looks like this
 ```typescript
-import { LoadingScreenScene } from './Scenes/LoadingScreenScene.js';
-import { MainScene } from './Scenes/MainScene.js';
-import { Assets, SceneManager } from './SnowballEngine/SE.js';
+import { LoadingScreenScene } from './Scenes/LoadingScreenScene';
+import { MainScene } from './Scenes/MainScene';
+import { Assets, SceneManager } from './SnowballEngine/SE';
 
 export class Game {
     private sceneManager: SceneManager;
@@ -72,7 +75,7 @@ export class Game {
 
         await sceneManager.load('Loadingscreen');
 
-        await Assets.loadFromAssetList();
+        await Assets.loadFromAssetDB();
 
         await sceneManager.load('Game');
     }
@@ -101,6 +104,8 @@ It's the audio counterpart of Camera.
 </br>
 
 ### AudioSource
+Emits positional Audio from a file(Asset).
+Can hold an AudioMixer object.
 </br>
 
 ### Behaviour
@@ -168,13 +173,14 @@ enum AssetType {
 }
 ```
 
-### AssetList
-Assets/AssetList.json contains information about all assets.\
-It can be generated with **npm run newal**
+### AssetDB
+Assets/AssetDB.json contains information about all assets.\
+It can be generated with **npm run newadb**
 
-Typescript signature of 'AssetList.json's content:
+Typescript signature of 'AssetDB.json's content:
 ```typescript
-{ path: string, type: AssetType, name?: string, clone?: boolean }[];
+type Path = string;
+type AssetDB = { [key: Path]: { type: AssetType, name ?: string, mimeType: string } };
 ```
 
 <br>
@@ -186,8 +192,8 @@ the signature of an input mapping file looks like this
 ```typescript
 interface InputMapping {
     keyboard: { [key: string]: string },
-    mouse: { [key: string]: string | number },
-    gamepad:  { [key: string]: string | number },
+    mouse: { [key: string]: number },
+    gamepad:  { [key: string]: number },
     touch: { [key: string]: number }
 }
 ```

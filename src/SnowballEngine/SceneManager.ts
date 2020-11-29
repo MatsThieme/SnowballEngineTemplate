@@ -1,4 +1,5 @@
-import { Scene } from './Scene.js';
+import { asyncTimeout } from './Helpers';
+import { Scene } from './Scene';
 
 export class SceneManager {
     private scenes: Map<string, { cb: (scene: Scene) => any, scene?: Scene }>;
@@ -9,44 +10,37 @@ export class SceneManager {
     public create(name: string, sceneCb: (scene: Scene) => any): void {
         this.scenes.set(name, { cb: sceneCb });
     }
-    public async load(name: string, unloadCurrentScene: boolean = true): Promise<Scene | void> {
-        const s = this.scenes.get(name);
+    public async load(name: string): Promise<Scene | void> {
+        const sO = this.scenes.get(name);
 
-        if (s) {
+        if (sO) {
 
-            if (!s.scene) {
-                let scene = new Scene(this);
-                await s.cb(scene);
-                s.scene = scene;
+            if (!sO.scene) {
+                const scene = new Scene(this, name);
+
+                await sO.cb(scene);
+
+                sO.scene = scene;
             }
 
-            await s.scene.start();
+            await sO.scene.start();
 
-            if (this.activeScene) {
-                const currentScene = this.scenes.get(this.activeScene)!.scene!;
-
-                currentScene.stop();
-
-                if (unloadCurrentScene) {
-                    currentScene.destroy();
-                    delete this.scenes.get(this.activeScene)?.scene;
-                }
-            }
-
+            if (this.activeScene) await this.unload(this.activeScene);
 
             this.activeScene = name;
 
-            return s.scene;
+            await asyncTimeout(10);
+
+            return sO.scene;
         }
     }
-    public unload(name: string) {
-        if (this.scenes.has(name)) {
+    public async unload(name: string) {
+        if (this.scenes.get(name)?.scene) {
             const currentScene = this.scenes.get(name)!.scene!;
 
-            currentScene.stop();
+            await currentScene.destroy();
 
-            currentScene.destroy();
-            delete this.scenes.get(name)?.scene;
+            delete this.scenes.get(name)!.scene;
         }
     }
 }

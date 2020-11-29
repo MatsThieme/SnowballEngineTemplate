@@ -1,4 +1,4 @@
-import { Behaviour, Collision, GameTime } from '../SnowballEngine/SE.js';
+import { Behaviour, Collision, GameTime } from '../SnowballEngine/SE';
 
 export class ExampleBehaviour extends Behaviour {
     /**
@@ -32,8 +32,8 @@ export class ExampleBehaviour extends Behaviour {
      * Called once every frame.
      * 
      */
-    public async update(gameTime: GameTime): Promise<void> {
-        this.gameObject.transform.relativeRotation.degree += 36 * gameTime.deltaTime / 1000;
+    public async update(): Promise<void> {
+        this.gameObject.transform.relativeRotation.degree += 36 * GameTime.deltaTime / 1000;
     }
 
     /**

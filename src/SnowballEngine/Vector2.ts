@@ -1,4 +1,4 @@
-import { Angle } from './Angle.js';
+import { Angle } from './Angle';
 
 export class Vector2 {
     public x: number;
@@ -198,15 +198,17 @@ export class Vector2 {
      *
      */
     public scale(scalar: number | Vector2): Vector2 {
-        this.x *= typeof scalar === 'number' ? scalar : scalar.x;
-        this.y *= typeof scalar === 'number' ? scalar : scalar.y;
+        const isNumber = typeof scalar === 'number';
+
+        this.x *= isNumber ? scalar : (<any>scalar).x;
+        this.y *= isNumber ? scalar : (<any>scalar).y;
 
         return this;
     }
 
     /**
      *
-     * Returns clone of this with magnitude of this.
+     * Returns a clone of this with a magnitude of 1.
      * 
      */
     public get normalized(): Vector2 {
@@ -247,8 +249,9 @@ export class Vector2 {
      * Returns a string containing rounded components of this.
      * 
      */
-    public toString(): string {
-        return `x: ${Math.round(this.x * 10000) / 10000}, y: ${Math.round(this.y * 10000) / 10000}`;
+    public toString(l: number = 3): string {
+        l = 10 ** l;
+        return `x: ${Math.round(this.x * l) / l}, y: ${Math.round(this.y * l) / l}`;
     }
 
     /**

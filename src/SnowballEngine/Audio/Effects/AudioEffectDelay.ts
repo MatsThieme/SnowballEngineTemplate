@@ -1,5 +1,5 @@
-import { AudioListener } from '../../GameObject/Components/AudioListener.js';
-import { AudioEffect } from '../AudioEffect.js';
+import { AudioListener } from '../../GameObject/Components/AudioListener';
+import { AudioEffect } from '../AudioEffect';
 
 export class AudioEffectDelay extends AudioEffect {
     public readonly node: DelayNode;

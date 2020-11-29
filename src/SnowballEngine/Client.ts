@@ -1,7 +1,8 @@
-import { asyncTimeout, triggerOnUserInputEvent } from './Helpers.js';
-import { Vector2 } from './Vector2.js';
+import { asyncTimeout, triggerOnUserInputEvent } from './Helpers';
+import { Vector2 } from './Vector2';
 
 export class Client {
+    public static platform: 'android' | 'ios' | 'browser' | 'windows' | 'osx' = <any>(window.cordova || {}).platformId || 'browser';
     /**
      * 
      * Measure the refresh rate of the active monitor for ms.

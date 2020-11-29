@@ -1,27 +1,25 @@
-import { Canvas } from '../Canvas.js';
-import { D } from '../Debug.js';
-import { Vector2 } from '../Vector2.js';
-import { AssetType } from './AssetType.js';
+import { Canvas } from '../Canvas';
+import { D } from '../Debug';
+import { Vector2 } from '../Vector2';
+import { AssetType } from './AssetType';
 
 export class Asset {
-    public readonly url: string;
+    public readonly path: string;
     public readonly type: AssetType;
     public readonly data: CanvasImageSource | HTMLAudioElement | HTMLVideoElement | string | Blob | object;
-    private readonly _imagePXSize?: Vector2;
-    public cloneAlways: boolean; // should Assets.get return the asset or a clone
-    public constructor(url: string, type: AssetType, data: CanvasImageSource | HTMLAudioElement | HTMLVideoElement | string | Blob | object, clone: boolean = false) {
-        this.url = url;
+    private readonly _imagePxSize?: Vector2;
+    public constructor(path: string, type: AssetType, data: CanvasImageSource | HTMLAudioElement | HTMLVideoElement | string | Blob | object) {
+        this.path = path;
         this.type = type;
         this.data = data;
-        this.cloneAlways = clone;
 
-        if (type === AssetType.Image) {
-            this._imagePXSize = new Vector2((<HTMLImageElement>this.data).width, (<HTMLImageElement>this.data).height);
+        if (this.type === AssetType.Image) {
+            this._imagePxSize = new Vector2((<HTMLImageElement>this.data).width, (<HTMLImageElement>this.data).height);
         }
     }
 
-    public get imagePXSize(): Vector2 | undefined {
-        return this._imagePXSize?.clone;
+    public get imagePxSize(): Vector2 | undefined {
+        return this._imagePxSize?.clone;
     }
 
     /**
@@ -79,21 +77,21 @@ export class Asset {
     }
 
     public clone(): Asset {
-        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.url, this.type, this.data);
-        if (this.type === AssetType.Blob) return new Asset(this.url, this.type, (<Blob>this.data).slice());
-        if (this.type === AssetType.JSON) return new Asset(this.url, this.type, JSON.parse(JSON.stringify(this.data)));
-        if (this.type === AssetType.Audio) return new Asset(this.url, this.type, new Audio(this.url));
+        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.path, this.type, this.data);
+        if (this.type === AssetType.Blob) return new Asset(this.path, this.type, (<Blob>this.data).slice());
+        if (this.type === AssetType.JSON) return new Asset(this.path, this.type, JSON.parse(JSON.stringify(this.data)));
+        if (this.type === AssetType.Audio) return new Asset(this.path, this.type, new Audio(this.path));
         if (this.type === AssetType.Image) {
             const img = new Image();
-            img.src = this.url;
-            return new Asset(this.url, this.type, img);
+            img.src = this.path;
+            return new Asset(this.path, this.type, img);
         }
         if (this.type === AssetType.Video) {
             const video = document.createElement('video');
-            video.src = this.url;
-            return new Asset(this.url, this.type, video);
+            video.src = this.path;
+            return new Asset(this.path, this.type, video);
         }
 
-        return new Asset(this.url, this.type, this.data);
+        return new Asset(this.path, this.type, this.data);
     }
 }

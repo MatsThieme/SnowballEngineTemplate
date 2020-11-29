@@ -1,9 +1,5 @@
-// Order doesn't matter
-
 declare enum InputType {
     Interact,
-
-    Trigger,
 
     TogglePauseMenu,
     ToggleInventory,
@@ -12,8 +8,6 @@ declare enum InputType {
 
     MoveHorizontal,
     MoveVertical,
-
-    PointerPosition,
 
     Attack
 }

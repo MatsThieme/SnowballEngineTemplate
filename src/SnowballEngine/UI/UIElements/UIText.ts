@@ -1,10 +1,10 @@
-import { Client } from '../../../SnowballEngine/SE.js';
-import { Asset } from '../../Assets/Asset.js';
-import { Input } from '../../Input/Input.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIElement } from './UIElement.js';
+import { Client } from '../../../SnowballEngine/SE';
+import { Asset } from '../../Assets/Asset';
+import { Input } from '../../Input/Input';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIMenu } from '../UIMenu';
+import { UIElement } from './UIElement';
 
 export class UIText extends UIElement {
     public constructor(menu: UIMenu, input: Input, font: Asset) {

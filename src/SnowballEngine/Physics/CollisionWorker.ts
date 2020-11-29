@@ -478,32 +478,26 @@
 //    }
 //};
 
-const ws = `self.addEventListener('message', (e) => {
+const ws = `self.addEventListener('message', e => {
     if (!e.data)
-        return postMessage(0);
-    if (e.data === 'close')
-        return close();
+        return postMessage(undefined);
+
     if (e.data.name === 'p') {
-        return postMessage(CollisionWorker.PolygonCollision(e.data.data));
+        return postMessage({ status: 'finished', data: CollisionWorker.PolygonCollision(e.data.data) });
     }
     else if (e.data.name === 'c') {
-        return postMessage(CollisionWorker.CircleCollision(e.data.data));
+        return postMessage({ status: 'finished', data: CollisionWorker.CircleCollision(e.data.data) });
     }
     else if (e.data.name === 'pc') {
-        return postMessage(CollisionWorker.PolygonCircleCollision(e.data.data));
+        return postMessage({ status: 'finished', data: CollisionWorker.PolygonCircleCollision(e.data.data) });
     }
     else if (e.data.name === 'ct') {
-        return postMessage(CollisionWorker.CircleTilemapCollision_(e.data.data));
+        return postMessage({ status: 'finished', data: CollisionWorker.CircleTilemapCollision_(e.data.data) });
     }
     else if (e.data.name === 'pt') {
-        return postMessage(CollisionWorker.PolygonTilemapCollision(e.data.data));
+        return postMessage({ status: 'finished', data: CollisionWorker.PolygonTilemapCollision(e.data.data) });
     }
 });
-/**
- *
- * @internal
- *
- */
 var CollisionWorker;
 (function (CollisionWorker) {
     function CircleCollision(data) {
@@ -849,7 +843,6 @@ var CollisionWorker;
     function dot(a, b) {
         return a.x * b.x + a.y * b.y;
     }
-    //https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect/1968345#1968345
     function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y) {
         let s1_x, s1_y, s2_x, s2_y;
         s1_x = p1_x - p0_x;

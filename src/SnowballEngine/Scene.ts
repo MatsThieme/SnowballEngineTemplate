@@ -1,51 +1,52 @@
-import { CameraManager } from './Camera/CameraManager.js';
-import { Canvas } from './Canvas.js';
-import { Client } from './Client.js';
-import { Framedata } from './Framedata.js';
-import { AudioListener } from './GameObject/Components/AudioListener.js';
-import { Behaviour } from './GameObject/Components/Behaviour.js';
-import { Collider } from './GameObject/Components/Collider.js';
-import { ComponentType } from './GameObject/Components/ComponentType.js';
-import { GameObject } from './GameObject/GameObject.js';
-import { GameTime } from './GameTime.js';
-import { clearObject, stopwatch } from './Helpers.js';
-import { Input } from './Input/Input.js';
-import { Collision } from './Physics/Collision.js';
-import { Physics } from './Physics/Physics.js';
-import { SceneManager } from './SceneManager.js';
-import { UI } from './UI/UI.js';
+import { AudioMixer } from './Audio/AudioMixer';
+import { CameraManager } from './Camera/CameraManager';
+import { Canvas } from './Canvas';
+import { Client } from './Client';
+import { Framedata } from './Framedata';
+import { AudioListener } from './GameObject/Components/AudioListener';
+import { Behaviour } from './GameObject/Components/Behaviour';
+import { Collider } from './GameObject/Components/Collider';
+import { ComponentType } from './GameObject/Components/ComponentType';
+import { GameObject } from './GameObject/GameObject';
+import { GameTime } from './GameTime';
+import { cantorPairingFunction, clearObject, interval } from './Helpers';
+import { Input } from './Input/Input';
+import { Collision } from './Physics/Collision';
+import { Physics } from './Physics/Physics';
+import { SceneManager } from './SceneManager';
+import { UI } from './UI/UI';
 
 export class Scene {
     public readonly domElement: HTMLCanvasElement;
     private readonly gameObjects: Map<string, GameObject>;
     public readonly cameraManager: CameraManager;
-    public readonly gameTime: GameTime;
-    public readonly input: Input;
     public readonly ui: UI;
     private requestAnimationFrameHandle?: number;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
     public readonly sceneManager: SceneManager;
+    public readonly name: string;
+    private updateComplete?: boolean;
     /**
      * 
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
      * 
      */
-    private readonly toDestroy: (() => void)[];
-    public constructor(sceneManager: SceneManager) {
+    private readonly destroyCbs: (() => void)[];
+    public constructor(sceneManager: SceneManager, name: string) {
         this.sceneManager = sceneManager;
+        this.name = name;
 
         this.domElement = Canvas(Client.resolution.x, Client.resolution.y);
+        this.domElement.id = this.name;
+
+        Input.reset();
 
         this.gameObjects = new Map();
         this.cameraManager = new CameraManager(this.domElement);
-        this.gameTime = new GameTime();
-        this.input = new Input(this);
-        this.ui = new UI(this.input, this);
+        this.ui = new UI(this);
         this.framedata = new Framedata();
-        this.toDestroy = [];
-
-        this.stop();
+        this.destroyCbs = [];
     }
 
     /**
@@ -74,6 +75,7 @@ export class Scene {
     public async addGameObject(name: string, ...cb: ((gameObject: GameObject) => any)[]): Promise<GameObject> {
         const gameObject = new GameObject(name, this);
         this.gameObjects.set(gameObject.name, gameObject);
+
         if (cb) {
             for (const c of cb) {
                 await c(gameObject);
@@ -86,8 +88,8 @@ export class Scene {
     /**
      * 
      * Updates...
-     * gameTime
-     * input
+     * GameTime
+     * Input
      * framedata
      * collider
      * collisions
@@ -98,16 +100,18 @@ export class Scene {
      * 
      */
     private async update() {
-        this.gameTime.update();
+        this.updateComplete = false;
 
-        this.input.update();
+        GameTime.update();
 
         this.framedata.update();
+
+        Input.update();
 
         const gameObjects = this.getAllGameObjects();
 
         if (!this.ui.pauseScene) {
-            gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update(this.gameTime)));
+            gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update()));
 
             const idPairs: number[] = [];
             const collisionPromises: Promise<Collision>[] = [];
@@ -115,9 +119,12 @@ export class Scene {
 
             const gOs = gameObjects.filter(gO => gO.active && gO.hasCollider && !gO.parent);
 
+
             for (const gO1 of gOs) {
                 for (const gO2 of gOs) {
-                    const id = gO1.id > gO2.id ? (gO1.id << 8) + gO2.id : (gO2.id << 8) + gO1.id;
+                    const id = gO1.id > gO2.id ? cantorPairingFunction(gO1.id, gO2.id) : cantorPairingFunction(gO2.id, gO1.id);
+
+                    ((gO1.id + gO2.id) / 2) * (gO1.id + gO2.id + 1) + gO2.id;
 
                     if (!idPairs[id] && gO1.id !== gO2.id) {
                         collisionPromises.push(...Physics.collision(gO1, gO2));
@@ -132,26 +139,23 @@ export class Scene {
                 collisions.push(c);
             }
 
-            try {
-                await Promise.all(gameObjects.map(gameObject => gameObject.update(this.gameTime, collisions)));
-            } catch (e) {
-                console.log(e);
-            }
+            await Promise.all(gameObjects.map(gameObject => gameObject.update(collisions)));
         }
 
-        if (this.toDestroy.length) {
-            this.toDestroy.forEach(d => d());
-            this.toDestroy.splice(0);
+        if (this.destroyCbs.length) {
+            this.destroyCbs.forEach(d => d());
+            this.destroyCbs.splice(0);
         }
-
 
         this.cameraManager.update(gameObjects);
 
-        await this.ui.update(this.gameTime);
+        await this.ui.update();
 
         this.cameraManager.drawUI(this.ui.currentFrame);
 
         if (this.requestAnimationFrameHandle) this.requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+
+        this.updateComplete = true;
     }
 
     /**
@@ -165,11 +169,11 @@ export class Scene {
 
     /**
      * 
-     * Start scene.
+     * Start or resume scene.
      * 
      */
     public async start(): Promise<void> {
-        this.requestAnimationFrameHandle = 0; // set isStarted true
+        this.requestAnimationFrameHandle = -1; // set isStarting true
 
         for (const gameObject of this.getAllGameObjects()) {
             for (const c of gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
@@ -182,7 +186,7 @@ export class Scene {
 
         this.requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
-        document.body.appendChild(this.domElement);
+        await this.appendToDOM();
     }
 
     /**
@@ -190,12 +194,48 @@ export class Scene {
      * Stop scene.
      *
      */
-    public stop(): void {
+    public async stop(): Promise<void> {
         if (this.requestAnimationFrameHandle) cancelAnimationFrame(this.requestAnimationFrameHandle);
         this.requestAnimationFrameHandle = undefined;
 
-        this.domElement.remove();
+        await this.removeFromDOM();
+
+        await new Promise<void>(resolve => {
+            interval(clear => {
+                if (this.updateComplete) {
+                    clear();
+                    resolve();
+                }
+            }, 10);
+        });
     }
+
+    private async appendToDOM(): Promise<void> {
+        document.body.appendChild(this.domElement);
+
+        await new Promise<void>(resolve => {
+            interval(clear => {
+                if (document.getElementById(this.name)) {
+                    clear();
+                    resolve();
+                }
+            }, 1);
+        });
+    }
+
+    private async removeFromDOM(): Promise<void> {
+        this.domElement.remove();
+
+        await new Promise<void>(resolve => {
+            interval(clear => {
+                if (!document.getElementById(this.name)) {
+                    clear();
+                    resolve();
+                }
+            }, 1);
+        });
+    }
+
 
     /**
      * 
@@ -217,6 +257,15 @@ export class Scene {
 
     /**
      * 
+     * Returns true while this.start() is running.
+     * 
+     */
+    public get isStarting(): boolean {
+        return this.requestAnimationFrameHandle === -1;
+    }
+
+    /**
+     * 
      * Remove gameObject from scene.
      * called by gameObject.destroy()
      * 
@@ -225,12 +274,14 @@ export class Scene {
         this.gameObjects.delete(name);
     }
 
-    public destroy() {
-        this.stop();
+    public async destroy() {
+        await this.stop();
 
         for (const gameObject of this.gameObjects.values()) {
             gameObject.destroy();
         }
+
+        AudioMixer.reset();
 
         clearObject(this);
     }

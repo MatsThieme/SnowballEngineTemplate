@@ -1,13 +1,14 @@
-import { D } from '../../SnowballEngine/SE.js';
-import { interval } from '../Helpers.js';
-import { Asset } from './Asset.js';
-import { AssetType } from './AssetType.js';
+import { D } from '../../SnowballEngine/SE';
+import { asyncTimeout, interval } from '../Helpers';
+import { Asset } from './Asset';
+import { AssetType } from './AssetType';
+import AssetDB from '../../../Assets/AssetDB.json';
 
 export class Assets {
     private static readonly assets: Map<string, Asset> = new Map();
     public static get(id: string): Asset | undefined {
         const asset = Assets.assets.get(id);
-        return asset?.cloneAlways ? asset.clone() : asset;
+        return asset?.clone();
     }
     public static delete(id: string): void {
         Assets.assets.delete(id);
@@ -16,53 +17,50 @@ export class Assets {
         Assets.assets.set(name, asset);
         return asset;
     }
-    public static load(path: string, type: AssetType, name?: string, clone: boolean = false): Promise<Asset> {
+    public static load(path: string, type: AssetType, name?: string): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (name && Assets.assets.get(name) || !name && Assets.get(path)) console.warn(path + ' overwriting ' + name);
 
             let asset!: Asset;
 
             try {
-                asset = await Assets.urlToAsset('./Assets/' + path, type, clone);
+                asset = await Assets.urlToAsset('./Assets/' + path, type);
             } catch (error) {
                 alert('Assets.load error: ' + path);
 
-                reject(error);
+                return reject(`asset not found ${path}`);
             }
 
-            if (asset) {
-                Assets.assets.set(name || path, asset);
-                return resolve(asset);
-            }
+            Assets.assets.set(name || path, asset);
 
-            reject(`asset not found ${path}`);
+            return resolve(asset);
         });
     }
-    private static urlToAsset(url: string, type: AssetType, clone: boolean = true): Promise<Asset> {
+    private static urlToAsset(url: string, type: AssetType): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
                 const img = new Image();
-                img.addEventListener('load', () => resolve(new Asset(url, type, img, clone)));
+                img.addEventListener('load', () => resolve(new Asset(url, type, img)));
                 img.addEventListener('error', reject);
                 img.src = url;
             } else if (type === AssetType.Audio) {
                 const audio = new Audio();
                 audio.preload = 'auto';
-                audio.addEventListener('canplaythrough', () => resolve(new Asset(url, type, audio, clone)));
+                audio.addEventListener('canplaythrough', () => resolve(new Asset(url, type, audio)));
                 audio.addEventListener('error', reject);
                 audio.src = url;
             } else if (type === AssetType.Video) {
                 const video = document.createElement('video');
-                video.addEventListener('canplaythrough', () => resolve(new Asset(url, type, video, clone)));
+                video.addEventListener('canplaythrough', () => resolve(new Asset(url, type, video)));
                 video.addEventListener('error', reject);
                 video.src = url;
             } else if (type === AssetType.Font) {
                 const fontfamilyname = 'f' + Date.now() + ~~(Math.random() * 1000000);
                 await Assets.loadFont(url, fontfamilyname);
-                resolve(new Asset(url, type, fontfamilyname, clone));
+                resolve(new Asset(url, type, fontfamilyname));
             } else if (type === AssetType.Text || type === AssetType.Blob || type === AssetType.JSON) {
                 const response = await Assets.req(url, type);
-                resolve(new Asset(url, type, response, clone));
+                resolve(new Asset(url, type, response));
             }
         });
     }
@@ -109,16 +107,22 @@ export class Assets {
             }, 1);
         });
     }
-    public static async loadFromAssetList(): Promise<void> {
-        if (Assets.get('AssetList.json')) return;
-
+    public static async loadFromAssetDB(): Promise<void> {
         try {
-            const list = <Array<{ path: string, type: AssetType, name?: string, clone?: boolean }>>(await Assets.load('AssetList.json', AssetType.JSON)).data;
+            const db = <{ [key: string]: { type: AssetType, mimeType: string, name?: string } }>AssetDB;
 
-            await Promise.all(list.map(obj => Assets.load(obj.path, obj.type, obj.name || obj.path, obj.clone)));
+            const p: Promise<Asset>[] = [];
 
+            for (const path in db) {
+                p.push(Assets.load(path, db[path].type, db[path].name));
+            }
+
+            for (const ap of p) {
+                await ap;
+                await asyncTimeout(1); // allow execution of other tasks
+            }
         } catch {
-            D.warn('No AssetList.json in Asset directory. It\'s recommended to use an AssetList.json.');
+            D.warn('No AssetDB.json in Asset directory. It\'s recommended to use an AssetDB.json.');
         }
     }
 }

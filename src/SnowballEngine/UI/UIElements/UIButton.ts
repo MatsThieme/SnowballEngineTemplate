@@ -1,18 +1,18 @@
-import { Asset } from '../../Assets/Asset.js';
-import { Client } from '../../Client.js';
-import { GameTime } from '../../GameTime.js';
-import { Input } from '../../Input/Input.js';
-import { UIElementType } from '../UIElementType.js';
-import { UIFont } from '../UIFont.js';
-import { UIMenu } from '../UIMenu.js';
-import { UIElement } from './UIElement.js';
+import { Asset } from '../../Assets/Asset';
+import { Client } from '../../Client';
+import { GameTime } from '../../GameTime';
+import { Input } from '../../Input/Input';
+import { UIElementType } from '../UIElementType';
+import { UIFont } from '../UIFont';
+import { UIMenu } from '../UIMenu';
+import { UIElement } from './UIElement';
 
 export class UIButton extends UIElement {
     public constructor(menu: UIMenu, input: Input, font: Asset) {
         super(menu, input, UIElementType.Button, font);
     }
-    public async update(gameTime: GameTime): Promise<void> {
-        await super.update(gameTime);
+    public async update(): Promise<void> {
+        await super.update();
 
         if (this.click) {
             if (this.onInput) this.onInput(this);
