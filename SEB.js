@@ -11,7 +11,6 @@ const distPath = resolve('dist');
 const assetPath = resolve('Assets');
 const configPath = resolve('SnowballEngineConfig.json');
 const distAssetPath = resolve(distPath, 'Assets');
-const tscDistPath = resolve(distPath, 'ts-build');
 const assetDBPath = resolve(assetPath, 'AssetDB.json');
 
 const newAssetDB = getProcessParameter('-newassetdb') || getProcessParameter('--a');
@@ -91,8 +90,6 @@ async function build() {
         })];
 
         await new Promise(resolve => webpack(webpackConfig, (err, stats) => err || stats.hasErrors() ? console.log(err || stats.toString()) : resolve()));
-
-        await deleteFolderRecursive(tscDistPath);
     } catch (error) {
         console.log(error);
     }

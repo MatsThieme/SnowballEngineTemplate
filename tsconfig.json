@@ -7,9 +7,8 @@
       "ESNext",
       "DOM"
     ],
-    "outDir": "dist/ts-build",
+    "outDir": "dist",
     "sourceMap": true,
-    "declaration": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
