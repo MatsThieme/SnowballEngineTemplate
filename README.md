@@ -1,3 +1,7 @@
+## Status:
+PIXI.js integrated
+Matter.js not yet integrated && physics currently not working properly
+
 # SnowballEngine
 
 **SnowballEngine is a 2D TypeScript game engine.**
