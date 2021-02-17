@@ -20,6 +20,7 @@ const dserver = getProcessParameter('-server') || getProcessParameter('--s');
 
 
 const port = 3000;
+let config;
 
 
 start();
@@ -38,21 +39,23 @@ async function start() {
     if (!await promisify(exists)(assetPath + '/InputMappingAxes.json')) await writeJSONFile(assetPath + '/InputMappingAxes.json', { touch: { PointerPosition: 0 }, keyboard: {}, mouse: { PointerPosition: 0 }, gamepad: {} });
 
 
+    config = await loadJSONFile(configPath);
+
     const aDBExists = await promisify(exists)(assetDBPath);
-    if (newAssetDB || mergeAssetDB || !aDBExists) {
+    if (newAssetDB || mergeAssetDB || !aDBExists || config.build.addNewAssetsToDB) {
         console.log('create asset db');
 
         let db = await createAssetDB(assetPath);
 
-        if (mergeAssetDB) {
+        if (mergeAssetDB || config.build.addNewAssetsToDB) {
             console.log('merge existing with new asset db');
-            db = mergeAssetDBs(JSON.stringify(await loadJSONFile(assetDBPath)) || '{}', db)
+            db = mergeAssetDBs(JSON.stringify(await loadJSONFile(assetDBPath)) || '{}', db);
         }
 
         console.log('write asset db');
         await promisify(writeFile)(assetDBPath, db);
 
-        if (aDBExists) return;
+        if (aDBExists && !config.build.addNewAssetsToDB) return;
     }
 
     console.log('start build');
@@ -62,6 +65,8 @@ async function start() {
     console.log('build finished');
 
     console.log('in', (Date.now() - start) / 1000 + 's');
+    
+    console.log('file size:', bytesToString((await promisify(stat)(distPath + '/main.js')).size));
 }
 
 async function build() {
@@ -74,8 +79,6 @@ async function build() {
         await promisify(unlink)(distAssetPath + '/AssetDB.json');
         await promisify(unlink)(distAssetPath + '/InputMappingButtons.json');
         await promisify(unlink)(distAssetPath + '/InputMappingAxes.json');
-
-        const config = await loadJSONFile(configPath);
 
         const webpackConfig = require('./webpack.config.js');
 
@@ -266,4 +269,11 @@ async function getAvailablePort(start = 0) {
 
 function portAvailable(port) {
     return new Promise(resolve => server = createServer().listen(port, () => resolve(true) || server.close()).on('error', () => resolve(false)));
+}
+
+function bytesToString(bytes) {
+    const names = ['B', 'KB', 'MB'];
+    for (let i = 0; i < names.length; i++) {
+        if (bytes / 1024 ** i < 1024) return (bytes / 1024 ** i).toFixed(2) + ' ' + names[i];
+    }
 }

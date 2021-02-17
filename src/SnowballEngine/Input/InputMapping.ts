@@ -4,6 +4,7 @@ export class InputMapping {
     public readonly mouse: Readonly<{ [key: number]: number | undefined }>;
     public readonly gamepad: Readonly<{ [key: number]: number | undefined }>;
     public readonly touch: Readonly<{ [key: number]: number | undefined }>;
+
     public constructor(mapping?: InputMapping) {
         this.keyboard = {};
         this.mouse = {};
@@ -14,9 +15,11 @@ export class InputMapping {
 
         Object.assign(this, this.replaceInputType(mapping));
     }
+
     public serialize(): string {
         return JSON.stringify(this);
     }
+
     private replaceInputType(mapping: any): InputMapping {
         const ret: InputMapping = <any>{ keyboard: {}, mouse: {}, gamepad: {}, touch: {} };
 

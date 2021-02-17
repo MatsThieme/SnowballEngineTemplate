@@ -1,16 +1,17 @@
 import { Angle } from './Angle';
 
-export class Vector2 {
+export class Vector2 implements IVector2 {
     public x: number;
     public y: number;
+
     public constructor(x: number = 0, y: number = 0) {
         this.x = x;
         this.y = y;
     }
 
-    public set(x: number, y: number): Vector2 {
+    public set(x: number, y?: number): Vector2 {
         this.x = x;
-        this.y = y;
+        this.y = y || x;
         return this;
     }
 
@@ -19,8 +20,8 @@ export class Vector2 {
      * Returns sum of passed vectors.
      * 
      */
-    public static add(...vectors: Vector2[]): Vector2 {
-        return vectors.reduce((a: Vector2, b: Vector2) => { a.x += b.x; a.y += b.y; return a; }, new Vector2());
+    public static add(...vectors: IVector2[]): Vector2 {
+        return vectors.reduce((a: Vector2, b: IVector2) => { a.x += b.x; a.y += b.y; return a; }, new Vector2());
     }
 
     /**
@@ -30,7 +31,7 @@ export class Vector2 {
      * Returns this for chainability.
      *
      */
-    public add(...vectors: Vector2[]): Vector2 {
+    public add(...vectors: IVector2[]): Vector2 {
         for (const v of vectors) {
             this.x += v.x;
             this.y += v.y;
@@ -46,8 +47,8 @@ export class Vector2 {
      * Subtract vectors from v.
      * 
      */
-    public static sub(v: Vector2, ...vectors: Vector2[]): Vector2 {
-        return vectors.reduce((a: Vector2, b: Vector2) => { a.x -= b.x; a.y -= b.y; return a; }, v.clone);
+    public static sub(v: IVector2, ...vectors: IVector2[]): Vector2 {
+        return vectors.reduce((a: Vector2, b: IVector2) => { a.x -= b.x; a.y -= b.y; return a; }, new Vector2(v.x, v.y));
     }
 
     /**
@@ -57,7 +58,7 @@ export class Vector2 {
      * Returns this for chainability.
      *
      */
-    public sub(...vectors: Vector2[]): Vector2 {
+    public sub(...vectors: IVector2[]): Vector2 {
         for (const v of vectors) {
             this.x -= v.x;
             this.y -= v.y;
@@ -71,8 +72,10 @@ export class Vector2 {
      * Divide vector by factor.
      * 
      */
-    public static divide(vector: Vector2, factor: number): Vector2 {
-        return new Vector2(vector.x / factor, vector.y / factor);
+    public static divide(vector: IVector2 | number, factor: IVector2 | number): Vector2 {
+        if (typeof vector === 'number') vector = new Vector2(vector, vector);
+        if (typeof factor === 'number') return new Vector2(vector.x / factor, vector.y / factor);
+        else return new Vector2(vector.x / factor.x, vector.y / factor.y);
     }
 
     /**
@@ -80,7 +83,7 @@ export class Vector2 {
      * Calculate dot product of two vectors.
      * 
      */
-    public static dot(v: Vector2, ov: Vector2): number {
+    public static dot(v: IVector2, ov: IVector2): number {
         return v.x * ov.x + v.y * ov.y;
     }
 
@@ -89,7 +92,7 @@ export class Vector2 {
      * Calculate cross product of v1 and v2.
      *
      */
-    public static cross(v1: Vector2, v2: Vector2): number {
+    public static cross(v1: IVector2, v2: IVector2): number {
         return v1.x * v2.y - v1.y * v2.x;
     }
 
@@ -98,7 +101,7 @@ export class Vector2 {
      * Calculate cross product of s and v.
      *
      */
-    public static cross1(s: number, v: Vector2): Vector2 {
+    public static cross1(s: number, v: IVector2): Vector2 {
         return new Vector2(-s * v.y, s * v.x);
     }
 
@@ -107,7 +110,7 @@ export class Vector2 {
      * Calculate cross product of v and s.
      *
      */
-    public static cross2(v: Vector2, s: number): Vector2 {
+    public static cross2(v: IVector2, s: number): Vector2 {
         return new Vector2(s * v.y, -s * v.x);
     }
 
@@ -116,7 +119,7 @@ export class Vector2 {
      * Returns the average of passed vectors.
      * 
      */
-    public static average(...vectors: Vector2[]): Vector2 {
+    public static average(...vectors: IVector2[]): Vector2 {
         return Vector2.divide(Vector2.add(...vectors), vectors.length);
     }
 
@@ -127,7 +130,7 @@ export class Vector2 {
      * Returns this for chainability.
      *
      */
-    public rotateAroundTo(rotatePoint: Vector2, angle: Angle): Vector2 {
+    public rotateAroundTo(rotatePoint: IVector2, angle: Angle): Vector2 {
         const s = Math.sin(-angle.radian);
         const c = Math.cos(-angle.radian);
 
@@ -147,7 +150,7 @@ export class Vector2 {
      * Returns angle to other vector.
      * 
      */
-    public angleTo(rotatePoint: Vector2, other: Vector2): Angle {
+    public angleTo(rotatePoint: IVector2, other: Vector2): Angle {
         const r1 = this.clone.sub(rotatePoint);
         const r2 = other.clone.sub(rotatePoint);
 
@@ -197,13 +200,24 @@ export class Vector2 {
      * Returns this for chainability.
      *
      */
-    public scale(scalar: number | Vector2): Vector2 {
+    public scale(scalar: IVector2 | number): Vector2 {
         const isNumber = typeof scalar === 'number';
 
         this.x *= isNumber ? scalar : (<any>scalar).x;
         this.y *= isNumber ? scalar : (<any>scalar).y;
 
         return this;
+    }
+
+
+    public static scale(vec: Vector2, scalar: number | IVector2, ...scalars: (number | IVector2)[]): Vector2 {
+        vec.scale(scalar);
+
+        for (const s of scalars) {
+            vec.scale(s);
+        }
+
+        return vec;
     }
 
     /**
@@ -259,7 +273,7 @@ export class Vector2 {
      * Returns distance from this to other.
      * 
      */
-    public distance(other: Vector2): number {
+    public distance(other: IVector2): number {
         return Math.sqrt((this.x - other.x) ** 2 + (this.y - other.y) ** 2);
     }
 
@@ -268,7 +282,7 @@ export class Vector2 {
      * Returns distance from v1 to v2.
      * 
      */
-    public static distance(v1: Vector2, v2: Vector2): number {
+    public static distance(v1: IVector2, v2: IVector2): number {
         return Math.sqrt((v1.x - v2.x) ** 2 + (v1.y - v2.y) ** 2);
     }
 
@@ -351,6 +365,20 @@ export class Vector2 {
 
     /**
      * 
+     * Floors this components.
+     * 
+     * Returns this for chainability.
+     *
+     */
+    public floor(): Vector2 {
+        this.x = Math.floor(this.x);
+        this.y = Math.floor(this.y);
+
+        return this;
+    }
+
+    /**
+     * 
      * Scales this by -1.
      * 
      * Returns this for chainability.
@@ -375,7 +403,7 @@ export class Vector2 {
      * Returns true if this and other are equal, false otherwise.
      * 
      */
-    public equal(other: Vector2): boolean {
+    public equal(other: IVector2): boolean {
         return this.x === other.x && this.y === other.y;
     }
 
@@ -384,7 +412,7 @@ export class Vector2 {
      * Returns -1 if distance(p1, this) < distance(p2, this) || 0 if distance(p1, this) == distance(p2, this) || 1 if distance(p1, this) > distance(p2, this).
      * 
      */
-    public lowestDist(p1: Vector2, p2: Vector2): -1 | 0 | 1 {
+    public lowestDist(p1: IVector2, p2: IVector2): -1 | 0 | 1 {
         const first = (this.x - p1.x) ** 2 + (this.y - p1.y) ** 2;
         const second = (this.x - p2.x) ** 2 + (this.y - p2.y) ** 2;
 
@@ -398,10 +426,14 @@ export class Vector2 {
      * Returns this for chainability.
      *
      */
-    public copy(other: Vector2): Vector2 {
+    public copy(other: IVector2): Vector2 {
         this.x = other.x;
         this.y = other.y;
 
         return this;
+    }
+
+    public static lerp(a: IVector2, b: IVector2, t: number): Vector2 {
+        return new Vector2(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
     }
 }

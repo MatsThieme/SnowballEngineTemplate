@@ -1,16 +1,15 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
-import { GameTime } from '../../GameTime';
-import { Input } from '../../Input/Input';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
 import { UIElement } from './UIElement';
 
 export class UIButton extends UIElement {
-    public constructor(menu: UIMenu, input: Input, font: Asset) {
-        super(menu, input, UIElementType.Button, font);
+    public constructor(menu: UIMenu, font: Asset) {
+        super(menu, UIElementType.Button, font);
     }
+
     public async update(): Promise<void> {
         await super.update();
 
@@ -19,6 +18,7 @@ export class UIButton extends UIElement {
             this.draw();
         }
     }
+
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);

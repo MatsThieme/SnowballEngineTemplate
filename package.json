@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/cordova": "^0.0.34",
+    "@types/lodash": "^4.14.168",
     "html-webpack-plugin": "^4.5.0",
     "mime": "^2.4.6",
     "ts-loader": "^8.0.11",
@@ -15,6 +16,7 @@
     "webpack": "^4.44.2"
   },
   "dependencies": {
+    "lodash": "^4.17.20",
     "pixi.js": "^5.3.3"
   }
 }

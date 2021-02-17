@@ -2,7 +2,7 @@ import { Input } from './Input';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 import { InputDevice } from './InputDevice';
-import { InputEvent } from './InputEvent';
+import { IInputEvent } from './InputEvent';
 import { InputEventTarget } from './InputEventTarget';
 
 export class InputTouch extends InputEventTarget {
@@ -19,6 +19,7 @@ export class InputTouch extends InputEventTarget {
 
         this.addListeners();
     }
+
     private onTouchEvent(e: TouchEvent): void {
         e.preventDefault();
 
@@ -33,16 +34,19 @@ export class InputTouch extends InputEventTarget {
 
         this.fireListener = true;
     }
+
     public getButton(index?: number): InputButton | undefined {
-        if (index === undefined) return undefined;
+        if (index === undefined) return;
 
         return index === 0 ? this.button : new InputButton();
     }
+
     public getAxis(index?: number): Readonly<InputAxis> | undefined {
-        if (index === undefined) return undefined;
+        if (index === undefined) return;
 
         return this._positions[index];
     }
+
     public update(): void {
         this.button.update();
 
@@ -52,7 +56,7 @@ export class InputTouch extends InputEventTarget {
             const btn = Input.inputMappingButtons.mouse[type];
             const ax = Input.inputMappingAxes.mouse[type];
 
-            const e: InputEvent = {
+            const e: IInputEvent = {
                 type,
                 device: InputDevice.Keyboard,
                 axis: this.getAxis(ax!),

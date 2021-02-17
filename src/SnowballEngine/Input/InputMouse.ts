@@ -2,7 +2,7 @@ import { Input } from './Input';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 import { InputDevice } from './InputDevice';
-import { InputEvent } from './InputEvent';
+import { IInputEvent } from './InputEvent';
 import { InputEventTarget } from './InputEventTarget';
 
 export class InputMouse extends InputEventTarget {
@@ -24,12 +24,14 @@ export class InputMouse extends InputEventTarget {
 
         this.addListeners();
     }
+
     private onMouseMove(e: MouseEvent): void {
         e.preventDefault();
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
 
         this.fireListener = true;
     }
+
     private onMouseUp(e: MouseEvent): void {
         e.preventDefault();
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
@@ -38,6 +40,7 @@ export class InputMouse extends InputEventTarget {
 
         this.fireListener = true;
     }
+
     private onMouseDown(e: MouseEvent): void {
         e.preventDefault();
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
@@ -48,17 +51,21 @@ export class InputMouse extends InputEventTarget {
 
         this.fireListener = true;
     }
+
     private onContextMenu(e: MouseEvent): void {
         e.preventDefault()
     }
+
     public getButton(index: number): InputButton | undefined {
-        if (index === undefined) return undefined;
+        if (index === undefined) return;
 
         return this.buttons[index] || new InputButton();
     }
+
     public getAxis(index: number): InputAxis {
         return index === 0 ? this._position : new InputAxis();
     }
+
     public update(): void {
         this.buttons.forEach(b => b.update());
 
@@ -68,7 +75,7 @@ export class InputMouse extends InputEventTarget {
             const btn = Input.inputMappingButtons.mouse[type];
             const ax = Input.inputMappingAxes.mouse[type];
 
-            const e: InputEvent = {
+            const e: IInputEvent = {
                 type,
                 device: InputDevice.Keyboard,
                 axis: this.getAxis(ax!),

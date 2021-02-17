@@ -2,24 +2,26 @@ import { GameTime } from '../../GameTime';
 import { Collision } from '../../Physics/Collision';
 import { Physics } from '../../Physics/Physics';
 import { Vector2 } from '../../Vector2';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { CircleCollider } from './CircleCollider';
 import { Collider } from './Collider';
 import { Component } from './Component';
-import { ComponentType } from './ComponentType';
 import { PolygonCollider } from './PolygonCollider';
 
 export class RigidBody extends Component {
-    private static nextID: number = 0;
+    private static _nextID: number = 0;
     private id: number;
     private _mass: number;
     private _inertia: number;
+
     /**
      * 
      * Velocity should not be modified directly, consider applying an impulse or change force.
      * 
      */
     public velocity: Vector2;
+
     /**
     *
     * AngularVelocity should not be modified directly, consider applying an impulse or change torque.
@@ -28,6 +30,7 @@ export class RigidBody extends Component {
     public angularVelocity: number;
     public force: Vector2;
     public torque: number;
+
     /**
      * 
      * Specifies whether this rigidbody should compute its mass or use the mass property.
@@ -36,10 +39,11 @@ export class RigidBody extends Component {
     public useAutoMass: boolean;
     public freezePosition: boolean;
     public freezeRotation: boolean;
-    public constructor(gameObject: GameObject, mass: number = 0, useAutoMass: boolean = false) {
+
+    public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.RigidBody);
-        this._mass = mass;
-        this.useAutoMass = useAutoMass;
+        this._mass = 0;
+        this.useAutoMass = false;
         this.velocity = new Vector2();
         this.angularVelocity = 0;
         this.torque = 0;
@@ -48,30 +52,38 @@ export class RigidBody extends Component {
         this.freezePosition = false;
         this.freezeRotation = false;
 
-        this.id = RigidBody.nextID++;
+        this.id = RigidBody._nextID++;
     }
+
     public get mass(): number {
         return this.useAutoMass ? this.autoMass : this._mass;
     }
+
     public get invMass(): number {
         return this.mass === 0 ? 0 : 1 / this.mass;
     }
+
     public get invInertia(): number {
         return this.inertia === 0 ? 0 : 1 / this.inertia;
     }
+
     public set mass(val: number) {
         this._mass = val;
         this.velocity = new Vector2();
     }
+
     public get centerOfMass(): Vector2 {
         return Vector2.average(...this.gameObject.getComponents<Collider>(ComponentType.Collider).map(c => c.position));
     }
+
     public get autoMass(): number {
         return this.gameObject.getComponents<Collider>(ComponentType.Collider).reduce((t, c) => t += c.autoMass, 0);
     }
+
     public get inertia(): number {
         return this._inertia;
     }
+
     private computeInertia(): number {
         const collider = <(CircleCollider | PolygonCollider)[]>this.gameObject.collider;
         if (collider.length === 0) return 0;
@@ -96,6 +108,7 @@ export class RigidBody extends Component {
 
         return inertia;
     }
+
     public updateInertia(): void {
         this._inertia = this.computeInertia();
     }
@@ -116,7 +129,7 @@ export class RigidBody extends Component {
      * 
      */
     public update(currentCollisions: Collision[]): void {
-        if (this.mass === 0 || !this.gameObject.active) return;
+        if (this.mass === 0 || !this.gameObject.active || !this.active) return;
 
 
         const solvedCollisions = [];
@@ -139,7 +152,7 @@ export class RigidBody extends Component {
                 for (const c of _c.impulses)
                     this.applyImpulse(c.impulse, c.at);
 
-            this.gameObject.transform.relativePosition.add(...solvedCollisions.map(c => c.project));
+            this.gameObject.transform.position.add(...solvedCollisions.map(c => c.project));
         }
 
 
@@ -153,7 +166,7 @@ export class RigidBody extends Component {
         this.torque = 0;
 
 
-        if (!this.freezePosition) this.gameObject.transform.relativePosition.add(this.velocity.clone.scale(GameTime.deltaTime / 1000 * Physics.timeScale));
-        if (!this.freezeRotation) this.gameObject.transform.relativeRotation.radian += this.angularVelocity * GameTime.deltaTime / 1000 * Physics.timeScale;
+        if (!this.freezePosition) this.gameObject.transform.position.add(this.velocity.clone.scale(GameTime.deltaTime / 1000 * Physics.timeScale));
+        if (!this.freezeRotation) this.gameObject.transform.rotation.radian += this.angularVelocity * GameTime.deltaTime / 1000 * Physics.timeScale;
     }
 }

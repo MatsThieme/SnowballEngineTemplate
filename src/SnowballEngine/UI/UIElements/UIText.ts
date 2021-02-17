@@ -1,15 +1,15 @@
 import { Client } from '../../../SnowballEngine/SE';
 import { Asset } from '../../Assets/Asset';
-import { Input } from '../../Input/Input';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
 import { UIElement } from './UIElement';
 
 export class UIText extends UIElement {
-    public constructor(menu: UIMenu, input: Input, font: Asset) {
-        super(menu, input, UIElementType.Text, font);
+    public constructor(menu: UIMenu, font: Asset) {
+        super(menu, UIElementType.Text, font);
     }
+
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);

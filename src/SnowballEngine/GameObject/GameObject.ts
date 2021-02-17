@@ -1,53 +1,89 @@
+import { Container } from 'pixi.js';
 import { D } from '../Debug';
-import { Transform } from '../GameObject/Components/Transform';
-import { GameTime } from '../GameTime';
+import { Transform } from './Components/Transform/Transform';
 import { clearObject } from '../Helpers';
 import { Collision } from '../Physics/Collision';
 import { Scene } from '../Scene';
+import { Vector2 } from '../Vector2';
 import { Behaviour } from './Components/Behaviour';
 import { Collider } from './Components/Collider';
 import { Component } from './Components/Component';
-import { ComponentType } from './Components/ComponentType';
 import { RigidBody } from './Components/RigidBody';
+import { ComponentType } from './ComponentType';
 
+/**
+ * 
+ * Created gameObjects correspond to the currently loaded Scene. A Scene must be loaded before Instantiating a GameObject.
+ * 
+ */
 export class GameObject {
-    private static nextID: number = 0;
-    private _name: string;
-    private components: Component[] = [];
     public readonly id: number;
+    public readonly name: string;
+
     public children: GameObject[];
-    public active: boolean = true;
+
     public scene: Scene;
-    public parent: GameObject | undefined;
+
     public drawPriority: number;
-    public hasCollider?: boolean;
-    private destroyed: boolean;
-    public constructor(name: string, scene: Scene) {
+    public hasCollider: boolean;
+
+    private static nextID: number = 0;
+
+    private __destroyed__: boolean;
+    private readonly _components: Component[];
+    private _active: boolean;
+    private _parent?: GameObject;
+
+    public readonly container: Container;
+
+    public constructor(name: string) {
+        if (!Scene.sceneManager.scene) throw 'No Scene loaded!'
+        this.scene = Scene.sceneManager.scene!;
+
         this.id = GameObject.nextID++;
-        this._name = `${name} (${this.id})`;
-        this.addComponent(Transform);
+        this.name = `${name} (${this.id})`;
+
+        this.scene.gameObjects.set(this.name, this);
+
+        this.container = new Container();
+        this.container.name = this.name;
+
+
         this.children = [];
-        this.scene = scene;
+
+
         this.drawPriority = 0;
-        this.destroyed = false;
+        this.hasCollider = false;
+
+        this.__destroyed__ = false;
+        this._components = [];
+        this._active = true;
+
+        this.addComponent(Transform);
+
+        this.connectCamera();
     }
 
-    /**
-     * 
-     * A Object can be identified by its name.
-     * 
-     */
-    public get name(): string {
-        return this._name;
+    public get active(): boolean {
+        if (this._parent) return this._active && this._parent.active;
+        else return this._active;
+    }
+    public set active(val: boolean) {
+        this._active = val;
+
+        this.container.visible = val;
     }
 
-    /**
-     *
-     * Set name of this, appends this.id.
-     *
-     */
-    public set name(val: string) {
-        this._name = `${val} (${this.id})`;
+    private connectCamera(): void {
+        if (this.container.parent) this.disconnectCamera();
+
+        if (!this._parent) this.scene.cameraManager.addGameObject(this);
+        else this._parent.container.addChild(this.container);
+    }
+
+    private disconnectCamera(): void {
+        if (!this._parent) this.scene.cameraManager.removeGameObject(this);
+        else this._parent.container.removeChild(this.container);
     }
 
     /**
@@ -66,10 +102,12 @@ export class GameObject {
      */
     public get rigidbody(): RigidBody {
         const rb = this.getComponent<RigidBody>(ComponentType.RigidBody);
+
         if (!rb) {
-            this.components.push(new RigidBody(this))
+            this._components.push(new RigidBody(this))
             return this.rigidbody;
         }
+
         return rb;
     }
 
@@ -85,6 +123,7 @@ export class GameObject {
     /** 
      *  
      * @param cb Callbacks are executed after component creation.
+     * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
     public addComponent<T extends Component>(type: Constructor<T>, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> | null {
@@ -100,7 +139,7 @@ export class GameObject {
             component.type === ComponentType.Camera && this.getComponents(ComponentType.Camera).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
             component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0) {
-            this.components.push(component);
+            this._components.push(component);
         } else if (component.type === ComponentType.Camera || component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap) {
             component.destroy();
             return null;
@@ -112,7 +151,6 @@ export class GameObject {
 
         if (component.type === ComponentType.AudioListener) (<any>this).scene.audioListener = <any>component;
 
-        if (component.type === ComponentType.Camera) this.scene.cameraManager.mainCameraIndex = this.scene.cameraManager.cameras.push(<any>component) - 1;
 
         return new Promise(async resolve => {
             if (cb) {
@@ -122,9 +160,9 @@ export class GameObject {
             }
 
             if (component.type === ComponentType.Behaviour) {
-                await (<any>component).awake();
+                if ((<Behaviour><unknown>component).awake) await (<Behaviour><unknown>component).awake!();
                 if (this.scene.isRunning || this.scene.isStarting) {
-                    await (<any>component).start();
+                    if ((<Behaviour><unknown>component).start) await (<Behaviour><unknown>component).start!();
                     (<any>component).__initialized__ = true;
                 }
             }
@@ -138,20 +176,18 @@ export class GameObject {
      * Remove a component.
      * 
      */
-    public removeComponent<T extends Component>(component: T | number): boolean {
+    public removeComponent<T extends Component>(component: T | number): void {
         if (!component) {
             D.warn('Component undefined');
-            return false;
+            return;
         }
 
-        const i = this.components.findIndex(v => v.componentId === (typeof component === 'number' ? component : component.componentId));
-
-        if (i === this.scene.audioListener?.componentId) console.log(this.scene.audioListener!.componentId);
+        const i = this._components.findIndex(c => c.componentId === (typeof component === 'number' ? component : component.componentId));
 
         if (i === this.scene.audioListener?.componentId) (<any>this).scene.audioListener = undefined;
-        if (i !== -1) this.components.splice(i, 1)[0].destroy();
 
-        return true;
+        if (i !== -1) this._components.splice(i, 1)[0].destroy(true);
+        else D.warn('Component not found on gameObject');
     }
 
     /**
@@ -160,7 +196,7 @@ export class GameObject {
      * 
      */
     public getComponents<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
-        return <T[]>this.components.filter((c: Component) => {
+        return <T[]>this._components.filter((c: Component) => {
             if (typeof type === 'number') {
                 return c.type === type ||
                     type === ComponentType.Component ||
@@ -177,7 +213,7 @@ export class GameObject {
      *
      */
     public getComponent<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
-        for (const c of this.components) {
+        for (const c of this._components) {
             if (typeof type === 'number') {
                 if (c.type === type ||
                     type === ComponentType.Component ||
@@ -190,31 +226,42 @@ export class GameObject {
 
         return;
     }
-    public getComponentsInChildren<T extends Component>(type: Constructor<T> | ComponentType): T[] {
+
+    /**
+     *
+     * Get components of type of direct children
+     *
+     */
+    public getComponentsInChildren<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         const ret: T[] = [];
 
         for (const child of this.children) {
             ret.push(...child.getComponents(type));
-            ret.push(...child.getComponentsInChildren(type));
         }
 
         return ret;
     }
-    public getComponentInChildren<T extends Component>(type: Constructor<T> | ComponentType): T | undefined {
+
+    /**
+     * 
+     * Get component of type of direct children
+     * 
+     */
+    public getComponentInChildren<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         for (const child of this.children) {
             let c = child.getComponent(type);
             if (c) return c;
-            c = child.getComponentInChildren(type);
-            if (c) return c;
         }
 
-        return undefined;
+        return;
     }
+
     public getComponentsInParents<T extends Component>(type: Constructor<T> | ComponentType): T[] {
-        return [...(this.parent?.getComponents(type) || []), ...(this.parent?.getComponentsInParents(type) || [])];
+        return [...(this._parent?.getComponents(type) || []), ...(this._parent?.getComponentsInParents(type) || [])];
     }
+
     public getComponentInParents<T extends Component>(type: Constructor<T> | ComponentType): T | undefined {
-        return this.parent?.getComponent(type) || this.parent?.getComponentInParents(type);
+        return this._parent?.getComponent(type) || this._parent?.getComponentInParents(type);
     }
 
     /**
@@ -222,10 +269,36 @@ export class GameObject {
      * Add a child gameObject.
      * 
      */
-    public addChild(gameObject: GameObject): GameObject {
+    public addChild(gameObject: GameObject): void {
+        if (gameObject._parent) {
+            gameObject._parent.removeChild(gameObject);
+        }
+
         this.children.push(gameObject);
-        gameObject.parent = this;
-        return gameObject;
+
+        gameObject.setParent(this);
+    }
+
+    public removeChild(gameObject: GameObject): void {
+        if (this.id !== gameObject._parent?.id) return;
+
+        const i = this.children.findIndex(c => c.id === gameObject.id);
+
+        if (i === -1) return;
+
+        this.children.splice(i, 1);
+
+        gameObject.setParent(undefined);
+    }
+
+    private setParent(gameObject: GameObject | undefined): void {
+        this._parent = gameObject;
+
+        this.connectCamera();
+    }
+
+    public get parent(): GameObject | undefined {
+        return this._parent;
     }
 
     /**
@@ -234,19 +307,40 @@ export class GameObject {
      * 
      */
     public async update(currentCollisions: Collision[]): Promise<void> {
-        if (!this.parent && this.active && this.hasCollider) this.rigidbody.update(currentCollisions);
+        if (!this._parent && this.active && this.hasCollider) this.rigidbody.update(currentCollisions);
 
-        for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if (b.__initialized__) await b.update();
+
+        if (this.active) {
+            for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
+                if (b.__initialized__ && b.active && b.update) await b.update();
+            }
         }
-
-        if (!this.active) return;
 
         this.children.forEach(c => c.update(currentCollisions));
 
-        for (const c of this.components) {
-            if (c.type === ComponentType.ParticleSystem || c.type === ComponentType.AnimatedSprite || c.type === ComponentType.AudioListener) (<any>c).update();
+        for (const c of this._components) {
+            if (c.type === ComponentType.ParticleSystem ||
+                c.type === ComponentType.AnimatedSprite ||
+                c.type === ComponentType.AudioListener ||
+                c.type === ComponentType.Texture ||
+                c.type === ComponentType.ParallaxBackground ||
+                c.type === ComponentType.Renderable ||
+                c.type === ComponentType.TileMap)
+                (<any>c).update();
         }
+
+        if (!this.container.children.length) return;
+
+        // update PIXI container
+
+        // position
+        this.container.position.copyFrom(this.transform.position.clone.scale(new Vector2(1, -1)));
+
+        // rotation
+        this.container.rotation = this.transform.rotation.radian;
+
+        // scale
+        this.container.scale.copyFrom(this.transform.scale);
     }
 
     /**
@@ -255,19 +349,19 @@ export class GameObject {
      * 
      */
     public destroy(): void {
-        if (this.destroyed !== false) return;
-        this.destroyed = true;
+        if (this.__destroyed__ !== false) return;
+        this.__destroyed__ = true;
 
         try {
             this.children.forEach(c => c.destroy());
 
             const d = () => {
-                this.scene.destroyGameObject(this._name);
+                this.scene.destroyGameObject(this.name);
 
-                const i = this.parent?.children.findIndex(v => v.name === this.name);
-                if (i && i !== -1) this.parent?.children.splice(i, 1);
+                const i = this._parent?.children.findIndex(v => v.name === this.name);
+                if (i && i !== -1) this._parent?.children.splice(i, 1);
 
-                this.components.forEach(c => c.destroy());
+                this._components.forEach(c => c.destroy());
 
                 clearObject(this, true);
             };
@@ -275,7 +369,7 @@ export class GameObject {
             if (this.scene.isRunning) (<any>this.scene).destroyCbs.push(d);
             else d();
         } catch (err) {
-            D.error(this);
+            D.error(JSON.stringify(this));
         }
     }
 }

@@ -1,6 +1,5 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
-import { GameTime } from '../../GameTime';
 import { clamp } from '../../Helpers';
 import { Input } from '../../Input/Input';
 import { UIElementType } from '../UIElementType';
@@ -14,8 +13,9 @@ export abstract class UIInputField extends UIElement {
     public abstract value: number | string;
     public max: number;
     public min: number;
-    public constructor(menu: UIMenu, input: Input, font: Asset, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
-        super(menu, input, type, font);
+
+    public constructor(menu: UIMenu, font: Asset, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
+        super(menu, type, font);
 
         this.domElement = document.createElement('input');
         this.domElement.type = type === UIElementType.TextInputField ? 'text' : UIElementType.NumberInputField ? 'number' : '';
@@ -26,6 +26,7 @@ export abstract class UIInputField extends UIElement {
         this.max = 999;
         this.focused = false;
     }
+
     public async update(): Promise<void> {
         await super.update();
 
@@ -62,6 +63,7 @@ export abstract class UIInputField extends UIElement {
             }
         } else this.domElement.blur();
     }
+
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);

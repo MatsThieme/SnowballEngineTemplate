@@ -2,6 +2,7 @@ export class InputButton {
     private _down: boolean;
     private isDown: boolean;
     private wasDown: boolean;
+
     /**
      * 
      * Used to store state information about a button.
@@ -12,6 +13,7 @@ export class InputButton {
         this.isDown = false;
         this.wasDown = false;
     }
+
     public get down(): boolean {
         return this.isDown;
     }
@@ -36,6 +38,7 @@ export class InputButton {
     public get click(): boolean {
         return this.isDown && !this.wasDown;
     }
+
     public update(): void {
         if (!this._down) this.isDown = this.wasDown = false;
         else if (this._down && !this.isDown) this.isDown = true;

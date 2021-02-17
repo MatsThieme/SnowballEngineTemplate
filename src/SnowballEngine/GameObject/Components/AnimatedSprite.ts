@@ -1,37 +1,60 @@
-import { Frame } from '../../Camera/Frame';
-import { GameTime } from '../../GameTime';
+import { Container } from 'pixi.js';
 import { SpriteAnimation } from '../../SpriteAnimation';
-import { Vector2 } from '../../Vector2';
-import { AlignH, AlignV } from '../Align';
-import { Alignable } from '../Alignable';
-import { Drawable } from '../Drawable';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
-import { Component } from './Component';
-import { ComponentType } from './ComponentType';
-import { Sprite } from '../../Sprite';
+import { Renderable } from './Renderable';
 
-export class AnimatedSprite extends Component implements Drawable, Alignable {
-    public spriteAnimations: { [key: string]: SpriteAnimation };
+export class AnimatedSprite extends Renderable {
+    public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };
+
+    private _spriteAnimations: Map<string, SpriteAnimation> = new Map();
     private _activeAnimation: string;
-    public relativePosition: Vector2;
-    public size: Vector2;
-    public alignH: AlignH;
-    public alignV: AlignV;
-    public constructor(gameObject: GameObject, spriteAnimations: { [key: string]: SpriteAnimation } = {}, relativePosition: Vector2 = new Vector2(), size: Vector2 = new Vector2(1, 1), alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center) {
+
+    public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AnimatedSprite);
-        this.spriteAnimations = spriteAnimations;
+
+        this.autoResizeContainer = true;
+
+        this.sprite = new Container();
+
+        this._spriteAnimations = new Map();
+
         this._activeAnimation = '';
-        this.relativePosition = relativePosition;
-        this.size = size;
-        this.alignH = alignH;
-        this.alignV = alignV;
+
+        this.spriteAnimations = <any>new Proxy(this._spriteAnimations, {
+            get: (target, prop: string) => target.get(prop),
+            set: (target, prop: string, value: SpriteAnimation | undefined) => {
+                const existingAnimation = target.get(prop)?.container;
+
+                if (existingAnimation) this.sprite!.removeChild(existingAnimation);
+
+                if (value) {
+                    target.set(prop, value);
+
+                    this.sprite!.addChild(value.container);
+
+                    if (this._activeAnimation === '') this._activeAnimation = prop;
+                } else if (existingAnimation) target.delete(prop);
+
+                return true;
+            }
+        });
     }
-    public get currentFrame(): Frame | undefined {
-        const a = this.spriteAnimations[this._activeAnimation];
-        return a ? new Frame(this.position, this.scaledSize, new Sprite(a.currentFrame), this.gameObject.transform.rotation, this.gameObject.drawPriority, 1) : undefined;
-    }
+
     public update(): void {
-        this.spriteAnimations[this._activeAnimation]?.update();
+        super.update();
+
+        if (!this.active || !this.sprite) return;
+
+        this._spriteAnimations.get(this._activeAnimation)?.update();
+
+        for (const prop in this._spriteAnimations.keys()) {
+            const anim = this._spriteAnimations.get(prop);
+
+            if (anim) {
+                anim.container.visible = prop === this._activeAnimation;
+            }
+        }
     }
 
     /**
@@ -39,22 +62,14 @@ export class AnimatedSprite extends Component implements Drawable, Alignable {
      * Set the active animation by index.
      * 
      */
-    public set activeAnimation(name: string) {
-        if (this.spriteAnimations[name]) {
-            this._activeAnimation = name;
-            this.spriteAnimations[this._activeAnimation]?.reset();
+    public set activeAnimation(val: string) {
+        if (this._spriteAnimations.has(val)) {
+            this._activeAnimation = val;
+            this._spriteAnimations.get(this._activeAnimation)?.reset();
         }
     }
+
     public get activeAnimation(): string {
         return this._activeAnimation;
-    }
-    public get scaledSize(): Vector2 {
-        return new Vector2(this.size.x * this.gameObject.transform.scale.x, this.size.y * this.gameObject.transform.scale.y);
-    }
-    public get position() {
-        return Vector2.add(this.relativePosition, this.gameObject.transform.position, this.align);
-    }
-    public get align(): Vector2 {
-        return new Vector2(this.alignH === AlignH.Right ? -this.scaledSize.x : this.alignH === AlignH.Center ? -this.scaledSize.x / 2 : 0, this.alignV === AlignV.Top ? -this.scaledSize.y : this.alignV === AlignV.Center ? -this.scaledSize.y / 2 : 0);
     }
 }

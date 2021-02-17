@@ -4,7 +4,8 @@
     "version": "1.0.0",
     "settings": {
         "allowContextMenu": false,
-        "isDevelopmentBuild": true
+        "transparentBackground": false,
+        "PIXIjsAntialiasing": false
     },
     "cordova-settings": {
         "id": "com.SnowballEngine.Template",
@@ -18,5 +19,9 @@
         "EnableWebGL": true,
         "KeepRunning": false,
         "plugins": []
+    },
+    "build": {
+        "isDevelopmentBuild": true,
+        "addNewAssetsToDB": true
     }
 }

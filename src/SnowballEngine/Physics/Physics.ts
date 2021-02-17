@@ -1,6 +1,6 @@
 import { Client } from '../Client';
 import { CircleCollider } from '../GameObject/Components/CircleCollider';
-import { ComponentType } from '../GameObject/Components/ComponentType';
+import { ComponentType } from '../GameObject/ComponentType';
 import { PolygonCollider } from '../GameObject/Components/PolygonCollider';
 import { TileMap } from '../GameObject/Components/TileMap';
 import { GameObject } from '../GameObject/GameObject';
@@ -15,6 +15,7 @@ export class Physics {
     public static timeScale: number = 1;
     private static worker: AsyncWorker = new AsyncWorker(worker, Client.cpuThreads);
     private static ignoreCollisions: Map<number, 1 | undefined> = new Map();
+
     public static ignoreCollision(gameObject1: GameObject, gameObject2: GameObject, collide: boolean = false): void {
         const id = gameObject1.id > gameObject2.id ? (gameObject1.id << 16) + gameObject2.id : (gameObject2.id << 16) + gameObject1.id;
         if (collide) Physics.ignoreCollisions.delete(id);
@@ -35,9 +36,12 @@ export class Physics {
         const secondCollider = second.collider;
 
         for (const collider of firstCollider) {
+            if (!collider.active) continue;
+
             if (collider.type === ComponentType.CircleCollider) {
                 for (const otherCollider of secondCollider) {
-                    if (!AABB.intersects(collider, otherCollider) && otherCollider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
+                    if (!otherCollider.active) continue;
+                    if (!otherCollider.active || !AABB.intersects(collider, otherCollider) && otherCollider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
 
                     if (otherCollider.type === ComponentType.CircleCollider) promises.push(Physics.collisionCircle(<CircleCollider>collider, <CircleCollider>otherCollider));
                     else if (otherCollider.type === ComponentType.PolygonCollider) promises.push(Physics.collisionPolygonCircle(<PolygonCollider>otherCollider, <CircleCollider>collider));
@@ -45,7 +49,7 @@ export class Physics {
                 }
             } else if (collider.type === ComponentType.PolygonCollider) {
                 for (const otherCollider of secondCollider) {
-                    if (!AABB.intersects(collider, otherCollider) && otherCollider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
+                    if (!otherCollider.active || !AABB.intersects(collider, otherCollider) && otherCollider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
 
                     if (otherCollider.type === ComponentType.PolygonCollider) promises.push(Physics.collisionPolygon(<PolygonCollider>collider, <PolygonCollider>otherCollider));
                     else if (otherCollider.type === ComponentType.CircleCollider) promises.push(Physics.collisionPolygonCircle(<PolygonCollider>collider, <CircleCollider>otherCollider));
@@ -53,7 +57,7 @@ export class Physics {
                 }
             } else if (collider.type === ComponentType.TileMap) {
                 for (const otherCollider of secondCollider) {
-                    if (!AABB.intersects(collider, otherCollider) && collider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
+                    if (!otherCollider.active || !AABB.intersects(collider, otherCollider) && collider.type !== ComponentType.TileMap || collider.id === otherCollider.id) continue;
 
                     if (otherCollider.type === ComponentType.PolygonCollider) promises.push(Physics.collisionPolygonTileMap(<PolygonCollider>otherCollider, <any>collider));
                     else if (otherCollider.type === ComponentType.CircleCollider) promises.push(Physics.collisionCircleTileMap(<CircleCollider>otherCollider, <any>collider));
@@ -63,6 +67,7 @@ export class Physics {
 
         return promises;
     }
+
     public static async collisionCircle(A: CircleCollider, B: CircleCollider): Promise<Collision> {
         //if (!A.intersects(B)) return new Collision(A, B);
 
@@ -80,6 +85,7 @@ export class Physics {
             return new Collision(A, B);
         }
     }
+
     public static async collisionPolygon(A: PolygonCollider, B: PolygonCollider): Promise<Collision> {
         //let leastPenetration: number = Infinity;
         //let incidentCollider!: PolygonCollider;
@@ -139,6 +145,7 @@ export class Physics {
             return new Collision(A, B);
         }
     }
+
     public static async collisionPolygonCircle(polygonCollider: PolygonCollider, circleCollider: CircleCollider): Promise<Collision> {
         //const contacts: Vector2[] = [];
 
@@ -162,6 +169,7 @@ export class Physics {
             return new Collision(polygonCollider, circleCollider);
         }
     }
+
     public static async collisionPolygonTileMap(polygonCollider: PolygonCollider, tileMap: TileMap): Promise<Collision> {
         try {
             const { contacts, penetrationDepth, normal } = await Physics.worker.task({ name: 'pt', data: { A: polygonCollider.vertices, B: { position: tileMap.position, tileSize: tileMap.tileSize, tileMap: tileMap.collisionMap } } });
@@ -170,6 +178,7 @@ export class Physics {
             return new Collision(polygonCollider, tileMap);
         }
     }
+
     public static async collisionCircleTileMap(circleCollider: CircleCollider, tileMap: TileMap): Promise<Collision> {
         try {
             const { contacts, penetrationDepth, normal } = await Physics.worker.task({ name: 'ct', data: { A: { position: circleCollider.position, radius: circleCollider.radius }, B: { position: tileMap.position, tileSize: tileMap.tileSize, tileMap: tileMap.collisionMap } } });

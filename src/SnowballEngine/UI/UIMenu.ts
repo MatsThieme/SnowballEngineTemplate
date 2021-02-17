@@ -1,10 +1,7 @@
 import { Asset } from '../Assets/Asset';
 import { Canvas } from '../Canvas';
 import { Client } from '../Client';
-import { D } from '../Debug';
 import { AlignH, AlignV } from '../GameObject/Align';
-import { GameTime } from '../GameTime';
-import { Input } from '../Input/Input';
 import { AABB } from '../Physics/AABB';
 import { Scene } from '../Scene';
 import { Vector2 } from '../Vector2';
@@ -49,7 +46,8 @@ export class UIMenu {
 
     public readonly scene: Scene;
     public readonly ui: UI;
-    public constructor(input: Input, scene: Scene) {
+
+    public constructor(scene: Scene) {
         this.active = false;
         this.pauseScene = true;
         this.drawPriority = 0;
@@ -63,12 +61,12 @@ export class UIMenu {
         this.alignH = AlignH.Left;
         this.alignV = AlignV.Top;
 
-        this.canvas = Canvas(Client.resolution.x, Client.resolution.y);
+        this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
         this.context = this.canvas.getContext('2d')!;
 
-        this.frame = new UIFrame(new AABB(this._aabb.size.clone.scale(new Vector2(Client.resolution.x, Client.resolution.y)).scale(0.01), this._aabb.position), this.canvas);
+        this.frame = new UIFrame(new AABB(this._aabb.size.clone.scale(Client.resolution).scale(0.01), this._aabb.position), this.canvas);
 
-        Client.OnResize(() => this.redraw = true);
+        addEventListener('resize', () => this.redraw = true);
 
         this.redraw = true;
     }
@@ -79,7 +77,7 @@ export class UIMenu {
      * 
      */
     public addUIElement<T extends UIElement>(type: Constructor<T>, ...cb: ((uiElement: T, scene: Scene) => any)[]): T {
-        const e = new type(this, Input, this.ui.font);
+        const e = new type(this, this.ui.font);
         this.uiElements.set(e.id, e);
         if (cb) cb.forEach(cb => cb(e, this.scene));
         e.draw();
@@ -131,6 +129,7 @@ export class UIMenu {
             this.redraw = false;
         }
     }
+
     public get aabb(): AABB {
         const localAlign = new Vector2(this.localAlignH === AlignH.Left ? 0 : this.localAlignH === AlignH.Center ? - this._aabb.size.x / 2 : - this._aabb.size.x, this.localAlignV === AlignV.Top ? 0 : this.localAlignV === AlignV.Center ? - this._aabb.size.y / 2 : - this._aabb.size.y);
         const globalAlign = new Vector2(this.alignH === AlignH.Left ? 0 : this.alignH === AlignH.Center ? 50 : 100, this.alignV === AlignV.Top ? 0 : this.alignV === AlignV.Center ? 50 : 100);

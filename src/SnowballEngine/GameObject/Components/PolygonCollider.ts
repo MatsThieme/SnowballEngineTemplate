@@ -1,13 +1,12 @@
-import { Face } from '../../Physics/Face';
-import { GameTime } from '../../GameTime';
 import { AABB } from '../../Physics/AABB';
+import { Face } from '../../Physics/Face';
 import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
 import { Projection } from '../../Physics/Projection';
 import { Vector2 } from '../../Vector2';
 import { AlignH, AlignV } from '../Align';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Collider } from './Collider';
-import { ComponentType } from './ComponentType';
 
 export class PolygonCollider extends Collider {
     protected _aabb: AABB;
@@ -16,6 +15,7 @@ export class PolygonCollider extends Collider {
     private _vertices: Vector2[];
     private _computedVertices: Vector2[];
     public faces: Face[];
+
     public constructor(gameObject: GameObject, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density: number = 1, vertices: Vector2[] = [new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 1), new Vector2(1, 0)], alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger: boolean = false) {
         super(gameObject, ComponentType.PolygonCollider, relativePosition, material, density, alignH, alignV, isTrigger);
 
@@ -26,8 +26,9 @@ export class PolygonCollider extends Collider {
         this._area = this.calculateArea();
         this._aabb = this.calculateAABB();
         this.gameObject.rigidbody.updateInertia();
-        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.relativeScale).rotateAroundTo(new Vector2(), this.gameObject.transform.relativeRotation).add(this.position));
+        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.scale).rotateAroundTo(new Vector2(), this.gameObject.transform.rotation).add(this.position));
     }
+
     /**
      * 
      * Set the points describing the polygon, order is irrelevant.
@@ -40,8 +41,9 @@ export class PolygonCollider extends Collider {
         this._area = this.calculateArea();
         this._aabb = this.calculateAABB();
         this.gameObject.rigidbody.updateInertia();
-        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.relativeScale).rotateAroundTo(new Vector2(), this.gameObject.transform.relativeRotation).add(this.position));
+        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.scale).rotateAroundTo(new Vector2(), this.gameObject.transform.rotation).add(this.position));
     }
+
     /**
      * 
      * Get absolute positioned, scaled and rotated vertices.
@@ -150,6 +152,7 @@ export class PolygonCollider extends Collider {
 
         return area / 2;
     }
+
     private calculateAABB(): AABB {
         const topLeft = new Vector2(Infinity, -Infinity);
 
@@ -169,7 +172,9 @@ export class PolygonCollider extends Collider {
      * 
      */
     public async update(): Promise<void> {
-        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.relativeScale).rotateAroundTo(new Vector2(), this.gameObject.transform.relativeRotation).add(this.position));
+        if (!this.active) return
+
+        this._computedVertices = this._vertices.map(v => v.clone.scale(this.gameObject.transform.scale).rotateAroundTo(new Vector2(), this.gameObject.transform.rotation).add(this.position));
         this.faces = this.calculateFaces(this.vertices);
         this.scaledSize = this.calculateSize(this.vertices);
         this._aabb = this.calculateAABB();

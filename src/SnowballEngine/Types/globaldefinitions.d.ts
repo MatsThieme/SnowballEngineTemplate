@@ -11,7 +11,8 @@ declare const project: {
     readonly version: string,
     readonly settings: {
         readonly allowContextMenu: boolean,
-        readonly isDevelopmentBuild: boolean
+        readonly PIXIjsAntialiasing: boolean,
+        readonly transparentBackground: boolean
     },
     readonly "cordova-settings": {
         readonly id: string,
@@ -23,7 +24,11 @@ declare const project: {
         readonly Fullscreen: boolean,
         readonly Orientation: 'default' | 'landscape' | 'portrait',
         readonly KeepRunning: boolean,
-        readonly plugins: ReadonlyArray<string>
+        readonly plugins: readonly string[]
+    },
+    readonly build: {
+        readonly isDevelopmentBuild: boolean,
+        readonly addNewAssetsToDB: boolean
     }
 };
 
@@ -43,11 +48,16 @@ declare interface Worker extends EventTarget, AbstractWorker {
 }
 
 /** @internal */
-type Constructor<T> = Function & { prototype: T, new(...args: any[]): T };
+type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 /** @internal */
 type AbstractConstructor<T> = Function & { prototype: T };
 
 declare enum InputType {
     Trigger = Infinity,
     PointerPosition,
+}
+
+interface IVector2 {
+    x: number;
+    y: number;
 }

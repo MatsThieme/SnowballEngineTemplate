@@ -1,10 +1,9 @@
 import InputMappingAxes from '../../../Assets/InputMappingAxes.json';
 import InputMappingButtons from '../../../Assets/InputMappingButtons.json';
-import { clearObject } from '../Helpers';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 import { InputDevice } from './InputDevice';
-import { InputEvent } from './InputEvent';
+import { IInputEvent } from './InputEvent';
 import { InputGamepad } from './InputGamepad';
 import { InputKeyboard } from './InputKeyboard';
 import { InputMapping } from './InputMapping';
@@ -19,6 +18,7 @@ export class Input {
     public static readonly gamepad?: InputGamepad;
     public static inputMappingButtons: InputMapping;
     public static inputMappingAxes: InputMapping;
+
     public static start() {
         if (Input._devices & InputDevice.Touch) (<any>Input).touch = new InputTouch();
         if (Input._devices & InputDevice.Mouse) (<any>Input).mouse = new InputMouse();
@@ -82,6 +82,7 @@ export class Input {
 
         return axes[0] || new InputAxis();
     }
+
     public static update(): void {
         Input.touch?.update();
         Input.mouse?.update();
@@ -89,7 +90,7 @@ export class Input {
         Input.gamepad?.update();
     }
 
-    public static addListener(type: InputType, cb: (event: InputEvent) => any, id: string = 'ilid' + Math.random() + performance.now(), devices: InputDevice = 0b1111): string {
+    public static addListener(type: InputType, cb: (event: IInputEvent) => any, id: string = 'ilid' + Math.random() + performance.now(), devices: InputDevice = 0b1111): string {
         if (devices & InputDevice.Touch) Input.touch?.addListener(type, cb, id);
         if (devices & InputDevice.Mouse) Input.mouse?.addListener(type, cb, id);
         if (devices & InputDevice.Keyboard) Input.keyboard?.addListener(type, cb, id);

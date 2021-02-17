@@ -59,7 +59,7 @@ export class AudioMixer {
         this._node.gain.value = clamp(0, 1, val);
     }
 
-    public get effects(): ReadonlyArray<AudioEffect> {
+    public get effects(): readonly AudioEffect[] {
         return this._effects;
     }
 

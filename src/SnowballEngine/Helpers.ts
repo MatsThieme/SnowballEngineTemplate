@@ -86,7 +86,7 @@ export function interval(cb: (clear: () => void) => void, ms: number): void {
  * 
  */
 export function createSprite(f: (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any, width: number = 100, height: number = 100): Asset {
-    const canvas = Canvas(width, height);
+    const canvas = new Canvas(width, height);
     const context = canvas.getContext('2d')!;
     context.imageSmoothingEnabled = false;
     f(context, canvas);
@@ -106,7 +106,7 @@ export function stopwatch(): () => number {
 
 /**
  * 
- * Deletes properties and prototype.
+ * Deletes properties and prototype to remove references and allow garbage collection.
  * 
  * @param setnull if true, properties will be set to null instead of deletion
  */
@@ -121,28 +121,23 @@ export function clearObject(object: object, setnull: boolean = false) {
 
 /**
  * 
- * internally used for InputType
+ * internally used for InputType: InputType = createENUM<InputType>();
  * 
  */
 export function createENUM<T>(): T {
-    const props = new Map<string, number>();
-    const nums = new Map<number, string>();
-
     let counter = 0;
 
-    const handler = {
-        get: function (target: any, property: string) {
-            if (props.has(property)) return props.get(property);
-            if (!isNaN(<any>property)) return nums.get(parseInt(property));
+    return <T>(<unknown>new Proxy({ props: new Map<string, number>(), nums: new Map<number, string>() }, {
+        get: function (target, property: string) {
+            if (target.props.has(property)) return target.props.get(property);
+            if (!isNaN(<any>property)) return target.nums.get(parseInt(property));
 
-            props.set(property, counter);
-            nums.set(counter, property);
+            target.props.set(property, counter);
+            target.nums.set(counter, property);
 
             return counter++;
         }
-    };
-
-    return <T>new Proxy({}, handler);
+    }));
 }
 
 export function random(min: number, max: number) {

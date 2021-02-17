@@ -1,5 +1,5 @@
 import { Collider } from '../GameObject/Components/Collider';
-import { ComponentType } from '../GameObject/Components/ComponentType';
+import { ComponentType } from '../GameObject/ComponentType';
 import { TileMap } from '../GameObject/Components/TileMap';
 import { Vector2 } from '../Vector2';
 
@@ -9,10 +9,11 @@ export class Collision {
     public readonly normal: Vector2 | undefined;
     public readonly penetrationDepth: number | undefined;
     public readonly contactPoints: Vector2[] | undefined;
-    public readonly solved: Solved | undefined;
+    public readonly solved: ISolved | undefined;
     public readonly e: number;
     public readonly df: number;
     public readonly sf: number;
+
     public constructor(colliderA: Collider | TileMap, colliderB: Collider | TileMap, normal?: Vector2, penetrationDepth?: number, contactPoints?: Vector2[]) {
         this.A = colliderA;
         this.B = colliderB;
@@ -31,6 +32,7 @@ export class Collision {
 
         this.solved = this.solve();
     }
+
     /**
      * 
      * Calculates the collision response (impulse and position projection).
@@ -38,7 +40,7 @@ export class Collision {
      * onTrigger and onColliding are called from within.
      * 
      */
-    private solve(): Solved | undefined {
+    private solve(): ISolved | undefined {
         if (!this.normal) return;
 
         if ((<Collider>this.A).isTrigger || (<Collider>this.B).isTrigger) {
@@ -106,7 +108,7 @@ export class Collision {
     }
 }
 
-declare interface Solved {
+declare interface ISolved {
     readonly collision: Collision;
     readonly A: {
         impulses: { impulse: Vector2, at: Vector2 }[];

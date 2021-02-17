@@ -1,5 +1,4 @@
-import { D } from '../Debug';
-import { interval, stopwatch } from '../Helpers';
+import { interval } from '../Helpers';
 
 /**
  * 
@@ -22,6 +21,7 @@ export class AsyncWorker {
      * 
      */
     public expirationTime: number;
+
     public constructor(url: string, maxWorkers: number = 1, expirationTime: number = 1000) {
         this.url = url;
 
@@ -100,7 +100,7 @@ export class AsyncWorker {
 
         if (this.workers.length < this.maxWorkers) return await this.createWorker();
 
-        return undefined;
+        return;
     }
 
     private removeWorker(id: number): void {

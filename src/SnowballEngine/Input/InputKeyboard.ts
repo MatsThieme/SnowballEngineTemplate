@@ -2,7 +2,7 @@ import { Input } from './Input';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 import { InputDevice } from './InputDevice';
-import { InputEvent } from './InputEvent';
+import { IInputEvent } from './InputEvent';
 import { InputEventTarget } from './InputEventTarget';
 
 export class InputKeyboard extends InputEventTarget {
@@ -17,6 +17,7 @@ export class InputKeyboard extends InputEventTarget {
 
         this.addListeners();
     }
+
     private onKeyDown(e: KeyboardEvent): void {
         const btn = this.keys.get(e.code) || new InputButton();
         btn.down = true;
@@ -24,6 +25,7 @@ export class InputKeyboard extends InputEventTarget {
 
         if (!btn.clicked) this.fireListener.set(e.code, true);
     }
+
     private onKeyUp(e: KeyboardEvent): void {
         const btn = this.keys.get(e.code) || new InputButton();
         btn.down = false;
@@ -31,15 +33,17 @@ export class InputKeyboard extends InputEventTarget {
 
         this.fireListener.set(e.code, true);
     }
+
     public getButton(key?: string): InputButton | undefined {
-        if (key === undefined) return undefined;
+        if (key === undefined) return;
 
         if (!this.keys.get(key)) this.keys.set(key, new InputButton());
 
         return this.keys.get(key);
     }
+
     public getAxis(key?: string): InputAxis | undefined {
-        if (key === undefined) return undefined;
+        if (key === undefined) return;
 
         const keys = this.axisToKeys(key);
 
@@ -47,11 +51,13 @@ export class InputKeyboard extends InputEventTarget {
             return new InputAxis(Number(this.getButton(keys[1])!.down) - Number(this.getButton(keys[0])!.down));
         }
 
-        return undefined;
+        return;
     }
+
     private axisToKeys(axis?: string): string[] | undefined[] {
         return axis?.match(/^Axis\((\w+), (\w+)\)$/)?.slice(1) || [];
     }
+
     public update() {
         for (const btn of this.keys.values()) {
             btn.update();
@@ -64,7 +70,7 @@ export class InputKeyboard extends InputEventTarget {
 
             if (!btn && !key1 && !key2 || btn && !this.fireListener.get(btn) && key1 && !this.fireListener.get(key1) && key2 && !this.fireListener.get(key2)) continue;
 
-            const e: InputEvent = {
+            const e: IInputEvent = {
                 type,
                 device: InputDevice.Keyboard,
                 axis: this.getAxis(ax),

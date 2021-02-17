@@ -6,7 +6,8 @@ import { Framedata } from './Framedata';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Behaviour } from './GameObject/Components/Behaviour';
 import { Collider } from './GameObject/Components/Collider';
-import { ComponentType } from './GameObject/Components/ComponentType';
+import { Component } from './GameObject/Components/Component';
+import { ComponentType } from './GameObject/ComponentType';
 import { GameObject } from './GameObject/GameObject';
 import { GameTime } from './GameTime';
 import { cantorPairingFunction, clearObject, interval } from './Helpers';
@@ -18,26 +19,30 @@ import { UI } from './UI/UI';
 
 export class Scene {
     public readonly domElement: HTMLCanvasElement;
-    private readonly gameObjects: Map<string, GameObject>;
+    public readonly gameObjects: Map<string, GameObject>;
     public readonly cameraManager: CameraManager;
     public readonly ui: UI;
     private requestAnimationFrameHandle?: number;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
-    public readonly sceneManager: SceneManager;
     public readonly name: string;
     private updateComplete?: boolean;
+
     /**
      * 
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
      * 
      */
     private readonly destroyCbs: (() => void)[];
+
+    public static readonly sceneManager: SceneManager;
+
     public constructor(sceneManager: SceneManager, name: string) {
-        this.sceneManager = sceneManager;
+        if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
+
         this.name = name;
 
-        this.domElement = Canvas(Client.resolution.x, Client.resolution.y);
+        this.domElement = new Canvas(Client.resolution.x, Client.resolution.y);
         this.domElement.id = this.name;
 
         Input.reset();
@@ -73,8 +78,7 @@ export class Scene {
      * 
      */
     public async addGameObject(name: string, ...cb: ((gameObject: GameObject) => any)[]): Promise<GameObject> {
-        const gameObject = new GameObject(name, this);
-        this.gameObjects.set(gameObject.name, gameObject);
+        const gameObject = new GameObject(name);
 
         if (cb) {
             for (const c of cb) {
@@ -86,6 +90,8 @@ export class Scene {
     }
 
     /**
+     * 
+     * Update and render loop
      * 
      * Updates...
      * GameTime
@@ -108,7 +114,7 @@ export class Scene {
 
         Input.update();
 
-        const gameObjects = this.getAllGameObjects();
+        const gameObjects = [...this.gameObjects.values()];
 
         if (!this.ui.pauseScene) {
             gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update()));
@@ -140,6 +146,12 @@ export class Scene {
             }
 
             await Promise.all(gameObjects.map(gameObject => gameObject.update(collisions)));
+
+            for (const gO of gameObjects) {
+                for (const c of gO.getComponents(ComponentType.Component)) {
+                    if (c.lateUpdate) c.lateUpdate();
+                }
+            }
         }
 
         if (this.destroyCbs.length) {
@@ -147,7 +159,7 @@ export class Scene {
             this.destroyCbs.splice(0);
         }
 
-        this.cameraManager.update(gameObjects);
+        this.cameraManager.update();
 
         await this.ui.update();
 
@@ -160,25 +172,19 @@ export class Scene {
 
     /**
      * 
-     * Returns all GameObjects in this Scene.
-     * 
-     */
-    public getAllGameObjects(): GameObject[] {
-        return [...this.gameObjects.values()];
-    }
-
-    /**
-     * 
      * Start or resume scene.
      * 
      */
     public async start(): Promise<void> {
         this.requestAnimationFrameHandle = -1; // set isStarting true
 
-        for (const gameObject of this.getAllGameObjects()) {
+        (<any>GameObject).nextID = (<any>Component).nextID = 0;
+
+
+        for (const gameObject of this.gameObjects.values()) {
             for (const c of gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
                 if (!c.__initialized__) {
-                    await c.start();
+                    if (c.start) await c.start();
                     (<any>c).__initialized__ = true;
                 }
             }
@@ -195,7 +201,7 @@ export class Scene {
      *
      */
     public async stop(): Promise<void> {
-        if (this.requestAnimationFrameHandle) cancelAnimationFrame(this.requestAnimationFrameHandle);
+        //if (this.requestAnimationFrameHandle) cancelAnimationFrame(this.requestAnimationFrameHandle);
         this.requestAnimationFrameHandle = undefined;
 
         await this.removeFromDOM();
@@ -286,56 +292,3 @@ export class Scene {
         clearObject(this);
     }
 }
-
-/**
- *
- * to do:
- * integrate pixi js and matter js
- *
- *
- * to fix:
- * ui umrandungen skalierung
- *
- * collision response rotation
- * tilemap paralax background at different aspect ratios
- * ui aabbs
- *
- *
- *
- * to test:
- * child collider
- *
- *
- * to do:
- * camera rotation
- * TilemapCollision contact points
- *
- * !Assets
- * !InputType ersetzen durch vom nutzer konfigurierbares
- * !Settings durch was sinnvolles ersetzen
- *
- *
- *
- * optional optimisations:
- * polygon intersection: support points
- * replace line intersection with face clipping in collisionPolygon
- * store things computed multiple times, e.g. vector2 magnitude
- * clean up ui elements
- * use webgl instead of 2d context
- *
- *
- * optional features:
- * continuous collision
- * joints
- * extend particlesystem(e.g. rotation direction)
- * tilemap vertical paralax background
- * fitContent for UIMenu
- *
- *
- * to review:
- * coordinate system, scale, rotation, position
- * polygoncollider aabb topleft???
- * gameObject.active
- *
- *
- */

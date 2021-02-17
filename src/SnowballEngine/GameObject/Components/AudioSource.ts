@@ -3,10 +3,10 @@ import { AssetType } from '../../Assets/AssetType';
 import { AudioMixer } from '../../Audio/AudioMixer';
 import { D } from '../../Debug';
 import { clamp, triggerOnUserInputEvent } from '../../Helpers';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';
 import { Component } from './Component';
-import { ComponentType } from './ComponentType';
 
 export class AudioSource extends Component {
     public readonly node: PannerNode;
@@ -17,6 +17,7 @@ export class AudioSource extends Component {
     private _volume!: number;
     private _loop!: boolean;
     private _mixer?: AudioMixer;
+
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioSource);
 
@@ -37,6 +38,14 @@ export class AudioSource extends Component {
         this.connected = false;
 
         this.connect();
+    }
+
+    public onEnable(): void {
+        if (!this.connected) this.connect();
+    }
+
+    public onDisable(): void {
+        if (this.connected) this.disconnect();
     }
 
     public get mixer(): AudioMixer | undefined {
@@ -60,7 +69,7 @@ export class AudioSource extends Component {
         if (!listener) return D.error('no listener');
 
         if (this.mixer) this.mixer.addSource(this);
-        else this.node.connect(AudioListener.node);
+        else this.node.connect(listener.node);
 
         listener.addSource(this);
 
@@ -160,6 +169,7 @@ export class AudioSource extends Component {
 
     public destroy(): void {
         this.disconnect();
+
         super.destroy();
     }
 }

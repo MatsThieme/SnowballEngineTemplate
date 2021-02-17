@@ -1,6 +1,6 @@
-import { AlignH, AlignV, UIFontSize, UIMenu, UIText, Vector2 } from '../SnowballEngine/SE';
+import { AlignH, AlignV, createSprite, interval, UIFontSize, UIMenu, UIText, Vector2 } from '../SnowballEngine/SE';
 
-export function LoadingScreenPrefab(menu: UIMenu){
+export function LoadingScreenPrefab(menu: UIMenu) {
     menu.addUIElement(UIText, text => {
         text.localAlignH = AlignH.Center;
         text.localAlignV = AlignV.Center;
@@ -9,13 +9,15 @@ export function LoadingScreenPrefab(menu: UIMenu){
 
 
         let counter = 0;
-        setInterval(() => text.label = 'loading' + '.'.repeat(counter = ++counter % 4), 500);
-        
+        interval(clear => text.label = 'loading' + '.'.repeat(counter = ++counter % 4), 500)
+
 
         text.fontSize = UIFontSize.Medium;
 
         text.padding = new Vector2(1, 1);
     });
+
+    menu.background = createSprite(c => { c.fillStyle = '#fff'; c.fillRect(0, 0, 1, 1); }, 1, 1);
 
     menu.active = true;
 }

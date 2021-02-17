@@ -2,8 +2,6 @@ import { Asset } from '../Assets/Asset';
 import { AssetType } from '../Assets/AssetType';
 import { Canvas } from '../Canvas';
 import { Client } from '../Client';
-import { GameTime } from '../GameTime';
-import { Input } from '../Input/Input';
 import { AABB } from '../Physics/AABB';
 import { Scene } from '../Scene';
 import { Vector2 } from '../Vector2';
@@ -19,9 +17,10 @@ export class UI {
     private lastMenusState: boolean[];
     public navigationHistoryMaxSize: number;
     private _font!: Asset;
+
     public constructor(scene: Scene) {
         this.menus = new Map();
-        this.canvas = Canvas(Client.resolution.x, Client.resolution.y);
+        this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
         this.context = this.canvas.getContext('2d')!;
         this.scene = scene;
         this.navigationHistory = [];
@@ -32,7 +31,6 @@ export class UI {
     public get font(): Asset {
         return this._font || (this._font = new Asset('', AssetType.Font, 'sans-serif'));
     }
-
     public set font(val: Asset) {
         this._font = val;
     }
@@ -49,7 +47,7 @@ export class UI {
             return menu;
         }
 
-        const menu = new UIMenu(Input, this.scene);
+        const menu = new UIMenu(this.scene);
         this.menus.set(name, menu);
 
         if (cb) {
@@ -82,7 +80,7 @@ export class UI {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 
-        await Promise.all([...this.menus.values()].map(m => m.active ? m.update() : undefined));
+        await Promise.all([...this.menus.values()].map(m => m.update()));
 
         for (const menu of this.menus.values()) {
             if (menu.active) {
@@ -90,6 +88,7 @@ export class UI {
                     this.context.drawImage(menu.currentFrame.sprite, Math.round(menu.aabb.position.x * Client.resolution.x / 100), Math.round(menu.aabb.position.y * Client.resolution.y / 100), Math.round(menu.aabb.size.x * Client.resolution.x / 100), Math.round(menu.aabb.size.y * Client.resolution.y / 100));
             }
         }
+
 
         let l;
         if (this.lastMenusState.length > 0) {

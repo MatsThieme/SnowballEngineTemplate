@@ -83,7 +83,7 @@ export class Game {
 ```
 
 ### Behaviour
-A Behaviour is a Component whose functionality is defined by the user.
+A Behaviour is a Component with user-defined functionality.
 
 ### Component
 A Component controls the behavior of the corresponding GameObject.

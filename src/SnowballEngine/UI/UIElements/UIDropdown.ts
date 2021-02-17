@@ -1,6 +1,5 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
-import { GameTime } from '../../GameTime';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
 import { Vector2 } from '../../Vector2';
@@ -14,14 +13,16 @@ export class UIDropdown extends UIElement {
     public activeIndex: number;
     public extendUpward: boolean;
     public extended: boolean;
-    public constructor(menu: UIMenu, input: Input, font: Asset) {
-        super(menu, input, UIElementType.Dropdown, font);
+
+    public constructor(menu: UIMenu, font: Asset) {
+        super(menu, UIElementType.Dropdown, font);
 
         this._values = [];
         this.activeIndex = 0;
         this.extendUpward = false;
         this.extended = false;
     }
+
     public async update(): Promise<void> {
         await super.update();
 
@@ -51,6 +52,7 @@ export class UIDropdown extends UIElement {
             }
         } else if (Input.getButton(InputType.Trigger).down && !Input.getButton(InputType.Trigger).clicked) this.extended = false;
     }
+
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
@@ -81,6 +83,7 @@ export class UIDropdown extends UIElement {
             context.shadowBlur = context.shadowOffsetX = context.shadowOffsetY = 0;
         }
     }
+
     public get values(): string[] {
         return this._values;
     }
@@ -88,6 +91,7 @@ export class UIDropdown extends UIElement {
         this._values = val;
         this.draw();
     }
+
     public get value(): string {
         return this._values[this.activeIndex];
     }

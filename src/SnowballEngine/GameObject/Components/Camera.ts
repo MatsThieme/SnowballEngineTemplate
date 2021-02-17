@@ -1,119 +1,139 @@
-import { Frame } from '../../Camera/Frame';
-import { Canvas } from '../../Canvas';
-import { AABB } from '../../Physics/AABB';
+import { PIXI } from '../../Camera/PIXI';
+import { Client } from '../../Client';
+import { Color } from '../../Color';
+import { D } from '../../Debug';
+import { clamp } from '../../Helpers';
 import { Vector2 } from '../../Vector2';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
-import { ComponentType } from './ComponentType';
 
 export class Camera extends Component {
-    public resolution: Vector2;
-    public size: Vector2;
-    private canvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
-    public constructor(gameObject: GameObject, resolution: Vector2 = new Vector2(), size: Vector2 = new Vector2(1, 1)) {
+    /**
+    *
+    * camera position in vw and vh.
+    *
+    */
+    public screenPosition: Vector2;
+
+    /**
+     * 
+     * higher value -> later drawn
+     * 
+     */
+    public zIndex: number;
+
+    /**
+     * 
+     * Backgroundcolor if not transparent
+     * 
+     */
+    public backgroundColor: Color;
+
+    private _screenSize: Vector2;
+    private _size: Vector2;
+    private _resolution: number;
+    private _px: Vector2;
+
+    public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Camera);
-        this.resolution = resolution;
-        this.size = size;
-        this.canvas = Canvas(this.resolution.x, this.resolution.y);
-        this.context = this.canvas.getContext('2d')!;
-        this.context.imageSmoothingEnabled = false;
+
+        this.screenPosition = new Vector2();
+        this.zIndex = 0;
+        this.backgroundColor = Color.lightblue;
+
+
+        this._screenSize = new Vector2(100, 100);
+        this._size = Client.aspectRatio;
+        this._resolution = 1;
+        this._px = this.calculatePX();
+
+
+        this.gameObject.scene.cameraManager.addCamera(this);
     }
-    public get currentFrame(): HTMLCanvasElement {
-        return this.canvas;
+
+    /**
+    *
+    * size in world units to display.
+    *
+    */
+    public get size(): Vector2 {
+        return this._size.clone;
+    }
+    public set size(val: Vector2) {
+        this._size = val;
     }
 
     /**
      * 
-     * Draw active gameObjects to a canvas.
+     * view size in vw and vh.
      * 
      */
-    public update(frames: Frame[]) {
-        if (this.canvas.width !== this.resolution.x) this.canvas.width = this.resolution.x;
-        if (this.canvas.height !== this.resolution.y) this.canvas.height = this.resolution.y;
+    public get screenSize(): Vector2 {
+        return this._screenSize.clone;
+    }
+    public set screenSize(val: Vector2) {
+        this._screenSize = new Vector2(clamp(0.0001, 100, val.x), clamp(0.0001, 100, val.y));
+    }
 
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        for (const frame of frames) {
-            if (frame.sprite && frame.sprite.canvasImageSource.width > 0 && frame.sprite.canvasImageSource.height > 0 && this.AABBInCamera(new AABB(frame.size, frame.worldCordinates))) {
-                const frameSize = this.worldToScreen(frame.size);
-                const framePos = this.worldToScreenPoint(frame.worldCordinates).sub(new Vector2(0, frameSize.y));
-
-                this.context.save();
-
-                if (frame.rotation.radian !== 0) {
-                    let rotationPoint;
-                    if (frame.rotationPoint) rotationPoint = this.worldToScreenPoint(frame.rotationPoint);
-                    else rotationPoint = new Vector2(framePos.x + frameSize.x / 2, framePos.y + frameSize.y / 2);
-
-                    this.context.translate(rotationPoint.x, rotationPoint.y);
-
-                    this.context.rotate(frame.rotation.radian);
-
-                    this.context.translate(-rotationPoint.x, -rotationPoint.y);
-                }
-
-                this.context.globalAlpha = frame.alpha;
-
-                this.context.filter = frame.filter;
-
-                this.context.drawImage(frame.sprite.canvasImageSource, frame.sprite.subPosition.x, frame.sprite.subPosition.y, frame.sprite.subSize.x, frame.sprite.subSize.y, framePos.x, framePos.y, frameSize.x, frameSize.y);
-
-                this.context.filter = 'none';
-
-                this.context.restore();
-            }
-        }
+    public get resolution(): number {
+        return this._resolution;
+    }
+    public set resolution(val: number) {
+        this._resolution = clamp(0, 2.5, val);
     }
 
     /**
      * 
-     * Returns whether a rectangle intersects the camera AABB.
+     * cameras canvas size
      * 
      */
-    public AABBInCamera(rect: AABB): boolean {
-        return rect.screenSpaceIntersects(this.AABB);
+    public get px(): Vector2 {
+        return this._px;
     }
 
     /**
      * 
-     * Transforms a world point into a screen point.
+     * calculate and set this.px
      * 
      */
-    public worldToScreenPoint(position: Vector2): Vector2 {
-        const localPosition = new Vector2(position.x, -position.y).sub(new Vector2(this.gameObject.transform.position.x, -this.gameObject.transform.position.y)).add(this.size.clone.scale(0.5));
-
-        return this.worldToScreen(localPosition);
+    public calculatePX(): Vector2 {
+        return this._px = new Vector2(~~(this.screenSize.x / 100 * Client.resolution.x * this.resolution), ~~(this.screenSize.y / 100 * Client.resolution.y * this.resolution));
     }
 
-    /**
-     *
-     * Transforms a screen point into a world point.
-     *
-     */
-    public screenToWorldPoint(position: Vector2): Vector2 {
-        const x = this.screenToWorld(position).add(new Vector2(this.gameObject.transform.position.x, -this.gameObject.transform.position.y)).sub(this.size.clone.scale(0.5));
-        return new Vector2(x.x, -x.y);
+    public update(pixi: PIXI): void {
+        if (!this.active) return;
+
+        this.calculatePX();
+
+
+        // TODO: better way of rendering multiple cameras, switching cameras shouldn't take >5 times longer than rendering
+        if (pixi.canvas.width !== this._px.x || pixi.canvas.height !== this._px.y) pixi.resize(this._px.x, this._px.y);
+
+
+        pixi.renderer.backgroundColor = this.backgroundColor.rgb;
+
+        const globalTransform = this.gameObject.transform.toGlobal();
+
+        pixi.container.scale.copyFrom(new Vector2(this._px.x / this.size.x * globalTransform.scale.x, this._px.y / this.size.y * globalTransform.scale.y));
+        pixi.container.position.copyFrom(this.worldToCameraPoint(globalTransform.position));
+        pixi.container.rotation = -globalTransform.rotation.radian;
+
+
+        pixi.render();
     }
 
-    /**
-     * 
-     * Transforms a world vector into a screen vector.
-     *
-     */
-    public worldToScreen(vector: Vector2) {
-        return new Vector2(vector.x * this.resolution.x / this.size.x, vector.y * this.resolution.y / this.size.y);
+    public worldToCamera(vec: Vector2): Vector2 {
+        return new Vector2(vec.x * this._px.x / this.size.x, vec.y * this._px.y / this.size.y);
     }
 
-    /**
-     *
-     * Transforms a screen vector into a world vector.
-     *
-     */
-    public screenToWorld(vector: Vector2) {
-        return new Vector2(vector.x * this.size.x / this.resolution.x, vector.y * this.size.y / this.resolution.y);
+    public worldToCameraPoint(point: Vector2): Vector2 {
+        return this.worldToCamera(new Vector2(-point.x + this.size.x / 2, point.y + this.size.y / 2)).floor();
     }
-    public get AABB(): AABB {
-        return new AABB(this.size, new Vector2(this.gameObject.transform.position.x - this.size.x / 2, this.gameObject.transform.position.y - this.size.y / 2));
+
+    public destroy(): void {
+        this.gameObject.scene.cameraManager.removeCamera(this);
+
+        super.destroy();
     }
 }

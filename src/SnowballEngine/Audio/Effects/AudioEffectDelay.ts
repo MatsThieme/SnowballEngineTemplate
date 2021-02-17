@@ -3,6 +3,7 @@ import { AudioEffect } from '../AudioEffect';
 
 export class AudioEffectDelay extends AudioEffect {
     public readonly node: DelayNode;
+
     public constructor() {
         super();
 

@@ -1,31 +1,37 @@
+import { cloneDeep } from 'lodash';
+
 export class D {
     public static log(msg: any, logstack: boolean = false) {
-        if (!project.settings.isDevelopmentBuild) return;
+        if (!project.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o);
-        else console.log(o);
+        if (window.cordova) alert(o.join());
+        else console.log(...o);
     }
+
     public static warn(msg: any, logstack: boolean = true) {
-        if (!project.settings.isDevelopmentBuild) return;
+        if (!project.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o);
-        else console.warn(o);
+        if (window.cordova) alert(o.join());
+        else console.warn(...o);
     }
+
     public static error(msg: any, logstack: boolean = true) {
-        if (!project.settings.isDevelopmentBuild) return;
+        if (!project.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o);
-        else console.warn(o);
+        if (window.cordova) alert(o.join());
+        else console.warn(...o);
     }
+
     private static formatStack(stack: string = ''): string {
         return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || D.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
     }
+
     private static formatStackFirefox(stack: string): string {
         return stack.split('\n').slice(1).map(line => {
             const match = line.match(/^(.*?)@http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)$/);
@@ -33,6 +39,7 @@ export class D {
             return D.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
+
     private static formatStackChromium(stack: string): string {
         return stack.split('\n').slice(2).map(line => {
             const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
@@ -40,6 +47,7 @@ export class D {
             return D.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
+
     private static formatStackCordova(stack: string): string {
         return stack.split('\n').slice(2).map(line => {
             const match = line.trim().match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
@@ -47,6 +55,7 @@ export class D {
             return D.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
+
     private static formatStackLine(match: RegExpMatchArray | null): string {
         if (!match) return '';
 
@@ -61,23 +70,23 @@ export class D {
 
         return `at ${info.functionName} (/${info.filePath}:${info.line})`;
     }
-    private static formatMessage(type: 'log' | 'warning' | 'error', msg: string, stack: string) {
-        let fmsg = '';
+
+    private static formatMessage(type: 'log' | 'warning' | 'error', msg: any, stack: string): any[] {
+        const ret: (string | object)[] = [];
 
         if (type === 'warning') {
-            fmsg += 'Warning';
-            if (!stack) fmsg += ': ';
+            ret.push(`Warning${!stack ? ': ' : ''}`);
         } else if (type === 'error') {
-            fmsg += 'Error';
-            if (!stack) fmsg += ': ';
+            ret.push(`Error${!stack ? ': ' : ''}`);
         }
 
-        if (!stack) fmsg += msg;
-        else {
-            fmsg += '\n' + msg;
-            fmsg += '\n\n' + stack;
-        }
+        if (ret[0]) ret.push('\n');
 
-        return fmsg;
+        if (Array.isArray(msg)) ret.push(...cloneDeep(msg));
+        else ret.push(cloneDeep(msg));
+
+        if (stack) ret.push('\n\n' + stack);
+
+        return ret;
     }
 }

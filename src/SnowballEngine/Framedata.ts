@@ -3,6 +3,7 @@ export class Framedata {
     private lastTime: number;
     private avgFramesPerSecond: number;
     private frames: number;
+
     public constructor(update = 1000) {
         this.updateInterval = update;
         this.lastTime = performance.now();

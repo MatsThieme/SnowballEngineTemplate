@@ -1,8 +1,11 @@
+import isMobile from 'ismobilejs';
 import { asyncTimeout, triggerOnUserInputEvent } from './Helpers';
 import { Vector2 } from './Vector2';
 
 export class Client {
     public static platform: 'android' | 'ios' | 'browser' | 'windows' | 'osx' = <any>(window.cordova || {}).platformId || 'browser';
+    public static isMobile: boolean = isMobile(navigator).any;
+
     /**
      * 
      * Measure the refresh rate of the active monitor for ms.
@@ -76,16 +79,8 @@ export class Client {
             Client.resolution.y = window.innerHeight * window.devicePixelRatio;
 
             Client.aspectRatio.copy(Client.resolution.clone.setLength(new Vector2(16, 9).magnitude));
-
-            Client.onResizeCbs.forEach(cb => cb(Client));
         });
 
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
-    }
-
-    private static readonly onResizeCbs: ((client: Client) => any)[] = [];
-
-    public static OnResize(cb: (client: Client) => any): void {
-        Client.onResizeCbs.push(cb);
     }
 }

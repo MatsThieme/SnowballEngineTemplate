@@ -1,22 +1,27 @@
+import AssetDB from '../../../Assets/AssetDB.json';
 import { D } from '../../SnowballEngine/SE';
 import { asyncTimeout, interval } from '../Helpers';
 import { Asset } from './Asset';
 import { AssetType } from './AssetType';
-import AssetDB from '../../../Assets/AssetDB.json';
 
 export class Assets {
     private static readonly assets: Map<string, Asset> = new Map();
+
     public static get(id: string): Asset | undefined {
         const asset = Assets.assets.get(id);
-        return asset?.clone();
+        return asset; // asset?.clone();
     }
+
     public static delete(id: string): void {
+        Assets.get(id)?.destroy();
         Assets.assets.delete(id);
     }
+
     public static set(asset: Asset, name: string): Asset {
         Assets.assets.set(name, asset);
         return asset;
     }
+
     public static load(path: string, type: AssetType, name?: string): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (name && Assets.assets.get(name) || !name && Assets.get(path)) console.warn(path + ' overwriting ' + name);
@@ -36,6 +41,7 @@ export class Assets {
             return resolve(asset);
         });
     }
+
     private static urlToAsset(url: string, type: AssetType): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
@@ -64,6 +70,7 @@ export class Assets {
             }
         });
     }
+
     private static req(url: string, type: AssetType): Promise<string | Blob | object> {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
@@ -82,6 +89,7 @@ export class Assets {
             req.send();
         });
     }
+
     private static loadFont(url: string, name: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const e = document.head.querySelector('style') || document.head.appendChild(document.createElement('style'));
@@ -107,22 +115,19 @@ export class Assets {
             }, 1);
         });
     }
+
     public static async loadFromAssetDB(): Promise<void> {
-        try {
-            const db = <{ [key: string]: { type: AssetType, mimeType: string, name?: string } }>AssetDB;
+        const db = <{ [key: string]: { type: AssetType, mimeType: string, name?: string } }>AssetDB;
 
-            const p: Promise<Asset>[] = [];
+        const p: Promise<Asset>[] = [];
 
-            for (const path in db) {
-                p.push(Assets.load(path, db[path].type, db[path].name));
-            }
+        for (const path in db) {
+            p.push(Assets.load(path, db[path].type, db[path].name));
+        }
 
-            for (const ap of p) {
-                await ap;
-                await asyncTimeout(1); // allow execution of other tasks
-            }
-        } catch {
-            D.warn('No AssetDB.json in Asset directory. It\'s recommended to use an AssetDB.json.');
+        for (const ap of p) {
+            await ap;
+            await asyncTimeout(1); // allow execution of other tasks
         }
     }
 }

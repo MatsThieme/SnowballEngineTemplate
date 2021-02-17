@@ -3,6 +3,7 @@ import { AudioEffect } from '../AudioEffect';
 
 export class AudioEffectReverb extends AudioEffect {
     public readonly node!: AudioNode;
+
     public constructor() {
         super();
 

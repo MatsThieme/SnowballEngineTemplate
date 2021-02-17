@@ -1,70 +1,102 @@
+import { D } from '../../Debug';
 import { triggerOnUserInputEvent } from '../../Helpers';
+import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioSource } from './AudioSource';
 import { Component } from './Component';
-import { ComponentType } from './ComponentType';
 
 export class AudioListener extends Component {
-    private static context: AudioContext;
-    public static node: GainNode;
+    private static readonly context: AudioContext = new AudioContext();
+
+    public static readonly node: AudioDestinationNode = AudioListener.context.destination;
+
+    public readonly node: GainNode;
     public volume: number;
     public maxDistance: number;
     public cameraDistance: number;
-    private sources: Map<number, AudioSource>;
-    public constructor(gameObject: GameObject, maxDistance: number = 20, volume: number = 1, cameraDistance: number = 5) {
+
+    private _sources: Map<number, AudioSource>;
+
+    public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioListener);
 
-        this.sources = new Map();
-        this.volume = volume;
-        this.maxDistance = maxDistance;
-        this.cameraDistance = cameraDistance;
+        this.node = AudioListener.createGain();
+        this.node.connect(AudioListener.node);
 
-        for (const gO of this.gameObject.scene.getAllGameObjects()) {
+        this.volume = 1;
+        this.maxDistance = 20;
+        this.cameraDistance = 5;
+
+        this._sources = new Map();
+
+
+        for (const gO of [...this.gameObject.scene.gameObjects.values()]) {
             for (const source of [...gO.getComponents(AudioSource)]) source.connect();
         }
     }
+
     public static start() {
-        AudioListener.context = new AudioContext();
-        AudioListener.node = AudioListener.createGain();
+        AudioListener.context.addEventListener('statechange', e => {
+            D.log(`audio context state change: ${AudioListener.context.state}`);
+        });
 
-        AudioListener.node.connect(AudioListener.context.destination);
-
-        if (AudioListener.context.state === 'suspended') triggerOnUserInputEvent(() => AudioListener.context.resume());
+        if (AudioListener.context.state === 'suspended') {
+            triggerOnUserInputEvent(() => AudioListener.context.resume());
+        }
     }
+
     public static createMediaElement(audio: HTMLAudioElement): MediaElementAudioSourceNode {
         return AudioListener.context.createMediaElementSource(audio);
     }
+
     public static createPanner(): PannerNode {
         return AudioListener.context.createPanner();
     }
+
     public static createGain(): GainNode {
         return AudioListener.context.createGain();
     }
+
     public static createDelay(): DelayNode {
         return AudioListener.context.createDelay();
     }
+
+    public onEnable(): void {
+        this.node.connect(AudioListener.node);
+    }
+
+    public onDisable(): void {
+        this.node.disconnect();
+    }
+
     public addSource(audioSource: AudioSource): void {
-        this.sources.set(audioSource.componentId, audioSource);
+        this._sources.set(audioSource.componentId, audioSource);
     }
+
     public removeSource(audioSource: AudioSource): void {
-        this.sources.delete(audioSource.componentId);
+        this._sources.delete(audioSource.componentId);
     }
+
     public update(): void {
-        for (const source of this.sources.values()) {
+        const globalTransform = this.gameObject.transform.toGlobal();
+
+        for (const source of this._sources.values()) {
             if (source.node) {
-                source.node.setPosition(source.gameObject.transform.position.x - this.gameObject.transform.position.x, source.gameObject.transform.position.y - this.gameObject.transform.position.y, this.cameraDistance);
+                const sourceGlobalTransform = source.gameObject.transform.toGlobal();
+                source.node.setPosition(sourceGlobalTransform.position.x - globalTransform.position.x, sourceGlobalTransform.position.y - globalTransform.position.y, this.cameraDistance);
                 source.node.maxDistance = this.maxDistance;
             }
         }
 
-        AudioListener.node.gain.value = this.volume;
+        this.node.gain.value = this.volume;
     }
+
     public destroy(): void {
-        for (const s of [...this.sources.values()]) {
+        for (const s of [...this._sources.values()]) {
             s.disconnect();
         }
 
-        this.sources.clear();
+        this._sources.clear();
 
         super.destroy();
     }

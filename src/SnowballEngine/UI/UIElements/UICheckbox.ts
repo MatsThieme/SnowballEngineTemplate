@@ -1,7 +1,5 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
-import { GameTime } from '../../GameTime';
-import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
 import { Vector2 } from '../../Vector2';
 import { UIElementType } from '../UIElementType';
@@ -11,8 +9,9 @@ import { UIElement } from './UIElement';
 
 export class UICheckbox extends UIElement {
     private _checked: boolean;
-    public constructor(menu: UIMenu, input: Input, font: Asset) {
-        super(menu, input, UIElementType.Checkbox, font);
+
+    public constructor(menu: UIMenu, font: Asset) {
+        super(menu, UIElementType.Checkbox, font);
 
         this._checked = false;
     }
@@ -47,6 +46,7 @@ export class UICheckbox extends UIElement {
             }
         }
     }
+
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
         const labelSize = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this.fontSize));
 

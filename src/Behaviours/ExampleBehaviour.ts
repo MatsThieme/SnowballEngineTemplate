@@ -33,7 +33,7 @@ export class ExampleBehaviour extends Behaviour {
      * 
      */
     public async update(): Promise<void> {
-        this.gameObject.transform.relativeRotation.degree += 36 * GameTime.deltaTime / 1000;
+        this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
     }
 
     /**

@@ -4,7 +4,6 @@ import { Client } from '../../Client';
 import { Color } from '../../Color';
 import { D } from '../../Debug';
 import { AlignH, AlignV } from '../../GameObject/Align';
-import { GameTime } from '../../GameTime';
 import { createSprite } from '../../Helpers';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
@@ -30,7 +29,7 @@ export abstract class UIElement {
     private _textShadow: number;
     private _font!: Asset;
     private _padding: Vector2;
-    private _resizeAABB: boolean;
+    private _resize: boolean;
 
     public readonly hover: boolean;
     public readonly click: boolean;
@@ -50,7 +49,8 @@ export abstract class UIElement {
     protected menu: UIMenu;
 
     public readonly type: UIElementType;
-    public constructor(menu: UIMenu, input: Input, type: UIElementType, font: Asset = new Asset('', AssetType.Font, 'sans-serif')) {
+
+    public constructor(menu: UIMenu, type: UIElementType, font: Asset = new Asset('', AssetType.Font, 'sans-serif')) {
         this.id = UIElement.nextID++;
 
         this.menu = menu;
@@ -64,11 +64,11 @@ export abstract class UIElement {
         this._label = '';
         this._fontSize = UIFontSize.Medium;
         this._active = true;
-        this._color = Color.darkGrey.colorString;
+        this._color = Color.darkGrey.rgbaString;
         this._stroke = type !== UIElementType.Text;
         this._textShadow = 0;
         this._padding = new Vector2();
-        this._resizeAABB = true;
+        this._resize = true;
 
         this.font = font;
 
@@ -77,10 +77,8 @@ export abstract class UIElement {
         this.alignH = AlignH.Left;
         this.alignV = AlignV.Top;
 
-        Client.OnResize(() => {
-            if (!this.menu.active) return;
-
-            if (this._resizeAABB) this.fitContent();
+        addEventListener('resize', () => {
+            if (this._resize) this.fitContent();
             else this.draw();
         });
     }
@@ -158,7 +156,7 @@ export abstract class UIElement {
     public set aabb(val: AABB) {
         if (val.size.equal(this._aabb.size) && val.position.equal(this._aabb.position)) return;
         this._aabb = val;
-        if (this._resizeAABB) this.fitContent();
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
@@ -172,7 +170,7 @@ export abstract class UIElement {
     }
     public set label(val: string) {
         this._label = val;
-        if (this._resizeAABB) this.fitContent();
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
@@ -186,7 +184,7 @@ export abstract class UIElement {
     }
     public set fontSize(val: number) {
         this._fontSize = val;
-        if (this._resizeAABB) this.fitContent();
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
@@ -200,7 +198,7 @@ export abstract class UIElement {
     }
     public set active(val: boolean) {
         this._active = val;
-        if (this._resizeAABB) this.fitContent();
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
@@ -253,7 +251,7 @@ export abstract class UIElement {
     }
     public set padding(val: Vector2) {
         this._padding = val;
-        if (this._resizeAABB) this.fitContent();
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
@@ -263,11 +261,11 @@ export abstract class UIElement {
      * 
      */
     public get resizeAABB(): boolean {
-        return this._resizeAABB;
+        return this._resize;
     }
     public set resizeAABB(val: boolean) {
-        this._resizeAABB = val;
-        if (this._resizeAABB) this.fitContent();
+        this._resize = val;
+        if (this._resize) this.fitContent();
         this.draw();
     }
 
