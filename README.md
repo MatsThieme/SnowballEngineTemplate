@@ -135,6 +135,10 @@ Base class for CircleCollider and PolygonCollider.
 Base class for all components.
 </br>
 
+### ParallaxBackground
+A graphical component for rendering parallax scrolling images.
+</br>
+
 ### ParticleSystem
 </br>
 
