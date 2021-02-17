@@ -68,11 +68,8 @@ import { MainScene } from './Scenes/MainScene';
 import { Assets, SceneManager } from './SnowballEngine/SE';
 
 export class Game {
-    private sceneManager: SceneManager;
     public constructor() {
-        this.sceneManager = new SceneManager();
-
-        this.initialize(this.sceneManager);
+        this.initialize(new SceneManager());
     }
     private async initialize(sceneManager: SceneManager): Promise<void> {
         sceneManager.create('Loadingscreen', LoadingScreenScene);
