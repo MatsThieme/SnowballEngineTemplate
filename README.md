@@ -1,5 +1,5 @@
 ## Status:
-PIXI.js integrated
+PIXI.js integrated for rendering game assets, ui is still rendered using a 2d context
 <br>
 Matter.js not yet integrated && physics currently not working properly
 
