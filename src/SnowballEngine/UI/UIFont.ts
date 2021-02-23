@@ -9,7 +9,7 @@ export class UIFont {
      * 
      */
     public static getCSSFontString(name: string, size: UIFontSize = UIFontSize.Medium) {
-        return `${Math.round(size * Client.resolution.magnitude / 200)}px ${name}`;
+        return `${Math.round(size * (<Vector2>Client.resolution).magnitude / 200)}px ${name}`;
     }
 
     /**

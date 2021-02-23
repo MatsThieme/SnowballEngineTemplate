@@ -27,9 +27,7 @@ export class Color {
     public get rgbaString(): string {
         if (!this._recalculateColor && this._rgbaString) return this._rgbaString;
 
-        const s = this.rgba.toString(16);
-
-        this._rgbaString = '#' + '0'.repeat(8 - s.length) + s;
+        this._rgbaString = `rgba(${this._r},${this._g},${this._b},${this._a / 255})`;
 
         return this._rgbaString;
     }
@@ -42,9 +40,7 @@ export class Color {
     public get rgbString(): string {
         if (!this._recalculateColor && this._rgbString) return this._rgbString;
 
-        const s = this.rgb.toString(16);
-
-        this._rgbString = '#' + '0'.repeat(8 - s.length) + s;
+        this._rgbString = `rgb(${this._r},${this._g},${this._b})`;
 
         return this._rgbString;
     }
@@ -109,7 +105,6 @@ export class Color {
         this._a = clamp(0, 255, Math.round(val));
         this._recalculateColor = true;
     }
-
 
     public static average(...colors: Color[]): Color {
         let r = 0;

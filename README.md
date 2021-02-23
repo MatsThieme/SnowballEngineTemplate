@@ -1,3 +1,8 @@
+## Status:
+PIXI.js integrated
+<br>
+Matter.js not yet integrated && physics currently not working properly
+
 # SnowballEngine
 
 **SnowballEngine is a 2D TypeScript game engine.**
@@ -63,11 +68,8 @@ import { MainScene } from './Scenes/MainScene';
 import { Assets, SceneManager } from './SnowballEngine/SE';
 
 export class Game {
-    private sceneManager: SceneManager;
     public constructor() {
-        this.sceneManager = new SceneManager();
-
-        this.initialize(this.sceneManager);
+        this.initialize(new SceneManager());
     }
     private async initialize(sceneManager: SceneManager): Promise<void> {
         sceneManager.create('Loadingscreen', LoadingScreenScene);
@@ -128,6 +130,10 @@ Base class for CircleCollider and PolygonCollider.
 
 ### Component
 Base class for all components.
+</br>
+
+### ParallaxBackground
+A graphical component for rendering parallax scrolling images.
 </br>
 
 ### ParticleSystem

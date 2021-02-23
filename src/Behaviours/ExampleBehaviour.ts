@@ -1,4 +1,4 @@
-import { Behaviour, Collision, GameTime } from '../SnowballEngine/SE';
+import { Behaviour, Collision, GameTime, Input, Vector2 } from '../SnowballEngine/SE';
 
 export class ExampleBehaviour extends Behaviour {
     /**
@@ -20,7 +20,7 @@ export class ExampleBehaviour extends Behaviour {
 
     /**
      * 
-     * Called on scene start, if scene is running it's called by the constructor.
+     * Called on scene start, if scene is running it's called immediately after awake.
      * 
      */
     public async start(): Promise<void> {
@@ -33,7 +33,11 @@ export class ExampleBehaviour extends Behaviour {
      * 
      */
     public async update(): Promise<void> {
+        // rotate the gameObject holding the texture component
         this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
+
+        // move the camera if there is user input
+        this.gameObject.scene.cameraManager.cameras[0].gameObject.transform.position.add(new Vector2(Input.getAxis(InputType.MoveHorizontal).values[0] * GameTime.deltaTimeSeconds * 10, Input.getAxis(InputType.MoveVertical).values[0] * GameTime.deltaTimeSeconds * 10));
     }
 
     /**

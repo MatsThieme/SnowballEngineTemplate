@@ -1,6 +1,7 @@
 import { Asset } from './Assets/Asset';
 import { AssetType } from './Assets/AssetType';
 import { Canvas } from './Canvas';
+import { Color } from './Color';
 import { D } from './Debug';
 
 /**
@@ -85,11 +86,15 @@ export function interval(cb: (clear: () => void) => void, ms: number): void {
  * Create an Image Asset from a canvas.
  * 
  */
-export function createSprite(f: (context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any, width: number = 100, height: number = 100): Asset {
+export function createSprite(f: ((context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any) | Color, width: number = 1, height: number = 1): Asset {
     const canvas = new Canvas(width, height);
     const context = canvas.getContext('2d')!;
     context.imageSmoothingEnabled = false;
-    f(context, canvas);
+
+    if ('rgba' in f) {
+        context.fillStyle = f.rgbaString;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    } else f(context, canvas);
 
     return new Asset(canvas.toDataURL(), AssetType.Image, canvas);
 }

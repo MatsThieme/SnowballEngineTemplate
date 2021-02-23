@@ -210,7 +210,9 @@ export class Vector2 implements IVector2 {
     }
 
 
-    public static scale(vec: Vector2, scalar: number | IVector2, ...scalars: (number | IVector2)[]): Vector2 {
+    public static scale(vec: Vector2 | number, scalar: IVector2 | number, ...scalars: (number | IVector2)[]): Vector2 {
+        if (typeof vec === 'number') vec = new Vector2(vec, vec);
+
         vec.scale(scalar);
 
         for (const s of scalars) {

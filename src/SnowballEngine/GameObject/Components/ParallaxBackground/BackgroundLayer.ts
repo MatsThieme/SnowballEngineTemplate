@@ -1,6 +1,7 @@
 import { Container, Graphics, TilingSprite } from 'pixi.js';
 import { Asset } from '../../../Assets/Asset';
 import { clamp, clearObject } from '../../../Helpers';
+import { AABB } from '../../../Physics/AABB';
 import { Vector2 } from '../../../Vector2';
 import { Camera } from '../Camera';
 import { Transform } from '../Transform/Transform';
@@ -45,7 +46,7 @@ export class BackgroundLayer {
     private readonly _parallaxBackground: ParallaxBackground;
 
     public constructor(speed: number, asset: BackgroundLayerAsset, container: Container, parallaxBackground: ParallaxBackground) {
-        this.speed = clamp(0.0000001, 1, speed);
+        this.speed = clamp(0.000001, 1, speed);
 
         this._container = container;
 
@@ -71,7 +72,7 @@ export class BackgroundLayer {
     }
 
     private toSprite(asset: BackgroundLayerSprite): BackgroundLayerSprite {
-        const sprite = asset.sprite = new TilingSprite(asset.asset.getPIXITexture()!, asset.size.x, asset.size.y);
+        const sprite = asset.sprite = new TilingSprite(asset.asset.getPIXITexture()!, asset.size.x * 3, asset.size.y);
         sprite.anchor.set(0.5);
         sprite.zIndex = (asset.xStart + 1) / this.speed;
         sprite.name = asset.asset.path;
@@ -86,7 +87,7 @@ export class BackgroundLayer {
     }
 
     public updateSpriteForCamera(camera: Camera) {
-        const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.sprite.spriteCenter).scale(this.speed);
+        const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.sprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
 
         this.sprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.sprite.size.x / 2, 0)));
     }

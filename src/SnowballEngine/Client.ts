@@ -1,5 +1,6 @@
 import isMobile from 'ismobilejs';
 import { asyncTimeout, triggerOnUserInputEvent } from './Helpers';
+import { ReadOnlyVector2 } from './ReadOnlyVector2';
 import { Vector2 } from './Vector2';
 
 export class Client {
@@ -31,11 +32,11 @@ export class Client {
      * Returns the resolution of the window.
      * 
      */
-    public static resolution: Vector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
+    public static readonly resolution: ReadOnlyVector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
 
     public static monitorRefreshRate: number = 0;
 
-    public static aspectRatio: Vector2 = Client.resolution.clone.setLength(new Vector2(16, 9).magnitude);
+    public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
 
     public static async requestFullscreen(element: HTMLElement): Promise<void> {
         await triggerOnUserInputEvent(async () => {
@@ -75,10 +76,10 @@ export class Client {
         Client.monitorRefreshRate = 1;
 
         addEventListener('resize', () => {
-            Client.resolution.x = window.innerWidth * window.devicePixelRatio;
-            Client.resolution.y = window.innerHeight * window.devicePixelRatio;
+            (<Vector2>Client.resolution).x = window.innerWidth * window.devicePixelRatio;
+            (<Vector2>Client.resolution).y = window.innerHeight * window.devicePixelRatio;
 
-            Client.aspectRatio.copy(Client.resolution.clone.setLength(new Vector2(16, 9).magnitude));
+            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude));
         });
 
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);

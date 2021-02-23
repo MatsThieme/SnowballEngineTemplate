@@ -1,3 +1,4 @@
+import { Graphics } from 'pixi.js';
 import { PIXI } from '../../Camera/PIXI';
 import { Client } from '../../Client';
 import { Color } from '../../Color';
@@ -32,8 +33,6 @@ export class Camera extends Component {
 
     private _screenSize: Vector2;
     private _size: Vector2;
-    private _resolution: number;
-    private _px: Vector2;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Camera);
@@ -45,8 +44,6 @@ export class Camera extends Component {
 
         this._screenSize = new Vector2(100, 100);
         this._size = Client.aspectRatio;
-        this._resolution = 1;
-        this._px = this.calculatePX();
 
 
         this.gameObject.scene.cameraManager.addCamera(this);
@@ -74,57 +71,35 @@ export class Camera extends Component {
     }
     public set screenSize(val: Vector2) {
         this._screenSize = new Vector2(clamp(0.0001, 100, val.x), clamp(0.0001, 100, val.y));
-    }
-
-    public get resolution(): number {
-        return this._resolution;
-    }
-    public set resolution(val: number) {
-        this._resolution = clamp(0, 2.5, val);
-    }
-
-    /**
-     * 
-     * cameras canvas size
-     * 
-     */
-    public get px(): Vector2 {
-        return this._px;
-    }
-
-    /**
-     * 
-     * calculate and set this.px
-     * 
-     */
-    public calculatePX(): Vector2 {
-        return this._px = new Vector2(~~(this.screenSize.x / 100 * Client.resolution.x * this.resolution), ~~(this.screenSize.y / 100 * Client.resolution.y * this.resolution));
+        if (val.x !== this._screenSize.x || val.y !== this._screenSize.y) D.warn(`Camera(${this.gameObject.name}).screenSize was clamped to 0.0001-100`);
     }
 
     public update(pixi: PIXI): void {
         if (!this.active) return;
-
-        this.calculatePX();
-
-
-        // TODO: better way of rendering multiple cameras, switching cameras shouldn't take >5 times longer than rendering
-        if (pixi.canvas.width !== this._px.x || pixi.canvas.height !== this._px.y) pixi.resize(this._px.x, this._px.y);
 
 
         pixi.renderer.backgroundColor = this.backgroundColor.rgb;
 
         const globalTransform = this.gameObject.transform.toGlobal();
 
-        pixi.container.scale.copyFrom(new Vector2(this._px.x / this.size.x * globalTransform.scale.x, this._px.y / this.size.y * globalTransform.scale.y));
-        pixi.container.position.copyFrom(this.worldToCameraPoint(globalTransform.position));
+        pixi.container.scale.copyFrom(new Vector2(pixi.canvas.width / this.size.x / (100 / this.screenSize.x), pixi.canvas.height / this.size.y / (100 / this.screenSize.y)).scale(globalTransform.scale));
+        pixi.container.position.copyFrom(this.worldToCameraPoint(globalTransform.position).add(new Vector2(pixi.canvas.width / (100 / this.screenPosition.x), pixi.canvas.height / (100 / this.screenPosition.y))));
         pixi.container.rotation = -globalTransform.rotation.radian;
+
+
+        (<Graphics>pixi.container.mask).clear();
+
+        (<Graphics>pixi.container.mask)
+            .beginFill(0)
+            .drawRect(pixi.canvas.width / (100 / this.screenPosition.x), pixi.canvas.height / (100 / this.screenPosition.y), pixi.canvas.width / (100 / this.screenSize.x), pixi.canvas.height / (100 / this.screenSize.y))
+            .endFill();
 
 
         pixi.render();
     }
 
     public worldToCamera(vec: Vector2): Vector2 {
-        return new Vector2(vec.x * this._px.x / this.size.x, vec.y * this._px.y / this.size.y);
+        return new Vector2(vec.x * (<any>this.gameObject.scene.cameraManager)._PIXI.canvas.width / this.size.x / (100 / this.screenSize.x), vec.y * (<any>this.gameObject.scene.cameraManager)._PIXI.canvas.height / this.size.y / (100 / this.screenSize.y));
     }
 
     public worldToCameraPoint(point: Vector2): Vector2 {

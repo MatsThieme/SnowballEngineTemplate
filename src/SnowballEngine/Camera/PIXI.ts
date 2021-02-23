@@ -1,4 +1,4 @@
-import { autoDetectRenderer, Container, Sprite } from 'pixi.js';
+import { autoDetectRenderer, Container, Graphics, Sprite } from 'pixi.js';
 import { Client } from '../Client';
 import { D } from '../Debug';
 
@@ -13,13 +13,15 @@ export class PIXI {
             antialias: project.settings.PIXIjsAntialiasing,
             transparent: project.settings.transparentBackground,
             powerPreference: Client.isMobile ? 'low-power' : 'high-performance',
-            clearBeforeRender: true
+            clearBeforeRender: false
         });
 
         this.renderer.on('context', console.log);
 
         this.container = new Container();
         this.container.interactiveChildren = false;
+
+        this.container.mask = new Graphics();
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -28,7 +30,7 @@ export class PIXI {
 
     public resize(width: number, height: number): void {
         if (this.renderer.context.isLost) D.error('context lost');
-        else this.renderer.resize(width, height);
+        else if (this.renderer.width !== width || this.renderer.height !== height) this.renderer.resize(width, height);
     }
 
     public addChild(child: Sprite | Container) {
@@ -43,7 +45,7 @@ export class PIXI {
     }
 
     public destroy(): void {
-        this.container.destroy({ children: true, texture: true, baseTexture: false}); // TODO: test
+        this.container.destroy({ children: true, texture: true, baseTexture: false }); // TODO: test
         this.renderer.destroy();
     }
 }

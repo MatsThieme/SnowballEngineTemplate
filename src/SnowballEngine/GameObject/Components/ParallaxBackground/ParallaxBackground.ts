@@ -34,6 +34,7 @@ export class ParallaxBackground extends Renderable {
 
         if (i === -1) return;
 
+        // TODO: test whether the background is in the viewport before calculating
         this.calculateBackgroundForCamera(camera);
     }
 
