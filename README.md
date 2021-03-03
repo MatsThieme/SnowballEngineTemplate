@@ -188,7 +188,7 @@ It can be generated with **npm run newadb**
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
-type AssetDB = { [path: string]: { type: AssetType, name ?: string, mimeType: string } };
+type AssetDB = { [path: string]: { type: AssetType, name?: string, mimeType: string } };
 ```
 
 <br>
@@ -199,9 +199,9 @@ InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, co
 the signature of an input mapping file looks like this
 ```typescript
 interface InputMapping {
-    keyboard: { [key: InputAction]: KeyboardButton | KeyboardAxis },
-    mouse: { [key: InputAction]: MouseButton | MouseAxis },
-    gamepad:  { [key: InputAction]: GamepadButton | GamepadAxis },
-    touch: { [key: InputAction]: number }
+    keyboard: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
+    mouse: { [key in InputAction]?: MouseButton | MouseAxis },
+    gamepad:  { [key in InputAction]?: GamepadButton | GamepadAxis },
+    touch: { [key in InputAction]?: number }
 }
 ```
