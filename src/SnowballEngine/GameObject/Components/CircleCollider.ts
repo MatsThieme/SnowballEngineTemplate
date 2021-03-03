@@ -1,6 +1,6 @@
 import { AABB } from '../../Physics/AABB';
 import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { AlignH, AlignV } from '../Align';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';

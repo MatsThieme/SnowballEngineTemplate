@@ -1,4 +1,4 @@
-import { Vector2 } from '../Vector2';
+import { Vector2 } from '../Utilities/Vector2';
 
 export class Projection {
     public readonly min: number;

@@ -1,6 +1,6 @@
 import { DisplayObject } from 'pixi.js';
-import { Angle } from '../../../Angle';
-import { Vector2 } from '../../../Vector2';
+import { Angle } from '../../../Utilities/Angle';
+import { Vector2 } from '../../../Utilities/Vector2';
 import { ComponentType } from '../../ComponentType';
 import { GameObject } from '../../GameObject';
 import { Component } from '../Component';

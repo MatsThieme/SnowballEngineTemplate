@@ -1,8 +1,8 @@
 import { Container, Sprite } from 'pixi.js';
 import { GameTime } from '../../../GameTime';
-import { clearObject } from '../../../Helpers';
-import { SpriteAnimation } from '../../../SpriteAnimation';
-import { Vector2 } from '../../../Vector2';
+import { clearObject } from '../../../Utilities/Helpers';
+import { Vector2 } from '../../../Utilities/Vector2';
+import { SpriteAnimation } from '../AnimatedSprite/SpriteAnimation';
 import { ParticleSystem } from './ParticleSystem';
 
 export class Particle {

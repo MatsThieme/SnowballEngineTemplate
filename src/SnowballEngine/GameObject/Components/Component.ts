@@ -1,4 +1,4 @@
-import { clearObject } from '../../Helpers';
+import { clearObject } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Camera } from './Camera';

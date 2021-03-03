@@ -1,7 +1,7 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
-import { clamp } from '../../Helpers';
 import { Input } from '../../Input/Input';
+import { clamp } from '../../Utilities/Helpers';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
@@ -32,7 +32,7 @@ export abstract class UIInputField extends UIElement {
 
         if (this.label === '') this.label = this.value.toString();
 
-        if (Input.getButton(InputType.Trigger).down && !this.down && this.focused) this.focused = false;
+        if (Input.getButton('Trigger').down && !this.down && this.focused) this.focused = false;
         else if (this.click) this.focused = true;
 
         if (this.focused) {

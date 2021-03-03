@@ -1,30 +1,33 @@
 import InputMappingAxes from '../../../Assets/InputMappingAxes.json';
 import InputMappingButtons from '../../../Assets/InputMappingButtons.json';
+import { Gamepad } from './Devices/Gamepad/Gamepad';
+import { InputDeviceType } from './Devices/InputDeviceType';
+import { Keyboard } from './Devices/Keyboard/Keyboard';
+import { Mouse } from './Devices/Mouse/Mouse';
+import { Touch } from './Devices/Touch';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
-import { InputDevice } from './InputDevice';
-import { IInputEvent } from './InputEvent';
-import { InputGamepad } from './InputGamepad';
-import { InputKeyboard } from './InputKeyboard';
+import { InputEvent } from './InputEvent';
 import { InputMapping } from './InputMapping';
-import { InputMouse } from './InputMouse';
-import { InputTouch } from './InputTouch';
 
 export class Input {
-    private static _devices: InputDevice = 0b1111;
-    public static readonly touch?: InputTouch;
-    public static readonly mouse?: InputMouse;
-    public static readonly keyboard?: InputKeyboard;
-    public static readonly gamepad?: InputGamepad;
+    private static _devices: InputDeviceType = 0b1111;
+    public static readonly touch?: Touch;
+    public static readonly mouse?: Mouse;
+    public static readonly keyboard?: Keyboard;
+    public static readonly gamepad: typeof Gamepad;
+
     public static inputMappingButtons: InputMapping;
     public static inputMappingAxes: InputMapping;
 
     public static start() {
-        if (Input._devices & InputDevice.Touch) (<any>Input).touch = new InputTouch();
-        if (Input._devices & InputDevice.Mouse) (<any>Input).mouse = new InputMouse();
-        if (Input._devices & InputDevice.Keyboard) (<any>Input).keyboard = new InputKeyboard();
-        if (Input._devices & InputDevice.Gamepad) (<any>Input).gamepad = new InputGamepad();
-
+        if (Input._devices & InputDeviceType.Touch) (<any>Input).touch = new Touch();
+        if (Input._devices & InputDeviceType.Mouse) (<any>Input).mouse = new Mouse();
+        if (Input._devices & InputDeviceType.Keyboard) (<any>Input).keyboard = new Keyboard();
+        if (Input._devices & InputDeviceType.Gamepad) {
+            (<any>Input).gamepad = Gamepad;
+            Gamepad.init();
+        }
 
         Input.inputMappingButtons = new InputMapping(<any>InputMappingButtons);
         Input.inputMappingAxes = new InputMapping(<any>InputMappingAxes);
@@ -35,37 +38,85 @@ export class Input {
     * Control which devices should be updated and considered when calling getButton or getAxis.
     *
     */
-    public static get devices(): InputDevice {
+    public static get devices(): InputDeviceType {
         return Input._devices;
     }
 
-    public static set devices(val: InputDevice) {
+    public static set devices(val: InputDeviceType) {
         Input._devices = val;
 
-        for (const i of [{ p: 'touch', c: InputTouch, t: InputDevice.Touch }, { p: 'mouse', c: InputMouse, t: InputDevice.Mouse }, { p: 'keyboard', c: InputKeyboard, t: InputDevice.Keyboard }, { p: 'gamepad', c: InputGamepad, t: InputDevice.Gamepad }]) {
-            if (val & i.t) {
-                if (!(<any>this)[i.p]) {
-                    (<any>this)[i.p] = new i.c();
-                }
-            } else if (this.touch) {
-                (<any>this)[i.p].destroy();
-                delete (<any>this)[i.p];
+
+        if (val & InputDeviceType.Gamepad) {
+            if (!Input.gamepad) {
+                (<any>Input).gamepad = Gamepad;
+                Input.gamepad!.init();
+            }
+        } else {
+            if (Input.gamepad) {
+                Input.gamepad.reset();
+                delete (<any>Input).gamepad;
+            }
+        }
+
+
+        if (val & InputDeviceType.Keyboard) {
+            if (!Input.keyboard) {
+                (<any>Input).keyboard = new Keyboard();
+            }
+        } else {
+            if (Input.keyboard) {
+                Input.keyboard.destroy();
+                delete (<any>Input).keyboard;
+            }
+        }
+
+
+        if (val & InputDeviceType.Mouse) {
+            if (!Input.mouse) {
+                (<any>Input).mouse = new Mouse();
+            }
+        } else {
+            if (Input.mouse) {
+                Input.mouse.destroy();
+                delete (<any>Input).mouse;
+            }
+        }
+
+
+        if (val & InputDeviceType.Touch) {
+            if (!Input.touch) {
+                (<any>Input).touch = new Touch();
+            }
+        } else {
+            if (Input.touch) {
+                Input.touch.destroy();
+                delete (<any>Input).touch;
             }
         }
     }
-
 
     /**
      * 
      * Returns a InputButton object mapped to the given inputtype.
      * 
      */
-    public static getButton(t: InputType): InputButton {
-        if (['keyboard', 'mouse', 'gamepad', 'touch'].map(n => this.inputMappingButtons[n][t]).filter(x => x == undefined).length === 0) return new InputButton();
+    public static getButton(t: InputAction): InputButton {
+        const btns: InputButton[] = [];
 
-        const btns = [this.keyboard?.getButton(<string>this.inputMappingButtons.keyboard[t]), this.touch?.getButton(<number>this.inputMappingButtons.touch[t]), this.mouse?.getButton(<number>this.inputMappingButtons.mouse[t]), this.gamepad?.getButton(<number>this.inputMappingButtons.gamepad[t])].filter(e => e && e.down != undefined).sort((a, b) => (b!.down ? b!.clicked ? 2 : 1 : 0) - (a!.down ? a!.clicked ? 2 : 1 : 0));
+        for (const device of ['keyboard', 'mouse', 'gamepad', 'touch']) {
+            if ((<any>this)[device] && this.inputMappingButtons[device][t] !== undefined) {
 
-        return <InputButton>btns[0] || new InputButton();
+                const b = <InputButton>(<any>this)[device].getButton(this.inputMappingButtons[device][t]);
+
+                if (b) {
+                    if (b.down && b.click) return b;
+                    else if (b.down) btns.unshift(b);
+                    else if (b.clicked) btns.push(b);
+                }
+            }
+        }
+
+        return btns[0] || new InputButton();
     }
 
     /**
@@ -73,44 +124,60 @@ export class Input {
      * Returns the axis with the largest absolute value mapped to the given inputtype.
      * 
      */
-    public static getAxis(t: InputType): InputAxis {
-        const axes: InputAxis[] = <any>[Input.keyboard?.getAxis(<string>Input.inputMappingAxes.keyboard[t]), Input.touch?.getAxis(<number>Input.inputMappingAxes.touch[t]), Input.mouse?.getAxis(<number>Input.inputMappingAxes.mouse[t]), Input.gamepad?.getAxis(<number>Input.inputMappingAxes.gamepad[t])].filter(e => e && e.values.length).sort((a, b) => Math.abs(b!.values.reduce((t, c) => t + c, 0)) - Math.abs(a!.values.reduce((t, c) => t + c, 0)));
+    public static getAxis(t: InputAction): InputAxis {
+        const axes: InputAxis[] = [];
 
-        for (const axis of axes) {
-            if (axis.values.length && axis.values.reduce((t, c) => t + c, 0) !== 0) return axis;
+        for (const device of ['keyboard', 'mouse', 'gamepad', 'touch']) {
+            if ((<any>Input)[device] && Input.inputMappingAxes[device][t] !== undefined) {
+
+                const a = <InputAxis>(<any>Input)[device].getAxis(<string | number>Input.inputMappingAxes[device][t]);
+
+                if (a) {
+                    if (a.values.reduce((t, c) => t + Math.abs(c), 0) / a.values.length < 0.1) continue;
+
+                    if (!axes[0] || Math.abs(a.values[0]) + a.values.reduce((t, c) => t + Math.abs(c), 0) > Math.abs(axes[0].values[0]) + axes[0].values.reduce((t, c) => t + Math.abs(c), 0)) axes.unshift(a);
+                    else if (a.values[0] !== undefined) axes.push(a);
+                }
+            }
         }
 
         return axes[0] || new InputAxis();
     }
 
     public static update(): void {
-        Input.touch?.update();
-        Input.mouse?.update();
-        Input.keyboard?.update();
-        Input.gamepad?.update();
+        if (Input.touch) Input.touch.update();
+        if (Input.mouse) Input.mouse.update();
+        if (Input.keyboard) Input.keyboard.update();
+        if (Input.gamepad) Input.gamepad.update();
     }
 
-    public static addListener(type: InputType, cb: (event: IInputEvent) => any, id: string = 'ilid' + Math.random() + performance.now(), devices: InputDevice = 0b1111): string {
-        if (devices & InputDevice.Touch) Input.touch?.addListener(type, cb, id);
-        if (devices & InputDevice.Mouse) Input.mouse?.addListener(type, cb, id);
-        if (devices & InputDevice.Keyboard) Input.keyboard?.addListener(type, cb, id);
-        if (devices & InputDevice.Gamepad) Input.gamepad?.addListener(type, cb, id);
+    /**
+     * 
+     * Listener will only be added to existing devices.
+     * If Input.devices changes afterwards, the listeners won't be added to new devices, but removed from removed devices
+     * 
+     */
+    public static addListener(type: InputAction, cb: (event: InputEvent) => any, id: string = 'inputListenerID' + Math.random() + performance.now(), devices: InputDeviceType = 0b1111): string {
+        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.addListener(type, cb, id);
+        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.addListener(type, cb, id);
+        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.addListener(type, cb, id);
+        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.addListener(type, cb, id);
 
         return id;
     }
 
-    public static removeListener(id: string, devices: InputDevice = 0b1111): void {
-        if (devices & InputDevice.Touch) Input.touch?.removeListener(id);
-        if (devices & InputDevice.Mouse) Input.mouse?.removeListener(id);
-        if (devices & InputDevice.Keyboard) Input.keyboard?.removeListener(id);
-        if (devices & InputDevice.Gamepad) Input.gamepad?.removeListener(id);
+    public static removeListener(id: string, devices: InputDeviceType = 0b1111): void {
+        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.removeListener(id);
+        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.removeListener(id);
+        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.removeListener(id);
+        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.removeListener(id);
     }
 
     public static reset(): void {
         Input.touch?.destroy();
         Input.mouse?.destroy();
         Input.keyboard?.destroy();
-        Input.gamepad?.destroy();
+        Input.gamepad?.reset();
 
         Input.start();
     }

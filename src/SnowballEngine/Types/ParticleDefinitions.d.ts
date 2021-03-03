@@ -1,6 +1,6 @@
-import { Angle } from '../Angle';
 import { Asset } from '../Assets/Asset';
-import { Vector2 } from '../Vector2';
+import { Angle } from '../Utilities/Angle';
+import { Vector2 } from '../Utilities/Vector2';
 
 declare global {
     type ParticleAsset = Asset | { readonly assets: Asset[], readonly swapTime: number };

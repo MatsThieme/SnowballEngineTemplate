@@ -9,5 +9,8 @@
     "mouse": {
         "PointerPosition": 0
     },
-    "gamepad": {}
+    "gamepad": {
+        "MoveHorizontal": 0,
+        "MoveVertical": 1
+    }
 }

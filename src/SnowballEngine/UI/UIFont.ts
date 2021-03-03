@@ -1,5 +1,5 @@
 import { Client } from '../Client';
-import { Vector2 } from '../Vector2';
+import { Vector2 } from '../Utilities/Vector2';
 import { UIFontSize } from './UIFontSize';
 
 export class UIFont {

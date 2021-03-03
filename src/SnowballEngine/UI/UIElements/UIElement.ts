@@ -1,13 +1,13 @@
 import { Asset } from '../../Assets/Asset';
 import { AssetType } from '../../Assets/AssetType';
 import { Client } from '../../Client';
-import { Color } from '../../Color';
 import { D } from '../../Debug';
 import { AlignH, AlignV } from '../../GameObject/Align';
-import { createSprite } from '../../Helpers';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
-import { Vector2 } from '../../Vector2';
+import { Color } from '../../Utilities/Color';
+import { createSprite } from '../../Utilities/Helpers';
+import { Vector2 } from '../../Utilities/Vector2';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIFontSize } from '../UIFontSize';
@@ -101,9 +101,9 @@ export abstract class UIElement {
     public async update(): Promise<void> {
         if (!this.active) return;
 
-        const trigger = Input.getButton(InputType.Trigger);
+        const trigger = Input.getButton('Trigger');
 
-        const p = Input.getAxis(InputType.PointerPosition);
+        const p = Input.getAxis('PointerPosition');
 
         const intersects = this.aabbpx.intersectsPoint(p.v2);
 

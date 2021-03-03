@@ -1,8 +1,8 @@
 import { Container } from 'pixi.js';
-import { SpriteAnimation } from '../../SpriteAnimation';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
-import { Renderable } from './Renderable';
+import { ComponentType } from '../../ComponentType';
+import { GameObject } from '../../GameObject';
+import { Renderable } from '../Renderable';
+import { SpriteAnimation } from './SpriteAnimation';
 
 export class AnimatedSprite extends Renderable {
     public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };

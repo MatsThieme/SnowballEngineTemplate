@@ -1,7 +1,8 @@
-import { average, clamp } from './Helpers';
+import { average, clamp } from './Utilities/Helpers';
+import { Stopwatch } from './Utilities/Stopwatch';
 
 export class GameTime {
-    private static _lastTime: number = performance.now();
+    private static _lastTime: number = 0;
 
     private static _deltaTime: number = 5;
     private static _deltaTimeSeconds: number = 0.005;
@@ -12,6 +13,8 @@ export class GameTime {
     private static readonly _startTime: number = performance.now();
 
     private static _time: number = 0;
+
+    private static _sw = new Stopwatch();
 
 
     /**
@@ -26,7 +29,7 @@ export class GameTime {
      * Highest clamped delta time
      * 
      */
-    public static maxDeltaTime: number = 40;
+    public static maxDeltaTime: number = 1000;
 
     /**
      *
@@ -53,11 +56,23 @@ export class GameTime {
     *
     */
     public static get time(): number {
-        return this._time;
+        return GameTime._time;
+    }
+
+    public static get now(): number {
+        return GameTime._time + GameTime._sw.milliseconds;
     }
 
     /**
      * 
+     * returns the app time in milliseconds after the last update.
+     * 
+     */
+    public static get lastUpdate(): number {
+        return GameTime._lastTime;
+    }
+
+    /**
      * @internal
      * 
      * Calculates and clamps the delta time since last call.
@@ -71,6 +86,7 @@ export class GameTime {
         GameTime.t.unshift(d);
 
         GameTime._time += GameTime.deltaTime;
+        GameTime._sw = new Stopwatch();
 
 
         const avgDelta = average(...GameTime.t);

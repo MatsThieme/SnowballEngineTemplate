@@ -1,4 +1,4 @@
-import { interval } from '../Helpers';
+import { interval } from './Helpers';
 
 /**
  * 

@@ -1,7 +1,7 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
 import { AABB } from '../../Physics/AABB';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';

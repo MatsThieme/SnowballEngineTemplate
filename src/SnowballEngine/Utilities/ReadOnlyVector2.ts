@@ -1,4 +1,3 @@
-import { Vector2 } from './Vector2';
 
 export class ReadOnlyVector2 {
     public readonly x: number;

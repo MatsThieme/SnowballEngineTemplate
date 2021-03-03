@@ -1,5 +1,5 @@
-import { asyncTimeout } from './Helpers';
 import { Scene } from './Scene';
+import { clearAllIntervals } from './Utilities/Helpers';
 
 export class SceneManager {
     private scenes: Map<string, { cb: (scene: Scene) => any, scene?: Scene }>;
@@ -16,14 +16,18 @@ export class SceneManager {
         this.scenes = new Map();
     }
 
-    public create(name: string, sceneCb: (scene: Scene) => any): void {
+    public add(name: string, sceneCb: (scene: Scene) => any): void {
         this.scenes.set(name, { cb: sceneCb });
     }
 
-    public async load(name: string): Promise<Scene | void> {
+    public async load(name: string): Promise<Scene> {
+        if (name === this.activeScene) await this.unload(this.activeScene);
+
+
         const sO = this.scenes.get(name);
 
         if (sO) {
+            clearAllIntervals();
 
             if (!sO.scene) {
                 const scene = new Scene(this, name);
@@ -34,25 +38,31 @@ export class SceneManager {
                 sO.scene = scene;
             }
 
+
             await sO.scene.start();
+
 
             if (this.activeScene) await this.unload(this.activeScene);
 
+
             this.activeScene = name;
 
-            await asyncTimeout(10);
 
             return sO.scene;
         }
+
+        throw `No Scene named ${name} found`;
     }
 
     public async unload(name: string) {
-        if (this.scenes.get(name)?.scene) {
-            const currentScene = this.scenes.get(name)!.scene!;
+        const scene = this.scenes.get(name)?.scene;
 
-            await currentScene.destroy();
+        if (scene) {
+            await scene.destroy();
 
             delete this.scenes.get(name)!.scene;
+
+            this.activeScene = undefined;
         }
     }
 }

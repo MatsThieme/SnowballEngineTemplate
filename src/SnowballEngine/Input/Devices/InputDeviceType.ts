@@ -1,4 +1,4 @@
-export enum InputDevice {
+export enum InputDeviceType {
     Touch = 0b0001,
     Mouse = 0b0010,
     Keyboard = 0b0100,

@@ -1,21 +1,22 @@
-import { Input } from './Input';
-import { InputAxis } from './InputAxis';
-import { InputButton } from './InputButton';
+import { Input } from '../Input';
+import { InputAxis } from '../InputAxis';
+import { InputButton } from '../InputButton';
+import { InputEvent } from '../InputEvent';
+import { InputEventTarget } from '../InputEventTarget';
 import { InputDevice } from './InputDevice';
-import { IInputEvent } from './InputEvent';
-import { InputEventTarget } from './InputEventTarget';
+import { InputDeviceType } from './InputDeviceType';
 
-export class InputTouch extends InputEventTarget {
+export class Touch extends InputEventTarget implements InputDevice {
     private _positions: InputAxis[];
-    private button: InputButton;
-    private fireListener: boolean;
+    private _button: InputButton;
+    private _fireListener: boolean;
 
     public constructor() {
         super();
 
-        this.button = new InputButton();
+        this._button = new InputButton();
         this._positions = [];
-        this.fireListener = false;
+        this._fireListener = false;
 
         this.addListeners();
     }
@@ -30,37 +31,34 @@ export class InputTouch extends InputEventTarget {
             this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio), Math.round(item.clientY * window.devicePixelRatio)]);
         }
 
-        this.button.down = !!e.touches.length;
+        this._button.down = !!e.touches.length;
 
-        this.fireListener = true;
+        this._fireListener = true;
     }
 
-    public getButton(index?: number): InputButton | undefined {
-        if (index === undefined) return;
-
-        return index === 0 ? this.button : new InputButton();
+    public getButton(index: number): InputButton | undefined {
+        return index === 0 ? this._button : new InputButton();
     }
 
-    public getAxis(index?: number): Readonly<InputAxis> | undefined {
-        if (index === undefined) return;
-
+    public getAxis(index: number): Readonly<InputAxis> | undefined {
         return this._positions[index];
     }
 
     public update(): void {
-        this.button.update();
+        this._button.update();
 
-        if (!this.fireListener) return;
+        if (!this._fireListener) return;
 
-        for (const { cb, type } of this.listeners.values()) {
+        for (const { cb, type } of this._listeners.values()) {
             const btn = Input.inputMappingButtons.mouse[type];
             const ax = Input.inputMappingAxes.mouse[type];
 
-            const e: IInputEvent = {
+            const e: InputEvent = {
                 type,
-                device: InputDevice.Keyboard,
-                axis: this.getAxis(ax!),
-                button: this.getButton(btn!)
+                deviceType: InputDeviceType.Touch,
+                axis: ax ? this.getAxis(ax) : undefined,
+                button: btn ? this.getButton(btn) : undefined,
+                device: this
             }
 
             if (!e.axis && !e.button) continue;
@@ -68,7 +66,7 @@ export class InputTouch extends InputEventTarget {
             cb(e);
         }
 
-        this.fireListener = false;
+        this._fireListener = false;
     }
 
     private addListeners(): void {

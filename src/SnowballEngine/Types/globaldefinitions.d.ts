@@ -52,11 +52,6 @@ type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 /** @internal */
 type AbstractConstructor<T> = Function & { prototype: T };
 
-declare enum InputType {
-    Trigger = Infinity,
-    PointerPosition,
-}
-
 interface IVector2 {
     x: number;
     y: number;

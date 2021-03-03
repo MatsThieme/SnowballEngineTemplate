@@ -1,8 +1,8 @@
-import { Asset } from './Assets/Asset';
-import { AssetType } from './Assets/AssetType';
+import { Asset } from '../Assets/Asset';
+import { AssetType } from '../Assets/AssetType';
+import { D } from '../Debug';
 import { Canvas } from './Canvas';
 import { Color } from './Color';
-import { D } from './Debug';
 
 /**
  * 
@@ -72,13 +72,26 @@ export function triggerOnUserInputEvent<T>(cb: (...args: any[]) => T | Promise<T
     });
 }
 
+
+const intervals: number[] = [];
+
 /**
  * 
  * Simplified version of setInterval, the interval can be cleared by calling cb's parameter clear.
  * 
  */
-export function interval(cb: (clear: () => void) => void, ms: number): void {
-    const i = window.setInterval(() => cb(() => window.clearInterval(i)), ms);
+export function interval(cb: (clear: () => void, handle: number) => void, ms: number, dontClearOnUnload: boolean = false): void {
+    const clear = () => window.clearInterval(intervals.splice(intervals.findIndex(v => v === i), 1)[0]);
+
+    const i: number = window.setInterval(() => cb(clear, i), ms);
+
+    if (!dontClearOnUnload) intervals.push(i);
+}
+
+export function clearAllIntervals() {
+    for (const i of intervals.splice(0)) {
+        window.clearInterval(i);
+    }
 }
 
 /**
@@ -86,7 +99,7 @@ export function interval(cb: (clear: () => void) => void, ms: number): void {
  * Create an Image Asset from a canvas.
  * 
  */
-export function createSprite(f: ((context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any) | Color, width: number = 1, height: number = 1): Asset {
+export function createSprite(f: Color | ((context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any), width: number = 1, height: number = 1): Asset {
     const canvas = new Canvas(width, height);
     const context = canvas.getContext('2d')!;
     context.imageSmoothingEnabled = false;
@@ -97,16 +110,6 @@ export function createSprite(f: ((context: CanvasRenderingContext2D, canvas: HTM
     } else f(context, canvas);
 
     return new Asset(canvas.toDataURL(), AssetType.Image, canvas);
-}
-
-/**
- * 
- * Returns a function which returns the elapsed time in milliseconds since stopwatch() was called.
- * 
- */
-export function stopwatch(): () => number {
-    const start = performance.now();
-    return () => performance.now() - start;
 }
 
 /**
@@ -126,7 +129,7 @@ export function clearObject(object: object, setnull: boolean = false) {
 
 /**
  * 
- * internally used for InputType: InputType = createENUM<InputType>();
+ * Dynamically created and initialized ENUM.
  * 
  */
 export function createENUM<T>(): T {

@@ -1,4 +1,4 @@
-import { Vector2 } from '../Vector2';
+import { Vector2 } from '../Utilities/Vector2';
 
 export class InputAxis {
     public values: readonly number[];

@@ -4,7 +4,7 @@ import { Camera } from '../GameObject/Components/Camera';
 import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
 import { UIFrame } from '../UI/UIFrame';
-import { Vector2 } from '../Vector2';
+import { Vector2 } from '../Utilities/Vector2';
 import { PIXI } from './PIXI';
 
 export class CameraManager {
@@ -63,6 +63,7 @@ export class CameraManager {
         return this._gameObjects.has(gameObject.id);
     }
 
+
     public update() {
         if (!this.cameras.filter(c => c.active)) return D.error('No active camera');
 
@@ -107,7 +108,7 @@ export class CameraManager {
             }
         }
 
-        /* little performance boost (around 5% when tested): clear pixi.canvas once per frame, not once per camera per frame and draw it only once to target canvas; remove drawImage call in loop above */
+        /* little performance boost (around 5% when tested): clear pixi.canvas once per frame, not once per camera per frame and draw it only once to the target canvas; remove drawImage call in loop above */
         // this._PIXI.renderer.clearBeforeRender = false;
 
         // this._context.drawImage(this._PIXI.canvas, 0, 0, Client.resolution.x * this.renderScale, Client.resolution.y * this.renderScale, 0, 0, Client.resolution.x, Client.resolution.y);

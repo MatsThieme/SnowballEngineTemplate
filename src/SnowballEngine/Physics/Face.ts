@@ -1,5 +1,5 @@
+import { Vector2 } from '../Utilities/Vector2';
 import { Line } from './Line';
-import { Vector2 } from '../Vector2';
 
 export class Face {
     public v1: Vector2;

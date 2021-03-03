@@ -13,7 +13,7 @@ export class PIXI {
             antialias: project.settings.PIXIjsAntialiasing,
             transparent: project.settings.transparentBackground,
             powerPreference: Client.isMobile ? 'low-power' : 'high-performance',
-            clearBeforeRender: false
+            clearBeforeRender: true
         });
 
         this.renderer.on('context', console.log);

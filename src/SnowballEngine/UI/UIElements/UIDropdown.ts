@@ -2,7 +2,7 @@ import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
@@ -30,7 +30,7 @@ export class UIDropdown extends UIElement {
             const a = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
             const b = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
 
-            const pointerPos = new Vector2(Input.getAxis(InputType.PointerPosition).values[0], Input.getAxis(InputType.PointerPosition).values[1]);
+            const pointerPos = Input.getAxis('PointerPosition').v2;
             const buttonSize = new Vector2(this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x), (this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y)) / (1 + this._values.length)).round();
 
             if (this.extended) {
@@ -50,7 +50,7 @@ export class UIDropdown extends UIElement {
                 this.extended = true;
                 this.draw();
             }
-        } else if (Input.getButton(InputType.Trigger).down && !Input.getButton(InputType.Trigger).clicked) this.extended = false;
+        } else if (Input.getButton('Trigger').click) this.extended = false;
     }
 
     protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {

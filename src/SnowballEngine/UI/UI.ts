@@ -1,10 +1,10 @@
 import { Asset } from '../Assets/Asset';
 import { AssetType } from '../Assets/AssetType';
-import { Canvas } from '../Canvas';
 import { Client } from '../Client';
 import { AABB } from '../Physics/AABB';
 import { Scene } from '../Scene';
-import { Vector2 } from '../Vector2';
+import { Canvas } from '../Utilities/Canvas';
+import { Vector2 } from '../Utilities/Vector2';
 import { UIFrame } from './UIFrame';
 import { UIMenu } from './UIMenu';
 

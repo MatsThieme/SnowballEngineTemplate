@@ -1,7 +1,8 @@
 import isMobile from 'ismobilejs';
-import { asyncTimeout, triggerOnUserInputEvent } from './Helpers';
-import { ReadOnlyVector2 } from './ReadOnlyVector2';
-import { Vector2 } from './Vector2';
+import { Scene } from './Scene';
+import { asyncTimeout, triggerOnUserInputEvent } from './Utilities/Helpers';
+import { ReadOnlyVector2 } from './Utilities/ReadOnlyVector2';
+import { Vector2 } from './Utilities/Vector2';
 
 export class Client {
     public static platform: 'android' | 'ios' | 'browser' | 'windows' | 'osx' = <any>(window.cordova || {}).platformId || 'browser';
@@ -24,6 +25,7 @@ export class Client {
         await asyncTimeout(ms);
 
         cancelAnimationFrame(handle);
+
         return Math.round(frames / ms * 1000);
     }
 
@@ -34,7 +36,7 @@ export class Client {
      */
     public static readonly resolution: ReadOnlyVector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
 
-    public static monitorRefreshRate: number = 0;
+    public static monitorRefreshRate: number = 60;
 
     public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
 
@@ -64,23 +66,26 @@ export class Client {
         }
     }
 
-    /**
-     * 
-     * Returns the number of available cpu threads.
-     * 
-     */
-    public static readonly cpuThreads: number = navigator.hardwareConcurrency;
+    private static resizeListener?: () => any;
 
-    public static async start(): Promise<void> {
-        if (Client.monitorRefreshRate) return;
-        Client.monitorRefreshRate = 1;
+    public static async init(): Promise<void> {
+        const el = Scene.sceneManager?.scene?.domElement || window;
 
-        addEventListener('resize', () => {
-            (<Vector2>Client.resolution).x = window.innerWidth * window.devicePixelRatio;
-            (<Vector2>Client.resolution).y = window.innerHeight * window.devicePixelRatio;
+        if (Client.resizeListener) el.removeEventListener('resize', Client.resizeListener);
 
-            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude));
-        });
+        Client.resizeListener = () => {
+            const boundingClientRect = Scene.sceneManager?.scene?.domElement.getBoundingClientRect();
+
+            (<Vector2>Client.resolution).x = (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
+            (<Vector2>Client.resolution).y = (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
+
+            (<Vector2>Client.resolution).round();
+
+            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(18.35)); // new Vector2(16, 9).magnitude = 18.35755975068582
+        }
+
+        el.addEventListener('resize', Client.resizeListener);
+
 
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
     }

@@ -1,14 +1,14 @@
 import { Container } from 'pixi.js';
 import { D } from '../Debug';
-import { Transform } from './Components/Transform/Transform';
-import { clearObject } from '../Helpers';
 import { Collision } from '../Physics/Collision';
 import { Scene } from '../Scene';
-import { Vector2 } from '../Vector2';
+import { clearObject } from '../Utilities/Helpers';
+import { Vector2 } from '../Utilities/Vector2';
 import { Behaviour } from './Components/Behaviour';
 import { Collider } from './Components/Collider';
 import { Component } from './Components/Component';
 import { RigidBody } from './Components/RigidBody';
+import { Transform } from './Components/Transform/Transform';
 import { ComponentType } from './ComponentType';
 
 /**

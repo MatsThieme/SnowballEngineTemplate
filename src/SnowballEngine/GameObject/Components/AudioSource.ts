@@ -2,7 +2,7 @@ import { Asset } from '../../Assets/Asset';
 import { AssetType } from '../../Assets/AssetType';
 import { AudioMixer } from '../../Audio/AudioMixer';
 import { D } from '../../Debug';
-import { clamp, triggerOnUserInputEvent } from '../../Helpers';
+import { clamp, triggerOnUserInputEvent } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';

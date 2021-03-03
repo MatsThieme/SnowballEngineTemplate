@@ -3,7 +3,7 @@ import { Assets } from '../../Assets/Assets';
 import { D } from '../../Debug';
 import { AABB } from '../../Physics/AABB';
 import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Renderable } from './Renderable';

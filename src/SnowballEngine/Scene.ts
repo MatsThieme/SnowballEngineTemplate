@@ -1,6 +1,5 @@
 import { AudioMixer } from './Audio/AudioMixer';
 import { CameraManager } from './Camera/CameraManager';
-import { Canvas } from './Canvas';
 import { Client } from './Client';
 import { Framedata } from './Framedata';
 import { AudioListener } from './GameObject/Components/AudioListener';
@@ -10,12 +9,13 @@ import { Component } from './GameObject/Components/Component';
 import { ComponentType } from './GameObject/ComponentType';
 import { GameObject } from './GameObject/GameObject';
 import { GameTime } from './GameTime';
-import { cantorPairingFunction, clearObject, interval } from './Helpers';
 import { Input } from './Input/Input';
 import { Collision } from './Physics/Collision';
 import { Physics } from './Physics/Physics';
 import { SceneManager } from './SceneManager';
 import { UI } from './UI/UI';
+import { Canvas } from './Utilities/Canvas';
+import { cantorPairingFunction, clearObject, interval } from './Utilities/Helpers';
 
 export class Scene {
     public readonly domElement: HTMLCanvasElement;
@@ -46,6 +46,7 @@ export class Scene {
         this.domElement.id = this.name;
 
         Input.reset();
+        Client.init();
 
         this.gameObjects = new Map();
         this.cameraManager = new CameraManager(this.domElement);
@@ -72,24 +73,9 @@ export class Scene {
         return [...this.gameObjects.entries()].filter(e => (e[0].match(/(.*) \(\d+\)/) || '')[1] === name).map(e => e[1]);
     }
 
-    /**
-     * 
-     * Creates new GameObject with name and executes callbacks.
-     * 
-     */
-    public async addGameObject(name: string, ...cb: ((gameObject: GameObject) => any)[]): Promise<GameObject> {
-        const gameObject = new GameObject(name);
-
-        if (cb) {
-            for (const c of cb) {
-                await c(gameObject);
-            }
-        }
-
-        return gameObject;
-    }
 
     /**
+     * @internal
      * 
      * Update and render loop
      * 
@@ -159,11 +145,13 @@ export class Scene {
             this.destroyCbs.splice(0);
         }
 
+
         this.cameraManager.update();
 
         await this.ui.update();
 
         this.cameraManager.drawUI(this.ui.currentFrame);
+
 
         if (this.requestAnimationFrameHandle) this.requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
@@ -171,6 +159,7 @@ export class Scene {
     }
 
     /**
+     * @internal
      * 
      * Start or resume scene.
      * 
@@ -201,7 +190,6 @@ export class Scene {
      *
      */
     public async stop(): Promise<void> {
-        //if (this.requestAnimationFrameHandle) cancelAnimationFrame(this.requestAnimationFrameHandle);
         this.requestAnimationFrameHandle = undefined;
 
         await this.removeFromDOM();

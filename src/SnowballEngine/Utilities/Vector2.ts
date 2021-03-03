@@ -435,6 +435,10 @@ export class Vector2 implements IVector2 {
         return this;
     }
 
+    public get values(): number[] {
+        return [this.x, this.y];
+    }
+
     public static lerp(a: IVector2, b: IVector2, t: number): Vector2 {
         return new Vector2(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
     }

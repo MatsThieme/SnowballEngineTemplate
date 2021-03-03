@@ -1,5 +1,5 @@
 import { Container, Sprite } from 'pixi.js';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { AlignH, AlignV } from '../Align';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
@@ -181,7 +181,7 @@ export abstract class Renderable extends Component {
             }
 
             this._sprite.position.copyFrom(this.position);
-        } 
+        }
     }
 
     public destroy(): void {

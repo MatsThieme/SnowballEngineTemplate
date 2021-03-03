@@ -1,8 +1,8 @@
 import { Container, Sprite } from 'pixi.js';
-import { Asset } from './Assets/Asset';
-import { AssetType } from './Assets/AssetType';
-import { D } from './Debug';
-import { GameTime } from './GameTime';
+import { Asset } from '../../../Assets/Asset';
+import { AssetType } from '../../../Assets/AssetType';
+import { D } from '../../../Debug';
+import { GameTime } from '../../../GameTime';
 
 export class SpriteAnimation {
     /**

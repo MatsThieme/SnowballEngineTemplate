@@ -5,7 +5,7 @@
     "settings": {
         "allowContextMenu": false,
         "transparentBackground": false,
-        "PIXIjsAntialiasing": false
+        "PIXIjsAntialiasing": true
     },
     "cordova-settings": {
         "id": "com.SnowballEngine.Template",

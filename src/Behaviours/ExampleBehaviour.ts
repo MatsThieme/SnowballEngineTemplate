@@ -1,4 +1,4 @@
-import { Behaviour, Collision, GameTime, Input, Vector2 } from '../SnowballEngine/SE';
+import { Behaviour, D, GameTime, Input, Vector2 } from '../SnowballEngine/SE';
 
 export class ExampleBehaviour extends Behaviour {
     /**
@@ -24,7 +24,7 @@ export class ExampleBehaviour extends Behaviour {
      * 
      */
     public async start(): Promise<void> {
-
+        D.log(this.example2);
     }
 
     /**
@@ -37,24 +37,6 @@ export class ExampleBehaviour extends Behaviour {
         this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
 
         // move the camera if there is user input
-        this.gameObject.scene.cameraManager.cameras[0].gameObject.transform.position.add(new Vector2(Input.getAxis(InputType.MoveHorizontal).values[0] * GameTime.deltaTimeSeconds * 10, Input.getAxis(InputType.MoveVertical).values[0] * GameTime.deltaTimeSeconds * 10));
-    }
-
-    /**
-     * 
-     * Called whenever a collider on this.gameObject collides.
-     * 
-     */
-    public onColliding(collision: Collision): void {
-
-    }
-
-    /**
-     * 
-     * Called if an other gameObjects collider intersects this.gameObject.collider.
-     * 
-     */
-    public onTrigger(collision: Collision): void {
-
+        this.gameObject.scene.cameraManager.cameras[0].gameObject.transform.position.add(new Vector2(Input.getAxis('MoveHorizontal').values[0] * GameTime.deltaTimeSeconds * 10, Input.getAxis('MoveVertical').values[0] * GameTime.deltaTimeSeconds * 10));
     }
 }

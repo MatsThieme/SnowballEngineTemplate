@@ -1,6 +1,5 @@
 import AssetDB from '../../../Assets/AssetDB.json';
-import { D } from '../../SnowballEngine/SE';
-import { asyncTimeout, interval } from '../Helpers';
+import { asyncTimeout, interval } from '../Utilities/Helpers';
 import { Asset } from './Asset';
 import { AssetType } from './AssetType';
 

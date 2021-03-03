@@ -1,32 +1,30 @@
-import { IInputEvent } from './InputEvent';
+import { Destroyable } from '../GameObject/Destroy';
+import { InputEvent } from './InputEvent';
 
-export class InputEventTarget {
-    protected listeners: Map<string, { cb: (e: IInputEvent) => any, type: InputType }>;
+export class InputEventTarget implements Destroyable {
+    protected _listeners: Map<string, { cb: (e: InputEvent) => any, type: InputAction }>;
 
     public constructor() {
-        this.listeners = new Map();
+        this._listeners = new Map();
     }
+
     /**
     *
     * Returns the listener id.
     *
     */
-    public addListener(type: InputType, cb: (e: IInputEvent) => any, id: string): string {
-        this.listeners.set(id, { cb, type });
+    public addListener(type: InputAction, cb: (e: InputEvent) => any, id: string): string {
+        this._listeners.set(id, { cb, type });
         return id;
     }
 
     public removeListener(id: string): void {
-        this.listeners?.delete(id);
+        this._listeners?.delete(id);
     }
 
-    protected destroy(): void {
-        for (const key of this.listeners.keys()) {
-            this.removeListener(key);
-        }
+    public destroy(): void {
+        this._listeners.clear();
 
-        this.listeners.clear();
-
-        delete (<any>this).listeners;
+        delete (<any>this)._listeners;
     }
 }

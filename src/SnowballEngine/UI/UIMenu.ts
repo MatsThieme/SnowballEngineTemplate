@@ -1,10 +1,10 @@
 import { Asset } from '../Assets/Asset';
-import { Canvas } from '../Canvas';
 import { Client } from '../Client';
 import { AlignH, AlignV } from '../GameObject/Align';
 import { AABB } from '../Physics/AABB';
 import { Scene } from '../Scene';
-import { Vector2 } from '../Vector2';
+import { Canvas } from '../Utilities/Canvas';
+import { Vector2 } from '../Utilities/Vector2';
 import { UI } from './UI';
 import { UIElement } from './UIElements/UIElement';
 import { UIFrame } from './UIFrame';

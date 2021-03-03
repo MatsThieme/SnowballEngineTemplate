@@ -1,8 +1,7 @@
 import { Container, Graphics, TilingSprite } from 'pixi.js';
 import { Asset } from '../../../Assets/Asset';
-import { clamp, clearObject } from '../../../Helpers';
-import { AABB } from '../../../Physics/AABB';
-import { Vector2 } from '../../../Vector2';
+import { clamp, clearObject } from '../../../Utilities/Helpers';
+import { Vector2 } from '../../../Utilities/Vector2';
 import { Camera } from '../Camera';
 import { Transform } from '../Transform/Transform';
 import { ParallaxBackground } from './ParallaxBackground';

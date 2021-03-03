@@ -1,7 +1,7 @@
 export class InputButton {
     private _down: boolean;
-    private isDown: boolean;
-    private wasDown: boolean;
+    private _isDown: boolean;
+    private _wasDown: boolean;
 
     /**
      * 
@@ -10,12 +10,12 @@ export class InputButton {
      */
     public constructor() {
         this._down = false;
-        this.isDown = false;
-        this.wasDown = false;
+        this._isDown = false;
+        this._wasDown = false;
     }
 
     public get down(): boolean {
-        return this.isDown;
+        return this._isDown;
     }
     public set down(val: boolean) {
         this._down = val;
@@ -23,11 +23,11 @@ export class InputButton {
 
     /**
      * 
-     * Returns whether the button was down in the last frame.
+     * Returns whether the button is down and was down in the last frame.
      * 
      */
     public get clicked(): boolean {
-        return this.isDown && this.wasDown;
+        return this._isDown && this._wasDown;
     }
 
     /**
@@ -36,12 +36,17 @@ export class InputButton {
      * 
      */
     public get click(): boolean {
-        return this.isDown && !this.wasDown;
+        return this._isDown && !this._wasDown;
+    }
+
+
+    public get wasReleasedThisFrame(): boolean {
+        return !this._isDown && this._wasDown;
     }
 
     public update(): void {
-        if (!this._down) this.isDown = this.wasDown = false;
-        else if (this._down && !this.isDown) this.isDown = true;
-        else if (this._down && this.isDown) this.wasDown = true;
+        if (!this._down) this._isDown = this._wasDown = false;
+        else if (!this._isDown) this._isDown = true;
+        else this._wasDown = true;
     }
 }

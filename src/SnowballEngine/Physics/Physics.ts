@@ -1,11 +1,10 @@
-import { Client } from '../Client';
 import { CircleCollider } from '../GameObject/Components/CircleCollider';
-import { ComponentType } from '../GameObject/ComponentType';
 import { PolygonCollider } from '../GameObject/Components/PolygonCollider';
 import { TileMap } from '../GameObject/Components/TileMap';
+import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
-import { Vector2 } from '../Vector2';
-import { AsyncWorker } from '../Worker/AsyncWorker';
+import { AsyncWorker } from '../Utilities/AsyncWorker';
+import { Vector2 } from '../Utilities/Vector2';
 import { AABB } from './AABB';
 import { Collision } from './Collision';
 import { worker } from './CollisionWorker';
@@ -13,7 +12,7 @@ import { worker } from './CollisionWorker';
 export class Physics {
     public static gravity: Vector2 = new Vector2(0, -0.00981);
     public static timeScale: number = 1;
-    private static worker: AsyncWorker = new AsyncWorker(worker, Client.cpuThreads);
+    private static worker: AsyncWorker = new AsyncWorker(worker, window.navigator.hardwareConcurrency);
     private static ignoreCollisions: Map<number, 1 | undefined> = new Map();
 
     public static ignoreCollision(gameObject1: GameObject, gameObject2: GameObject, collide: boolean = false): void {

@@ -1,5 +1,5 @@
 import { D } from '../../Debug';
-import { triggerOnUserInputEvent } from '../../Helpers';
+import { triggerOnUserInputEvent } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioSource } from './AudioSource';

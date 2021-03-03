@@ -65,7 +65,7 @@ async function start() {
     console.log('build finished');
 
     console.log('in', (Date.now() - start) / 1000 + 's');
-    
+
     console.log('file size:', bytesToString((await promisify(stat)(distPath + '/main.js')).size));
 }
 

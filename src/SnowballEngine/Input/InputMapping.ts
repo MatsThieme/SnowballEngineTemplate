@@ -1,34 +1,27 @@
+import { GamepadAxis } from './Devices/Gamepad/GamepadAxis';
+import { GamepadButton } from './Devices/Gamepad/GamepadButton';
+import { KeyboardAxis } from './Devices/Keyboard/KeyboardAxis';
+import { KeyboardButton } from './Devices/Keyboard/KeyboardButton';
+import { MouseAxis } from './Devices/Mouse/MouseAxis';
+import { MouseButton } from './Devices/Mouse/MouseButton';
+
 export class InputMapping {
     readonly [key: string]: any;
-    public readonly keyboard: Readonly<{ [key: number]: string | undefined }>;
-    public readonly mouse: Readonly<{ [key: number]: number | undefined }>;
-    public readonly gamepad: Readonly<{ [key: number]: number | undefined }>;
-    public readonly touch: Readonly<{ [key: number]: number | undefined }>;
+    public readonly keyboard: Readonly<{ [key in InputAction]?: KeyboardButton | KeyboardAxis }>;
+    public readonly mouse: Readonly<{ [key in InputAction]?: MouseButton | MouseAxis }>;
+    public readonly gamepad: Readonly<{ [key in InputAction]?: GamepadButton | GamepadAxis }>;
+    public readonly touch: Readonly<{ [key in InputAction]?: number }>;
 
-    public constructor(mapping?: InputMapping) {
-        this.keyboard = {};
-        this.mouse = {};
-        this.gamepad = {};
-        this.touch = {};
+    public constructor(mapping: InputMapping) {
+        this.keyboard = <any>{};
+        this.mouse = <any>{};
+        this.gamepad = <any>{};
+        this.touch = <any>{};
 
-        if (!mapping) return;
-
-        Object.assign(this, this.replaceInputType(mapping));
+        Object.assign(this, mapping);
     }
 
     public serialize(): string {
         return JSON.stringify(this);
-    }
-
-    private replaceInputType(mapping: any): InputMapping {
-        const ret: InputMapping = <any>{ keyboard: {}, mouse: {}, gamepad: {}, touch: {} };
-
-        for (const key in mapping) {
-            for (const it in mapping[key]) {
-                if (ret[key] != parseInt(ret[key])) Object.assign(ret[key], JSON.parse(`{"${InputType[<any>it]}":${isNaN(mapping[key][it]) ? '"' + mapping[key][it] + '"' : mapping[key][it]}}`));
-            }
-        }
-
-        return ret;
     }
 }

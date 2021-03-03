@@ -1,8 +1,8 @@
 import { BaseTexture, Rectangle, Sprite, Texture } from 'pixi.js';
-import { Canvas } from '../Canvas';
 import { D } from '../Debug';
-import { clearObject } from '../Helpers';
-import { ReadOnlyVector2 } from '../ReadOnlyVector2';
+import { Canvas } from '../Utilities/Canvas';
+import { clearObject } from '../Utilities/Helpers';
+import { ReadOnlyVector2 } from '../Utilities/ReadOnlyVector2';
 import { AssetType } from './AssetType';
 
 export class Asset {

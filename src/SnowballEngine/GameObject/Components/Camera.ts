@@ -1,10 +1,10 @@
 import { Graphics } from 'pixi.js';
 import { PIXI } from '../../Camera/PIXI';
 import { Client } from '../../Client';
-import { Color } from '../../Color';
 import { D } from '../../Debug';
-import { clamp } from '../../Helpers';
-import { Vector2 } from '../../Vector2';
+import { Color } from '../../Utilities/Color';
+import { clamp } from '../../Utilities/Helpers';
+import { Vector2 } from '../../Utilities/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';

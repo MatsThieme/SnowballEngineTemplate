@@ -1,6 +1,6 @@
 import { AudioListener } from '../GameObject/Components/AudioListener';
 import { AudioSource } from '../GameObject/Components/AudioSource';
-import { clamp } from '../Helpers';
+import { clamp } from '../Utilities/Helpers';
 import { AudioEffect } from './AudioEffect';
 
 export class AudioMixer {

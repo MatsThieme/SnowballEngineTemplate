@@ -1,7 +1,7 @@
 import { GameTime } from '../../GameTime';
 import { Collision } from '../../Physics/Collision';
 import { Physics } from '../../Physics/Physics';
-import { Vector2 } from '../../Vector2';
+import { Vector2 } from '../../Utilities/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { CircleCollider } from './CircleCollider';

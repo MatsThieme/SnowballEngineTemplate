@@ -1,10 +1,12 @@
+import { InputDevice } from './Devices/InputDevice';
+import { InputDeviceType } from './Devices/InputDeviceType';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
-import { InputDevice } from './InputDevice';
 
-export interface IInputEvent {
+export interface InputEvent {
     readonly button?: InputButton,
     readonly axis?: InputAxis,
-    readonly device: InputDevice,
-    readonly type: InputType
+    readonly deviceType: InputDeviceType,
+    readonly type: InputAction,
+    readonly device: InputDevice
 }
