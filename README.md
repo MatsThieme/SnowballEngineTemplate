@@ -45,7 +45,7 @@ dist/
 
 #### Configurables
 Configurables contains engine files the user will edit during the development process.\
-e.g. InputType.d.ts for input mapping
+e.g. InputAction.d.ts for input mapping
 
 #### Prefabs
 Prefabs are functions that initialize a GameObject.
@@ -58,6 +58,7 @@ SceneManager
   Scene
     GameObject
       Component
+    UI
 </pre>
 
 
@@ -72,8 +73,8 @@ export class Game {
         this.initialize(new SceneManager());
     }
     private async initialize(sceneManager: SceneManager): Promise<void> {
-        sceneManager.create('Loadingscreen', LoadingScreenScene);
-        sceneManager.create('Game', MainScene);
+        sceneManager.add('Loadingscreen', LoadingScreenScene);
+        sceneManager.add('Game', MainScene);
 
         await sceneManager.load('Loadingscreen');
 
@@ -98,6 +99,7 @@ It has a Transform component by default.
 
 ## Components
 ### AnimatedSprite
+Switch between multiple SpriteAnimations
 </br>
 
 ### AudioListener
@@ -115,6 +117,7 @@ Base class for all Behaviours.
 </br>
 
 ### Camera
+A Camera component displays a part of the world on screen.
 </br>
 
 ### CircleCollider
@@ -185,8 +188,7 @@ It can be generated with **npm run newadb**
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
-type Path = string;
-type AssetDB = { [key: Path]: { type: AssetType, name ?: string, mimeType: string } };
+type AssetDB = { [path: string]: { type: AssetType, name ?: string, mimeType: string } };
 ```
 
 <br>
@@ -197,10 +199,9 @@ InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, co
 the signature of an input mapping file looks like this
 ```typescript
 interface InputMapping {
-    keyboard: { [key: string]: string },
-    mouse: { [key: string]: number },
-    gamepad:  { [key: string]: number },
-    touch: { [key: string]: number }
+    keyboard: { [key: InputAction]: KeyboardButton | KeyboardAxis },
+    mouse: { [key: InputAction]: MouseButton | MouseAxis },
+    gamepad:  { [key: InputAction]: GamepadButton | GamepadAxis },
+    touch: { [key: InputAction]: number }
 }
 ```
-[key: string] is a member of InputType(src/Configurables/InputType.d.ts).

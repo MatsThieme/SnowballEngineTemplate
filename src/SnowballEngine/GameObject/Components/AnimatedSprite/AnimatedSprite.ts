@@ -68,7 +68,6 @@ export class AnimatedSprite extends Renderable {
             this._spriteAnimations.get(this._activeAnimation)?.reset();
         }
     }
-
     public get activeAnimation(): string {
         return this._activeAnimation;
     }
