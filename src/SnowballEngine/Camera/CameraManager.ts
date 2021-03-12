@@ -4,6 +4,7 @@ import { Camera } from '../GameObject/Components/Camera';
 import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
 import { UIFrame } from '../UI/UIFrame';
+import { Canvas } from '../Utilities/Canvas';
 import { Vector2 } from '../Utilities/Vector2';
 import { PIXI } from './PIXI';
 
@@ -18,8 +19,8 @@ export class CameraManager {
 
     public renderScale: number;
 
-    public constructor(domElement: HTMLCanvasElement) {
-        this._context = domElement.getContext('2d')!;
+    public constructor(domElement: Canvas) {
+        this._context = domElement.context2D();
         this.cameras = [];
         this._cleared = false;
 
@@ -44,7 +45,7 @@ export class CameraManager {
 
 
     public addGameObject(gameObject: GameObject): void {
-        if (this.hasGameObject(gameObject)) return D.error('gameObject.container is already staged');
+        if (this.hasGameObject(gameObject)) return D.warn('GameObject.container is already staged');
 
         this._PIXI.container.addChild(gameObject.container);
 
@@ -52,7 +53,7 @@ export class CameraManager {
     }
 
     public removeGameObject(gameObject: GameObject): void {
-        if (!this.hasGameObject(gameObject)) return D.error('go not found');
+        if (!this.hasGameObject(gameObject)) return D.warn('GameObject not found');
 
         this._PIXI.container.removeChild(gameObject.container);
 
@@ -65,7 +66,7 @@ export class CameraManager {
 
 
     public update() {
-        if (!this.cameras.filter(c => c.active)) return D.error('No active camera');
+        if (!this.cameras.filter(c => c.active)) return D.warn('No active camera');
 
 
         const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).floor();

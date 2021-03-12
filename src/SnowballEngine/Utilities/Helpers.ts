@@ -9,7 +9,7 @@ import { Color } from './Color';
  * Clamps a number between min and max.
  * 
  */
-export const clamp = (min: number, max: number, val: number) => val < min ? min : val > max ? max : val;
+export const clamp = (min: number, max: number, val: number): number => val < min ? min : val > max ? max : val;
 
 /**
  * 
@@ -44,8 +44,8 @@ export const average = (...numbers: number[]): number => numbers.reduce((t, c) =
  * @returns Returns Promise which resolves as result of callback.
  * 
  */
-export function triggerOnUserInputEvent<T>(cb: (...args: any[]) => T | Promise<T>, ...params: any[]): Promise<T> {
-    return new Promise((resolve, reject) => {
+export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<T>, ...params: U[]): Promise<T> {
+    return new Promise(resolve => {
         async function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
             if (!e.isTrusted) return;
 
@@ -54,7 +54,7 @@ export function triggerOnUserInputEvent<T>(cb: (...args: any[]) => T | Promise<T
                 resolve(result);
             }
             catch (error) {
-                D.error(error);
+                D.warn(error);
             }
 
             window.removeEventListener('mousedown', end);
@@ -80,7 +80,7 @@ const intervals: number[] = [];
  * Simplified version of setInterval, the interval can be cleared by calling cb's parameter clear.
  * 
  */
-export function interval(cb: (clear: () => void, handle: number) => void, ms: number, dontClearOnUnload: boolean = false): void {
+export function interval(cb: (clear: () => void, handle: number) => void, ms: number, dontClearOnUnload = false): void {
     const clear = () => window.clearInterval(intervals.splice(intervals.findIndex(v => v === i), 1)[0]);
 
     const i: number = window.setInterval(() => cb(clear, i), ms);
@@ -88,7 +88,7 @@ export function interval(cb: (clear: () => void, handle: number) => void, ms: nu
     if (!dontClearOnUnload) intervals.push(i);
 }
 
-export function clearAllIntervals() {
+export function clearAllIntervals(): void {
     for (const i of intervals.splice(0)) {
         window.clearInterval(i);
     }
@@ -99,9 +99,10 @@ export function clearAllIntervals() {
  * Create an Image Asset from a canvas.
  * 
  */
-export function createSprite(f: Color | ((context: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => any), width: number = 1, height: number = 1): Asset {
+export function createSprite(f: Color | ((context: CanvasRenderingContext2D, canvas: Canvas) => void), width = 1, height = 1): Asset {
     const canvas = new Canvas(width, height);
-    const context = canvas.getContext('2d')!;
+    const context = canvas.context2D();
+
     context.imageSmoothingEnabled = false;
 
     if ('rgba' in f) {
@@ -118,12 +119,12 @@ export function createSprite(f: Color | ((context: CanvasRenderingContext2D, can
  * 
  * @param setnull if true, properties will be set to null instead of deletion
  */
-export function clearObject(object: object, setnull: boolean = false) {
+export function clearObject(object: Record<string, any>, setnull = false): void {
     Object.setPrototypeOf(object, null);
 
     for (const key of Object.keys(object)) {
-        if (setnull) (<any>object)[key] = null
-        else delete (<any>object)[key];
+        if (setnull) object[key] = null
+        else delete object[key];
     }
 }
 
@@ -138,7 +139,7 @@ export function createENUM<T>(): T {
     return <T>(<unknown>new Proxy({ props: new Map<string, number>(), nums: new Map<number, string>() }, {
         get: function (target, property: string) {
             if (target.props.has(property)) return target.props.get(property);
-            if (!isNaN(<any>property)) return target.nums.get(parseInt(property));
+            if (!isNaN(Number(property))) return target.nums.get(parseInt(property));
 
             target.props.set(property, counter);
             target.nums.set(counter, property);
@@ -148,9 +149,8 @@ export function createENUM<T>(): T {
     }));
 }
 
-export function random(min: number, max: number) {
+export function random(min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
 
-
-export const cantorPairingFunction = (a: number, b: number) => ((a + b) / 2) * (a + b + 1) + b;
+export const cantorPairingFunction = (a: number, b: number): number => ((a + b) / 2) * (a + b + 1) + b;

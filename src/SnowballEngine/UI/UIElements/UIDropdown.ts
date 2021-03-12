@@ -2,6 +2,7 @@ import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
+import { Canvas } from '../../Utilities/Canvas';
 import { Vector2 } from '../../Utilities/Vector2';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
@@ -53,7 +54,7 @@ export class UIDropdown extends UIElement {
         } else if (Input.getButton('Trigger').click) this.extended = false;
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
 

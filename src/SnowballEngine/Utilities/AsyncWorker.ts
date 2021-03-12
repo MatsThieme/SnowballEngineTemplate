@@ -13,7 +13,7 @@ export class AsyncWorker {
     private url: string;
 
     private readonly workers: Worker[];
-    private readonly queue: { data: any, progress?: (data: any) => any, resolve: (value?: any) => void, reject: (value?: any) => void }[];
+    private readonly queue: QueueEntry[];
 
     /**
      *
@@ -22,7 +22,7 @@ export class AsyncWorker {
      */
     public expirationTime: number;
 
-    public constructor(url: string, maxWorkers: number = 1, expirationTime: number = 1000) {
+    public constructor(url: string, maxWorkers = 1, expirationTime = 1000) {
         this.url = url;
 
         this.maxWorkers = maxWorkers;
@@ -42,9 +42,9 @@ export class AsyncWorker {
      * @param progress progress will be called when the worker sends a progress message: { status: 'progress', data: any }
      * 
      */
-    public task(data: any, progress?: (data: any) => any): Promise<any> {
+    public task<T>(data: Record<string, unknown>, progress?: (data: Record<string, unknown>) => void): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.queue.push({ data, progress, resolve, reject });
+            this.queue.push({ data, progress, resolve: <(value?: Record<string, unknown>) => void>resolve, reject });
             this.work();
         });
     }
@@ -78,7 +78,7 @@ export class AsyncWorker {
                             clear();
                             resolve();
                         }
-                    }, 0.1);
+                    }, 1);
                 });
             }
 
@@ -122,7 +122,7 @@ export class AsyncWorker {
         return worker;
     }
 
-    private workerFinished(worker: Worker, work: boolean = true): void {
+    private workerFinished(worker: Worker, work = true): void {
         worker.onmessage = worker.onerror = null;
         worker.isBusy = false;
 
@@ -148,11 +148,25 @@ export class AsyncWorker {
         return new Promise((resolve, reject) => {
             worker.onmessage = () => {
                 worker.onmessage = null;
+                worker.onerror = null;
                 this.workerFinished(worker, false);
                 resolve();
+            };
+
+            worker.onerror = () => {
+                worker.onmessage = null;
+                worker.onerror = null;
+                reject(new Error(`Error in worker: ${this.url}`));
             };
 
             worker.postMessage(undefined);
         });
     }
+}
+
+interface QueueEntry {
+    data: Record<string, unknown>;
+    progress?: (data: Record<string, unknown>) => void;
+    resolve: (value?: Record<string, unknown>) => void;
+    reject: (value?: unknown) => void
 }

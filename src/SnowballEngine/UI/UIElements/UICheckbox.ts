@@ -1,6 +1,7 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
 import { AABB } from '../../Physics/AABB';
+import { Canvas } from '../../Utilities/Canvas';
 import { Vector2 } from '../../Utilities/Vector2';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
@@ -47,7 +48,7 @@ export class UICheckbox extends UIElement {
         }
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
         const labelSize = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this.fontSize));
 
         canvas.height = Math.min(this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x), this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y));
@@ -56,7 +57,7 @@ export class UICheckbox extends UIElement {
         const x = canvas.width / (this.menu.aabb.size.x / 100 * Client.resolution.x) * 100;
         const y = canvas.height / (this.menu.aabb.size.y / 100 * Client.resolution.y) * 100;
 
-        (<any>this)._aabb = new AABB(new Vector2(x, y), this._aabb.position);
+        this._aabb = new AABB(new Vector2(x, y), this._aabb.position);
 
         context.save();
 

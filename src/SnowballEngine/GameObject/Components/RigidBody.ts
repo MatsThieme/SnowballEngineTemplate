@@ -10,7 +10,7 @@ import { Component } from './Component';
 import { PolygonCollider } from './PolygonCollider';
 
 export class RigidBody extends Component {
-    private static _nextID: number = 0;
+    private static _nextID = 0;
     private id: number;
     private _mass: number;
     private _inertia: number;
@@ -58,6 +58,10 @@ export class RigidBody extends Component {
     public get mass(): number {
         return this.useAutoMass ? this.autoMass : this._mass;
     }
+    public set mass(val: number) {
+        this._mass = val;
+        this.velocity = new Vector2();
+    }
 
     public get invMass(): number {
         return this.mass === 0 ? 0 : 1 / this.mass;
@@ -65,11 +69,6 @@ export class RigidBody extends Component {
 
     public get invInertia(): number {
         return this.inertia === 0 ? 0 : 1 / this.inertia;
-    }
-
-    public set mass(val: number) {
-        this._mass = val;
-        this.velocity = new Vector2();
     }
 
     public get centerOfMass(): Vector2 {

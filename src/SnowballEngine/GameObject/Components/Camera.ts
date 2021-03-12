@@ -2,6 +2,7 @@ import { Graphics } from 'pixi.js';
 import { PIXI } from '../../Camera/PIXI';
 import { Client } from '../../Client';
 import { D } from '../../Debug';
+import { AABB } from '../../Physics/AABB';
 import { Color } from '../../Utilities/Color';
 import { clamp } from '../../Utilities/Helpers';
 import { Vector2 } from '../../Utilities/Vector2';
@@ -33,6 +34,7 @@ export class Camera extends Component {
 
     private _screenSize: Vector2;
     private _size: Vector2;
+    private _aabb?: AABB;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Camera);
@@ -96,6 +98,8 @@ export class Camera extends Component {
 
 
         pixi.render();
+
+        this._aabb = undefined;
     }
 
     public worldToCamera(vec: Vector2): Vector2 {
@@ -104,6 +108,16 @@ export class Camera extends Component {
 
     public worldToCameraPoint(point: Vector2): Vector2 {
         return this.worldToCamera(new Vector2(-point.x + this.size.x / 2, point.y + this.size.y / 2)).floor();
+    }
+
+    public get aabb(): AABB {
+        if (this._aabb) return this._aabb;
+
+        const globalTransform = this.gameObject.transform.toGlobal();
+
+        const size = this.size.scale(globalTransform.scale);
+
+        return this._aabb = new AABB(size, globalTransform.position.clone.sub(Vector2.divide(size, 2)));
     }
 
     public destroy(): void {

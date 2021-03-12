@@ -8,7 +8,7 @@ export class UIFont {
      * Returns a font string, font size adjusts to menu size.
      * 
      */
-    public static getCSSFontString(name: string, size: UIFontSize = UIFontSize.Medium) {
+    public static getCSSFontString(name: string, size: UIFontSize = UIFontSize.Medium): string {
         return `${Math.round(size * (<Vector2>Client.resolution).magnitude / 200)}px ${name}`;
     }
 
@@ -18,7 +18,19 @@ export class UIFont {
      * 
      */
     public static parseFontString(font: string): { size: number, name: string } {
-        return { size: parseInt((<any>font.match(/[^\d]*(\d+)px.*/))[1]), name: (<any>font.match(/.*px (\w+).*/))[1] };
+        let match = font.match(/[^\d]*(\d+)px.*/);
+
+        if (!match) throw new Error('Invalid font-string');
+
+        const size = parseInt(match[1]);
+
+        match = font.match(/.*px (\w+).*/);
+
+        if (!match) throw new Error('Invalid font-string');
+
+        const name = match[1];
+
+        return { size, name };
     }
 
     /**

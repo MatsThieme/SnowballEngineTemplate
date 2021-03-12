@@ -18,7 +18,7 @@ import { Canvas } from './Utilities/Canvas';
 import { cantorPairingFunction, clearObject, interval } from './Utilities/Helpers';
 
 export class Scene {
-    public readonly domElement: HTMLCanvasElement;
+    public readonly domElement: Canvas;
     public readonly gameObjects: Map<string, GameObject>;
     public readonly cameraManager: CameraManager;
     public readonly ui: UI;
@@ -36,9 +36,11 @@ export class Scene {
     private readonly destroyCbs: (() => void)[];
 
     public static readonly sceneManager: SceneManager;
+    public static readonly currentScene: Scene;
 
     public constructor(sceneManager: SceneManager, name: string) {
         if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
+        (<any>Scene).currentScene = this;
 
         this.name = name;
 
@@ -91,10 +93,10 @@ export class Scene {
      * cameraManager
      * 
      */
-    private async update() {
+    private async update(time: number) {
         this.updateComplete = false;
 
-        GameTime.update();
+        GameTime.update(time);
 
         this.framedata.update();
 

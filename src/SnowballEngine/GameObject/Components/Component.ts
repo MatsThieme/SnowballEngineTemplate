@@ -4,7 +4,7 @@ import { GameObject } from '../GameObject';
 import { Camera } from './Camera';
 
 export abstract class Component {
-    private static _nextCID: number = 0;
+    private static _nextCID = 0;
 
     public readonly gameObject: GameObject;
     public readonly type: ComponentType;
@@ -46,7 +46,7 @@ export abstract class Component {
      * @param componentHasNoGameObject internally used in gameObject.removeComponent to prevent a second unnecessary call of gameObject.removeComponent
      * 
      */
-    public destroy(componentHasNoGameObject: boolean = false): void {
+    public destroy(componentHasNoGameObject = false): void {
         if (this.__destroyed__ === true || this.onDestroy && this.onDestroy() === false) return;
 
         this.__destroyed__ = true;

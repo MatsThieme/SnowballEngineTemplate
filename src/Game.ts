@@ -1,6 +1,6 @@
-import { LoadingScreenScene } from './Scenes/LoadingScreenScene';
-import { MainScene } from './Scenes/MainScene';
-import { Assets, asyncTimeout, Color, createSprite, SceneManager } from './SnowballEngine/SE';
+import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
+import { MainScene } from 'Scenes/MainScene';
+import { Assets, asyncTimeout, Color, createSprite, SceneManager } from 'se';
 
 export class Game {
     public constructor() {
@@ -24,10 +24,10 @@ export class Game {
          * 
          * or create and register an asset manually:
          */
-        Assets.set(createSprite(Color.yellow), 'some image');
+        Assets.set(createSprite(Color.orange), 'some image');
 
 
-        // timeout to simulate example loadingscreen
+        // timeout to show example loadingscreen
         await asyncTimeout(1000);
 
 

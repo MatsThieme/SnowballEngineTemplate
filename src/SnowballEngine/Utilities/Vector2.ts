@@ -4,7 +4,7 @@ export class Vector2 implements IVector2 {
     public x: number;
     public y: number;
 
-    public constructor(x: number = 0, y: number = 0) {
+    public constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
     }
@@ -171,7 +171,7 @@ export class Vector2 implements IVector2 {
      * Returns the sum of this components.
      * 
      */
-    public get sum() {
+    public get sum(): number {
         return this.x + this.y;
     }
 
@@ -180,7 +180,7 @@ export class Vector2 implements IVector2 {
      * Returns the squared magnitude of this.
      * 
      */
-    public get magnitudeSquared() {
+    public get magnitudeSquared(): number {
         return this.x ** 2 + this.y ** 2;
     }
 
@@ -189,7 +189,7 @@ export class Vector2 implements IVector2 {
      * Returns the magnitude of this.
      * 
      */
-    public get magnitude() {
+    public get magnitude(): number {
         return Math.sqrt(this.magnitudeSquared);
     }
 
@@ -201,10 +201,14 @@ export class Vector2 implements IVector2 {
      *
      */
     public scale(scalar: IVector2 | number): Vector2 {
-        const isNumber = typeof scalar === 'number';
 
-        this.x *= isNumber ? scalar : (<any>scalar).x;
-        this.y *= isNumber ? scalar : (<any>scalar).y;
+        if (typeof scalar === 'number') {
+            this.x *= scalar;
+            this.y *= scalar;
+        } else {
+            this.x *= scalar.x;
+            this.y *= scalar.y;
+        }
 
         return this;
     }
@@ -265,9 +269,9 @@ export class Vector2 implements IVector2 {
      * Returns a string containing rounded components of this.
      * 
      */
-    public toString(l: number = 3): string {
-        l = 10 ** l;
-        return `x: ${Math.round(this.x * l) / l}, y: ${Math.round(this.y * l) / l}`;
+    public toString(precision = 3): string {
+        precision = 10 ** precision;
+        return `x: ${Math.round(this.x * precision) / precision}, y: ${Math.round(this.y * precision) / precision}`;
     }
 
     /**

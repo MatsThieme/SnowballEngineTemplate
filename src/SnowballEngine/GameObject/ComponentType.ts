@@ -16,5 +16,6 @@ export enum ComponentType {
     RigidBody,
     Texture,
     TileMap,
-    Transform
+    Transform,
+    Video
 }

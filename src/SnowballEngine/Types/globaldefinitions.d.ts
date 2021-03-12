@@ -1,11 +1,18 @@
-/**
- *
- * SnowballEngineConfig.json values stored in window.project
- * 
- * @internal
- *
- */
-declare const project: {
+
+interface Window {
+    /**
+     *
+     * SnowballEngineConfig.json values stored in window.project
+     * 
+     * @internal
+     *
+     */
+    project: Project;
+}
+
+declare const project: Project;
+
+declare interface Project {
     readonly title: string,
     readonly description: string,
     readonly version: string,
@@ -21,16 +28,14 @@ declare const project: {
             readonly email: string,
             readonly href: string
         },
-        readonly Fullscreen: boolean,
-        readonly Orientation: 'default' | 'landscape' | 'portrait',
-        readonly KeepRunning: boolean,
         readonly plugins: readonly string[]
     },
     readonly build: {
         readonly isDevelopmentBuild: boolean,
         readonly addNewAssetsToDB: boolean
     }
-};
+}
+
 
 /** @internal */
 declare interface Worker extends EventTarget, AbstractWorker {
@@ -48,7 +53,7 @@ declare interface Worker extends EventTarget, AbstractWorker {
 }
 
 /** @internal */
-type Constructor<T extends {} = {}> = new (...args: any[]) => T;
+type Constructor<T extends Record<string, any>> = new (...args: any[]) => T;
 /** @internal */
 type AbstractConstructor<T> = Function & { prototype: T };
 

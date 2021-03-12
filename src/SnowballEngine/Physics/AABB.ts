@@ -21,15 +21,6 @@ export class AABB {
      * 
      */
     public intersects(other: AABB): boolean {
-        return this.position.x < other.position.x + other.size.x && this.position.x + this.size.x > other.position.x && this.position.y > other.position.y - other.size.y && this.position.y - this.size.y < other.position.y;
-    }
-
-    /**
-     *
-     * Returns whether two AABBs intersect. (y is increasing downwards)
-     *
-     */
-    public screenSpaceIntersects(other: AABB): boolean {
         return this.position.x < other.position.x + other.size.x && this.position.x + this.size.x > other.position.x && this.position.y < other.position.y + other.size.y && this.position.y + this.size.y > other.position.y;
     }
 
@@ -49,5 +40,9 @@ export class AABB {
      */
     public intersectsPoint(point: Vector2): boolean {
         return point.x > this.position.x && point.x < this.position.x + this.size.x && point.y > this.position.y && point.y < this.position.y + this.size.y;
+    }
+
+    public toString(precision?: number) {
+        return `size: ${this.size.toString(precision)}, position: ${this.position.toString(precision)}`;
     }
 }

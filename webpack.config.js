@@ -13,7 +13,10 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.js'],
-        modules: ['node_modules']
+        modules: ['node_modules', 'src'],
+        alias: {
+            se: path.resolve(__dirname, 'src/SnowballEngine/SE.ts')
+        }
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

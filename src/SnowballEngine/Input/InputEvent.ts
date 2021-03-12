@@ -4,8 +4,8 @@ import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 
 export interface InputEvent {
-    readonly button?: InputButton,
-    readonly axis?: InputAxis,
+    readonly button?: Readonly<InputButton>,
+    readonly axis?: Readonly<InputAxis>,
     readonly deviceType: InputDeviceType,
     readonly type: InputAction,
     readonly device: InputDevice

@@ -1,7 +1,21 @@
-import { cloneDeep } from 'lodash';
+import { default as cloneDeep } from 'lodash.clonedeep';
 
 export class D {
-    public static log(msg: any, logstack: boolean = false) {
+    public static init() {
+        window.addEventListener('error', (e: ErrorEvent) => {
+            e.preventDefault();
+
+            D.error(e.error);
+        });
+
+        window.addEventListener(<any>'unhandledrejection ', (e: PromiseRejectionEvent) => {
+            e.preventDefault();
+
+            D.error(e.reason);
+        });
+    }
+
+    public static log(msg: any, logstack = false): void {
         if (!project.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
@@ -10,7 +24,7 @@ export class D {
         else console.log(...o);
     }
 
-    public static warn(msg: any, logstack: boolean = true) {
+    public static warn(msg: any, logstack = true): void {
         if (!project.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
@@ -19,8 +33,10 @@ export class D {
         else console.warn(...o);
     }
 
-    public static error(msg: any, logstack: boolean = true) {
+    public static error(msg: any, logstack = true): void {
         if (!project.build.isDevelopmentBuild) return;
+
+        if ('name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
 
         const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -28,7 +44,7 @@ export class D {
         else console.warn(...o);
     }
 
-    private static formatStack(stack: string = ''): string {
+    private static formatStack(stack = ''): string {
         return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || D.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
     }
 
@@ -72,7 +88,7 @@ export class D {
     }
 
     private static formatMessage(type: 'log' | 'warning' | 'error', msg: any, stack: string): any[] {
-        const ret: (string | object)[] = [];
+        const ret: (string | Record<string, any>)[] = [];
 
         if (type === 'warning') {
             ret.push(`Warning${!stack ? ': ' : ''}`);

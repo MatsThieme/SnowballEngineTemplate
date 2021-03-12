@@ -1,8 +1,10 @@
 import { Asset } from '../../Assets/Asset';
 import { AssetType } from '../../Assets/AssetType';
 import { AudioMixer } from '../../Audio/AudioMixer';
+import { Client } from '../../Client';
 import { D } from '../../Debug';
-import { clamp, triggerOnUserInputEvent } from '../../Utilities/Helpers';
+import { clamp } from '../../Utilities/Helpers';
+import { Stopwatch } from '../../Utilities/Stopwatch';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';
@@ -10,42 +12,59 @@ import { Component } from './Component';
 
 export class AudioSource extends Component {
     public readonly node: PannerNode;
-    private readonly mediaElement: MediaElementAudioSourceNode;
-    private readonly audio: HTMLAudioElement;
-    private connected: boolean;
+
+    public playGlobally: boolean;
+
+    private _audioBufferNode!: AudioBufferSourceNode;
+
+    private _connected: boolean;
+
     private _asset?: Asset;
-    private _volume!: number;
-    private _loop!: boolean;
     private _mixer?: AudioMixer;
+
+    private _loop: boolean;
+    private _loopStart: number;
+    private _loopEnd: number;
+    private _rate: number;
+    private _sw: Stopwatch;
+    private _playing: boolean;
+
+    private _maxDistance: number;
+    private _zPosition: number;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioSource);
 
-        this.audio = new Audio();
-        this.audio.autoplay = false;
+        this._loop = false;
+        this._loopStart = 0;
+        this._loopEnd = 0;
+        this._rate = 1;
+        this._sw = new Stopwatch(false);
+        this._playing = false;
+        this._maxDistance = 50;
+        this._zPosition = 5;
 
-        this.volume = 0.5;
-        this.loop = false;
+        this.playGlobally = false;
 
-        this.mediaElement = AudioListener.createMediaElement(this.audio);
-        this.node = AudioListener.createPanner();
-        this.mediaElement.connect(this.node);
+        this.node = AudioListener.context.createPanner();
+        this.renewNode();
 
         this.node.panningModel = 'HRTF';
-        this.node.distanceModel = 'inverse';
+        this.node.distanceModel = 'linear';
+        this.node.maxDistance = this._maxDistance;
+        this.node.positionZ.value = this._zPosition;
 
-
-        this.connected = false;
+        this._connected = false;
 
         this.connect();
     }
 
     public onEnable(): void {
-        if (!this.connected) this.connect();
+        this.connect();
     }
 
     public onDisable(): void {
-        if (this.connected) this.disconnect();
+        this.disconnect();
     }
 
     public get mixer(): AudioMixer | undefined {
@@ -60,87 +79,164 @@ export class AudioSource extends Component {
     }
 
     public connect() {
-        if (this.connected) this.disconnect();
-
         if (!this.asset) return;
 
         const listener = this.gameObject.scene.audioListener;
 
-        if (!listener) return D.error('no listener');
+        if (!listener) return D.warn('No AudioListener');
+
+
+        if (this._connected) this.disconnect();
 
         if (this.mixer) this.mixer.addSource(this);
         else this.node.connect(listener.node);
 
         listener.addSource(this);
 
-        this.connected = true;
+        this._connected = true;
     }
 
     public disconnect() {
-        if (!this.connected) return;
+        if (!this._connected) return;
 
         this.node.disconnect();
 
         this.gameObject.scene.audioListener?.removeSource(this);
 
-        this.connected = false;
+        this._connected = false;
     }
 
+    /**
+     * 
+     * Playback will be stopped when switching Asset.
+     * 
+     */
     public get asset(): Asset | undefined {
         return this._asset;
     }
     public set asset(asset: Asset | undefined) {
         if (asset) {
             if (asset.type !== AssetType.Audio) {
-                D.error('asset.type !== AssetType.Audio');
+                throw new Error('asset.type !== AssetType.Audio');
             } else {
-                this.audio.src = asset.path;
+                if (this._playing) this.stop();
 
                 this._asset = asset;
-            }
 
-            this.connect();
+                this.connect();
+            }
+        } else {
+            if (this._playing) this.stop();
+
+            this.disconnect();
+
+            this._asset = undefined;
         }
     }
 
-    /**
-     * 
-     * Loop the clip.
-     * 
-     */
     public get loop(): boolean {
         return this._loop;
     }
     public set loop(val: boolean) {
-        this.audio.loop = this._loop = val;
+        this._audioBufferNode.loop = this._loop = val;
+    }
+
+    public get loopStart(): number {
+        return this._loopStart;
+    }
+    public set loopStart(val: number) {
+        this._loopStart = this._audioBufferNode.loopStart = val;
+    }
+
+    public get loopEnd(): number {
+        return this._loopEnd;
+    }
+    public set loopEnd(val: number) {
+        this._loopEnd = this._audioBufferNode.loopEnd = val;
+    }
+
+    public get rate(): number {
+        return this._rate;
+    }
+    public set rate(val: number) {
+        const ms = this._sw.milliseconds * this._rate / val;
+
+        this._rate = this._audioBufferNode.playbackRate.value = val;
+
+        if (ms) this._sw.milliseconds = ms;
     }
 
     /**
      * 
-     * The volume of the clip.
+     * The current playback time in seconds.
      * 
      */
-    public get volume(): number {
-        return this._volume;
+    public get currentTime(): number {
+        if (!this.asset) return 0;
+
+        return (this._sw.seconds % ((<AudioBuffer>this.asset!.data).duration / this._rate)) * this._rate;
     }
-    public set volume(val: number) {
-        this.audio.volume = this._volume = clamp(0, 1, val);
+    public set currentTime(val: number) {
+        this._sw.seconds = val;
+
+        if (this._playing) this.play();
     }
+
+    public get playing(): boolean {
+        return this._playing;
+    }
+
+    public get paused(): boolean {
+        return !this._sw.running;
+    }
+
+    public get maxDistance(): number {
+        return this._maxDistance;
+    }
+    public set maxDistance(val: number) {
+        this._maxDistance = val;
+        this.node.maxDistance = val;
+    }
+
+    public get zPosition(): number {
+        return this._zPosition;
+    }
+    public set zPosition(val: number) {
+        this._zPosition = val;
+        this.node.positionZ.value = val;
+    }
+
 
     /**
      * 
      * Play the audio clip.
      * 
      */
-    public async play(): Promise<void> {
-        if (!this.asset) return D.error('no audio clip set');
+    public play(): void {
+        if (!this.asset) return D.warn('No audio clip set');
 
-        try {
-            await this.audio.play();
-        } catch {
-            await triggerOnUserInputEvent(async () => await this.audio.play());
-        }
+        if (this._playing) return D.warn('Already playing, stop the playback before calling play');
 
+        if (!Client.hasMediaPlayPermission) return D.warn('Need permission to play media first');
+
+
+        this.renewNode();
+
+        this._playing = true;
+        this._audioBufferNode.onended = () => {
+            this._playing = false;
+
+            let diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;
+            if (diff > 20 && diff < 50) D.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: <820ms`);
+
+            if (this._sw.seconds + 0.02 > this._audioBufferNode.buffer!.duration / this._rate) {
+                this._sw.stop();
+                this._sw.milliseconds = 0;
+            }
+        };
+
+        this._sw.start();
+        this._audioBufferNode.start(AudioListener.context.currentTime, this._loop ? clamp(this._loopStart, this._loopEnd, this.currentTime) : this.currentTime);
     }
 
     /**
@@ -148,14 +244,21 @@ export class AudioSource extends Component {
      * Pause the audio clip.
      *
      */
-    public async pause(): Promise<void> {
-        if (!this.asset) return D.error('no audio clip set');
+    public pause(): void {
+        if (!this._playing) return;
 
-        try {
-            await this.audio.pause();
-        } catch {
-            await triggerOnUserInputEvent(async () => await this.audio.pause());
-        }
+        this._sw.stop();
+
+        this._audioBufferNode.stop();
+    }
+
+    public stop(): void {
+        if (!this._playing && !this.paused) return;
+
+        if (this._playing) this._audioBufferNode.stop();
+
+        this._playing = false;
+        this._sw.reset();
     }
 
     /**
@@ -164,7 +267,26 @@ export class AudioSource extends Component {
      *
      */
     public reset(): void {
-        this.audio.currentTime = 0;
+        this.currentTime = 0;
+    }
+
+    private renewNode(): void {
+        if (this._playing) this._audioBufferNode.stop();
+
+        if (this._audioBufferNode) {
+            this._audioBufferNode.disconnect();
+            this._audioBufferNode.onended = null;
+            this._audioBufferNode.buffer = null;
+        }
+
+        this._audioBufferNode = AudioListener.context.createBufferSource();
+        this._audioBufferNode.buffer = <AudioBuffer>this.asset?.data;
+        this._audioBufferNode.loop = this._loop;
+        this._audioBufferNode.loopStart = this._loopStart;
+        this._audioBufferNode.loopEnd = this._loopEnd;
+        this._audioBufferNode.playbackRate.value = this._rate;
+
+        this._audioBufferNode.connect(this.node);
     }
 
     public destroy(): void {

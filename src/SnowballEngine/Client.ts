@@ -1,4 +1,5 @@
 import isMobile from 'ismobilejs';
+import { AudioListener } from './GameObject/Components/AudioListener';
 import { Scene } from './Scene';
 import { asyncTimeout, triggerOnUserInputEvent } from './Utilities/Helpers';
 import { ReadOnlyVector2 } from './Utilities/ReadOnlyVector2';
@@ -14,7 +15,7 @@ export class Client {
      * 
      */
     private static async measureMonitorRefreshRate(ms: number): Promise<number> {
-        let frames: number = 0;
+        let frames = 0;
         let handle = requestAnimationFrame(update);
 
         function update() {
@@ -36,7 +37,7 @@ export class Client {
      */
     public static readonly resolution: ReadOnlyVector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
 
-    public static monitorRefreshRate: number = 60;
+    public static monitorRefreshRate = 60;
 
     public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
 
@@ -88,5 +89,11 @@ export class Client {
 
 
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
+
+        (<any>Client).hasMediaPlayPermission = AudioListener.context.state === 'running';
+
+        AudioListener.context.addEventListener('statechange', e => (<any>Client).hasMediaPlayPermission = AudioListener.context.state === 'running');
     }
+
+    public static readonly hasMediaPlayPermission: boolean;
 }

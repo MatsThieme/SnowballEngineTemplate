@@ -1,4 +1,3 @@
-//@ts-ignore
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
@@ -11,7 +10,7 @@ import { KeyboardButton } from './KeyboardButton';
 
 export class Keyboard extends InputEventTarget implements InputDevice {
     private _keys: Map<KeyboardButton, InputButton>;
-    private _fireListener: Map<KeyboardButton, boolean>; // Map<e.code, boolean>
+    private _fireListener: Map<KeyboardButton, boolean>;
     private _axesKeys: Map<KeyboardAxis, KeyboardButton[]>;
 
     public constructor() {
@@ -25,8 +24,6 @@ export class Keyboard extends InputEventTarget implements InputDevice {
     }
 
     private onKeyDown(e: KeyboardEvent): void {
-        e.preventDefault();
-
         let btn = this._keys.get(<KeyboardButton>e.code);
 
         if (!btn) {
@@ -40,8 +37,6 @@ export class Keyboard extends InputEventTarget implements InputDevice {
     }
 
     private onKeyUp(e: KeyboardEvent): void {
-        e.preventDefault();
-
         let btn = this._keys.get(<KeyboardButton>e.code);
 
         if (!btn) {
@@ -54,13 +49,19 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         this._fireListener.set(<KeyboardButton>e.code, true);
     }
 
-    public getButton(btn: KeyboardButton): InputButton | undefined {
-        if (!this._keys.get(btn)) this._keys.set(btn, new InputButton());
+    public getButton(btn: KeyboardButton): Readonly<InputButton> | undefined {
+        let b = this._keys.get(btn);
 
-        return this._keys.get(btn);
+        if (b) return b;
+
+        b = new InputButton();
+
+        this._keys.set(btn, b);
+
+        return b;
     }
 
-    public getAxis(ax: KeyboardAxis): InputAxis | undefined {
+    public getAxis(ax: KeyboardAxis): Readonly<InputAxis> | undefined {
         const keys = this.axisToKeys(ax);
 
         if (keys) {
@@ -94,15 +95,17 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         }
 
         for (const { cb, type } of this._listeners.values()) {
-            const btn = <KeyboardButton>Input.inputMappingButtons.keyboard[type];
-            const ax = <KeyboardAxis>Input.inputMappingAxes.keyboard[type];
+            const btn = <KeyboardButton | undefined>Input.inputMappingButtons.keyboard[type];
+            const ax = <KeyboardAxis | undefined>Input.inputMappingAxes.keyboard[type];
 
             if (!btn && !ax || btn && !this._fireListener.get(btn) && !ax) continue;
 
 
-            const keys = this.axisToKeys(ax);
+            if (ax) {
+                const keys = this.axisToKeys(ax);
 
-            if (keys && keys[0] && !this._fireListener.get(keys[0]) && keys[1] && !this._fireListener.get(keys[1])) continue;
+                if (keys && keys[0] && !this._fireListener.get(keys[0]) && keys[1] && !this._fireListener.get(keys[1])) continue;
+            }
 
 
             const e: InputEvent = {

@@ -32,7 +32,7 @@ export class UIMenu {
     public drawPriority: number;
     private readonly uiElements: Map<number, UIElement>;
     private _aabb: AABB;
-    private readonly canvas: HTMLCanvasElement;
+    private readonly canvas: Canvas;
     private readonly context: CanvasRenderingContext2D;
     public background?: Asset;
     private frame: UIFrame;
@@ -44,17 +44,15 @@ export class UIMenu {
 
     private redraw: boolean;
 
-    public readonly scene: Scene;
     public readonly ui: UI;
 
-    public constructor(scene: Scene) {
+    public constructor() {
         this.active = false;
         this.pauseScene = true;
         this.drawPriority = 0;
         this.uiElements = new Map();
         this._aabb = new AABB(new Vector2(100, 100), new Vector2());
-        this.scene = scene;
-        this.ui = scene.ui;
+        this.ui = Scene.currentScene.ui;
 
         this.localAlignH = AlignH.Left;
         this.localAlignV = AlignV.Top;
@@ -62,7 +60,7 @@ export class UIMenu {
         this.alignV = AlignV.Top;
 
         this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
-        this.context = this.canvas.getContext('2d')!;
+        this.context = this.canvas.context2D();
 
         this.frame = new UIFrame(new AABB(this._aabb.size.clone.scale(Client.resolution).scale(0.01), this._aabb.position), this.canvas);
 
@@ -76,12 +74,19 @@ export class UIMenu {
      * Add a UIElement to this. The newly created UIElement can be adjusted within the callback.
      * 
      */
-    public addUIElement<T extends UIElement>(type: Constructor<T>, ...cb: ((uiElement: T, scene: Scene) => any)[]): T {
+    public addUIElement<T extends UIElement>(type: Constructor<T>, ...cb: ((uiElement: T) => void)[]): T {
         const e = new type(this, this.ui.font);
+
         this.uiElements.set(e.id, e);
-        if (cb) cb.forEach(cb => cb(e, this.scene));
+
+        if (cb) {
+            for (const c of cb) {
+                c(e);
+            }
+        }
+
         e.draw();
-        this.redraw = true;
+
         return e;
     }
 
@@ -139,5 +144,9 @@ export class UIMenu {
     public set aabb(val: AABB) {
         this.redraw = true;
         this._aabb = val;
+    }
+
+    public forceRedraw(): void {
+        this.redraw = true;
     }
 }

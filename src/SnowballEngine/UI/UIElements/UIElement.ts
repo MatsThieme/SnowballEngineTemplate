@@ -5,6 +5,8 @@ import { D } from '../../Debug';
 import { AlignH, AlignV } from '../../GameObject/Align';
 import { Input } from '../../Input/Input';
 import { AABB } from '../../Physics/AABB';
+import { Scene } from '../../Scene';
+import { Canvas } from '../../Utilities/Canvas';
 import { Color } from '../../Utilities/Color';
 import { createSprite } from '../../Utilities/Helpers';
 import { Vector2 } from '../../Utilities/Vector2';
@@ -15,7 +17,7 @@ import { UIFrame } from '../UIFrame';
 import { UIMenu } from '../UIMenu';
 
 export abstract class UIElement {
-    private static nextID: number = 0;
+    private static nextID = 0;
 
     public readonly id: number;
 
@@ -40,11 +42,11 @@ export abstract class UIElement {
     public alignH: AlignH;
     public alignV: AlignV;
 
-    public onInput?: (uiElement: this) => any;
-    public onHover?: (uiElement: this) => any;
+    public onInput?: (uiElement: this) => void;
+    public onHover?: (uiElement: this) => void;
 
     protected sprite?: CanvasImageSource;
-    protected abstract drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void;
+    protected abstract drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void;
 
     protected menu: UIMenu;
 
@@ -77,7 +79,7 @@ export abstract class UIElement {
         this.alignH = AlignH.Left;
         this.alignV = AlignV.Top;
 
-        addEventListener('resize', () => {
+        Scene.currentScene.domElement.addEventListener('resize', () => {
             if (this._resize) this.fitContent();
             else this.draw();
         });
@@ -90,7 +92,7 @@ export abstract class UIElement {
      */
     public draw(): void {
         this.sprite = <CanvasImageSource>createSprite(this.drawCb.bind(this)).data;
-        (<any>this).menu.redraw = true;
+        this.menu.forceRedraw();
     }
 
     /**
@@ -120,7 +122,7 @@ export abstract class UIElement {
      * 
      */
     private fitContent(): void {
-        if (this.type === UIElementType.Dropdown) { /*!!!TEST!!!*/
+        if (this.type === UIElementType.Dropdown) {
             if ((<any>this).values.length === 0) return;
             const size = new Vector2();
 

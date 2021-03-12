@@ -11,7 +11,7 @@ export class CircleCollider extends Collider {
     protected _area: number;
     private _radius: number;
 
-    public constructor(gameObject: GameObject, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density: number = 1, radius: number = 1, alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger: boolean = false) {
+    public constructor(gameObject: GameObject, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density = 1, radius = 1, alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger = false) {
         super(gameObject, ComponentType.CircleCollider, relativePosition, material, density, alignH, alignV, isTrigger);
         this._radius = radius;
         this._area = Math.PI * this.radius ** 2;

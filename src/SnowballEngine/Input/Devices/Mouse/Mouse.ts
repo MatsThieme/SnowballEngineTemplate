@@ -67,11 +67,11 @@ export class Mouse extends InputEventTarget implements InputDevice {
         e.preventDefault()
     }
 
-    public getButton(btn: MouseButton): InputButton | undefined {
+    public getButton(btn: MouseButton): Readonly<InputButton> | undefined {
         return this._buttons[btn];
     }
 
-    public getAxis(ax: MouseAxis): InputAxis | undefined {
+    public getAxis(ax: MouseAxis): Readonly<InputAxis> | undefined {
         if (ax === 0) return this._position;
         if (ax === 1) return new InputAxis([this._position.values[0]]);
         if (ax === 2) return new InputAxis([this._position.values[1]]);
@@ -86,8 +86,8 @@ export class Mouse extends InputEventTarget implements InputDevice {
         if (!this._fireListener) return;
 
         for (const { cb, type } of this._listeners.values()) {
-            const btn = <MouseButton>Input.inputMappingButtons.mouse[type];
-            const ax = <MouseAxis>Input.inputMappingAxes.mouse[type];
+            const btn = <MouseButton | undefined>Input.inputMappingButtons.mouse[type];
+            const ax = <MouseAxis | undefined>Input.inputMappingAxes.mouse[type];
 
             const e: InputEvent = {
                 type,

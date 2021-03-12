@@ -1,6 +1,7 @@
 import { Asset } from '../../Assets/Asset';
 import { Client } from '../../Client';
 import { Input } from '../../Input/Input';
+import { Canvas } from '../../Utilities/Canvas';
 import { clamp } from '../../Utilities/Helpers';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
@@ -64,7 +65,7 @@ export abstract class UIInputField extends UIElement {
         } else this.domElement.blur();
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
         context.save();

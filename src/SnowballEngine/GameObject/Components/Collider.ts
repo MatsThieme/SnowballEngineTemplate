@@ -9,7 +9,7 @@ import { Behaviour } from './Behaviour';
 import { Component } from './Component';
 
 export abstract class Collider extends Component {
-    private static _nextID: number = 0;
+    private static _nextID = 0;
     public readonly id: number;
 
     public position: Vector2;
@@ -25,7 +25,7 @@ export abstract class Collider extends Component {
     protected abstract _area: number;
     protected abstract _aabb: AABB;
 
-    public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Collider, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density: number = 1, alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger: boolean = false) {
+    public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Collider, relativePosition: Vector2 = new Vector2(), material: PhysicsMaterial = new PhysicsMaterial(), density = 1, alignH: AlignH = AlignH.Center, alignV: AlignV = AlignV.Center, isTrigger = false) {
         super(gameObject, type);
         this.position = relativePosition;
         this.alignH = alignH;
@@ -35,10 +35,6 @@ export abstract class Collider extends Component {
         this.density = density;
         this.isTrigger = isTrigger;
         this.id = Collider._nextID++;
-    }
-
-    public getAbsolutePosition(): Vector2 {
-        return Vector2.add(this.position, this.gameObject.transform.toGlobal().position, this.align);
     }
 
     /**

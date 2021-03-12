@@ -17,7 +17,7 @@ export class SpriteAnimation {
     private _sprites: readonly Sprite[];
     private _timer: number;
 
-    public constructor(assets: Asset[] = [], swapTime: number = 200) {
+    public constructor(assets: Asset[] = [], swapTime = 200) {
         this.swapTime = swapTime;
 
         this.container = new Container();
@@ -35,8 +35,7 @@ export class SpriteAnimation {
     public set assets(val: readonly Asset[]) {
         for (const a of val) {
             if (a.type !== AssetType.Image) {
-                D.error('Wrong assetType: ' + a.type);
-                return;
+                throw new Error(`Wrong assetType: ${a.type}`);
             }
         }
 

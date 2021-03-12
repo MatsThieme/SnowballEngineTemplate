@@ -1,10 +1,12 @@
-import { Input } from '../Input';
-import { InputAxis } from '../InputAxis';
-import { InputButton } from '../InputButton';
-import { InputEvent } from '../InputEvent';
-import { InputEventTarget } from '../InputEventTarget';
-import { InputDevice } from './InputDevice';
-import { InputDeviceType } from './InputDeviceType';
+import { Input } from '../../Input';
+import { InputAxis } from '../../InputAxis';
+import { InputButton } from '../../InputButton';
+import { InputEvent } from '../../InputEvent';
+import { InputEventTarget } from '../../InputEventTarget';
+import { InputDevice } from '../InputDevice';
+import { InputDeviceType } from '../InputDeviceType';
+import { TouchAxis } from './TouchAxis';
+import { TouchButton } from './TouchButton';
 
 export class Touch extends InputEventTarget implements InputDevice {
     private _positions: InputAxis[];
@@ -36,12 +38,14 @@ export class Touch extends InputEventTarget implements InputDevice {
         this._fireListener = true;
     }
 
-    public getButton(index: number): InputButton | undefined {
-        return index === 0 ? this._button : new InputButton();
+    public getButton(btn: TouchButton): Readonly<InputButton> | undefined {
+        if (btn === 0) return this._button;
+
+        return;
     }
 
-    public getAxis(index: number): Readonly<InputAxis> | undefined {
-        return this._positions[index];
+    public getAxis(ax: TouchAxis): Readonly<InputAxis> | undefined {
+        return this._positions[ax];
     }
 
     public update(): void {
@@ -50,8 +54,8 @@ export class Touch extends InputEventTarget implements InputDevice {
         if (!this._fireListener) return;
 
         for (const { cb, type } of this._listeners.values()) {
-            const btn = Input.inputMappingButtons.mouse[type];
-            const ax = Input.inputMappingAxes.mouse[type];
+            const btn = <TouchButton | undefined>Input.inputMappingButtons.touch[type];
+            const ax = <TouchAxis | undefined>Input.inputMappingAxes.touch[type];
 
             const e: InputEvent = {
                 type,

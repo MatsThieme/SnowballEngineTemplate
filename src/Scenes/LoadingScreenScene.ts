@@ -1,12 +1,9 @@
-import { CameraPrefab } from '../Prefabs/CameraPrefab';
-import { LoadingScreenPrefab } from '../Prefabs/LoadingScreenPrefab';
-import { Instantiate } from '../SnowballEngine/GameObject/Instantiate';
-import { Scene } from '../SnowballEngine/SE';
+import { CameraPrefab } from 'Prefabs/CameraPrefab';
+import { LoadingScreenPrefab } from 'Prefabs/LoadingScreenPrefab';
+import { Instantiate, Scene } from 'se';
 
-export function LoadingScreenScene(scene: Scene) {
-    // add a camera
-    Instantiate('Camera', CameraPrefab);
+export async function LoadingScreenScene(scene: Scene) {
+    await Instantiate('Camera', CameraPrefab);
 
-    // show something to the waiting user
-    scene.ui.addMenu('Loadingscreen', LoadingScreenPrefab);
+    await scene.ui.addMenu('Loadingscreen', LoadingScreenPrefab);
 }

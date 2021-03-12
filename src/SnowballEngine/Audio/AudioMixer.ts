@@ -5,7 +5,7 @@ import { AudioEffect } from './AudioEffect';
 
 export class AudioMixer {
     private static _mixers: Map<string, AudioMixer> = new Map();
-    private static _nextID: number = 0;
+    private static _nextID = 0;
     private readonly _id: number;
 
     private readonly _node: GainNode;
@@ -22,9 +22,9 @@ export class AudioMixer {
 
     private connected: boolean;
 
-    public constructor() {
+    private constructor() {
         this._id = AudioMixer._nextID++;
-        this._node = AudioListener.createGain();
+        this._node = AudioListener.context.createGain();
 
         this._effects = [];
         this._sources = [];
@@ -88,14 +88,14 @@ export class AudioMixer {
     }
 
 
-    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer: (effect: T) => any): AudioEffect {
+    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => any): AudioEffect {
         const reconnect = this._effects.length === 0;
 
         if (reconnect) this.disconnect();
 
-        const e = new effect();
+        const e = new effect(this);
 
-        initializer(e);
+        if (initializer) initializer(e);
 
         this.disconnectEffects();
         this._effects.push(e);
@@ -112,7 +112,7 @@ export class AudioMixer {
      * 
      */
     public removeEffect(effect: AudioEffect | number): void {
-        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentId === effect._id);
+        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentId === effect.id);
         if (id === -1) return;
 
         const reconnect = this._effects.length > 0;
@@ -164,6 +164,11 @@ export class AudioMixer {
         this.connected = false;
     }
 
+    /**
+     * 
+     * @internal 
+     * 
+     */
     public addSource(source: AudioSource): void {
         this._sources.push(source);
         source.node.connect(this._node);

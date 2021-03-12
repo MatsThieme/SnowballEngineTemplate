@@ -3,7 +3,7 @@ export class PhysicsMaterial {
     public dynamicFriction: number;
     public staticFriction: number;
 
-    public constructor(restitution: number = 1, dynamicFriction: number = 1, staticFriction: number = 1) {
+    public constructor(restitution = 1, dynamicFriction = 1, staticFriction = 1) {
         this.restitution = restitution;
         this.dynamicFriction = dynamicFriction;
         this.staticFriction = staticFriction;

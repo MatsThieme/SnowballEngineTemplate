@@ -22,8 +22,6 @@ export class Gamepad extends InputEventTarget implements InputDevice {
         this.gamepad = gamepad;
         this.id = gamepad.index;
 
-        console.log(this.gamepad);
-
         this._buttons = [];
     }
 
@@ -42,7 +40,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
      * Query the gamepads axes, indecies > axes.length will return button.value (axes.length+1 == buttons[0].value) 
      * 
      */
-    public getAxis(ax: GamepadAxis): InputAxis | undefined {
+    public getAxis(ax: GamepadAxis): Readonly<InputAxis> | undefined {
         if (this.gamepad.axes[ax]) return new InputAxis(ax % 2 !== 0 ? -this.gamepad.axes[ax] : this.gamepad.axes[ax]);
 
         if (ax === GamepadAxis.LeftTrigger) return new InputAxis(this.gamepad.buttons[6].value);
@@ -89,8 +87,8 @@ export class Gamepad extends InputEventTarget implements InputDevice {
         }
 
         for (const { cb, type } of this._listeners.values()) {
-            const btn = <GamepadButton>Input.inputMappingButtons.gamepad[type];
-            const ax = <GamepadAxis>Input.inputMappingAxes.gamepad[type];
+            const btn = <GamepadButton | undefined>Input.inputMappingButtons.gamepad[type];
+            const ax = <GamepadAxis | undefined>Input.inputMappingAxes.gamepad[type];
 
             if (!btn && !ax) continue;
 
@@ -109,11 +107,11 @@ export class Gamepad extends InputEventTarget implements InputDevice {
     }
 
     /** TODO: return button / axis with most input */
-    public static getButton(key: number): InputButton | undefined {
+    public static getButton(key: number): Readonly<InputButton> | undefined {
         return Gamepad.gamepads[0]?.getButton(key);
     }
 
-    public static getAxis(key: number): InputAxis | undefined {
+    public static getAxis(key: number): Readonly<InputAxis> | undefined {
         return Gamepad.gamepads[0]?.getAxis(key);
     }
 
@@ -142,11 +140,11 @@ export class Gamepad extends InputEventTarget implements InputDevice {
     }
 
     public static update(): void {
-        const gpads = navigator.getGamepads();
+        const gpads = (<any>window).chrome ? navigator.getGamepads() : undefined;
 
-        for (let i = 0; i < gpads.length; i++) {
+        for (let i = 0; i < (gpads ? gpads.length : this._gamepads.length); i++) {
             if (this._gamepads[i]) {
-                if ((<any>window).chrome) {
+                if (gpads) {
                     (<any>this)._gamepads[i].gamepad = gpads[i];
                 }
 

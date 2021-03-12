@@ -27,7 +27,7 @@ export class GameObject {
     public drawPriority: number;
     public hasCollider: boolean;
 
-    private static nextID: number = 0;
+    private static nextID = 0;
 
     private __destroyed__: boolean;
     private readonly _components: Component[];
@@ -36,8 +36,11 @@ export class GameObject {
 
     public readonly container: Container;
 
+
+    public readonly transform!: Transform;
+
     public constructor(name: string) {
-        if (!Scene.sceneManager.scene) throw 'No Scene loaded!'
+        if (!Scene.sceneManager.scene) throw new Error('No Scene loaded!');
         this.scene = Scene.sceneManager.scene!;
 
         this.id = GameObject.nextID++;
@@ -60,6 +63,8 @@ export class GameObject {
         this._active = true;
 
         this.addComponent(Transform);
+
+        this.transform = this.getComponent(ComponentType.Transform)!;
 
         this.connectCamera();
     }
@@ -84,15 +89,6 @@ export class GameObject {
     private disconnectCamera(): void {
         if (!this._parent) this.scene.cameraManager.removeGameObject(this);
         else this._parent.container.removeChild(this.container);
-    }
-
-    /**
-     *
-     * Returns transform component of this.
-     *
-     */
-    public get transform(): Transform {
-        return <Transform>this.getComponent<Transform>(ComponentType.Transform);
     }
 
     /**
@@ -126,7 +122,7 @@ export class GameObject {
      * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
-    public addComponent<T extends Component>(type: Constructor<T>, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T> | null {
+    public async addComponent<T extends Component>(type: Constructor<T>, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T | null> {
         const component = new type(this);
 
         if (component.type !== ComponentType.Camera &&
@@ -152,23 +148,21 @@ export class GameObject {
         if (component.type === ComponentType.AudioListener) (<any>this).scene.audioListener = <any>component;
 
 
-        return new Promise(async resolve => {
-            if (cb) {
-                for (const c of cb) {
-                    await c(component);
-                }
+        if (cb) {
+            for (const c of cb) {
+                await c(component);
             }
+        }
 
-            if (component.type === ComponentType.Behaviour) {
-                if ((<Behaviour><unknown>component).awake) await (<Behaviour><unknown>component).awake!();
-                if (this.scene.isRunning || this.scene.isStarting) {
-                    if ((<Behaviour><unknown>component).start) await (<Behaviour><unknown>component).start!();
-                    (<any>component).__initialized__ = true;
-                }
+        if (component.type === ComponentType.Behaviour) {
+            if ((<Behaviour><unknown>component).awake) await (<Behaviour><unknown>component).awake!();
+            if (this.scene.isRunning || this.scene.isStarting) {
+                if ((<Behaviour><unknown>component).start) await (<Behaviour><unknown>component).start!();
+                (<any>component).__initialized__ = true;
             }
+        }
 
-            resolve(component);
-        });
+        return component;
     }
 
     /**
@@ -249,7 +243,7 @@ export class GameObject {
      */
     public getComponentInChildren<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         for (const child of this.children) {
-            let c = child.getComponent(type);
+            const c = child.getComponent(type);
             if (c) return c;
         }
 
@@ -352,24 +346,20 @@ export class GameObject {
         if (this.__destroyed__ !== false) return;
         this.__destroyed__ = true;
 
-        try {
-            this.children.forEach(c => c.destroy());
+        this.children.forEach(c => c.destroy());
 
-            const d = () => {
-                this.scene.destroyGameObject(this.name);
+        const d = () => {
+            this.scene.destroyGameObject(this.name);
 
-                const i = this._parent?.children.findIndex(v => v.name === this.name);
-                if (i && i !== -1) this._parent?.children.splice(i, 1);
+            const i = this._parent?.children.findIndex(v => v.name === this.name);
+            if (i && i !== -1) this._parent?.children.splice(i, 1);
 
-                this._components.forEach(c => c.destroy());
+            this._components.forEach(c => c.destroy());
 
-                clearObject(this, true);
-            };
+            clearObject(this, true);
+        };
 
-            if (this.scene.isRunning) (<any>this.scene).destroyCbs.push(d);
-            else d();
-        } catch (err) {
-            D.error(JSON.stringify(this));
-        }
+        if (this.scene.isRunning) (<any>this.scene).destroyCbs.push(d);
+        else d();
     }
 }

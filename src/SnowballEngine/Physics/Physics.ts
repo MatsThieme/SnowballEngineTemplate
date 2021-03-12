@@ -11,11 +11,11 @@ import { worker } from './CollisionWorker';
 
 export class Physics {
     public static gravity: Vector2 = new Vector2(0, -0.00981);
-    public static timeScale: number = 1;
+    public static timeScale = 1;
     private static worker: AsyncWorker = new AsyncWorker(worker, window.navigator.hardwareConcurrency);
     private static ignoreCollisions: Map<number, 1 | undefined> = new Map();
 
-    public static ignoreCollision(gameObject1: GameObject, gameObject2: GameObject, collide: boolean = false): void {
+    public static ignoreCollision(gameObject1: GameObject, gameObject2: GameObject, collide = false): void {
         const id = gameObject1.id > gameObject2.id ? (gameObject1.id << 16) + gameObject2.id : (gameObject2.id << 16) + gameObject1.id;
         if (collide) Physics.ignoreCollisions.delete(id);
         else Physics.ignoreCollisions.set(id, 1);

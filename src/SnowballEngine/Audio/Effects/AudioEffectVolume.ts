@@ -1,13 +1,14 @@
 import { AudioListener } from '../../GameObject/Components/AudioListener';
 import { AudioEffect } from '../AudioEffect';
+import { AudioMixer } from '../AudioMixer';
 
 export class AudioEffectVolume extends AudioEffect {
     public readonly node: GainNode;
 
-    public constructor() {
-        super();
+    public constructor(mixer: AudioMixer) {
+        super(mixer);
 
-        this.node = AudioListener.createGain();
+        this.node = AudioListener.context.createGain();
     }
 
     public get value(): number {

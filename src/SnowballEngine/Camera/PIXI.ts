@@ -16,8 +16,6 @@ export class PIXI {
             clearBeforeRender: true
         });
 
-        this.renderer.on('context', console.log);
-
         this.container = new Container();
         this.container.interactiveChildren = false;
 
@@ -29,7 +27,7 @@ export class PIXI {
     }
 
     public resize(width: number, height: number): void {
-        if (this.renderer.context.isLost) D.error('context lost');
+        if (this.renderer.context.isLost) D.warn('context lost');
         else if (this.renderer.width !== width || this.renderer.height !== height) this.renderer.resize(width, height);
     }
 

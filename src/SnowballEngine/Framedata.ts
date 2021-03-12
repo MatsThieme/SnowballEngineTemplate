@@ -7,7 +7,7 @@ export class Framedata {
     private frames: number;
     private totalFrames: number;
 
-    public constructor(update: number = 1000) {
+    public constructor(update = 1000) {
         this.updateInterval = update;
         this.lastTime = performance.now();
         this.avgFramesPerSecond = 0;
@@ -20,11 +20,11 @@ export class Framedata {
      * Calculates fps.
      * 
      */
-    public update() {
+    public update(time = performance.now()) {
         this.frames++;
         this.totalFrames++;
 
-        const now = performance.now();
+        const now = time;
         const delta = now - this.lastTime;
 
         if (delta >= this.updateInterval) {

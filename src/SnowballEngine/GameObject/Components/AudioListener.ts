@@ -6,13 +6,12 @@ import { AudioSource } from './AudioSource';
 import { Component } from './Component';
 
 export class AudioListener extends Component {
-    private static readonly context: AudioContext = new AudioContext();
+    public static readonly context: AudioContext = new AudioContext();
 
     public static readonly node: AudioDestinationNode = AudioListener.context.destination;
 
     public readonly node: GainNode;
     public volume: number;
-    public maxDistance: number;
     public cameraDistance: number;
 
     private _sources: Map<number, AudioSource>;
@@ -20,11 +19,10 @@ export class AudioListener extends Component {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioListener);
 
-        this.node = AudioListener.createGain();
+        this.node = AudioListener.context.createGain();
         this.node.connect(AudioListener.node);
 
         this.volume = 1;
-        this.maxDistance = 20;
         this.cameraDistance = 5;
 
         this._sources = new Map();
@@ -43,22 +41,6 @@ export class AudioListener extends Component {
         if (AudioListener.context.state === 'suspended') {
             triggerOnUserInputEvent(() => AudioListener.context.resume());
         }
-    }
-
-    public static createMediaElement(audio: HTMLAudioElement): MediaElementAudioSourceNode {
-        return AudioListener.context.createMediaElementSource(audio);
-    }
-
-    public static createPanner(): PannerNode {
-        return AudioListener.context.createPanner();
-    }
-
-    public static createGain(): GainNode {
-        return AudioListener.context.createGain();
-    }
-
-    public static createDelay(): DelayNode {
-        return AudioListener.context.createDelay();
     }
 
     public onEnable(): void {
@@ -83,8 +65,16 @@ export class AudioListener extends Component {
         for (const source of this._sources.values()) {
             if (source.node) {
                 const sourceGlobalTransform = source.gameObject.transform.toGlobal();
-                source.node.setPosition(sourceGlobalTransform.position.x - globalTransform.position.x, sourceGlobalTransform.position.y - globalTransform.position.y, this.cameraDistance);
-                source.node.maxDistance = this.maxDistance;
+
+                if (source.playGlobally) {
+                    source.node.positionX.value = 0;
+                    source.node.positionY.value = 0;
+                    source.node.positionZ.value = 0;
+                } else {
+                    source.node.positionX.value = sourceGlobalTransform.position.x - globalTransform.position.x;
+                    source.node.positionY.value = sourceGlobalTransform.position.y - globalTransform.position.y;
+                }
+
             }
         }
 

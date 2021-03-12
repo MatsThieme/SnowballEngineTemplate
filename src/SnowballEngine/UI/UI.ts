@@ -10,7 +10,7 @@ import { UIMenu } from './UIMenu';
 
 export class UI {
     public menus: Map<string, UIMenu>;
-    private canvas: HTMLCanvasElement;
+    private canvas: Canvas;
     private context: CanvasRenderingContext2D;
     private scene: Scene;
     public navigationHistory: string[];
@@ -21,7 +21,8 @@ export class UI {
     public constructor(scene: Scene) {
         this.menus = new Map();
         this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
-        this.context = this.canvas.getContext('2d')!;
+        this.context = this.canvas.context2D();
+
         this.scene = scene;
         this.navigationHistory = [];
         this.lastMenusState = [];
@@ -42,12 +43,11 @@ export class UI {
      */
     public async addMenu(name: string, ...cb: ((menu: UIMenu, scene: Scene) => void | Promise<void>)[]): Promise<UIMenu> {
         if (this.menus.has(name)) {
-            const menu = this.menus.get(name)!;
-            if (cb) cb.forEach(cb => cb(menu, this.scene));
-            return menu;
+            throw new Error(`Menu with name ${name} already exists`);
         }
 
-        const menu = new UIMenu(this.scene);
+        const menu = new UIMenu();
+
         this.menus.set(name, menu);
 
         if (cb) {

@@ -1,5 +1,6 @@
 import { Client } from '../../../SnowballEngine/SE';
 import { Asset } from '../../Assets/Asset';
+import { Canvas } from '../../Utilities/Canvas';
 import { UIElementType } from '../UIElementType';
 import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
@@ -10,7 +11,7 @@ export class UIText extends UIElement {
         super(menu, UIElementType.Text, font);
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: HTMLCanvasElement): void {
+    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
         canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
         canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
         context.save();

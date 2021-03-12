@@ -4,7 +4,8 @@ import { Vector2 } from '../../../Utilities/Vector2';
 import { ComponentType } from '../../ComponentType';
 import { GameObject } from '../../GameObject';
 import { Component } from '../Component';
-import { Transformable, TransformRealation } from './Transformable';
+import { Transformable } from './Transformable';
+import { TransformRealation } from './TransformRelation';
 
 export class Transform extends Component implements Transformable {
     public position: Vector2;
@@ -14,7 +15,7 @@ export class Transform extends Component implements Transformable {
 
     public readonly id: number;
 
-    private static nextID: number = 0;
+    private static nextID = 0;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Transform);
@@ -31,6 +32,13 @@ export class Transform extends Component implements Transformable {
         return this.gameObject.getComponentsInChildren(ComponentType.Transform);
     }
 
+    /**
+     * 
+     * Transform into this local space
+     * 
+     * @param tranform 
+     * @returns 
+     */
     public toLocal(tranform: Transformable): Transformable {
         return Transform.toLocal(tranform, this);
     }
@@ -211,16 +219,14 @@ export class Transform extends Component implements Transformable {
         return {
             position: child.position.flipped.scale(scale).rotateAroundTo(new Vector2(), new Angle(-child.rotation.radian)),
             rotation: new Angle(-child.rotation.radian),
-            scale,//
+            scale,
             parent,
             id: Transform.nextID++
         };
     }
 
     /**
-     *
-     * TODO: review
-     *
+     * Transforms a Transformable into a siblings space
      *
      * @param sibling
      * @param targetSibling
@@ -228,7 +234,7 @@ export class Transform extends Component implements Transformable {
      */
     public static toSibling(sibling: Transformable, targetSibling: Transformable, parent?: Transformable): Transformable {
         return {
-            position: Vector2.divide(sibling.position.clone.sub(targetSibling.position), (parent || sibling.parent || targetSibling.parent)?.scale || new Vector2(1, 1))/*.scale(Vector2.divide(1, targetSibling.scale))*/, // ??? TODO: test rotation
+            position: Vector2.divide(sibling.position.clone.sub(targetSibling.position), (parent || sibling.parent || targetSibling.parent)?.scale || new Vector2(1, 1)),
             rotation: new Angle(sibling.rotation.radian - targetSibling.rotation.radian),
             scale: Vector2.divide(targetSibling.scale, sibling.scale),
             parent: targetSibling,
@@ -241,7 +247,7 @@ export class Transform extends Component implements Transformable {
             transform = Transform.toParent(transform, transform.parent);
         }
 
-        return transform;
+        return Transform.clone(transform);
     }
 
     public static fromPIXI(pixiObject: DisplayObject, parent?: Transformable): Transformable {

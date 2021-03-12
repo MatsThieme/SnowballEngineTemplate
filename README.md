@@ -184,7 +184,7 @@ enum AssetType {
 
 ### AssetDB
 Assets/AssetDB.json contains information about all assets.\
-It can be generated with **npm run newadb**
+It can be generated with <code>npm run newadb</code>.
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
@@ -196,12 +196,12 @@ type AssetDB = { [path: string]: { type: AssetType, name?: string, mimeType: str
 ### InputMapping
 InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, contain input mapping information.
 
-the signature of an input mapping file looks like this
+The signature of an input mapping file looks like this:
 ```typescript
 interface InputMapping {
     keyboard: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
     mouse: { [key in InputAction]?: MouseButton | MouseAxis },
     gamepad:  { [key in InputAction]?: GamepadButton | GamepadAxis },
-    touch: { [key in InputAction]?: number }
+    touch: { [key in InputAction]?: TouchButton | TouchAxis }
 }
 ```

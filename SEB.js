@@ -240,7 +240,7 @@ function mergeAssetDBs(...dbs) {
 /* Debug server */
 function serve(port) {
     createServer((request, response) => {
-        let path = join(__dirname, 'dist', request.url);
+        let path = join(__dirname, 'dist', decodeURI(request.url));
 
         if (request.url === '/') path += 'index.html';
 
@@ -253,7 +253,7 @@ function serve(port) {
             response.end(content, 'utf-8');
         });
 
-        console.log(request.url);
+        console.log(decodeURI(request.url));
     }).listen(port);
 
     console.log('http://localhost:' + port);

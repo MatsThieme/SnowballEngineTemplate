@@ -1,18 +1,24 @@
 {
-  "compilerOptions": {
-    "module": "ES6",
-    "moduleResolution": "Node",
-    "target": "ES6",
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
-    "outDir": "dist",
-    "sourceMap": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
-  }
+    "compilerOptions": {
+        "module": "ES6",
+        "moduleResolution": "Node",
+        "target": "ES6",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "outDir": "dist",
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "src",
+        "paths": {
+            "se": [
+                "SnowballEngine/SE.ts"
+            ]
+        }
+    }
 }

@@ -4,7 +4,7 @@ import { Gamepad } from './Devices/Gamepad/Gamepad';
 import { InputDeviceType } from './Devices/InputDeviceType';
 import { Keyboard } from './Devices/Keyboard/Keyboard';
 import { Mouse } from './Devices/Mouse/Mouse';
-import { Touch } from './Devices/Touch';
+import { Touch } from './Devices/Touch/Touch';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
 import { InputEvent } from './InputEvent';
@@ -15,7 +15,7 @@ export class Input {
     public static readonly touch?: Touch;
     public static readonly mouse?: Mouse;
     public static readonly keyboard?: Keyboard;
-    public static readonly gamepad: typeof Gamepad;
+    public static readonly gamepad?: typeof Gamepad;
 
     public static inputMappingButtons: InputMapping;
     public static inputMappingAxes: InputMapping;

@@ -1,50 +1,23 @@
-import { Container, Graphics, TilingSprite } from 'pixi.js';
-import { Asset } from '../../../Assets/Asset';
+import { Container, TilingSprite } from 'pixi.js';
 import { clamp, clearObject } from '../../../Utilities/Helpers';
 import { Vector2 } from '../../../Utilities/Vector2';
 import { Camera } from '../Camera';
 import { Transform } from '../Transform/Transform';
+import { BackgroundLayerAsset } from './BackgroundLayerAsset';
+import { BackgroundLayerSprite } from './BackgroundLayerSprite';
 import { ParallaxBackground } from './ParallaxBackground';
-
-export interface BackgroundLayerAsset {
-    asset: Asset;
-
-    size: Vector2;
-
-    /**
-    *
-    * Cut relative to the ParallaxBackground Component.
-    *
-    */
-    xStart?: number;
-
-    /**
-    *
-    * Height offset of the background.
-    *
-    */
-    yOffset?: number;
-}
-
-interface BackgroundLayerSprite extends BackgroundLayerAsset {
-    sprite: TilingSprite;
-    spriteCenter: Vector2;
-
-    xStart: number;
-    yOffset: number;
-};
 
 export class BackgroundLayer {
     /** speed from 0 to 1, 0 == near(no movement), 1 == far(camera speed) */
     public readonly speed: number;
 
-    public readonly sprite: BackgroundLayerSprite;
+    public readonly backgroundLayerSprite: BackgroundLayerSprite;
 
     private readonly _container: Container;
 
     private readonly _parallaxBackground: ParallaxBackground;
 
-    public constructor(speed: number, asset: BackgroundLayerAsset, container: Container, parallaxBackground: ParallaxBackground) {
+    public constructor(speed: number, backgroundLayerAsset: BackgroundLayerAsset, container: Container, parallaxBackground: ParallaxBackground) {
         this.speed = clamp(0.000001, 1, speed);
 
         this._container = container;
@@ -52,47 +25,41 @@ export class BackgroundLayer {
         this._parallaxBackground = parallaxBackground;
 
 
-        if (!asset.xStart) asset.xStart = 0;
-        if (!asset.yOffset) asset.yOffset = 0;
+        if (!backgroundLayerAsset.offset) backgroundLayerAsset.offset = new Vector2();
 
 
-        this.sprite = this.toSprite(<BackgroundLayerSprite>asset);
+        this.backgroundLayerSprite = this.toSprite(<BackgroundLayerSprite>backgroundLayerAsset);
 
-        this._container.addChild(this.sprite.sprite);
-
-
-
-        this.sprite.sprite.mask = new Graphics()
-            .beginFill(0)
-            .drawRect(asset.xStart, -(asset.yOffset + asset.size.y / 2), asset.size.x, asset.size.y)
-            .endFill();
-
-        this._container.addChild(this.sprite.sprite.mask);
+        this._container.addChild(this.backgroundLayerSprite.sprite);
     }
 
     private toSprite(asset: BackgroundLayerSprite): BackgroundLayerSprite {
-        const sprite = asset.sprite = new TilingSprite(asset.asset.getPIXITexture()!, asset.size.x * 3, asset.size.y);
+        const pxScale = asset.size.y / asset.asset.image!.size.y;
+
+        const sprite = asset.sprite = new TilingSprite(asset.asset.getPIXITexture()!, asset.size.x * 2, asset.size.y - pxScale);
         sprite.anchor.set(0.5);
-        sprite.zIndex = (asset.xStart + 1) / this.speed;
+        sprite.zIndex = 1 / this.speed;
         sprite.name = asset.asset.path;
 
 
-        sprite.tileScale.set(asset.size.y / asset.asset.image!.size.y);
+        sprite.tilePosition.y = -pxScale;
+
+        sprite.tileScale.set(pxScale);
 
 
-        asset.spriteCenter = new Vector2(asset.xStart + asset.size.x / 2, asset.yOffset);
+        asset.spriteCenter = new Vector2(asset.offset.x + asset.size.x / 2, -asset.offset.y);
 
         return asset;
     }
 
     public updateSpriteForCamera(camera: Camera) {
-        const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.sprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
+        const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.backgroundLayerSprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
 
-        this.sprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.sprite.size.x / 2, 0)));
+        this.backgroundLayerSprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.backgroundLayerSprite.size.x / 2)));
     }
 
     public destroy(): void {
-        this.sprite.sprite.destroy({ children: true, texture: true, baseTexture: false });
+        this.backgroundLayerSprite.sprite.destroy({ children: true, texture: true, baseTexture: false });
 
         clearObject(this);
     }

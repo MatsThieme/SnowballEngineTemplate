@@ -14,10 +14,6 @@
             "email": "",
             "href": ""
         },
-        "Fullscreen": false,
-        "Orientation": "default|landscape|portrait",
-        "EnableWebGL": true,
-        "KeepRunning": false,
         "plugins": []
     },
     "build": {

@@ -1,5 +1,4 @@
 import { BaseTexture, Rectangle, Sprite, Texture } from 'pixi.js';
-import { D } from '../Debug';
 import { Canvas } from '../Utilities/Canvas';
 import { clearObject } from '../Utilities/Helpers';
 import { ReadOnlyVector2 } from '../Utilities/ReadOnlyVector2';
@@ -13,11 +12,11 @@ export class Asset {
      */
     public readonly path: string;
     public readonly type: AssetType;
-    public readonly data: HTMLCanvasElement | HTMLImageElement | HTMLAudioElement | HTMLVideoElement | string | Blob | object;
+    public readonly data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, any>;
 
     public readonly image?: {
         readonly size: ReadOnlyVector2,
-        readonly baseTexture: Readonly<BaseTexture>,
+        readonly baseTexture: BaseTexture,
         mirrorX: boolean,
         mirrorY: boolean
     };
@@ -27,7 +26,12 @@ export class Asset {
         mirroredY: boolean
     }
 
-    public constructor(path: string, type: AssetType, data: HTMLCanvasElement | HTMLImageElement | HTMLAudioElement | HTMLVideoElement | string | Blob | object) {
+    public readonly video?: {
+        readonly size: ReadOnlyVector2,
+        readonly baseTexture: BaseTexture
+    };
+
+    public constructor(path: string, type: AssetType, data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, any>) {
         this.path = path;
         this.type = type;
         this.data = data;
@@ -44,61 +48,17 @@ export class Asset {
                 mirroredX: false,
                 mirroredY: false
             };
+        } else if (this.type === AssetType.Video) {
+            this.video = {
+                size: new ReadOnlyVector2((<HTMLVideoElement>this.data).videoWidth, (<HTMLVideoElement>this.data).videoHeight),
+                baseTexture: new BaseTexture(<HTMLVideoElement>this.data, { resourceOptions: { autoPlay: false } })
+            };
         }
     }
 
-    ///**
-    // * 
-    // * Mirror the canvasImageSource horizontally.
-    // * 
-    // */
-    //public mirrorImageX(): Asset {
-    //    if (this.type !== AssetType.Image) {
-    //        D.error('type != AssetType.Image');
-    //        return this;
-    //    }
-
-    //    const c = Canvas((<HTMLImageElement>this.data).width, (<HTMLImageElement>this.data).height);
-    //    const ctx = c.getContext('2d')!;
-    //    ctx.translate(c.width, 0);
-    //    ctx.scale(-1, 1);
-    //    ctx.imageSmoothingEnabled = false;
-    //    ctx.drawImage(<HTMLImageElement>this.data, 0, 0);
-    //    (<any>this).data = c;
-
-    //    this._image!.mirroredX = !!this._image!.mirroredX;
-
-    //    return this;
-    //}
-
-    ///**
-    // *
-    // * Mirror the canvasImageSource vertically.
-    // *
-    // */
-    //public mirrorImageY(): Asset {
-    //    if (this.type !== AssetType.Image) {
-    //        D.error('type != AssetType.Image');
-    //        return this;
-    //    }
-
-    //    const c = Canvas((<HTMLImageElement>this.data).width, (<HTMLImageElement>this.data).height);
-    //    const ctx = c.getContext('2d')!;
-    //    ctx.translate(0, c.height);
-    //    ctx.scale(1, -1);
-    //    ctx.imageSmoothingEnabled = false;
-    //    ctx.drawImage((<HTMLImageElement>this.data), 0, 0);
-    //    (<any>this).data = c;
-
-    //    this._image!.mirroredY = !!this._image!.mirroredY;
-
-    //    return this;
-    //}
-
     public mirrorImage(x?: boolean, y?: boolean): Asset {
         if (this.type !== AssetType.Image) {
-            D.error('type != AssetType.Image');
-            return this;
+            throw new Error('type !== AssetType.Image');
         }
 
         if (!x && !y) return this;
@@ -111,8 +71,8 @@ export class Asset {
         ctx.drawImage((<HTMLImageElement>this.data), 0, 0);
         (<any>this).data = c;
 
-        if (x) this._image!.mirroredX = !!this._image!.mirroredX;
-        if (y) this._image!.mirroredY = !!this._image!.mirroredY;
+        if (x) this._image!.mirroredX = !this._image!.mirroredX;
+        if (y) this._image!.mirroredY = !this._image!.mirroredY;
 
         this.image!.baseTexture.destroy();
 
@@ -128,12 +88,11 @@ export class Asset {
      * 
      */
     public getPIXISprite(x?: number, y?: number, width?: number, height?: number): Sprite | undefined {
-        if (this.type !== AssetType.Image) {
-            D.error('type != AssetType.Image');
-            return;
+        if (this.type !== AssetType.Image && this.type !== AssetType.Video) {
+            throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
         }
 
-        this.mirrorImage(this.image!.mirrorX && !this._image!.mirroredX, this.image!.mirrorY && !this._image!.mirroredY);
+        if (this.type === AssetType.Image) this.mirrorImage(this.image!.mirrorX && !this._image!.mirroredX, this.image!.mirrorY && !this._image!.mirroredY);
 
 
         const sprite = new Sprite(this.getPIXITexture(x, y, width, height)!);
@@ -144,23 +103,20 @@ export class Asset {
     }
 
     public getPIXITexture(x?: number, y?: number, width?: number, height?: number): Texture | undefined {
-        if (this.type !== AssetType.Image) {
-            D.error('type != AssetType.Image');
-            return;
+        if (this.type !== AssetType.Image && this.type !== AssetType.Video) {
+            throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
         }
 
-        if (!x && !y && !width && !height) return new Texture(<any>this.image!.baseTexture);
-        else return new Texture(<any>this.image!.baseTexture, new Rectangle(x, y, width === undefined ? this.image!.size.x : width, height === undefined ? this.image!.size.y : height));
+        if (!x && !y && !width && !height) return new Texture(<any>(this.image || this.video)!.baseTexture);
+        else return new Texture(<any>(this.image || this.video)!.baseTexture, new Rectangle(x, y, width === undefined ? (this.image || this.video)!.size.x : width, height === undefined ? (this.image || this.video)!.size.y : height));
     }
 
     public clone(): Asset {
-        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.path, this.type, this.data);
+        if (this.type === AssetType.Text || this.type === AssetType.Font || this.type === AssetType.Audio) return new Asset(this.path, this.type, this.data);
 
         if (this.type === AssetType.Blob) return new Asset(this.path, this.type, (<Blob>this.data).slice());
 
         if (this.type === AssetType.JSON) return new Asset(this.path, this.type, JSON.parse(JSON.stringify(this.data)));
-
-        if (this.type === AssetType.Audio) return new Asset(this.path, this.type, new Audio(this.path));
 
         if (this.type === AssetType.Image) {
             const img = new Image();

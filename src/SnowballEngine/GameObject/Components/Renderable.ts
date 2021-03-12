@@ -4,7 +4,6 @@ import { AlignH, AlignV } from '../Align';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
-import { Transform } from './Transform/Transform';
 
 export abstract class Renderable extends Component {
     private _visible: boolean;
@@ -34,7 +33,7 @@ export abstract class Renderable extends Component {
         super(gameObject, type);
 
         this._visible = true;
-        this._size = new Vector2(1, 1);
+        this._size = new Vector2(0, 0);
 
         this.alignH = AlignH.Center;
         this.alignV = AlignV.Center;
@@ -98,31 +97,16 @@ export abstract class Renderable extends Component {
         if (val) {
             val.name = this.constructor.name + ' (' + this.componentId + ')';
 
-            if (val.width + val.height !== 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
+            if (val.width + val.height !== 0 && this._size.x + this._size.y === 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
             else if (this.autoResizeContainer) {
                 val.addListener('childAdded', (c: Sprite | Container) => { if (c.parent.name === val.name) this.resizeContainer(val); });
                 val.addListener('removed', () => val.removeAllListeners());
             }
 
+            if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
+
             this.connectCamera();
         }
-    }
-
-    public getSpritePosition(): Vector2 {
-        if (!this.sprite) return new Vector2();
-
-        return new Vector2().copy(this.sprite.position);
-    }
-
-    /**
-     * 
-     * TODO: review and revise
-     * 
-     */
-    public getSpriteAbsolutePosition(): Vector2 {
-        if (!this.sprite) return new Vector2();
-
-        return Transform.toGlobal(Transform.fromPIXI(this.sprite, this.gameObject.transform)).position;
     }
 
     private resizeContainer(container: Container) {
@@ -162,11 +146,6 @@ export abstract class Renderable extends Component {
         if (!this._sprite) return;
 
         this.gameObject.container.removeChild(this._sprite);
-    }
-
-    public getAbsoluteSize(): Vector2 {
-        const globalTransform = this.gameObject.transform.toGlobal();
-        return new Vector2(this.size.x * globalTransform.scale.x, this.size.y * globalTransform.scale.y);
     }
 
     public update() {

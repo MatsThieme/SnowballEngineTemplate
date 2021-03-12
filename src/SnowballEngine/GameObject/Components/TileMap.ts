@@ -1,6 +1,5 @@
 import { Container } from 'pixi.js';
 import { Assets } from '../../Assets/Assets';
-import { D } from '../../Debug';
 import { AABB } from '../../Physics/AABB';
 import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
 import { Vector2 } from '../../Utilities/Vector2';
@@ -41,26 +40,21 @@ export class TileMap extends Renderable {
 
                 if (!val[y][x]) continue;
 
-                try {
-                    const asset = Assets.get(val[y][x]);
+                const asset = Assets.get(val[y][x]);
 
-                    if (!asset) throw 'cant get asset'
+                if (!asset) throw new Error(`Can't get asset at position ${new Vector2(x, y).toString(0)}: ${val[y][x]}`);
 
-                    const sprite = asset.getPIXISprite();
+                const sprite = asset.getPIXISprite();
 
-                    if (!sprite) throw 'cant get sprite'
+                if (!sprite) throw new Error(`Can't get sprite at position ${new Vector2(x, y).toString(0)}: ${val[y][x]}`);
 
-                    sprite.x = x * this.tileSize.x;
-                    sprite.y = y * this.tileSize.y;
+                sprite.x = x * this.tileSize.x;
+                sprite.y = y * this.tileSize.y;
 
-                    sprite.width = this.tileSize.x;
-                    sprite.height = this.tileSize.y;
+                sprite.width = this.tileSize.x;
+                sprite.height = this.tileSize.y;
 
-                    this.sprite!.addChild(sprite);
-                } catch (e) {
-                    D.error(val[y][x] + '\n' + e);
-                    return;
-                }
+                this.sprite!.addChild(sprite);
             }
         }
     }

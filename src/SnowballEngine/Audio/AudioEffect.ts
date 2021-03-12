@@ -1,9 +1,13 @@
+import { AudioMixer } from "./AudioMixer";
+
 export abstract class AudioEffect {
     private static nextID: number;
     public abstract readonly node: AudioNode;
-    public readonly _id: number;
+    public readonly id: number;
+    public mixer: AudioMixer;
 
-    public constructor() {
-        this._id = AudioEffect.nextID++;
+    public constructor(mixer: AudioMixer) {
+        this.id = AudioEffect.nextID++;
+        this.mixer = mixer;
     }
 }
