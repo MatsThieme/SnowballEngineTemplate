@@ -64,9 +64,9 @@ SceneManager
 
 ### The main file 'Game.ts' looks like this
 ```typescript
-import { LoadingScreenScene } from './Scenes/LoadingScreenScene';
-import { MainScene } from './Scenes/MainScene';
-import { Assets, SceneManager } from './SnowballEngine/SE';
+import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
+import { MainScene } from 'Scenes/MainScene';
+import { Assets, SceneManager } from 'se';
 
 export class Game {
     public constructor() {
