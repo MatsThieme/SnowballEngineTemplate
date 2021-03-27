@@ -1,42 +1,92 @@
-import { Client } from '../../../SnowballEngine/SE';
-import { Asset } from '../../Assets/Asset';
-import { Canvas } from '../../Utilities/Canvas';
+import { TextStyleAlign } from '@pixi/text';
+import { BitmapText } from '@pixi/text-bitmap';
+import { Client } from 'SnowballEngine/Client';
+import { Scene } from 'SnowballEngine/Scene';
+import { Color } from 'SnowballEngine/Utilities/Color';
 import { UIElementType } from '../UIElementType';
-import { UIFont } from '../UIFont';
+import { UIFonts } from '../UIFonts';
 import { UIMenu } from '../UIMenu';
 import { UIElement } from './UIElement';
 
 export class UIText extends UIElement {
-    public constructor(menu: UIMenu, font: Asset) {
-        super(menu, UIElementType.Text, font);
+    protected readonly _bitmapText: BitmapText;
+
+    private readonly _resizeListener: () => void;
+
+    public constructor(menu: UIMenu, type: UIElementType = UIElementType.Text) {
+        super(menu, type);
+
+        this._bitmapText = new BitmapText('', { fontName: menu.font || Scene.currentScene.ui.font });
+
+        this.container.addChild(this._bitmapText);
+
+        this._resizeListener = (() => this._bitmapText.updateText()).bind(this);
+
+        window.addEventListener('resize', this._resizeListener);
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
-        canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
-        canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
-        context.save();
+    public get font(): UIFont {
+        return <UIFont>this._bitmapText.fontName;
+    }
+    public set font(val: UIFont) {
+        this._bitmapText.fontName = val;
+        this._bitmapText.updateText();
+    }
 
-        if (this.background) context.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+    public get text(): string {
+        return this._bitmapText.text;
+    }
+    public set text(val: string) {
+        this._bitmapText.text = val;
+    }
 
-        context.strokeStyle = context.fillStyle = context.shadowColor = this.color;
+    public get tint(): Color {
+        const color = new Color();
 
-        context.lineWidth = Math.round(this.menu.aabb.size.magnitude / 40);
-        if (this.stroke) context.strokeRect(context.lineWidth / 2, context.lineWidth / 2, canvas.width - context.lineWidth, canvas.height - context.lineWidth);
+        color.rgb = this._bitmapText.tint;
 
-        context.textAlign = 'center';
-        context.textBaseline = 'middle';
+        return color;
+    }
+    public set tint(val: Color) {
+        this._bitmapText.tint = val.rgb;
+    }
 
-        context.font = UIFont.getCSSFontString(<string>this.font.data, this.fontSize);
+    /**
+     * 
+     * Multiline text align.
+     * 
+     */
+    public get textAlign(): TextStyleAlign {
+        return <TextStyleAlign>this._bitmapText.align;
+    }
+    public set textAlign(val: TextStyleAlign) {
+        this._bitmapText.align = val;
+    }
+
+    public update(): boolean {
+        if (!this.active) return false;
+
+        this._bitmapText.scale.set(Client.resolution.y / Client.resolution.x, 1);
+
+        this._bitmapText.position.copyFrom(this._scaledPadding);
+
+        const style = UIFonts.getStyle(<UIFont>this._bitmapText.fontName)!;
+        const fontSize = <number>style.fontSize;
+
+        const lines = [...this._bitmapText.text.matchAll(/\n/g)].length + 1;
 
 
-        if (this.textShadow > 0) {
-            context.shadowBlur = context.lineWidth * 1.5 * this.textShadow;
-            context.shadowOffsetX = context.lineWidth * this.textShadow;
-            context.shadowOffsetY = -context.lineWidth * this.textShadow;
-        }
+        const ratio = this._bitmapText.width / this._bitmapText.height;
 
-        context.fillText(this.label, canvas.width / 2, canvas.height / 2);
+        this._bitmapText.height = fontSize * lines + fontSize * 0.11;
+        this._bitmapText.width = ratio * fontSize * lines * (1 + 0.2 / lines);
 
-        context.restore();
+        return super.update();
+    }
+
+    public destroy(): void {
+        window.removeEventListener('resize', this._resizeListener);
+        console.log(this.text)
+        super.destroy();
     }
 }

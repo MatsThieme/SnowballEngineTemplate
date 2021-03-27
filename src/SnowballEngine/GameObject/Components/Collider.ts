@@ -8,6 +8,7 @@ import { GameObject } from '../GameObject';
 import { Behaviour } from './Behaviour';
 import { Component } from './Component';
 
+/**@category Component */
 export abstract class Collider extends Component {
     private static _nextID = 0;
     public readonly id: number;

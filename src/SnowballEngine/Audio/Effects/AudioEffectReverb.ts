@@ -58,7 +58,7 @@ export class AudioEffectReverb extends AudioEffect {
 
         let n: number;
 
-        for (let i: number = 0; i < length; i++) {
+        for (let i = 0; i < length; i++) {
             n = this._reverse ? length - i : i;
             impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, this._decay);
             impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, this._decay);
@@ -68,7 +68,7 @@ export class AudioEffectReverb extends AudioEffect {
         convolver.buffer = impulse;
 
         this.node?.disconnect();
-        (<any>this).node = convolver;
+        (<Mutable<AudioEffectReverb>>this).node = convolver;
 
         this.mixer.connect();
     }

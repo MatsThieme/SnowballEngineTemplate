@@ -1,3 +1,4 @@
+import projectConfig from '../../../../../SnowballEngineConfig.json';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
@@ -31,8 +32,6 @@ export class Mouse extends InputEventTarget implements InputDevice {
     }
 
     private onMouseMove(e: MouseEvent): void {
-        e.preventDefault();
-
         this._prevPosition.values = this._position.values;
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
 
@@ -40,10 +39,10 @@ export class Mouse extends InputEventTarget implements InputDevice {
     }
 
     private onMouseUp(e: MouseEvent): void {
-        e.preventDefault();
-
         this._prevPosition.values = this._position.values;
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+
+        if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
         this._buttons[e.button].down = false;
 
@@ -51,8 +50,6 @@ export class Mouse extends InputEventTarget implements InputDevice {
     }
 
     private onMouseDown(e: MouseEvent): void {
-        e.preventDefault();
-
         this._prevPosition.values = this._position.values;
         this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
 
@@ -109,7 +106,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
         window.addEventListener('mousedown', this.onMouseDown.bind(this));
         window.addEventListener('mouseup', this.onMouseUp.bind(this));
         window.addEventListener('mousemove', this.onMouseMove.bind(this));
-        if (!project.settings.allowContextMenu) window.addEventListener('contextmenu', this.onContextMenu.bind(this));
+        if (!projectConfig.settings.allowContextMenu) window.addEventListener('contextmenu', this.onContextMenu.bind(this));
     }
 
     private removeListeners(): void {

@@ -1,9 +1,12 @@
+import { D } from 'SnowballEngine/Debug';
 import { clearObject } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
+import { Destroyable } from '../Destroy';
 import { GameObject } from '../GameObject';
 import { Camera } from './Camera';
 
-export abstract class Component {
+/**@category Component */
+export abstract class Component implements Destroyable {
     private static _nextCID = 0;
 
     public readonly gameObject: GameObject;
@@ -31,7 +34,12 @@ export abstract class Component {
         return this._active;
     }
     public set active(val: boolean) {
-        if (this._active === val || this.type === ComponentType.Transform) return;
+        if (this.type === ComponentType.Transform) {
+            D.warn(`Can't disable a Transform component`);
+            return;
+        }
+
+        if (this._active === val) return;
 
         this._active = val;
 
@@ -57,7 +65,7 @@ export abstract class Component {
             clearObject(this, true);
         }
 
-        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene).destroyCbs.push(d);
+        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene)._destroyCbs.push(d);
         else d();
     }
 }
@@ -98,7 +106,7 @@ export interface Component {
     * Called once every frame.
     *
     */
-    update?(...args: any[]): void;
+    update?(...args: unknown[]): void;
 
     /**
     *

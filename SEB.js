@@ -201,9 +201,7 @@ async function createAssetDB(path) {
 
     for (const p of await listDir(path)) {
         assetDB[p] = {
-            name: '',
-            type: getAssetType(p),
-            mimeType: getType(p)
+            type: getAssetType(p)
         }
     }
 

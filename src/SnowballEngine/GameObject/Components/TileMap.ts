@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { Assets } from '../../Assets/Assets';
 import { AABB } from '../../Physics/AABB';
 import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
@@ -7,6 +7,7 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Renderable } from './Renderable';
 
+/**@category Component */
 export class TileMap extends Renderable {
     public tileSize: Vector2;
     private _tileMap: (1 | 0)[][];
@@ -27,7 +28,7 @@ export class TileMap extends Renderable {
      * Initialize the tilemap using a 2D array containing image sources.
      * 
      */
-    public set tileMap(val: string[][]) {
+    public set tileMap(val: AssetID[][]) {
         this.sprite!.removeChildren();
 
         this._tileMap = [];
@@ -40,7 +41,7 @@ export class TileMap extends Renderable {
 
                 if (!val[y][x]) continue;
 
-                const asset = Assets.get(val[y][x]);
+                const asset = Assets.get(<AssetID>val[y][x]);
 
                 if (!asset) throw new Error(`Can't get asset at position ${new Vector2(x, y).toString(0)}: ${val[y][x]}`);
 

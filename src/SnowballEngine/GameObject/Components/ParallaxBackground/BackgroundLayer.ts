@@ -1,4 +1,5 @@
-import { Container, TilingSprite } from 'pixi.js';
+import { Container } from '@pixi/display';
+import { TilingSprite } from '@pixi/sprite-tiling';
 import { clamp, clearObject } from '../../../Utilities/Helpers';
 import { Vector2 } from '../../../Utilities/Vector2';
 import { Camera } from '../Camera';
@@ -52,7 +53,7 @@ export class BackgroundLayer {
         return asset;
     }
 
-    public updateSpriteForCamera(camera: Camera) {
+    public updateSpriteForCamera(camera: Camera): void {
         const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.backgroundLayerSprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
 
         this.backgroundLayerSprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.backgroundLayerSprite.size.x / 2)));

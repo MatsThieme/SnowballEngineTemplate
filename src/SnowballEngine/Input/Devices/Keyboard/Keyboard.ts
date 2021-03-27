@@ -89,7 +89,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         return keys;
     }
 
-    public update() {
+    public update(): void {
         for (const btn of this._keys.values()) {
             btn.update();
         }

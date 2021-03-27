@@ -1,13 +1,26 @@
 import isMobile from 'ismobilejs';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Scene } from './Scene';
-import { asyncTimeout, triggerOnUserInputEvent } from './Utilities/Helpers';
-import { ReadOnlyVector2 } from './Utilities/ReadOnlyVector2';
+import { triggerOnUserInputEvent } from './Utilities/Helpers';
+import { Timeout } from './Utilities/Timeout';
 import { Vector2 } from './Utilities/Vector2';
 
 export class Client {
     public static platform: 'android' | 'ios' | 'browser' | 'windows' | 'osx' = <any>(window.cordova || {}).platformId || 'browser';
     public static isMobile: boolean = isMobile(navigator).any;
+
+    /**
+     *
+     * Returns the resolution of the window.
+     * 
+     */
+    public static readonly resolution: ImmutableObject<Vector2> = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio).round();
+
+    public static monitorRefreshRate = 60;
+
+    public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
+
+    public static readonly hasMediaPlayPermission: boolean;
 
     /**
      * 
@@ -23,23 +36,12 @@ export class Client {
             handle = requestAnimationFrame(update);
         }
 
-        await asyncTimeout(ms);
+        await new Timeout(ms);
 
         cancelAnimationFrame(handle);
 
         return Math.round(frames / ms * 1000);
     }
-
-    /**
-     *
-     * Returns the resolution of the window.
-     * 
-     */
-    public static readonly resolution: ReadOnlyVector2 = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
-
-    public static monitorRefreshRate = 60;
-
-    public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
 
     public static async requestFullscreen(element: HTMLElement): Promise<void> {
         await triggerOnUserInputEvent(async () => {
@@ -67,15 +69,15 @@ export class Client {
         }
     }
 
-    private static resizeListener?: () => any;
+    private static resizeListener?: () => void;
 
     public static async init(): Promise<void> {
-        const el = Scene.sceneManager?.scene?.domElement || window;
+        const el = Scene.currentScene?.domElement || window;
 
         if (Client.resizeListener) el.removeEventListener('resize', Client.resizeListener);
 
         Client.resizeListener = () => {
-            const boundingClientRect = Scene.sceneManager?.scene?.domElement.getBoundingClientRect();
+            const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
 
             (<Vector2>Client.resolution).x = (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
             (<Vector2>Client.resolution).y = (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
@@ -88,12 +90,13 @@ export class Client {
         el.addEventListener('resize', Client.resizeListener);
 
 
+        if (!(<Mutable<typeof Client>>Client).hasMediaPlayPermission) {
+            (<Mutable<typeof Client>>Client).hasMediaPlayPermission = AudioListener.context.state === 'running';
+
+            AudioListener.context.addEventListener('statechange', e => (<Mutable<typeof Client>>Client).hasMediaPlayPermission = AudioListener.context.state === 'running');
+        }
+
+        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(100);
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
-
-        (<any>Client).hasMediaPlayPermission = AudioListener.context.state === 'running';
-
-        AudioListener.context.addEventListener('statechange', e => (<any>Client).hasMediaPlayPermission = AudioListener.context.state === 'running');
     }
-
-    public static readonly hasMediaPlayPermission: boolean;
 }

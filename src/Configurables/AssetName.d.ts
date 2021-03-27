@@ -1,0 +1,1 @@
+type AssetName = 'some image';

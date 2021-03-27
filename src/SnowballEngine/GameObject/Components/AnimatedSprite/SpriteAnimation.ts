@@ -1,8 +1,10 @@
-import { Container, Sprite } from 'pixi.js';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
 import { Asset } from '../../../Assets/Asset';
 import { AssetType } from '../../../Assets/AssetType';
 import { D } from '../../../Debug';
 import { GameTime } from '../../../GameTime';
+
 
 export class SpriteAnimation {
     /**
@@ -71,7 +73,7 @@ export class SpriteAnimation {
      * Adds the deltaTime to timer property.
      * 
      */
-    public update() {
+    public update(): void {
         if (this._sprites.length === 0) return;
 
         this._timer = (this._timer + GameTime.deltaTime) % (this._sprites.length * this.swapTime);
@@ -86,7 +88,7 @@ export class SpriteAnimation {
      * Reset the animation timer.
      * 
      */
-    public reset() {
+    public reset(): void {
         this._timer = 0;
     }
 

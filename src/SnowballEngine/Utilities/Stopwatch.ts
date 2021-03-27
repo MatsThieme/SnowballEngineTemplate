@@ -1,5 +1,6 @@
 import { GameTime } from "../GameTime";
 
+/** @category Utility */
 export class Stopwatch {
     private _start?: number;
     private _stop?: number;
@@ -39,14 +40,14 @@ export class Stopwatch {
         return <boolean>(!this._stop && this._start);
     }
 
-    public start() {
+    public start(): void {
         if (this._stop !== undefined) this._start = this.now - (this._stop - (this._start || 0));
         else this._start = this.now;
 
         this._stop = undefined;
     }
 
-    public stop() {
+    public stop(): void {
         this._stop = this.now;
     }
 

@@ -4,36 +4,36 @@ import { Client } from './Client';
 import { Framedata } from './Framedata';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Behaviour } from './GameObject/Components/Behaviour';
-import { Collider } from './GameObject/Components/Collider';
 import { Component } from './GameObject/Components/Component';
 import { ComponentType } from './GameObject/ComponentType';
 import { GameObject } from './GameObject/GameObject';
 import { GameTime } from './GameTime';
 import { Input } from './Input/Input';
 import { Collision } from './Physics/Collision';
-import { Physics } from './Physics/Physics';
 import { SceneManager } from './SceneManager';
 import { UI } from './UI/UI';
-import { Canvas } from './Utilities/Canvas';
-import { cantorPairingFunction, clearObject, interval } from './Utilities/Helpers';
+import { UIFonts } from './UI/UIFonts';
+import { clearObject } from './Utilities/Helpers';
+import { Interval } from './Utilities/Interval';
 
 export class Scene {
-    public readonly domElement: Canvas;
-    public readonly gameObjects: Map<string, GameObject>;
     public readonly cameraManager: CameraManager;
+    public readonly gameObjects: Map<string, GameObject>;
     public readonly ui: UI;
-    private requestAnimationFrameHandle?: number;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
+    public readonly domElement: HTMLCanvasElement;
     public readonly name: string;
-    private updateComplete?: boolean;
+
+    private _requestAnimationFrameHandle?: number;
+    private _updateComplete?: boolean;
 
     /**
      * 
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
      * 
      */
-    private readonly destroyCbs: (() => void)[];
+    private readonly _destroyCbs: (() => void)[];
 
     public static readonly sceneManager: SceneManager;
     public static readonly currentScene: Scene;
@@ -44,18 +44,50 @@ export class Scene {
 
         this.name = name;
 
-        this.domElement = new Canvas(Client.resolution.x, Client.resolution.y);
-        this.domElement.id = this.name;
 
         Input.reset();
         Client.init();
 
+        if (!(<any>UIFonts)._fonts) UIFonts.init();
+
         this.gameObjects = new Map();
-        this.cameraManager = new CameraManager(this.domElement);
-        this.ui = new UI(this);
+        this.ui = new UI();
+        this.cameraManager = new CameraManager();
         this.framedata = new Framedata();
-        this.destroyCbs = [];
+        this._destroyCbs = [];
+
+        this.domElement = this.cameraManager.canvas;
+        this.domElement.id = this.name;
     }
+
+
+    /**
+     * 
+     * Returns true while this.start() is running.
+     * 
+     */
+    public get isStarting(): boolean {
+        return this._requestAnimationFrameHandle === -1;
+    }
+
+    /**
+     * 
+     * Returns true if scene start() has been called.
+     * 
+     */
+    public get isStarted(): boolean {
+        return typeof this._requestAnimationFrameHandle === 'number';
+    }
+
+    /**
+     * 
+     * Returns true if animation loop is running.
+     * 
+     */
+    public get isRunning(): boolean {
+        return !!this._requestAnimationFrameHandle;
+    }
+
 
     /**
      * 
@@ -94,7 +126,7 @@ export class Scene {
      * 
      */
     private async update(time: number) {
-        this.updateComplete = false;
+        this._updateComplete = false;
 
         GameTime.update(time);
 
@@ -104,34 +136,36 @@ export class Scene {
 
         const gameObjects = [...this.gameObjects.values()];
 
-        if (!this.ui.pauseScene) {
-            gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update()));
+        const scenePaused = [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
 
-            const idPairs: number[] = [];
-            const collisionPromises: Promise<Collision>[] = [];
+        if (!scenePaused) {
+            // gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update()));
+
+            // const idPairs: number[] = [];
+            // const collisionPromises: Promise<Collision>[] = [];
 
 
-            const gOs = gameObjects.filter(gO => gO.active && gO.hasCollider && !gO.parent);
+            // const gOs = gameObjects.filter(gO => gO.active && gO.hasCollider && !gO.parent);
 
 
-            for (const gO1 of gOs) {
-                for (const gO2 of gOs) {
-                    const id = gO1.id > gO2.id ? cantorPairingFunction(gO1.id, gO2.id) : cantorPairingFunction(gO2.id, gO1.id);
+            // for (const gO1 of gOs) {
+            //     for (const gO2 of gOs) {
+            //         const id = gO1.id > gO2.id ? cantorPairingFunction(gO1.id, gO2.id) : cantorPairingFunction(gO2.id, gO1.id);
 
-                    ((gO1.id + gO2.id) / 2) * (gO1.id + gO2.id + 1) + gO2.id;
+            //         ((gO1.id + gO2.id) / 2) * (gO1.id + gO2.id + 1) + gO2.id;
 
-                    if (!idPairs[id] && gO1.id !== gO2.id) {
-                        collisionPromises.push(...Physics.collision(gO1, gO2));
-                        idPairs[id] = 1;
-                    }
-                }
-            }
+            //         if (!idPairs[id] && gO1.id !== gO2.id) {
+            //             collisionPromises.push(...Physics.collision(gO1, gO2));
+            //             idPairs[id] = 1;
+            //         }
+            //     }
+            // }
 
             const collisions: Collision[] = [];
 
-            for (const c of await Promise.all(collisionPromises)) {
-                collisions.push(c);
-            }
+            // for (const c of await Promise.all(collisionPromises)) {
+            //     collisions.push(c);
+            // }
 
             await Promise.all(gameObjects.map(gameObject => gameObject.update(collisions)));
 
@@ -142,32 +176,30 @@ export class Scene {
             }
         }
 
-        if (this.destroyCbs.length) {
-            this.destroyCbs.forEach(d => d());
-            this.destroyCbs.splice(0);
-        }
-
-
-        this.cameraManager.update();
 
         await this.ui.update();
 
-        this.cameraManager.drawUI(this.ui.currentFrame);
+        this.cameraManager.update();
 
 
-        if (this.requestAnimationFrameHandle) this.requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+        if (this._destroyCbs.length) {
+            this._destroyCbs.forEach(d => d());
+            this._destroyCbs.splice(0);
+        }
 
-        this.updateComplete = true;
+        if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+
+        this._updateComplete = true;
     }
 
     /**
-     * @internal
      * 
-     * Start or resume scene.
+     * Start scene.
+     * @internal
      * 
      */
     public async start(): Promise<void> {
-        this.requestAnimationFrameHandle = -1; // set isStarting true
+        this._requestAnimationFrameHandle = -1; // set isStarting true
 
         (<any>GameObject).nextID = (<any>Component).nextID = 0;
 
@@ -181,7 +213,7 @@ export class Scene {
             }
         }
 
-        this.requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+        this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
         await this.appendToDOM();
     }
@@ -192,14 +224,14 @@ export class Scene {
      *
      */
     public async stop(): Promise<void> {
-        this.requestAnimationFrameHandle = undefined;
+        this._requestAnimationFrameHandle = undefined;
 
         await this.removeFromDOM();
 
         await new Promise<void>(resolve => {
-            interval(clear => {
-                if (this.updateComplete) {
-                    clear();
+            new Interval(i => {
+                if (this._updateComplete) {
+                    i.clear();
                     resolve();
                 }
             }, 10);
@@ -210,9 +242,9 @@ export class Scene {
         document.body.appendChild(this.domElement);
 
         await new Promise<void>(resolve => {
-            interval(clear => {
+            new Interval(i => {
                 if (document.getElementById(this.name)) {
-                    clear();
+                    i.clear();
                     resolve();
                 }
             }, 1);
@@ -223,59 +255,25 @@ export class Scene {
         this.domElement.remove();
 
         await new Promise<void>(resolve => {
-            interval(clear => {
+            new Interval(i => {
                 if (!document.getElementById(this.name)) {
-                    clear();
+                    i.clear();
                     resolve();
                 }
             }, 1);
         });
     }
 
-
-    /**
-     * 
-     * Returns true if scene start() has been called.
-     * 
-     */
-    public get isStarted(): boolean {
-        return typeof this.requestAnimationFrameHandle === 'number';
-    }
-
-    /**
-     * 
-     * Returns true if animation loop is running.
-     * 
-     */
-    public get isRunning(): boolean {
-        return !!this.requestAnimationFrameHandle;
-    }
-
-    /**
-     * 
-     * Returns true while this.start() is running.
-     * 
-     */
-    public get isStarting(): boolean {
-        return this.requestAnimationFrameHandle === -1;
-    }
-
-    /**
-     * 
-     * Remove gameObject from scene.
-     * called by gameObject.destroy()
-     * 
-     */
-    public destroyGameObject(name: string): void {
-        this.gameObjects.delete(name);
-    }
-
-    public async destroy() {
+    public async destroy(): Promise<void> {
         await this.stop();
 
         for (const gameObject of this.gameObjects.values()) {
             gameObject.destroy();
         }
+
+        this.cameraManager.destroy();
+
+        this.ui.destroy();
 
         AudioMixer.reset();
 

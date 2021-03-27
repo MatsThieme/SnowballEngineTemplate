@@ -1,39 +1,27 @@
-import { Asset } from '../Assets/Asset';
-import { AssetType } from '../Assets/AssetType';
-import { Client } from '../Client';
-import { AABB } from '../Physics/AABB';
-import { Scene } from '../Scene';
-import { Canvas } from '../Utilities/Canvas';
-import { Vector2 } from '../Utilities/Vector2';
-import { UIFrame } from './UIFrame';
+import { Container } from '@pixi/display';
+import { D } from 'SnowballEngine/Debug';
+import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
 import { UIMenu } from './UIMenu';
+import { UIMenuNavigation } from './UIMenuNavigation';
 
-export class UI {
-    public menus: Map<string, UIMenu>;
-    private canvas: Canvas;
-    private context: CanvasRenderingContext2D;
-    private scene: Scene;
-    public navigationHistory: string[];
-    private lastMenusState: boolean[];
-    public navigationHistoryMaxSize: number;
-    private _font!: Asset;
+export class UI implements Destroyable {
+    public readonly menus: Map<UIMenuName, UIMenu>;
+    public readonly container: Container;
+    public readonly navigationHistory: UIMenuNavigation;
 
-    public constructor(scene: Scene) {
+    /**
+     * 
+     * The font that menus should use if no other font is set for the particular menu. When changed, the font of existing UI elements is not updated.
+     * 
+     */
+    public font: UIFont;
+
+    public constructor() {
         this.menus = new Map();
-        this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
-        this.context = this.canvas.context2D();
+        this.container = new Container();
+        this.navigationHistory = new UIMenuNavigation();
 
-        this.scene = scene;
-        this.navigationHistory = [];
-        this.lastMenusState = [];
-        this.navigationHistoryMaxSize = 10;
-    }
-
-    public get font(): Asset {
-        return this._font || (this._font = new Asset('', AssetType.Font, 'sans-serif'));
-    }
-    public set font(val: Asset) {
-        this._font = val;
+        this.font = 'Default-Normal';
     }
 
     /**
@@ -41,18 +29,21 @@ export class UI {
      * Add a new menu to the ui.
      * 
      */
-    public async addMenu(name: string, ...cb: ((menu: UIMenu, scene: Scene) => void | Promise<void>)[]): Promise<UIMenu> {
+    public async addMenu(name: UIMenuName, ...initializer: ((menu: UIMenu) => void | Promise<void>)[]): Promise<UIMenu> {
         if (this.menus.has(name)) {
             throw new Error(`Menu with name ${name} already exists`);
         }
 
-        const menu = new UIMenu();
+        const menu = new UIMenu(name);
+
+        this.container.addChild(menu.container);
+        this.container.name = 'UI';
 
         this.menus.set(name, menu);
 
-        if (cb) {
-            for (const c of cb) {
-                await c(menu, this.scene);
+        if (initializer) {
+            for (const i of initializer) {
+                await i(menu);
             }
         }
 
@@ -61,10 +52,27 @@ export class UI {
 
     /**
      * 
+     * Remove an existing menu.
+     * 
+     */
+    public removeMenu(name: UIMenuName): void {
+        const menu = this.menu(name);
+
+        if (menu) {
+            this.container.removeChild(menu.container);
+            menu.destroy();
+            this.menus.delete(name);
+        } else {
+            D.warn(`No Menu identified by ${name}`);
+        }
+    }
+
+    /**
+     * 
      * Return menu of specified name if present.
      * 
      */
-    public menu(name: string): UIMenu | undefined {
+    public menu(name: UIMenuName): UIMenu | undefined {
         return this.menus.get(name);
     }
 
@@ -74,55 +82,22 @@ export class UI {
      *
      */
     public async update(): Promise<void> {
-        if (this.canvas.width !== Client.resolution.x) this.canvas.width = Client.resolution.x;
-        if (this.canvas.height !== Client.resolution.y) this.canvas.height = Client.resolution.y;
-
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-
         await Promise.all([...this.menus.values()].map(m => m.update()));
+    }
 
+    public onEnableMenu(name: UIMenuName): void {
+        this.navigationHistory.onEnableMenu(name);
+    }
+
+    public onDisableMenu(name: UIMenuName): void {
+
+    }
+
+    public destroy(): void {
         for (const menu of this.menus.values()) {
-            if (menu.active) {
-                if (menu.currentFrame.sprite.width > 0 && menu.currentFrame.sprite.height > 0)
-                    this.context.drawImage(menu.currentFrame.sprite, Math.round(menu.aabb.position.x * Client.resolution.x / 100), Math.round(menu.aabb.position.y * Client.resolution.y / 100), Math.round(menu.aabb.size.x * Client.resolution.x / 100), Math.round(menu.aabb.size.y * Client.resolution.y / 100));
-            }
+            menu.destroy();
         }
 
-
-        let l;
-        if (this.lastMenusState.length > 0) {
-            l = [...this.menus.entries()];
-
-            for (let i = 0; i < l.length; i++) {
-                if (l[i][1].active && l[i][1].active !== this.lastMenusState[i] && (this.navigationHistory[0] || '') !== l[i][0]) {
-                    this.navigationHistory.unshift(l[i][0]);
-                }
-            }
-
-            if (this.navigationHistory.length > this.navigationHistoryMaxSize) this.navigationHistory.splice(this.navigationHistoryMaxSize);
-
-            l = l.map(e => e[1].active);
-        }
-
-        this.lastMenusState = l || [...this.menus.values()].map(e => e.active);
-    }
-
-    /**
-     * 
-     * Returns the current frame of this.
-     * 
-     */
-    public get currentFrame(): UIFrame {
-        return new UIFrame(new AABB(new Vector2(Client.resolution.x, Client.resolution.y), new Vector2()), this.canvas);
-    }
-
-    /**
-     *
-     * Returns true if a menu has the pauseScene property set to true.
-     * 
-     */
-    public get pauseScene(): boolean {
-        return [...this.menus.values()].some(m => m.active && m.pauseScene);
+        this.container.destroy();
     }
 }

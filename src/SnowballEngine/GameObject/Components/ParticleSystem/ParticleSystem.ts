@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { GameTime } from '../../../GameTime';
 import { Angle } from '../../../Utilities/Angle';
 import { Vector2 } from '../../../Utilities/Vector2';
@@ -7,6 +7,7 @@ import { GameObject } from '../../GameObject';
 import { Renderable } from '../Renderable';
 import { Particle } from './Particle';
 
+/**@category Component */
 export class ParticleSystem extends Renderable {
     public readonly particleSettings: ParticleSettings;
     public readonly emissionSettings: EmissionSettings;

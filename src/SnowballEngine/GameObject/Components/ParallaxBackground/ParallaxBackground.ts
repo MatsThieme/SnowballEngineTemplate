@@ -1,4 +1,5 @@
-import { Container, Graphics } from 'pixi.js';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
 import { AssetType } from '../../../Assets/AssetType';
 import { AABB } from '../../../Physics/AABB';
 import { Angle } from '../../../Utilities/Angle';
@@ -11,11 +12,7 @@ import { Transform } from '../Transform/Transform';
 import { BackgroundLayer } from './BackgroundLayer';
 import { BackgroundLayerAsset } from './BackgroundLayerAsset';
 
-/**
- * 
- * ParallaxBackground's GameObject or parent GameObjects should not be scaled or rotated
- * 
- */
+/**@category Component */
 export class ParallaxBackground extends Renderable {
     public cameras: Camera[];
     public scrollSpeed: number;
@@ -24,6 +21,11 @@ export class ParallaxBackground extends Renderable {
 
     private aabb: AABB;
 
+    /**
+     * 
+     * ParallaxBackground's GameObject or parent GameObjects should not be scaled or rotated
+     * 
+     */
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.ParallaxBackground);
         this.sprite = new Container();
@@ -48,7 +50,7 @@ export class ParallaxBackground extends Renderable {
         this.calculateBackgroundForCamera(camera);
     }
 
-    private calculateAABB(): void {
+    public recalculateAABB(): void {
         let top = 0;
         let bot = 0;
         let right = 0;
@@ -83,18 +85,18 @@ export class ParallaxBackground extends Renderable {
     }
 
     public addBackground(speed: number, asset: BackgroundLayerAsset): void {
-        if (asset.asset.type !== AssetType.Image) throw new Error('Could not add background: Asset is not of type Image');
+        if (asset.asset?.type !== AssetType.Image) throw new Error(`Could not add background: Asset is not of type Image (${asset.asset?.path})`);
 
         this._backgroundLayers.push(new BackgroundLayer(speed, asset, this.sprite!, this));
 
         this.sprite!.sortChildren();
 
-        this.calculateAABB();
+        this.recalculateAABB();
 
 
         (<Graphics>this.sprite!.mask).clear()
             .beginFill(0)
-            .drawRect(this.aabb.position.x, -this.aabb.position.y, this.aabb.size.x, -this.aabb.size.y)
+            .drawRect(this.aabb.position.x, this.aabb.position.y, this.aabb.size.x, this.aabb.size.y)
             .endFill();
     }
 

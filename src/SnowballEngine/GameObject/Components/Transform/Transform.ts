@@ -1,4 +1,4 @@
-import { DisplayObject } from 'pixi.js';
+import { DisplayObject } from '@pixi/display';
 import { Angle } from '../../../Utilities/Angle';
 import { Vector2 } from '../../../Utilities/Vector2';
 import { ComponentType } from '../../ComponentType';
@@ -7,6 +7,7 @@ import { Component } from '../Component';
 import { Transformable } from './Transformable';
 import { TransformRealation } from './TransformRelation';
 
+/**@category Component */
 export class Transform extends Component implements Transformable {
     public position: Vector2;
     public rotation: Angle;
@@ -28,7 +29,7 @@ export class Transform extends Component implements Transformable {
         this.id = Transform.nextID++;
     }
 
-    public get children() {
+    public get children(): Transform[] {
         return this.gameObject.getComponentsInChildren(ComponentType.Transform);
     }
 

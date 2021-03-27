@@ -2,6 +2,7 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
 
+/**@category Component */
 export class CircleRenderer extends Component {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.CircleRenderer);

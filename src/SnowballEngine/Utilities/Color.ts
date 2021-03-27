@@ -1,5 +1,6 @@
 import { clamp, random } from './Helpers';
 
+/** @category Utility */
 export class Color {
     private _r: number;
     private _g: number;
@@ -11,6 +12,13 @@ export class Color {
     private _rgbString?: string;
     private _recalculateColor: boolean;
 
+    /**
+     * 
+     * @param r 0-255
+     * @param g 0-255
+     * @param b 0-255
+     * @param a 0-255
+     */
     public constructor(r = 255, g = 255, b = 255, a = 255) {
         this._r = clamp(0, 255, Math.round(r));
         this._g = clamp(0, 255, Math.round(g));
@@ -56,6 +64,14 @@ export class Color {
 
         return this._rgba!;
     }
+    public set rgba(val: number) {
+        this._r = (val >> 24) & 0xff;
+        this._g = (val >> 16) & 0xff;
+        this._b = (val >> 8) & 0xff;
+        this._a = val & 0xff;
+
+        this._recalculateColor = true;
+    }
 
     public get rgb(): number {
         if (this._recalculateColor) {
@@ -68,10 +84,12 @@ export class Color {
 
         return this._rgb!;
     }
+    public set rgb(val: number) {
+        this._r = (val >> 16) & 0xff;
+        this._g = (val >> 8) & 0xff;
+        this._b = val & 0xff;
 
-    private calculateColor(): void {
-        this._rgb = this._r << 16 | this._g << 8 | this._b;
-        this._rgba = this._r * 256 ** 3 + (this._g << 16) + (this._b << 8) + this._a;
+        this._recalculateColor = true;
     }
 
     public get r(): number {
@@ -104,6 +122,15 @@ export class Color {
     public set a(val: number) {
         this._a = clamp(0, 255, Math.round(val));
         this._recalculateColor = true;
+    }
+
+    public add(color: Color): Color {
+        return new Color(this._r + color._r, this._g + color._g, this._b + color._b, this._a + color._a);
+    }
+
+    private calculateColor(): void {
+        this._rgb = this._r << 16 | this._g << 8 | this._b;
+        this._rgba = this._r * 256 ** 3 + (this._g << 16) + (this._b << 8) + this._a;
     }
 
     public static average(...colors: Color[]): Color {

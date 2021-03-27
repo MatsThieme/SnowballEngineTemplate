@@ -1,5 +1,6 @@
 import { Angle } from './Angle';
 
+/** @category Utility */
 export class Vector2 implements IVector2 {
     public x: number;
     public y: number;

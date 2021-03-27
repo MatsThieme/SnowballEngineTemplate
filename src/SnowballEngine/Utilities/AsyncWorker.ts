@@ -1,10 +1,6 @@
-import { interval } from './Helpers';
+import { Interval } from 'SnowballEngine/Utilities/Interval';
 
-/**
- * 
- * postMessage in a webworker has to use this signature for the returned object: { status: 'failed' | 'finished' | 'progress', data: any }
- * 
- */
+/** @category Utility */
 export class AsyncWorker {
     public maxWorkers: number;
 
@@ -22,6 +18,11 @@ export class AsyncWorker {
      */
     public expirationTime: number;
 
+    /**
+     * 
+     * postMessage in a webworker has to use this signature for the returned object: { status: 'failed' | 'finished' | 'progress', data: any }
+     * 
+     */
     public constructor(url: string, maxWorkers = 1, expirationTime = 1000) {
         this.url = url;
 
@@ -73,9 +74,9 @@ export class AsyncWorker {
 
             if (p !== 0) {
                 await new Promise<void>(resolve => {
-                    interval(clear => {
+                    new Interval(i => {
                         if (p === 0) {
-                            clear();
+                            i.clear();
                             resolve();
                         }
                     }, 1);

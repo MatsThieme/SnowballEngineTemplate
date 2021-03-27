@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { D } from '../Debug';
 import { Collision } from '../Physics/Collision';
 import { Scene } from '../Scene';
@@ -40,8 +40,8 @@ export class GameObject {
     public readonly transform!: Transform;
 
     public constructor(name: string) {
-        if (!Scene.sceneManager.scene) throw new Error('No Scene loaded!');
-        this.scene = Scene.sceneManager.scene!;
+        if (!Scene.currentScene) throw new Error('No Scene loaded!');
+        this.scene = Scene.currentScene;
 
         this.id = GameObject.nextID++;
         this.name = `${name} (${this.id})`;
@@ -79,16 +79,12 @@ export class GameObject {
         this.container.visible = val;
     }
 
-    private connectCamera(): void {
-        if (this.container.parent) this.disconnectCamera();
-
-        if (!this._parent) this.scene.cameraManager.addGameObject(this);
-        else this._parent.container.addChild(this.container);
+    public get zIndex(): number {
+        return this.container.zIndex;
     }
-
-    private disconnectCamera(): void {
-        if (!this._parent) this.scene.cameraManager.removeGameObject(this);
-        else this._parent.container.removeChild(this.container);
+    public set zIndex(val: number) {
+        this.container.zIndex = val;
+        this.container.parent.sortChildren();
     }
 
     /**
@@ -116,13 +112,26 @@ export class GameObject {
         return [...this.getComponents<Collider>(ComponentType.Collider), ...this.getComponentsInChildren<Collider>(ComponentType.Collider), ...this.getComponentsInParents<Collider>(ComponentType.Collider)];
     }
 
+
+    private connectCamera(): void {
+        if (this.container.parent) this.disconnectCamera();
+
+        if (!this._parent) this.scene.cameraManager.addGameObject(this);
+        else this._parent.container.addChild(this.container);
+    }
+
+    private disconnectCamera(): void {
+        if (!this._parent) this.scene.cameraManager.removeGameObject(this);
+        else this._parent.container.removeChild(this.container);
+    }
+
     /** 
      *  
-     * @param cb Callbacks are executed after component creation.
+     * @param initializer Callbacks are executed after component creation.
      * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
-    public async addComponent<T extends Component>(type: Constructor<T>, ...cb: ((component: T) => void | Promise<void>)[]): Promise<T | null> {
+    public async addComponent<T extends Component>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T | null> {
         const component = new type(this);
 
         if (component.type !== ComponentType.Camera &&
@@ -145,11 +154,11 @@ export class GameObject {
 
         if (component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) this.hasCollider = true;
 
-        if (component.type === ComponentType.AudioListener) (<any>this).scene.audioListener = <any>component;
+        if (component.type === ComponentType.AudioListener) (<Mutable<Scene>>this.scene).audioListener = <any>component;
 
 
-        if (cb) {
-            for (const c of cb) {
+        if (initializer) {
+            for (const c of initializer) {
                 await c(component);
             }
         }
@@ -178,7 +187,7 @@ export class GameObject {
 
         const i = this._components.findIndex(c => c.componentId === (typeof component === 'number' ? component : component.componentId));
 
-        if (i === this.scene.audioListener?.componentId) (<any>this).scene.audioListener = undefined;
+        if (i === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
 
         if (i !== -1) this._components.splice(i, 1)[0].destroy(true);
         else D.warn('Component not found on gameObject');
@@ -218,7 +227,7 @@ export class GameObject {
             if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
-        return;
+        return undefined;
     }
 
     /**
@@ -247,7 +256,7 @@ export class GameObject {
             if (c) return c;
         }
 
-        return;
+        return undefined;
     }
 
     public getComponentsInParents<T extends Component>(type: Constructor<T> | ComponentType): T[] {
@@ -340,6 +349,7 @@ export class GameObject {
     /**
      * 
      * Remove this from scene and delete all references.
+     * All components, children and their components will be destroyed.
      * 
      */
     public destroy(): void {
@@ -349,7 +359,7 @@ export class GameObject {
         this.children.forEach(c => c.destroy());
 
         const d = () => {
-            this.scene.destroyGameObject(this.name);
+            this.scene.gameObjects.delete(this.name);
 
             const i = this._parent?.children.findIndex(v => v.name === this.name);
             if (i && i !== -1) this._parent?.children.splice(i, 1);
@@ -359,7 +369,7 @@ export class GameObject {
             clearObject(this, true);
         };
 
-        if (this.scene.isRunning) (<any>this.scene).destroyCbs.push(d);
+        if (this.scene.isRunning) (<any>this.scene)._destroyCbs.push(d);
         else d();
     }
 }

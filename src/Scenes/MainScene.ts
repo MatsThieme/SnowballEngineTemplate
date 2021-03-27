@@ -10,5 +10,5 @@ export async function MainScene(scene: Scene) {
     // add a camera
     await Instantiate('Camera', CameraPrefab);
 
-    await scene.ui.addMenu('fpsDisplay', FPSDisplayPrefab);
+    await scene.ui.addMenu('FPS Display', FPSDisplayPrefab);
 }

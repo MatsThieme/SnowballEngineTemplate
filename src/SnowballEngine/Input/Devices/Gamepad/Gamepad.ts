@@ -145,7 +145,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
         for (let i = 0; i < (gpads ? gpads.length : this._gamepads.length); i++) {
             if (this._gamepads[i]) {
                 if (gpads) {
-                    (<any>this)._gamepads[i].gamepad = gpads[i];
+                    (<Mutable<Gamepad>>this._gamepads[i]).gamepad = gpads[i]!;
                 }
 
                 this._gamepads[i]!.update();
@@ -160,7 +160,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
         Gamepad.addListeners();
     }
 
-    public static reset() {
+    public static reset(): void {
         for (const g of Gamepad.gamepads) {
             g.destroy();
         }

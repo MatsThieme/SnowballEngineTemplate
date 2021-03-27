@@ -1,4 +1,5 @@
-import { Container, Sprite } from 'pixi.js';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
 import { GameTime } from '../../../GameTime';
 import { clearObject } from '../../../Utilities/Helpers';
 import { Vector2 } from '../../../Utilities/Vector2';
@@ -75,7 +76,7 @@ export class Particle {
      * Updates sprite animations and moves this.
      * 
      */
-    public update() {
+    public update(): void {
         if (this.spriteAnimation) {
             this.spriteAnimation.update();
             this._sprite = this.spriteAnimation.sprite;

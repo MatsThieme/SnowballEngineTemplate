@@ -1,9 +1,10 @@
-import { Container } from 'pixi.js';
+import { Container } from '@pixi/display';
 import { ComponentType } from '../../ComponentType';
 import { GameObject } from '../../GameObject';
 import { Renderable } from '../Renderable';
 import { SpriteAnimation } from './SpriteAnimation';
 
+/**@category Component */
 export class AnimatedSprite extends Renderable {
     public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };
 

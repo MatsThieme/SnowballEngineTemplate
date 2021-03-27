@@ -9,6 +9,7 @@ import { Collider } from './Collider';
 import { Component } from './Component';
 import { PolygonCollider } from './PolygonCollider';
 
+/**@category Component */
 export class RigidBody extends Component {
     private static _nextID = 0;
     private id: number;

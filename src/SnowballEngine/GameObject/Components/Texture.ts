@@ -4,6 +4,7 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Renderable } from './Renderable';
 
+/**@category Component */
 export class Texture extends Renderable {
     private _asset?: Asset;
 

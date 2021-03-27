@@ -15,7 +15,7 @@ module.exports = {
         extensions: ['.ts', '.js'],
         modules: ['node_modules', 'src'],
         alias: {
-            se: path.resolve(__dirname, 'src/SnowballEngine/SE.ts')
+            se: path.resolve(__dirname, 'src/SnowballEngine/SnowballEngine.ts')
         }
     },
     output: {

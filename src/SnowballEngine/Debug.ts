@@ -1,22 +1,23 @@
 import { default as cloneDeep } from 'lodash.clonedeep';
+import projectConfig from '../../SnowballEngineConfig.json';
 
 export class D {
-    public static init() {
+    public static init(): void {
         window.addEventListener('error', (e: ErrorEvent) => {
             e.preventDefault();
 
             D.error(e.error);
         });
 
-        window.addEventListener(<any>'unhandledrejection ', (e: PromiseRejectionEvent) => {
+        window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
             e.preventDefault();
 
             D.error(e.reason);
         });
     }
 
-    public static log(msg: any, logstack = false): void {
-        if (!project.build.isDevelopmentBuild) return;
+    public static log(msg: string | number | boolean | Record<string, unknown>, logstack = false): void {
+        if (!projectConfig.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -24,8 +25,8 @@ export class D {
         else console.log(...o);
     }
 
-    public static warn(msg: any, logstack = true): void {
-        if (!project.build.isDevelopmentBuild) return;
+    public static warn(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
+        if (!projectConfig.build.isDevelopmentBuild) return;
 
         const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -33,10 +34,10 @@ export class D {
         else console.warn(...o);
     }
 
-    public static error(msg: any, logstack = true): void {
-        if (!project.build.isDevelopmentBuild) return;
+    public static error(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
+        if (!projectConfig.build.isDevelopmentBuild) return;
 
-        if ('name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
+        if (typeof msg === 'object' && 'name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
 
         const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
 
@@ -87,8 +88,8 @@ export class D {
         return `at ${info.functionName} (/${info.filePath}:${info.line})`;
     }
 
-    private static formatMessage(type: 'log' | 'warning' | 'error', msg: any, stack: string): any[] {
-        const ret: (string | Record<string, any>)[] = [];
+    private static formatMessage(type: 'log' | 'warning' | 'error', msg: string | number | boolean | Record<string, unknown> | (string | number | boolean | Record<string, unknown>)[], stack: string): (string | number | boolean | Record<string, unknown>)[] {
+        const ret: (string | number | boolean | Record<string, unknown>)[] = [];
 
         if (type === 'warning') {
             ret.push(`Warning${!stack ? ': ' : ''}`);

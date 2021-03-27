@@ -1,5 +1,6 @@
 import { lerp } from './Helpers';
 
+/** @category Utility */
 export class Noise {
     private vs: number[];
 

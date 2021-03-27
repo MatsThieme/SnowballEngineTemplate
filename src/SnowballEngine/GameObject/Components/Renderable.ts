@@ -1,10 +1,12 @@
-import { Container, Sprite } from 'pixi.js';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
 import { Vector2 } from '../../Utilities/Vector2';
 import { AlignH, AlignV } from '../Align';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
 
+/**@category Component */
 export abstract class Renderable extends Component {
     private _visible: boolean;
     public alignH: AlignH;
@@ -81,15 +83,10 @@ export abstract class Renderable extends Component {
         }
     }
 
-    /**
-     * 
-     * If sprite is a container
-     * 
-     */
-    protected get sprite(): Sprite | Container | undefined {
+    public get sprite(): Sprite | Container | undefined {
         return this._sprite;
     }
-    protected set sprite(val: Sprite | Container | undefined) {
+    public set sprite(val: Sprite | Container | undefined) {
         this.disconnectCamera();
 
         this._sprite = val;
@@ -148,7 +145,7 @@ export abstract class Renderable extends Component {
         this.gameObject.container.removeChild(this._sprite);
     }
 
-    public update() {
+    public update(): void {
         if (this._sprite && this.active) {
             // update anchor/pivot
             const anchor = new Vector2(this.alignH === AlignH.Left ? 0 : this.alignH === AlignH.Center ? 0.5 : 1, this.alignV === AlignV.Top ? 0 : this.alignV === AlignV.Center ? 0.5 : 1);

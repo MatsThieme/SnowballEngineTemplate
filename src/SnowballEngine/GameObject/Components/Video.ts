@@ -7,6 +7,7 @@ import { Renderable } from './Renderable';
 /**
  * 
  * Playback is controlled by asset.datas HTMLVideoElement.
+ * @category Component
  * 
  */
 export class Video extends Renderable {

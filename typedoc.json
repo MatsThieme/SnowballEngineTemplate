@@ -1,0 +1,12 @@
+{
+    "name": "SnowballEngine",
+    "readme": "README.md",
+    "entryPoints": [
+        "src/SnowballEngine/SnowballEngine.ts"
+    ],
+    "out": "docs",
+    "highlightTheme": "github-light",
+    "excludeInternal": true,
+    "categorizeByGroup": true,
+    "hideGenerator": true
+}

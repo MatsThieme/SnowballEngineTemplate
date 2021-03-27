@@ -1,6 +1,6 @@
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
-import { Assets, asyncTimeout, Color, createSprite, SceneManager } from 'se';
+import { Assets, Color, SceneManager, Shape, Timeout } from 'se';
 
 export class Game {
     public constructor() {
@@ -8,12 +8,12 @@ export class Game {
     }
     private async initialize(sceneManager: SceneManager): Promise<void> {
         // create scenes
-        sceneManager.add('Loadingscreen', LoadingScreenScene);
+        sceneManager.add('Loading Screen Scene', LoadingScreenScene);
         sceneManager.add('Main Scene', MainScene);
 
 
         // load scene
-        await sceneManager.load('Loadingscreen');
+        await sceneManager.load('Loading Screen Scene');
 
         /**
          * load from asset database:
@@ -24,11 +24,11 @@ export class Game {
          * 
          * or create and register an asset manually:
          */
-        Assets.set(createSprite(Color.orange), 'some image');
+        Assets.set(Shape.createSprite('Rect', Color.orange), 'some image');
 
 
         // timeout to show example loadingscreen
-        await asyncTimeout(1000);
+        await new Timeout(1000);
 
 
         await sceneManager.load('Main Scene');

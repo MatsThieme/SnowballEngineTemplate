@@ -8,6 +8,7 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Collider } from './Collider';
 
+/**@category Component */
 export class PolygonCollider extends Collider {
     protected _aabb: AABB;
     protected _area: number;

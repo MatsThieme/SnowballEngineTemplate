@@ -1,4 +1,4 @@
-import { asyncTimeout } from "./Utilities/Helpers";
+import { Timeout } from './Utilities/Timeout';
 
 export class Framedata {
     public updateInterval: number;
@@ -20,7 +20,7 @@ export class Framedata {
      * Calculates fps.
      * 
      */
-    public update(time = performance.now()) {
+    public update(time = performance.now()): void {
         this.frames++;
         this.totalFrames++;
 
@@ -40,7 +40,7 @@ export class Framedata {
      * Returns the average frames per second 
      * 
      */
-    public get fps() {
+    public get fps(): number {
         return this.avgFramesPerSecond;
     }
 
@@ -53,7 +53,7 @@ export class Framedata {
     public async measureFps(milliseconds: number): Promise<number> {
         const frames = this.totalFrames;
 
-        await asyncTimeout(milliseconds);
+        await new Timeout(milliseconds);
 
         return (this.totalFrames - frames) / milliseconds * 1000;
     }

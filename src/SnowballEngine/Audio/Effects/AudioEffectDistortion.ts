@@ -28,7 +28,7 @@ export class AudioEffectDistortion extends AudioEffect {
         const deg = Math.PI / 180;
 
         for (let i = 0; i < n_samples; i++) {
-            let x = i * 2 / n_samples - 1;
+            const x = i * 2 / n_samples - 1;
             curve[i] = (3 + amount) * x * 20 * deg / (Math.PI + amount * Math.abs(x));
         }
 

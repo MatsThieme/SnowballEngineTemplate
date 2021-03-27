@@ -1,23 +1,22 @@
-import { AlignH, AlignV, Color, createSprite, interval, UIFontSize, UIMenu, UIText, Vector2 } from 'se';
+import { AlignH, AlignV, Color, Interval, Shape, UIMenu, UIText, Vector2 } from 'se';
 
 export function LoadingScreenPrefab(menu: UIMenu) {
     menu.addUIElement(UIText, text => {
-        text.localAlignH = AlignH.Center;
-        text.localAlignV = AlignV.Center;
         text.alignH = AlignH.Center;
         text.alignV = AlignV.Center;
 
+        text.position.x = text.position.y = 50;
 
         let counter = 0;
-        interval(clear => text.label = 'loading' + '.'.repeat(counter = ++counter % 4), 500)
+        new Interval(clear => text.text = 'loading' + '.'.repeat(counter = ++counter % 4), 500)
 
 
-        text.fontSize = UIFontSize.Medium;
+        text.font = 'Default-Normal';
 
         text.padding = new Vector2(1, 1);
     });
 
-    menu.background = createSprite(Color.white, 1, 1);
+    menu.background = Shape.createSprite('Rect', Color.white);
 
     menu.active = true;
 }

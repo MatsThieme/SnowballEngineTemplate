@@ -2,7 +2,7 @@ export enum UIElementType {
     Text,
     Button,
     Checkbox,
-    Dropdown,
+    Select,
     TextInputField,
     NumberInputField
 }

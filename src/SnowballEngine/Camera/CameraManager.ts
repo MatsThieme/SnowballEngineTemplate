@@ -1,41 +1,66 @@
+import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
+import { Scene } from 'SnowballEngine/Scene';
+import { Color } from 'SnowballEngine/Utilities/Color';
 import { Client } from '../Client';
 import { D } from '../Debug';
 import { Camera } from '../GameObject/Components/Camera';
 import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
-import { UIFrame } from '../UI/UIFrame';
-import { Canvas } from '../Utilities/Canvas';
 import { Vector2 } from '../Utilities/Vector2';
 import { PIXI } from './PIXI';
 
-export class CameraManager {
-    private _context: CanvasRenderingContext2D;
-    private _cleared: boolean;
-
+export class CameraManager implements Destroyable {
     public readonly cameras: Camera[];
-    private readonly _gameObjects: Map<number, GameObject>;
-
-    private readonly _PIXI: PIXI;
-
     public renderScale: number;
 
-    public constructor(domElement: Canvas) {
-        this._context = domElement.context2D();
+    private readonly _gameObjects: Map<number, GameObject>;
+    private readonly _PIXI: PIXI;
+
+    public constructor() {
         this.cameras = [];
-        this._cleared = false;
 
         this.renderScale = 1;
 
         this._PIXI = new PIXI(Client.resolution.x, Client.resolution.y);
 
         this._gameObjects = new Map();
+
+        this._PIXI.uiContainer = Scene.currentScene.ui.container;
+
+
+        this.backgroundColor = Color.lightblue;
     }
 
-    public addCamera(camera: Camera) {
+    public get canvas(): HTMLCanvasElement {
+        return this._PIXI.canvas;
+    }
+
+    public get backgroundColor(): Color {
+        const color = new Color();
+
+        color.rgb = this._PIXI.renderer.backgroundColor;
+
+        return color;
+    }
+    public set backgroundColor(val: Color) {
+        this._PIXI.renderer.backgroundColor = val.rgb;
+    }
+
+    /**
+     * 
+     * @internal 
+     * 
+     */
+    public addCamera(camera: Camera): void {
         this.cameras.push(camera);
     }
 
-    public removeCamera(camera: Camera) {
+    /**
+     * 
+     * @internal 
+     * 
+     */
+    public removeCamera(camera: Camera): void {
         const i = this.cameras.findIndex(c => c.componentId == camera.componentId);
 
         if (i === -1) return;
@@ -44,6 +69,12 @@ export class CameraManager {
     }
 
 
+    /**
+     * 
+     * Stage a GameObject
+     * @internal
+     * 
+     */
     public addGameObject(gameObject: GameObject): void {
         if (this.hasGameObject(gameObject)) return D.warn('GameObject.container is already staged');
 
@@ -52,6 +83,12 @@ export class CameraManager {
         this._gameObjects.set(gameObject.id, gameObject);
     }
 
+    /**
+     * 
+     * Unstage a GameObject
+     * @internal
+     * 
+     */
     public removeGameObject(gameObject: GameObject): void {
         if (!this.hasGameObject(gameObject)) return D.warn('GameObject not found');
 
@@ -65,27 +102,21 @@ export class CameraManager {
     }
 
 
-    public update() {
+    public update(): void {
         if (!this.cameras.filter(c => c.active)) return D.warn('No active camera');
 
 
-        const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).floor();
+        const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
         this._PIXI.resize(canvasSize.x, canvasSize.y);
 
+        this._PIXI.renderer.clear();
 
-        if (this._context.canvas.width !== Client.resolution.x) this._context.canvas.width = Client.resolution.x;
-        if (this._context.canvas.height !== Client.resolution.y) this._context.canvas.height = Client.resolution.y;
-
-
-        this._context.clearRect(0, 0, this._context.canvas.width, this._context.canvas.height);
-        this._cleared = true;
 
         const gameObjects = [...this.cameras[0].gameObject.scene.gameObjects.values()];
         const components = gameObjects.flatMap(gameObject => gameObject.getComponents(ComponentType.Component));
 
 
         for (const camera of this.cameras.sort((a, b) => a.zIndex - b.zIndex)) {
-
             if (camera.active) {
                 for (const component of components) {
                     if (component.onPreRender)
@@ -96,12 +127,6 @@ export class CameraManager {
                 camera.update(this._PIXI);
 
 
-                const screenPos = Vector2.scale(Vector2.divide(camera.screenPosition, 100), Client.resolution).floor();
-                const screenSize = Vector2.scale(Vector2.divide(camera.screenSize, 100), Client.resolution).floor();
-
-                this._context.drawImage(this._PIXI.canvas, screenPos.x * this.renderScale, screenPos.y * this.renderScale, screenSize.x * this.renderScale, screenSize.y * this.renderScale, screenPos.x, screenPos.y, screenSize.x, screenSize.y);
-
-
                 for (const component of components) {
                     if (component.onPostRender)
                         component.onPostRender(camera);
@@ -109,17 +134,12 @@ export class CameraManager {
             }
         }
 
-        /* little performance boost (around 5% when tested): clear pixi.canvas once per frame, not once per camera per frame and draw it only once to the target canvas; remove drawImage call in loop above */
-        // this._PIXI.renderer.clearBeforeRender = false;
+        this._PIXI.uiContainer.scale.set(canvasSize.x / 100, canvasSize.y / 100);
 
-        // this._context.drawImage(this._PIXI.canvas, 0, 0, Client.resolution.x * this.renderScale, Client.resolution.y * this.renderScale, 0, 0, Client.resolution.x, Client.resolution.y);
-
-        // this._PIXI.renderer.clear();
+        this._PIXI.renderUI();
     }
 
-    public drawUI(ui: UIFrame) {
-        if (!this._cleared) this._context.clearRect(0, 0, this._context.canvas.width, this._context.canvas.height);
-
-        this._context.drawImage(ui.sprite, ui.aabb.position.x, ui.aabb.position.y, ui.aabb.size.x, ui.aabb.size.y);
+    public destroy(): void {
+        this._PIXI.destroy();
     }
 }

@@ -10,6 +10,7 @@ import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';
 import { Component } from './Component';
 
+/**@category Component */
 export class AudioSource extends Component {
     public readonly node: PannerNode;
 
@@ -78,7 +79,7 @@ export class AudioSource extends Component {
         this.connect();
     }
 
-    public connect() {
+    public connect(): void {
         if (!this.asset) return;
 
         const listener = this.gameObject.scene.audioListener;
@@ -96,7 +97,7 @@ export class AudioSource extends Component {
         this._connected = true;
     }
 
-    public disconnect() {
+    public disconnect(): void {
         if (!this._connected) return;
 
         this.node.disconnect();
@@ -172,9 +173,9 @@ export class AudioSource extends Component {
      * 
      */
     public get currentTime(): number {
-        if (!this.asset) return 0;
+        if (!this._asset) return 0;
 
-        return (this._sw.seconds % ((<AudioBuffer>this.asset!.data).duration / this._rate)) * this._rate;
+        return (this._sw.seconds % ((<AudioBuffer>this._asset.data).duration / this._rate)) * this._rate;
     }
     public set currentTime(val: number) {
         this._sw.seconds = val;
@@ -226,7 +227,7 @@ export class AudioSource extends Component {
         this._audioBufferNode.onended = () => {
             this._playing = false;
 
-            let diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;
+            const diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;
             if (diff > 20 && diff < 50) D.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: <820ms`);
 
             if (this._sw.seconds + 0.02 > this._audioBufferNode.buffer!.duration / this._rate) {

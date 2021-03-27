@@ -1,5 +1,6 @@
 import { Vector2 } from './Vector2';
 
+/** @category Utility */
 export class Angle {
     private _radian?: number;
     private _degree?: number;

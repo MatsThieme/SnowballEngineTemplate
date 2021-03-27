@@ -1,9 +1,9 @@
 import { Scene } from './Scene';
-import { clearAllIntervals } from './Utilities/Helpers';
+import { Interval } from './Utilities/Interval';
 
 export class SceneManager {
-    private scenes: Map<string, { cb: (scene: Scene) => any, scene?: Scene }>;
-    private activeScene?: string;
+    private scenes: Map<SceneName, { initializer: (scene: Scene) => any, scene?: Scene }>;
+    private activeScene?: SceneName;
 
     /**
     *
@@ -16,24 +16,24 @@ export class SceneManager {
         this.scenes = new Map();
     }
 
-    public add(name: string, sceneCb: (scene: Scene) => any): void {
-        this.scenes.set(name, { cb: sceneCb });
+    public add(name: SceneName, sceneCb: (scene: Scene) => any): void {
+        this.scenes.set(name, { initializer: sceneCb });
     }
 
-    public async load(name: string): Promise<Scene> {
+    public async load(name: SceneName): Promise<Scene> {
         if (name === this.activeScene) await this.unload(this.activeScene);
 
 
         const sO = this.scenes.get(name);
 
         if (sO) {
-            clearAllIntervals();
+            Interval.clearAll();
 
             if (!sO.scene) {
                 const scene = new Scene(this, name);
-                (<any>this).scene = scene;
+                (<Mutable<SceneManager>>this).scene = scene;
 
-                await sO.cb(scene);
+                await sO.initializer(scene);
 
                 sO.scene = scene;
             }
@@ -54,7 +54,7 @@ export class SceneManager {
         throw `No Scene named ${name} found`;
     }
 
-    public async unload(name: string) {
+    public async unload(name: SceneName): Promise<void> {
         const scene = this.scenes.get(name)?.scene;
 
         if (scene) {

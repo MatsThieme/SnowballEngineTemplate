@@ -1,63 +1,55 @@
+import { TextStyleFill, TextStyleFontVariant, TextStyleFontWeight, TextStyleLineJoin, TextStyleTextBaseline, TEXT_GRADIENT } from "@pixi/text";
 
-interface Window {
-    /**
-     *
-     * SnowballEngineConfig.json values stored in window.project
-     * 
-     * @internal
-     *
-     */
-    project: Project;
-}
+declare global {
+    type Constructor<T> = new (...args: any[]) => T;
+    type AbstractConstructor<T> = abstract new (...args: any[]) => T;
 
-declare const project: Project;
+    type ImmutableObject<T> = { readonly [P in keyof T]: T[P] };
+    type ImmutableObjectDeep<T> = { readonly [P in keyof T]: ImmutableObjectDeep<T[P]> };
+    type Mutable<T> = { -readonly [P in keyof T]: T[P]; };
+    type MutableDeep<T> = { -readonly [P in keyof T]: MutableDeep<T[P]>; };
 
-declare interface Project {
-    readonly title: string,
-    readonly description: string,
-    readonly version: string,
-    readonly settings: {
-        readonly allowContextMenu: boolean,
-        readonly PIXIjsAntialiasing: boolean,
-        readonly transparentBackground: boolean
-    },
-    readonly "cordova-settings": {
-        readonly id: string,
-        readonly author: {
-            readonly name: string,
-            readonly email: string,
-            readonly href: string
-        },
-        readonly plugins: readonly string[]
-    },
-    readonly build: {
-        readonly isDevelopmentBuild: boolean,
-        readonly addNewAssetsToDB: boolean
+
+    /** @internal */
+    interface Worker extends EventTarget, AbstractWorker {
+        isBusy: boolean;
+        id: number;
+        finished: number;
+        onmessage: ((this: Worker, ev: MessageEvent) => any) | null;
+        postMessage(message: any, transfer: Transferable[]): void;
+        postMessage(message: any, options?: PostMessageOptions): void;
+        terminate(): void;
+        addEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
-}
 
 
-/** @internal */
-declare interface Worker extends EventTarget, AbstractWorker {
-    isBusy: boolean;
-    id: number;
-    finished: number;
-    onmessage: ((this: Worker, ev: MessageEvent) => any) | null;
-    postMessage(message: any, transfer: Transferable[]): void;
-    postMessage(message: any, options?: PostMessageOptions): void;
-    terminate(): void;
-    addEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-    removeEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-    removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-}
+    interface IVector2 {
+        x: number;
+        y: number;
+    }
 
-/** @internal */
-type Constructor<T extends Record<string, any>> = new (...args: any[]) => T;
-/** @internal */
-type AbstractConstructor<T> = Function & { prototype: T };
 
-interface IVector2 {
-    x: number;
-    y: number;
+    interface BitmapTextStyle {
+        dropShadow?: boolean;
+        dropShadowAngle?: number;
+        dropShadowBlur?: number;
+        dropShadowColor?: string | number;
+        dropShadowDistance?: number;
+        fill?: TextStyleFill;
+        fillGradientType?: TEXT_GRADIENT;
+        fillGradientStops?: number[];
+        fontFamily?: string | string[];
+        fontSize?: number | string;
+        fontVariant?: TextStyleFontVariant;
+        fontWeight?: TextStyleFontWeight;
+        letterSpacing?: number;
+        lineJoin?: TextStyleLineJoin;
+        miterLimit?: number;
+        stroke?: string | number;
+        strokeThickness?: number;
+        textBaseline?: TextStyleTextBaseline;
+    }
 }

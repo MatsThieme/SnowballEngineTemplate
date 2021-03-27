@@ -1,17 +1,24 @@
+import { Interval } from 'SnowballEngine/Utilities/Interval';
+import { Timeout } from 'SnowballEngine/Utilities/Timeout';
 import AssetDB from '../../../Assets/AssetDB.json';
 import { AudioListener } from '../GameObject/Components/AudioListener';
-import { asyncTimeout, interval } from '../Utilities/Helpers';
 import { Asset } from './Asset';
 import { AssetType } from './AssetType';
+
+type ADB = typeof AssetDB;
+
+declare global {
+    type AssetID = keyof ADB | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], 'type' | ''> | AssetName;
+}
 
 export class Assets {
     private static readonly assets: Map<string, Asset> = new Map();
 
-    public static get(id: string): Asset | undefined {
+    public static get(id: AssetID): Asset | undefined {
         return Assets.assets.get(id);
     }
 
-    public static delete(id: string): void {
+    public static delete(id: AssetID): void {
         const asset = Assets.get(id);
 
         if (asset) {
@@ -20,22 +27,22 @@ export class Assets {
         }
     }
 
-    public static set(asset: Asset, name: string): Asset {
+    public static set(asset: Asset, name: AssetID): Asset {
         Assets.assets.set(name, asset);
         return asset;
     }
 
-    public static async load(path: string, type: AssetType, name?: string): Promise<Asset> {
-        if (name && Assets.assets.get(name) || !name && Assets.get(path)) {
+    public static async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
+        if (name && Assets.assets.get(name) || !name && Assets.get(<AssetID>path)) {
             throw new Error('Asset not loaded: Asset with name/path exists');
         }
 
         let asset: Asset;
 
         try {
-            asset = await Assets.urlToAsset('./Assets/' + path, type);
+            asset = await Assets.urlToAsset(`./Assets/${path}`, type, name);
         } catch (error) {
-            throw new Error(`Could not load asset: ${path}; ${JSON.stringify(error)}`);
+            throw new Error(`Could not load Asset: ${path}; ${JSON.stringify(error)}`);
         }
 
         Assets.assets.set(name || path, asset);
@@ -43,7 +50,7 @@ export class Assets {
         return asset;
     }
 
-    private static urlToAsset(url: string, type: AssetType): Promise<Asset> {
+    private static urlToAsset(url: string, type: AssetType, name?: string): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
                 const img = new Image();
@@ -60,17 +67,17 @@ export class Assets {
                 video.addEventListener('error', reject);
                 video.src = url;
             } else if (type === AssetType.Font) {
-                const fontfamilyname = 'f' + Date.now() + ~~(Math.random() * 1000000);
+                const fontfamilyname = name || 'f' + Date.now() + ~~(Math.random() * 1000000);
                 await Assets.loadFont(url, fontfamilyname);
                 resolve(new Asset(url, type, fontfamilyname));
             } else if (type === AssetType.Text || type === AssetType.Blob || type === AssetType.JSON) {
                 const response = await Assets.req(url, type);
-                resolve(new Asset(url, type, response));
+                resolve(new Asset(url, type, <string | Blob | Record<string, unknown>>response));
             }
         });
     }
 
-    private static req(url: string, type: AssetType.Text | AssetType.Blob | AssetType.JSON | AssetType.Audio): Promise<string | Blob | Record<string, any> | ArrayBuffer> {
+    private static req(url: string, type: AssetType.Text | AssetType.Blob | AssetType.JSON | AssetType.Audio): Promise<string | Blob | Record<string, unknown> | ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
             req.addEventListener('load', () => resolve(req.response));
@@ -92,7 +99,7 @@ export class Assets {
     }
 
     private static loadFont(url: string, name: string): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             const e = document.head.querySelector('style') || document.head.appendChild(document.createElement('style'));
             e.innerHTML += `@font-face { font-family: ${name}; src: url('${url}'); }`;
 
@@ -103,13 +110,13 @@ export class Assets {
             p.style.fontSize = '10000px';
             document.body.appendChild(p);
 
-            const initialSize = p.offsetWidth << 16 + p.offsetHeight;
+            const initialSize = p.offsetWidth * p.offsetHeight;
 
             p.style.fontFamily = name;
 
-            interval(clear => {
-                if (p.offsetWidth << 16 + p.offsetHeight !== initialSize) {
-                    clear();
+            new Interval(i => {
+                if (p.offsetWidth * p.offsetHeight !== initialSize) {
+                    i.clear();
                     resolve();
                     p.remove();
                 }
@@ -118,17 +125,18 @@ export class Assets {
     }
 
     public static async loadFromAssetDB(): Promise<void> {
-        const db = <{ [key: string]: { type: AssetType, mimeType: string, name?: string } }>AssetDB;
+        const db = <{ [path: string]: { type: AssetType } }>AssetDB;
 
         const p: Promise<Asset>[] = [];
 
         for (const path in db) {
-            p.push(Assets.load(path, db[path].type, db[path].name));
+            const name = <AssetID>Object.keys(db[path])[0];
+            p.push(Assets.load(path, db[path].type, (<string>name) !== 'type' ? name : undefined));
         }
 
         for (const ap of p) {
             await ap;
-            await asyncTimeout(1); // allow execution of other tasks
+            await new Timeout(1); // allow execution of other tasks
         }
     }
 }

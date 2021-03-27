@@ -1,22 +1,16 @@
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { AssetType } from 'SnowballEngine/Assets/AssetType';
+import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
+import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
 import { Asset } from '../Assets/Asset';
-import { Client } from '../Client';
-import { AlignH, AlignV } from '../GameObject/Align';
-import { AABB } from '../Physics/AABB';
 import { Scene } from '../Scene';
-import { Canvas } from '../Utilities/Canvas';
-import { Vector2 } from '../Utilities/Vector2';
-import { UI } from './UI';
 import { UIElement } from './UIElements/UIElement';
-import { UIFrame } from './UIFrame';
 
-export class UIMenu {
-    /**
-     * 
-     * if true the menu is visible and responsive to user interaction.
-     * 
-     */
-    public active: boolean;
-
+export class UIMenu implements Destroyable {
+    public font?: UIFont;
+    public readonly container: Container;
+    public readonly name: UIMenuName;
     /**
      * 
      * if true and this.active the scene will be paused.
@@ -24,49 +18,86 @@ export class UIMenu {
      */
     public pauseScene: boolean;
 
+    public onEnable?: () => void;
+    public onDisable?: () => void;
+
     /**
-     *
-     * Set priority in drawing queue.
+     * 
+     * if true the menu is visible and responsive to user interaction.
      * 
      */
-    public drawPriority: number;
-    private readonly uiElements: Map<number, UIElement>;
-    private _aabb: AABB;
-    private readonly canvas: Canvas;
-    private readonly context: CanvasRenderingContext2D;
-    public background?: Asset;
-    private frame: UIFrame;
+    private _active: boolean;
+    private _background?: Asset;
+    private _backgroundSprite?: Sprite;
+    private readonly _uiElements: Map<number, UIElement>;
 
-    public localAlignH: AlignH;
-    public localAlignV: AlignV;
-    public alignH: AlignH;
-    public alignV: AlignV;
-
-    private redraw: boolean;
-
-    public readonly ui: UI;
-
-    public constructor() {
-        this.active = false;
+    public constructor(name: UIMenuName) {
         this.pauseScene = true;
-        this.drawPriority = 0;
-        this.uiElements = new Map();
-        this._aabb = new AABB(new Vector2(100, 100), new Vector2());
-        this.ui = Scene.currentScene.ui;
+        this.container = new Container();
+        this.name = name;
 
-        this.localAlignH = AlignH.Left;
-        this.localAlignV = AlignV.Top;
-        this.alignH = AlignH.Left;
-        this.alignV = AlignV.Top;
+        this._active = false;
+        this._uiElements = new Map();
+    }
 
-        this.canvas = new Canvas(Client.resolution.x, Client.resolution.y);
-        this.context = this.canvas.context2D();
+    public get active(): boolean {
+        return this._active;
+    }
+    public set active(val: boolean) {
+        if (val && !this._active) {
+            this.container.visible = true;
+            Scene.currentScene.ui.onEnableMenu(this.name);
+            if (this.onEnable) this.onEnable();
+        } else if (!val && this._active) {
+            this.container.visible = false;
+            Scene.currentScene.ui.onDisableMenu(this.name);
+            if (this.onDisable) this.onDisable();
+        }
 
-        this.frame = new UIFrame(new AABB(this._aabb.size.clone.scale(Client.resolution).scale(0.01), this._aabb.position), this.canvas);
+        this._active = val;
+    }
 
-        addEventListener('resize', () => this.redraw = true);
+    public get background(): Asset | undefined {
+        return this._background;
+    }
+    public set background(val: Asset | undefined) {
+        if (val?.type !== AssetType.Image) throw new Error('Asset.type !== AssetType.Image');
 
-        this.redraw = true;
+        const s = val.getPIXISprite();
+
+        if (!s) throw new Error(`Can't create PIXI.Sprite from Asset`);
+
+
+        if (this._backgroundSprite) this.container.removeChild(this._backgroundSprite);
+
+        this.container.addChild(s);
+
+        this._backgroundSprite = s;
+        this._backgroundSprite.zIndex = -1;
+        this._backgroundSprite.scale.set(100);
+        this._background = val;
+
+        this.container.sortChildren();
+    }
+
+    /**
+     * 
+     * The higher the value (compared to other menus), the later it will be rendered.
+     * 
+     */
+    public get zIndex(): number {
+        return this.container.zIndex;
+    }
+    public set zIndex(val: number) {
+        this.container.zIndex = val;
+        this.container.parent.sortChildren();
+    }
+
+    public get position(): Vector2 {
+        return new Vector2().copy(this.container.position);
+    }
+    public set position(val: Vector2) {
+        this.container.position.copyFrom(val);
     }
 
     /**
@@ -74,18 +105,18 @@ export class UIMenu {
      * Add a UIElement to this. The newly created UIElement can be adjusted within the callback.
      * 
      */
-    public addUIElement<T extends UIElement>(type: Constructor<T>, ...cb: ((uiElement: T) => void)[]): T {
-        const e = new type(this, this.ui.font);
+    public addUIElement<T extends UIElement>(type: Constructor<T>, ...initializer: ((uiElement: T) => void)[]): T {
+        const e = new type(this);
 
-        this.uiElements.set(e.id, e);
+        this._uiElements.set(e.id, e);
 
-        if (cb) {
-            for (const c of cb) {
-                c(e);
+        this.container.addChild(e.container);
+
+        if (initializer) {
+            for (const i of initializer) {
+                i(e);
             }
         }
-
-        e.draw();
 
         return e;
     }
@@ -96,18 +127,15 @@ export class UIMenu {
      * 
      */
     public removeUIElement(id: number): void {
-        this.uiElements.delete(id);
-        this.redraw = true;
+        const el = this._uiElements.get(id);
+
+        if (el) {
+            this.container.removeChild(el.container);
+            el.destroy();
+            this._uiElements.delete(id);
+        }
     }
 
-    /**
-     *
-     * Returns the current UIFrame.
-     * 
-     */
-    public get currentFrame(): UIFrame {
-        return this.frame;
-    }
 
     /**
      * 
@@ -115,38 +143,12 @@ export class UIMenu {
      * 
      */
     public async update(): Promise<void> {
-        await Promise.all([...this.uiElements.values()].map(e => e.update()));
+        await Promise.all([...this._uiElements.values()].map(e => e.update()));
+    }
 
-        if (this.redraw && this.active) {
-            this.canvas.width = ~~(this.aabb.size.x / 100 * Client.resolution.x);
-            this.canvas.height = ~~(this.aabb.size.y / 100 * Client.resolution.y);
-
-            if (this.background) this.context.drawImage(<CanvasImageSource>this.background.data, 0, 0, this.canvas.width, this.canvas.height);
-            else this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-            for (const uiElement of this.uiElements.values()) {
-                const { sprite, aabb } = uiElement.currentFrame;
-                this.context.drawImage(sprite, Math.round(aabb.position.x / 100 * (this.aabb.size.x / 100 * Client.resolution.x)), Math.round(aabb.position.y / 100 * (this.aabb.size.y / 100 * Client.resolution.y)), Math.round(aabb.size.x / 100 * (this.aabb.size.x / 100 * Client.resolution.x)), Math.round(aabb.size.y / 100 * (this.aabb.size.y / 100 * Client.resolution.y)));
-            }
-
-            this.frame = new UIFrame(new AABB(this._aabb.size.clone.scale(Client.resolution).scale(0.01), this._aabb.position), this.canvas);
-
-            this.redraw = false;
+    public destroy(): void {
+        for (const uiElement of this._uiElements.values()) {
+            uiElement.destroy();
         }
-    }
-
-    public get aabb(): AABB {
-        const localAlign = new Vector2(this.localAlignH === AlignH.Left ? 0 : this.localAlignH === AlignH.Center ? - this._aabb.size.x / 2 : - this._aabb.size.x, this.localAlignV === AlignV.Top ? 0 : this.localAlignV === AlignV.Center ? - this._aabb.size.y / 2 : - this._aabb.size.y);
-        const globalAlign = new Vector2(this.alignH === AlignH.Left ? 0 : this.alignH === AlignH.Center ? 50 : 100, this.alignV === AlignV.Top ? 0 : this.alignV === AlignV.Center ? 50 : 100);
-
-        return new AABB(this._aabb.size, this._aabb.position.clone.add(globalAlign).add(localAlign));
-    }
-    public set aabb(val: AABB) {
-        this.redraw = true;
-        this._aabb = val;
-    }
-
-    public forceRedraw(): void {
-        this.redraw = true;
     }
 }

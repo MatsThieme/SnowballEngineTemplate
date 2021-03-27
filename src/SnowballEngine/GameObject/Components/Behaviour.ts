@@ -4,6 +4,7 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
 
+/**@category Component */
 export class Behaviour extends Component {
     protected readonly scene: Scene;
     public readonly __initialized__: boolean;

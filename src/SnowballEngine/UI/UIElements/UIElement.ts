@@ -1,193 +1,77 @@
-import { Asset } from '../../Assets/Asset';
-import { AssetType } from '../../Assets/AssetType';
-import { Client } from '../../Client';
-import { D } from '../../Debug';
-import { AlignH, AlignV } from '../../GameObject/Align';
-import { Input } from '../../Input/Input';
-import { AABB } from '../../Physics/AABB';
-import { Scene } from '../../Scene';
-import { Canvas } from '../../Utilities/Canvas';
-import { Color } from '../../Utilities/Color';
-import { createSprite } from '../../Utilities/Helpers';
-import { Vector2 } from '../../Utilities/Vector2';
+import { Container } from '@pixi/display';
+import { Sprite } from '@pixi/sprite';
+import { Asset } from 'SnowballEngine/Assets/Asset';
+import { AssetType } from 'SnowballEngine/Assets/AssetType';
+import { Client } from 'SnowballEngine/Client';
+import { AlignH, AlignV } from 'SnowballEngine/GameObject/Align';
+import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
+import { Input } from 'SnowballEngine/Input/Input';
+import { clearObject } from 'SnowballEngine/Utilities/Helpers';
+import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
+import { _AABB } from 'SnowballEngine/Utilities/_AABB';
 import { UIElementType } from '../UIElementType';
-import { UIFont } from '../UIFont';
-import { UIFontSize } from '../UIFontSize';
-import { UIFrame } from '../UIFrame';
 import { UIMenu } from '../UIMenu';
 
-export abstract class UIElement {
-    private static nextID = 0;
-
+export class UIElement implements Destroyable {
     public readonly id: number;
 
-    protected _aabb: AABB;
-    private _label: string;
-    private _background?: CanvasImageSource;
-    private _fontSize: number;
-    private _active: boolean;
-    private _color: string;
-    private _stroke: boolean;
-    private _textShadow: number;
-    private _font!: Asset;
-    private _padding: Vector2;
-    private _resize: boolean;
+    public readonly type: UIElementType;
+
+    public readonly container: Container;
 
     public readonly hover: boolean;
     public readonly click: boolean;
     public readonly down: boolean;
 
-    public localAlignH: AlignH;
-    public localAlignV: AlignV;
+    /**
+     * 
+     * Position of the pointer in the menu space (0-100,0-100)
+     * 
+     */
+    public readonly downPosition?: Vector2;
+
     public alignH: AlignH;
     public alignV: AlignV;
+
+    public padding: Vector2;
+    public position: Vector2;
 
     public onInput?: (uiElement: this) => void;
     public onHover?: (uiElement: this) => void;
 
-    protected sprite?: CanvasImageSource;
-    protected abstract drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void;
+    private static _nextID = 0;
 
-    protected menu: UIMenu;
+    protected _menu: UIMenu;
+    protected _background?: Asset;
 
-    public readonly type: UIElementType;
+    protected _backgroundSprite?: Sprite;
 
-    public constructor(menu: UIMenu, type: UIElementType, font: Asset = new Asset('', AssetType.Font, 'sans-serif')) {
-        this.id = UIElement.nextID++;
+    public readonly aabb: _AABB;
 
-        this.menu = menu;
+    protected _scaledPadding: Vector2;
+
+    public constructor(menu: UIMenu, type: UIElementType) {
+        this.id = UIElement._nextID++;
+
         this.type = type;
+        this.container = new Container();
 
         this.hover = false;
         this.click = false;
         this.down = false;
 
-        this._aabb = new AABB(new Vector2(1, 1), new Vector2());
-        this._label = '';
-        this._fontSize = UIFontSize.Medium;
-        this._active = true;
-        this._color = Color.darkGrey.rgbaString;
-        this._stroke = type !== UIElementType.Text;
-        this._textShadow = 0;
-        this._padding = new Vector2();
-        this._resize = true;
-
-        this.font = font;
-
-        this.localAlignH = AlignH.Left;
-        this.localAlignV = AlignV.Top;
         this.alignH = AlignH.Left;
         this.alignV = AlignV.Top;
 
-        Scene.currentScene.domElement.addEventListener('resize', () => {
-            if (this._resize) this.fitContent();
-            else this.draw();
-        });
-    }
+        this.padding = new Vector2();
 
-    /**
-     * 
-     * Draw the UIElement.
-     * 
-     */
-    public draw(): void {
-        this.sprite = <CanvasImageSource>createSprite(this.drawCb.bind(this)).data;
-        this.menu.forceRedraw();
-    }
+        this.position = new Vector2();
 
-    /**
-     * 
-     * Update down and click properties.
-     * 
-     */
-    public async update(): Promise<void> {
-        if (!this.active) return;
+        this._menu = menu;
 
-        const trigger = Input.getButton('Trigger');
+        this.aabb = new _AABB();
 
-        const p = Input.getAxis('PointerPosition');
-
-        const intersects = this.aabbpx.intersectsPoint(p.v2);
-
-        (<any>this).hover = intersects;
-        (<any>this).click = trigger.click && intersects;
-        (<any>this).down = trigger.down && intersects;
-
-        if (!this.sprite) this.draw();
-    }
-
-    /**
-     * 
-     * Adjusts the AABB of this to fit the contents.
-     * 
-     */
-    private fitContent(): void {
-        if (this.type === UIElementType.Dropdown) {
-            if ((<any>this).values.length === 0) return;
-            const size = new Vector2();
-
-            for (const val of (<any>this).values) {
-                const m = UIFont.measureText(val, UIFont.getCSSFontString(<string>this.font.data, this._fontSize));
-                if (m.x > size.x) size.x = m.x;
-                if (m.y > size.y) size.y = m.y;
-            }
-
-            this._aabb = new AABB(new Vector2(Math.max(size.x, 1) + this.padding.x * 2, Math.max(size.y, 1) + this.padding.y * 2 * ((<any>this).values.length + 1)), this._aabb.position);
-        } else {
-            if (this.label.length === 0) return;
-
-            const m = UIFont.measureText(this.label, UIFont.getCSSFontString(<string>this.font.data, this._fontSize));
-
-            this._aabb = new AABB(new Vector2(m.x + this.padding.x * 2, m.y + this.padding.y * 2), this._aabb.position);
-        }
-
-        this.draw();
-    }
-
-    /**
-     *
-     * Absolute aabb of this, align is considered in position property.
-     * 
-     */
-    public get aabb(): AABB {
-        const localAlign = new Vector2(this.localAlignH === AlignH.Left ? 0 : this.localAlignH === AlignH.Center ? -this._aabb.size.x / 2 : -this._aabb.size.x, this.localAlignV === AlignV.Top ? 0 : this.localAlignV === AlignV.Center ? -this._aabb.size.y / 2 : -this._aabb.size.y);
-        const globalAlign = new Vector2(this.alignH === AlignH.Left ? 0 : this.alignH === AlignH.Center ? 50 : 100, this.alignV === AlignV.Top ? 0 : this.alignV === AlignV.Center ? 50 : 100);
-
-        return new AABB(this._aabb.size, this._aabb.position.clone.add(globalAlign).add(localAlign));
-    }
-    public set aabb(val: AABB) {
-        if (val.size.equal(this._aabb.size) && val.position.equal(this._aabb.position)) return;
-        this._aabb = val;
-        if (this._resize) this.fitContent();
-        this.draw();
-    }
-
-    /**
-     *
-     * The currently drawn label.
-     * 
-     */
-    public get label(): string {
-        return this._label;
-    }
-    public set label(val: string) {
-        this._label = val;
-        if (this._resize) this.fitContent();
-        this.draw();
-    }
-
-    /**
-     * 
-     * Fontsize in % of Client.resolution.magnitude.
-     * 
-     */
-    public get fontSize(): number {
-        return this._fontSize;
-    }
-    public set fontSize(val: number) {
-        this._fontSize = val;
-        if (this._resize) this.fitContent();
-        this.draw();
+        this._scaledPadding = new Vector2();
     }
 
     /**
@@ -196,79 +80,32 @@ export abstract class UIElement {
      * 
      */
     public get active(): boolean {
-        return this._active;
+        return this.container.visible;
     }
     public set active(val: boolean) {
-        this._active = val;
-        if (this._resize) this.fitContent();
-        this.draw();
+        this.container.visible = val;
     }
 
-    /**
-     * 
-     * Color of text and stroke.
-     *
-     */
-    public get color(): string {
-        return this._color;
+
+    // public abstract get font(): UIFont;
+    // public abstract set font(val: UIFont);
+
+    // public abstract get tint(): Color;
+    // public abstract set tint(val: Color);
+
+    public get alpha(): number {
+        return this.container.alpha;
     }
-    public set color(val: string) {
-        this._color = val;
-        this.draw();
+    public set alpha(val: number) {
+        this.container.alpha = val;
     }
 
-    /**
-     * 
-     * Stroke the UIElement
-     *
-     */
-    public get stroke(): boolean {
-        return this._stroke;
+    public get zIndex(): number {
+        return this.container.zIndex;
     }
-    public set stroke(val: boolean) {
-        this._stroke = val;
-        this.draw();
-    }
-
-    /**
-     * 
-     * Text shadow
-     * 
-     */
-    public get textShadow(): number {
-        return this._textShadow;
-    }
-    public set textShadow(val: number) {
-        this._textShadow = val;
-        this.draw();
-    }
-
-    /**
-     * 
-     * Padding used when calculating AABB.
-     * 
-     */
-    public get padding(): Vector2 {
-        return this._padding;
-    }
-    public set padding(val: Vector2) {
-        this._padding = val;
-        if (this._resize) this.fitContent();
-        this.draw();
-    }
-
-    /**
-     * 
-     * Resize AABB to fit contents + padding on change.
-     * 
-     */
-    public get resizeAABB(): boolean {
-        return this._resize;
-    }
-    public set resizeAABB(val: boolean) {
-        this._resize = val;
-        if (this._resize) this.fitContent();
-        this.draw();
+    public set zIndex(val: number) {
+        this.container.zIndex = val;
+        this.container.parent.sortChildren();
     }
 
     /**
@@ -276,38 +113,83 @@ export abstract class UIElement {
      * The background image of this UIElement.
      * 
      */
-    public get background(): CanvasImageSource | undefined {
+    public get background(): Asset | undefined {
         return this._background;
     }
-    public set background(val: CanvasImageSource | undefined) {
+    public set background(val: Asset | undefined) {
+        if (val?.type !== AssetType.Image) throw new Error('Asset.type !== AssetType.Image');
+
+        const s = val.getPIXISprite();
+
+        if (!s) throw new Error(`Can't create PIXI.Sprite from Asset`);
+
+
+        if (this._backgroundSprite) this.container.removeChild(this._backgroundSprite);
+
+        this.container.addChild(s);
+
+        this._backgroundSprite = s;
         this._background = val;
-        this.draw();
+
+        this._backgroundSprite.zIndex = -1;
+
+        this.container.sortChildren();
     }
 
-    /**
-     * 
-     * Font Asset.
-     * 
-     */
-    public set font(font: Asset) {
-        if (font.type === AssetType.Font) {
-            this._font = font;
-        } else {
-            this._font = new Asset('', AssetType.Font, 'sans-serif');
-            D.warn('Asset not valid Font, using default "sans-serif" font family');
+    protected updateBounds(): void {
+        if (this._backgroundSprite) this._backgroundSprite.visible = false; // ignore background in getLocalBounds()
+
+        const bounds = this.container.getLocalBounds();
+        this._scaledPadding.copy(this.padding.clone.scale(new Vector2(Client.resolution.y / Client.resolution.x, 1)));
+        this.aabb.setHalfExtents(new Vector2(bounds.width / 2, bounds.height / 2).add(this._scaledPadding));
+
+        const topLeft = this.position.clone.sub(new Vector2(this.alignH * (bounds.width + this._scaledPadding.x * 2), this.alignV * (bounds.height + this._scaledPadding.y * 2)));
+
+        this.container.position.copyFrom(topLeft);
+
+        this.aabb.setPosition(topLeft.add(this.aabb.halfExtents));
+
+
+        if (this._backgroundSprite) {
+            this._backgroundSprite.visible = true;
+            this._backgroundSprite.width = this.aabb.width;
+            this._backgroundSprite.height = this.aabb.height;
         }
     }
-    public get font(): Asset {
-        return this._font;
-    }
 
     /**
      * 
-     * Calculates the aabb of this in px relative to the viewport.
+     * Update down and click properties, position the content and scale background.
      * 
      */
-    private get aabbpx(): AABB {
-        return new AABB(new Vector2(this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x), this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y)).round(), new Vector2((this.aabb.position.x / 100 * this.menu.aabb.size.x + this.menu.aabb.position.x) / 100 * Client.resolution.x, (this.aabb.position.y / 100 * this.menu.aabb.size.y + this.menu.aabb.position.y) / 100 * Client.resolution.y).round());
+    public update(): boolean {
+        if (!this.active) return false;
+
+        this.updateBounds();
+
+
+        if (this.type === UIElementType.Text) return true;
+
+        const trigger = Input.getButton('Trigger');
+
+        if (!trigger.down) {
+            (<Mutable<UIElement>>this).hover = false;
+            (<Mutable<UIElement>>this).click = false;
+            (<Mutable<UIElement>>this).down = false;
+            (<Mutable<UIElement>>this).downPosition = undefined;
+        } else {
+            const p = Input.getAxis('PointerPosition');
+
+            (<Mutable<UIElement>>this).downPosition = Vector2.divide(p.v2, Client.resolution).scale(100);
+
+            const intersects = this.aabb.intersectsPoint(this.downPosition!);
+
+            (<Mutable<UIElement>>this).hover = intersects;
+            (<Mutable<UIElement>>this).click = intersects && trigger.click;
+            (<Mutable<UIElement>>this).down = intersects && trigger.down;
+        }
+
+        return true;
     }
 
     /**
@@ -316,17 +198,11 @@ export abstract class UIElement {
      * 
      */
     public remove(): void {
-        this.menu.removeUIElement(this.id);
+        this._menu.removeUIElement(this.id);
     }
 
-    /**
-     * 
-     * Get the current UIFrame, used internally to pass image data to the CameraManager.
-     * 
-     * @internal
-     * 
-     */
-    public get currentFrame(): UIFrame {
-        return new UIFrame(this.aabb, this.sprite || <CanvasImageSource>createSprite(() => undefined).data);
+    public destroy(): void {
+        this.container.destroy();
+        clearObject(this);
     }
 }

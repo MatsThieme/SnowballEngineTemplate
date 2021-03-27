@@ -88,7 +88,7 @@ export class AudioMixer {
     }
 
 
-    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => any): AudioEffect {
+    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => unknown): AudioEffect {
         const reconnect = this._effects.length === 0;
 
         if (reconnect) this.disconnect();

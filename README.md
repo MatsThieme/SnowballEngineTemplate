@@ -188,7 +188,7 @@ It can be generated with <code>npm run newadb</code>.
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
-type AssetDB = { [path: string]: { type: AssetType, name?: string, mimeType: string } };
+type AssetDB = { [path: string]: { type: AssetType, "asset name"?: 0 } };
 ```
 
 <br>

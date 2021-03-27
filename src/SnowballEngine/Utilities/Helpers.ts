@@ -1,8 +1,4 @@
-import { Asset } from '../Assets/Asset';
-import { AssetType } from '../Assets/AssetType';
 import { D } from '../Debug';
-import { Canvas } from './Canvas';
-import { Color } from './Color';
 
 /**
  * 
@@ -10,15 +6,6 @@ import { Color } from './Color';
  * 
  */
 export const clamp = (min: number, max: number, val: number): number => val < min ? min : val > max ? max : val;
-
-/**
- * 
- * Resolves after ms.
- * 
- * @param ms milliseconds to wait before resolve.
- * 
- */
-export const asyncTimeout = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
  *
@@ -72,47 +59,6 @@ export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<
     });
 }
 
-
-const intervals: number[] = [];
-
-/**
- * 
- * Simplified version of setInterval, the interval can be cleared by calling cb's parameter clear.
- * 
- */
-export function interval(cb: (clear: () => void, handle: number) => void, ms: number, dontClearOnUnload = false): void {
-    const clear = () => window.clearInterval(intervals.splice(intervals.findIndex(v => v === i), 1)[0]);
-
-    const i: number = window.setInterval(() => cb(clear, i), ms);
-
-    if (!dontClearOnUnload) intervals.push(i);
-}
-
-export function clearAllIntervals(): void {
-    for (const i of intervals.splice(0)) {
-        window.clearInterval(i);
-    }
-}
-
-/**
- * 
- * Create an Image Asset from a canvas.
- * 
- */
-export function createSprite(f: Color | ((context: CanvasRenderingContext2D, canvas: Canvas) => void), width = 1, height = 1): Asset {
-    const canvas = new Canvas(width, height);
-    const context = canvas.context2D();
-
-    context.imageSmoothingEnabled = false;
-
-    if ('rgba' in f) {
-        context.fillStyle = f.rgbaString;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-    } else f(context, canvas);
-
-    return new Asset(canvas.toDataURL(), AssetType.Image, canvas);
-}
-
 /**
  * 
  * Deletes properties and prototype to remove references and allow garbage collection.
@@ -128,29 +74,6 @@ export function clearObject(object: Record<string, any>, setnull = false): void 
     }
 }
 
-/**
- * 
- * Dynamically created and initialized ENUM.
- * 
- */
-export function createENUM<T>(): T {
-    let counter = 0;
-
-    return <T>(<unknown>new Proxy({ props: new Map<string, number>(), nums: new Map<number, string>() }, {
-        get: function (target, property: string) {
-            if (target.props.has(property)) return target.props.get(property);
-            if (!isNaN(Number(property))) return target.nums.get(parseInt(property));
-
-            target.props.set(property, counter);
-            target.nums.set(counter, property);
-
-            return counter++;
-        }
-    }));
-}
-
 export function random(min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
-
-export const cantorPairingFunction = (a: number, b: number): number => ((a + b) / 2) * (a + b + 1) + b;

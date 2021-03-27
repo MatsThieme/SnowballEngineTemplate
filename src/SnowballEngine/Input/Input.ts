@@ -97,7 +97,7 @@ export class Input {
 
     /**
      * 
-     * Returns a InputButton object mapped to the given inputtype.
+     * Returns an InputButton object mapped to the given inputtype.
      * 
      */
     public static getButton(t: InputAction): InputButton {
@@ -121,7 +121,7 @@ export class Input {
 
     /**
      * 
-     * Returns the axis with the largest absolute value mapped to the given inputtype.
+     * Returns an InputAxis object mapped to the given inputtype.
      * 
      */
     public static getAxis(t: InputAction): InputAxis {
@@ -154,7 +154,7 @@ export class Input {
     /**
      * 
      * Listener will only be added to existing devices.
-     * If Input.devices changes afterwards, the listeners won't be added to new devices, but removed from removed devices
+     * If Input.devices changes afterwards, existing listeners won't be added to new devices, but removed from removed devices
      * 
      */
     public static addListener(type: InputAction, cb: (event: InputEvent) => any, id: string = 'inputListenerID' + Math.random() + performance.now(), devices: InputDeviceType = 0b1111): string {

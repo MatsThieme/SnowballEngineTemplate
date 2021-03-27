@@ -5,6 +5,7 @@ import { GameObject } from '../GameObject';
 import { AudioSource } from './AudioSource';
 import { Component } from './Component';
 
+/**@category Component */
 export class AudioListener extends Component {
     public static readonly context: AudioContext = new AudioContext();
 
@@ -33,8 +34,8 @@ export class AudioListener extends Component {
         }
     }
 
-    public static start() {
-        AudioListener.context.addEventListener('statechange', e => {
+    public static start(): void {
+        AudioListener.context.addEventListener('statechange', () => {
             D.log(`audio context state change: ${AudioListener.context.state}`);
         });
 

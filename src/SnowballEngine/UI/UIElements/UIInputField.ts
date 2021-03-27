@@ -1,97 +1,77 @@
-import { Asset } from '../../Assets/Asset';
-import { Client } from '../../Client';
-import { Input } from '../../Input/Input';
-import { Canvas } from '../../Utilities/Canvas';
-import { clamp } from '../../Utilities/Helpers';
 import { UIElementType } from '../UIElementType';
-import { UIFont } from '../UIFont';
 import { UIMenu } from '../UIMenu';
-import { UIElement } from './UIElement';
+import { UIText } from './UIText';
 
-export abstract class UIInputField extends UIElement {
+export abstract class UIInputField<T extends number | string> extends UIText {
     public focused: boolean;
-    protected domElement: HTMLInputElement;
-    public abstract value: number | string;
-    public max: number;
-    public min: number;
+    public readonly domElement: HTMLInputElement;
+    protected _prevValue!: T;
 
-    public constructor(menu: UIMenu, font: Asset, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
-        super(menu, type, font);
+    /**
+     * 
+     * Max number of characters. A change will come in effect as this.value changes.
+     * 
+     */
+    public length: number;
+
+    public constructor(menu: UIMenu, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
+        super(menu, type);
 
         this.domElement = document.createElement('input');
         this.domElement.type = type === UIElementType.TextInputField ? 'text' : UIElementType.NumberInputField ? 'number' : '';
         document.body.appendChild(this.domElement);
-        this.domElement.step = '0.1';
+        this.domElement.step = '0.000001';
 
-        this.min = 0;
-        this.max = 999;
+        this.domElement.addEventListener('blur', this.elOnBlur.bind(this));
+        this.domElement.addEventListener('input', this.elOnInput.bind(this));
+
+        this.length = 10;
         this.focused = false;
     }
 
-    public async update(): Promise<void> {
-        await super.update();
-
-        if (this.label === '') this.label = this.value.toString();
-
-        if (Input.getButton('Trigger').down && !this.down && this.focused) this.focused = false;
-        else if (this.click) this.focused = true;
-
-        if (this.focused) {
-            this.domElement.focus();
-
-            if (this.label !== this.domElement.value) {
-                if (this.type === UIElementType.NumberInputField && typeof this.value === 'number') {
-                    const x = parseFloat(this.domElement.value);
-
-                    if (x) {
-                        this.value = x;
-
-                        this.value = clamp(this.min, this.max, this.value);
-
-                        this.domElement.value = this.label = this.value.toString();
-                    } else this.label = '0';
-                } else if (this.type === UIElementType.TextInputField && typeof this.value === 'string') {
-                    this.value = this.domElement.value;
-
-                    if (this.value.length > this.max) this.value = this.value.substr(0, this.max);
-
-                    this.domElement.value = this.label = this.value;
-                }
-
-                if (this.onInput) this.onInput(this);
-
-                this.draw();
-            }
-        } else this.domElement.blur();
+    public get value(): T {
+        return <T>(this.type === UIElementType.TextInputField ? this.domElement.value : +this.domElement.value || 0);
+    }
+    public set value(val: T) {
+        this.domElement.value = (val + '').substr(0, this.length);
     }
 
-    protected drawCb(context: CanvasRenderingContext2D, canvas: Canvas): void {
-        canvas.width = this._aabb.size.x / 100 * (this.menu.aabb.size.x / 100 * Client.resolution.x);
-        canvas.height = this._aabb.size.y / 100 * (this.menu.aabb.size.y / 100 * Client.resolution.y);
-        context.save();
+    private elOnInput(e: Event): void {
+        if (this.domElement.value.length > this.length) {
+            this.domElement.value = <string>this._prevValue;
+        }
+    }
 
-        if (this.background) context.drawImage(this.background, 0, 0, canvas.width, canvas.height);
+    private elOnBlur(e: Event): void {
+        this.focused = false;
+    }
 
-        context.strokeStyle = context.fillStyle = context.shadowColor = this.color;
+    private focus(): void {
+        this.domElement.focus();
+        this.focused = true;
+    }
 
-        context.lineWidth = Math.round(this.menu.aabb.size.magnitude / 50);
-        if (this.stroke) context.strokeRect(context.lineWidth / 2, context.lineWidth / 2, canvas.width - context.lineWidth, canvas.height - context.lineWidth);
+    public update(): boolean {
+        if (!super.update()) return false;
 
-        context.textAlign = 'center';
-        context.textBaseline = 'middle';
+        if (this.domElement.value != this._bitmapText.text) {
+            this._bitmapText.text = this.domElement.value;
 
-        context.font = UIFont.getCSSFontString(<string>this.font.data, this.fontSize);
-
-
-
-        if (this.textShadow !== 0) {
-            context.shadowBlur = context.lineWidth * 1.5 * this.textShadow;
-            context.shadowOffsetX = context.lineWidth * this.textShadow;
-            context.shadowOffsetY = -context.lineWidth * this.textShadow;
+            if (this.onInput) this.onInput(this);
         }
 
-        context.fillText(this.label, canvas.width / 2, canvas.height / 2);
 
-        context.restore();
+        if (this.click) this.focus();
+
+        return true;
+    }
+
+    public destroy(): void {
+        this.domElement.remove();
+
+        this.domElement.removeEventListener('blur', this.elOnBlur.bind(this));
+        this.domElement.removeEventListener('input', this.elOnInput.bind(this));
+
+        super.destroy();
     }
 }

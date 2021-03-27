@@ -1,4 +1,4 @@
-import { TilingSprite } from 'pixi.js';
+import { TilingSprite } from '@pixi/sprite-tiling';
 import { Vector2 } from '../../../Utilities/Vector2';
 import { BackgroundLayerAsset } from './BackgroundLayerAsset';
 
