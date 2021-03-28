@@ -141,23 +141,23 @@ export class GameObject {
     public async addComponent<T extends Component>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T> {
         const component = new type(this);
 
-        if (component.type !== ComponentType.Camera &&
-            component.type !== ComponentType.Transform &&
+        if (component.type !== ComponentType.Transform &&
             component.type !== ComponentType.RigidBody &&
             component.type !== ComponentType.AudioListener &&
-            component.type !== ComponentType.TileMap ||
+            component.type !== ComponentType.TileMap &&
+            component.type !== ComponentType.ParallaxBackground ||
             component.type === ComponentType.RigidBody && this.getComponents(ComponentType.RigidBody).length === 0 ||
             component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0 ||
-            component.type === ComponentType.Camera && this.getComponents(ComponentType.Camera).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
-            component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0) {
+            component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0 ||
+            component.type === ComponentType.ParallaxBackground && this.getComponents(ComponentType.ParallaxBackground).length === 0) {
             const components = this._components.get(component.type) || [];
             components.push(component);
             this._components.set(component.type, components);
-        } else if (component.type === ComponentType.Camera || component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap) {
+        } else if (component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap || component.type === ComponentType.ParallaxBackground) {
             const type = component.type;
             component.destroy();
-            throw new Error(`Can't add component(type: ${type})`);
+            throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
 
         if ((component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) && !this.rigidbody) this.addComponent(RigidBody);
