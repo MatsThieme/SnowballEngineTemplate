@@ -14,6 +14,7 @@ import { ComponentType } from './ComponentType';
 /**
  * 
  * Created gameObjects correspond to the currently loaded Scene. A Scene must be loaded before Instantiating a GameObject.
+ * @category Scene
  * 
  */
 export class GameObject {

@@ -2,6 +2,7 @@ import { UIElementType } from '../UIElementType';
 import { UIMenu } from '../UIMenu';
 import { UIText } from './UIText';
 
+/** @category UI */
 export abstract class UIInputField<T extends number | string> extends UIText {
     public focused: boolean;
     public readonly domElement: HTMLInputElement;

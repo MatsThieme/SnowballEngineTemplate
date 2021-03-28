@@ -9,6 +9,7 @@ import { GameObject } from '../GameObject/GameObject';
 import { Vector2 } from '../Utilities/Vector2';
 import { PIXI } from './PIXI';
 
+/** @category Camera */
 export class CameraManager implements Destroyable {
     public readonly cameras: Camera[];
     public renderScale: number;

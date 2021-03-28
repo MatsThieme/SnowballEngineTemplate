@@ -3,6 +3,7 @@ import { AudioSource } from '../GameObject/Components/AudioSource';
 import { clamp } from '../Utilities/Helpers';
 import { AudioEffect } from './AudioEffect';
 
+/** @category Audio */
 export class AudioMixer {
     private static _mixers: Map<string, AudioMixer> = new Map();
     private static _nextID = 0;

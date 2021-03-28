@@ -1,3 +1,4 @@
+/** @category Input */
 export enum InputDeviceType {
     Touch = 0b0001,
     Mouse = 0b0010,

@@ -1,3 +1,4 @@
+/** @category UI */
 export class UIMenuNavigation {
     /**
      * 

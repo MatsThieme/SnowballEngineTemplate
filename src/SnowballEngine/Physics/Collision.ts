@@ -3,6 +3,10 @@ import { TileMap } from '../GameObject/Components/TileMap';
 import { ComponentType } from '../GameObject/ComponentType';
 import { Vector2 } from '../Utilities/Vector2';
 
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class Collision {
     public readonly A: Collider | TileMap;
     public readonly B: Collider | TileMap;

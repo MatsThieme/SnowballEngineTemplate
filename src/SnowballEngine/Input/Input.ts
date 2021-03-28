@@ -10,6 +10,7 @@ import { InputButton } from './InputButton';
 import { InputEvent } from './InputEvent';
 import { InputMapping } from './InputMapping';
 
+/** @category Input */
 export class Input {
     private static _devices: InputDeviceType = 0b1111;
     public static readonly touch?: Touch;

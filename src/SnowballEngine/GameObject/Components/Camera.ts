@@ -9,7 +9,10 @@ import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';
 
-/**@category Component */
+/**
+ * @category Component
+ * @category Camera 
+ */
 export class Camera extends Component {
     /**
     *

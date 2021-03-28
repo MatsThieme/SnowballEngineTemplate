@@ -12,6 +12,7 @@ import { _AABB } from 'SnowballEngine/Utilities/_AABB';
 import { UIElementType } from '../UIElementType';
 import { UIMenu } from '../UIMenu';
 
+/** @category UI */
 export class UIElement implements Destroyable {
     public readonly id: number;
 

@@ -1,5 +1,6 @@
 import { Timeout } from './Utilities/Timeout';
 
+/** @category Scene */
 export class Framedata {
     public updateInterval: number;
 

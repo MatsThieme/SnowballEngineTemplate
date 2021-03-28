@@ -8,6 +8,7 @@ import { InputDeviceType } from '../InputDeviceType';
 import { TouchAxis } from './TouchAxis';
 import { TouchButton } from './TouchButton';
 
+/** @category Input */
 export class Touch extends InputEventTarget implements InputDevice {
     private _positions: InputAxis[];
     private _button: InputButton;

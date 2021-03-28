@@ -1,6 +1,7 @@
 import { Destroyable } from '../GameObject/Destroy';
 import { InputEvent } from './InputEvent';
 
+/** @category Input */
 export class InputEventTarget implements Destroyable {
     protected _listeners: Map<string, { cb: (e: InputEvent) => any, type: InputAction }>;
 

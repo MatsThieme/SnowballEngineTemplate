@@ -1,3 +1,4 @@
+/** @category Input */
 export class InputButton {
     private _down: boolean;
     private _isDown: boolean;

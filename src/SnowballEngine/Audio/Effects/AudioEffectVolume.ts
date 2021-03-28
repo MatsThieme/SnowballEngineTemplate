@@ -2,6 +2,7 @@ import { AudioListener } from '../../GameObject/Components/AudioListener';
 import { AudioEffect } from '../AudioEffect';
 import { AudioMixer } from '../AudioMixer';
 
+/** @category Audio */
 export class AudioEffectVolume extends AudioEffect {
     public readonly node: GainNode;
 

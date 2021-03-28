@@ -11,6 +11,7 @@ declare global {
     type AssetID = keyof ADB | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], 'type' | ''> | AssetName;
 }
 
+/** @category Asset Management */
 export class Assets {
     private static readonly _assets: Map<string, Asset> = new Map();
 

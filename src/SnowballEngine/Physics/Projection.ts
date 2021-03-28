@@ -1,5 +1,9 @@
 import { Vector2 } from '../Utilities/Vector2';
 
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class Projection {
     public readonly min: number;
     public readonly max: number;

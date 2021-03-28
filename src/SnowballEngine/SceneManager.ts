@@ -1,6 +1,7 @@
 import { Scene } from './Scene';
 import { Interval } from './Utilities/Interval';
 
+/** @category Scene */
 export class SceneManager {
     private _scenes: Map<SceneName, { initializer: (scene: Scene) => any, scene?: Scene }>;
     private _activeScene?: SceneName;

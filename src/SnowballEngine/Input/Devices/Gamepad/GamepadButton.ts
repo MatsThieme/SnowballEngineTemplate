@@ -1,3 +1,4 @@
+/** @category Input */
 export enum GamepadButton {
     South,
     East,
@@ -15,4 +16,4 @@ export enum GamepadButton {
     DPadDown,
     DPadLeft,
     DPadRight
-}   
+}

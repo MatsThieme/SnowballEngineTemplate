@@ -10,6 +10,7 @@ import { UIFonts } from '../UIFonts';
 import { UIMenu } from '../UIMenu';
 import { UIElement } from './UIElement';
 
+/** @category UI */
 export class UISelect extends UIElement {
     public readonly value: string;
 

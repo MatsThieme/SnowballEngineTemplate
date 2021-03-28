@@ -1,5 +1,6 @@
 import { Vector2 } from '../Utilities/Vector2';
 
+/** @category Input */
 export class InputAxis {
     public values: readonly number[];
 

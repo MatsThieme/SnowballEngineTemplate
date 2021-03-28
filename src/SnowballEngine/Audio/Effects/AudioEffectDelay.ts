@@ -3,6 +3,7 @@ import { clamp } from '../../Utilities/Helpers';
 import { AudioEffect } from '../AudioEffect';
 import { AudioMixer } from '../AudioMixer';
 
+/** @category Audio */
 export class AudioEffectDelay extends AudioEffect {
     public readonly node: DelayNode;
 

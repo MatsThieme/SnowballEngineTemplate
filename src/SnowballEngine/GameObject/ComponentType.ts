@@ -1,3 +1,4 @@
+/** @category Component */
 export enum ComponentType {
     AnimatedSprite,
     AudioListener,

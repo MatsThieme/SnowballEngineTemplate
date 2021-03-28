@@ -6,6 +6,7 @@ import { Canvas } from '../Utilities/Canvas';
 import { clearObject } from '../Utilities/Helpers';
 import { AssetType } from './AssetType';
 
+/** @category Asset Management */
 export class Asset {
     /**
      * 

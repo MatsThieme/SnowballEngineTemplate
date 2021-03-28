@@ -1,5 +1,9 @@
 import { Vector2 } from '../Utilities/Vector2';
 
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class Line {
     public a: Vector2;
     public b: Vector2;

@@ -4,6 +4,7 @@ import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
 import { UIMenu } from './UIMenu';
 import { UIMenuNavigation } from './UIMenuNavigation';
 
+/** @category UI */
 export class UI implements Destroyable {
     public readonly menus: Map<UIMenuName, UIMenu>;
     public readonly container: Container;

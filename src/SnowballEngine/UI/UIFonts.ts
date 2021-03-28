@@ -3,6 +3,7 @@ import { BitmapFont } from '@pixi/text-bitmap';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from '../Debug';
 
+/** @category UI */
 export class UIFonts {
     private static readonly _fonts: Map<UIFont, { style: BitmapTextStyle, font: BitmapFont }>;
 

@@ -3,11 +3,7 @@ import { clamp } from '../../Utilities/Helpers';
 import { AudioEffect } from '../AudioEffect';
 import { AudioMixer } from '../AudioMixer';
 
-/**
- * 
- * https://github.com/pixijs/pixi-sound/blob/main/src/filters/ReverbFilter.ts
- * 
- */
+/** @category Audio */
 export class AudioEffectReverb extends AudioEffect {
     public readonly node!: ConvolverNode;
 
@@ -15,6 +11,11 @@ export class AudioEffectReverb extends AudioEffect {
     private _decay: number;
     private _reverse: boolean;
 
+    /**
+     * 
+     * https://github.com/pixijs/pixi-sound/blob/main/src/filters/ReverbFilter.ts
+     * 
+     */
     public constructor(mixer: AudioMixer) {
         super(mixer);
 

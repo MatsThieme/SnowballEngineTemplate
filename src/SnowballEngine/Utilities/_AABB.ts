@@ -1,5 +1,6 @@
 import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
 
+/** @category Utility */
 export class _AABB {
     public readonly position: Vector2;
     public readonly halfExtents: Vector2;

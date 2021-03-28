@@ -1,3 +1,7 @@
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class PhysicsMaterial {
     public restitution: number;
     public dynamicFriction: number;

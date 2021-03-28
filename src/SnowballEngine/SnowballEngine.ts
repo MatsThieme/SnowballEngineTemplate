@@ -1,4 +1,3 @@
-export { TextStyle } from '@pixi/text';
 export * from './Assets/Asset';
 export * from './Assets/Assets';
 export * from './Assets/AssetType';
@@ -81,7 +80,6 @@ export * from './UI/UIElements/UIText';
 export * from './UI/UIElements/UITextInputField';
 export * from './UI/UIElementType';
 export * from './UI/UIFonts';
-export * from './UI/UIFontSize';
 export * from './UI/UIMenu';
 export * from './Utilities/Angle';
 export * from './Utilities/AsyncWorker';
@@ -95,4 +93,3 @@ export * from './Utilities/Stopwatch';
 export * from './Utilities/Timeout';
 export * from './Utilities/Vector2';
 export * from './Utilities/_AABB';
-

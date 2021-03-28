@@ -9,6 +9,10 @@ import { AABB } from './AABB';
 import { Collision } from './Collision';
 import { worker } from './CollisionWorker';
 
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class Physics {
     public static gravity: Vector2 = new Vector2(0, -0.00981);
     public static timeScale = 1;

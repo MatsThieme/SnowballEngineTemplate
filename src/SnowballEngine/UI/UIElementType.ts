@@ -1,3 +1,4 @@
+/** @category UI */
 export enum UIElementType {
     Text,
     Button,

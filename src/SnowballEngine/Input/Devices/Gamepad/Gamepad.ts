@@ -8,6 +8,7 @@ import { InputDeviceType } from '../InputDeviceType';
 import { GamepadAxis } from './GamepadAxis';
 import { GamepadButton } from './GamepadButton';
 
+/** @category Input */
 export class Gamepad extends InputEventTarget implements InputDevice {
     private static _gamepads: (Gamepad | undefined)[] = [];
 

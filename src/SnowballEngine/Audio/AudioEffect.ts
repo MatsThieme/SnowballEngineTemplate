@@ -1,5 +1,6 @@
 import { AudioMixer } from "./AudioMixer";
 
+/** @category Audio */
 export abstract class AudioEffect {
     private static _nextID: number;
     public abstract readonly node: AudioNode;

@@ -1,6 +1,10 @@
 import { Vector2 } from '../Utilities/Vector2';
 import { Line } from './Line';
 
+/** 
+ * @deprecated
+ * @category Deprecated 
+ */
 export class Face {
     public v1: Vector2;
     public v2: Vector2;

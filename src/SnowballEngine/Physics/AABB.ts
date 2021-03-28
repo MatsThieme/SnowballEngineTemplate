@@ -1,7 +1,11 @@
 import { Collider } from '../GameObject/Components/Collider';
 import { Vector2 } from '../Utilities/Vector2';
 
-/** @category Utility */
+/** 
+ * @deprecated
+ * @category Utility
+ * @category Deprecated
+ */
 export class AABB {
     public readonly size: Vector2;
     public readonly position: Vector2;

@@ -16,6 +16,7 @@ import { UIFonts } from './UI/UIFonts';
 import { clearObject } from './Utilities/Helpers';
 import { Interval } from './Utilities/Interval';
 
+/** @category Scene */
 export class Scene {
     public readonly cameraManager: CameraManager;
     public readonly gameObjects: Map<string, GameObject>;

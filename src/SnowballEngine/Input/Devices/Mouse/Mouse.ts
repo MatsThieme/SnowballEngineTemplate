@@ -9,6 +9,7 @@ import { InputDeviceType } from '../InputDeviceType';
 import { MouseAxis } from './MouseAxis';
 import { MouseButton } from './MouseButton';
 
+/** @category Input */
 export class Mouse extends InputEventTarget implements InputDevice {
     /**
      * 

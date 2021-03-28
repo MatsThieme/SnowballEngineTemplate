@@ -7,6 +7,7 @@ import { MouseButton } from './Devices/Mouse/MouseButton';
 import { TouchAxis } from './Devices/Touch/TouchAxis';
 import { TouchButton } from './Devices/Touch/TouchButton';
 
+/** @category Input */
 export class InputMapping {
     readonly [key: string]: any;
     public readonly keyboard: Readonly<{ [key in InputAction]?: KeyboardButton | KeyboardAxis }>;

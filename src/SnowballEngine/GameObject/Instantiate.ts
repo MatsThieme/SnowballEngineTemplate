@@ -1,7 +1,7 @@
 import { GameObject } from './GameObject';
 
 /**
- * 
+ * @category Scene
  * @param name GameObject's name
  * @param initializer initializer functions, gameObject is the newly instantiated gameObject
  */

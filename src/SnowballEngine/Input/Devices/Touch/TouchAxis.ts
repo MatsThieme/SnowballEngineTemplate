@@ -1,3 +1,4 @@
+/** @category Input */
 export enum TouchAxis {
     TouchPoint0,
     TouchPoint1,

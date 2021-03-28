@@ -1,4 +1,4 @@
-import { GameTime } from "../GameTime";
+import { GameTime } from '../GameTime';
 
 /** @category Utility */
 export class Stopwatch {

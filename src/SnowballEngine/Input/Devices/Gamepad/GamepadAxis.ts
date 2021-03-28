@@ -1,3 +1,4 @@
+/** @category Input */
 export enum GamepadAxis {
     LeftStickHorizontal,
     LeftStickVertical,

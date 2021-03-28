@@ -8,6 +8,7 @@ import { UIFonts } from '../UIFonts';
 import { UIMenu } from '../UIMenu';
 import { UIElement } from './UIElement';
 
+/** @category UI */
 export class UIText extends UIElement {
     protected readonly _bitmapText: BitmapText;
 

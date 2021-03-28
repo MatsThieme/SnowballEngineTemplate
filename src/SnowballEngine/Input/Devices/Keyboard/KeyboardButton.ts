@@ -1,4 +1,5 @@
 // KeyboardEvent.code (physical keys) https://www.w3.org/TR/uievents-code/#keyboard-key-codes
+/** @category Input */
 export enum KeyboardButton {
     KeyQ = 'KeyQ',
     KeyW = 'KeyW',

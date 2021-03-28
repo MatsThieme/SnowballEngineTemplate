@@ -1,6 +1,7 @@
 import { average, clamp } from './Utilities/Helpers';
 import { Stopwatch } from './Utilities/Stopwatch';
 
+/** @category Scene */
 export class GameTime {
     private static _lastTime = 0;
 

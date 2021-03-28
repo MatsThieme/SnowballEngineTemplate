@@ -1,3 +1,4 @@
+/** @category Asset Management */
 export enum AssetType {
     Image,
     Audio,

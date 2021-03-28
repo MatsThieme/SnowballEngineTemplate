@@ -8,6 +8,7 @@ import { InputDeviceType } from '../InputDeviceType';
 import { KeyboardAxis } from './KeyboardAxis';
 import { KeyboardButton } from './KeyboardButton';
 
+/** @category Input */
 export class Keyboard extends InputEventTarget implements InputDevice {
     private _keys: Map<KeyboardButton, InputButton>;
     private _fireListener: Map<KeyboardButton, boolean>;

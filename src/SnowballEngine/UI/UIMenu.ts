@@ -7,6 +7,7 @@ import { Asset } from '../Assets/Asset';
 import { Scene } from '../Scene';
 import { UIElement } from './UIElements/UIElement';
 
+/** @category UI */
 export class UIMenu implements Destroyable {
     public font?: UIFont;
     public readonly container: Container;
