@@ -1,7 +1,9 @@
 ## Status:
-PIXI.js integrated for rendering game assets, ui is still rendered using a 2d context
+PIXI.js integrated for rendering game assets and ui
 <br>
 Matter.js not yet integrated && physics currently not working properly
+
+[Documentation](https://matsthieme.github.io/SnowballEngineTemplate)
 
 # SnowballEngine
 
