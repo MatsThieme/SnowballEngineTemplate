@@ -23,7 +23,7 @@ export class ExampleBehaviour extends Behaviour {
      * Called on scene start, if scene is running it's called immediately after awake.
      * 
      */
-    public async start(): Promise<void> {
+    async start() {
         Debug.log(this.example2);
     }
 
@@ -32,7 +32,7 @@ export class ExampleBehaviour extends Behaviour {
      * Called once every frame.
      * 
      */
-    public async update(): Promise<void> {
+    async update() {
         // rotate the gameObject holding the texture component
         this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
 
