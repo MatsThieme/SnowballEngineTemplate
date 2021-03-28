@@ -15,18 +15,31 @@ It manages scenes, game assets, simulates physics, renders assets, provides a si
 
 ### build
 <pre>npm run build</pre>
+<pre>node SEB --b</pre>
+<pre>node SEB -build</pre>
 
 ### debug build
-<pre>npm run builddebug</pre>
+<pre>npm run debugbuild</pre>
+<pre>node SEB --d</pre>
+<pre>node SEB -debugbuild</pre>
 
 ### generate AssetDB.json from Assets folder
-<pre>npm run newadb</pre>
+<pre>npm run createadb</pre>
+<pre>node SEB --c</pre>
+<pre>node SEB -createADB</pre>
 
-### generate AssetDB.json from Assets folder and merge with existing AssetDB.json
-<pre>npm run mnewadb</pre>
+### update AssetDB.json, copy named assets from the existing db to a newly generated one
+<pre>npm run updateadb</pre>
+<pre>node SEB --u</pre>
+<pre>node SEB -updateADB</pre>
 
 ### start debug server
 <pre>npm run server</pre>
+<pre>npm SEB --s</pre>
+<pre>npm SEB --server</pre>
+
+### generate documentation
+<pre>npm run doc</pre>
 
 <br>
 

@@ -1,9 +1,9 @@
 {
     "scripts": {
-        "build": "node SEB",
-        "builddebug": "node SEB --d",
-        "newadb": "node SEB --a",
-        "mnewadb": "node SEB --m",
+        "build": "node SEB --b",
+        "debugbuild": "node SEB --d",
+        "createadb": "node SEB --c",
+        "updateadb": "node SEB --m",
         "server": "node SEB --s",
         "lint": "eslint . --ext .ts --ignore-path src/SnowballEngine",
         "lintfix": "eslint . --ext .ts --ignore-path src/SnowballEngine --fix",

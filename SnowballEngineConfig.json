@@ -18,6 +18,6 @@
     },
     "build": {
         "isDevelopmentBuild": true,
-        "addNewAssetsToDB": true
+        "updateADB": true
     }
 }
