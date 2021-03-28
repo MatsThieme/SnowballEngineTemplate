@@ -2,17 +2,19 @@ import { Timeout } from './Utilities/Timeout';
 
 export class Framedata {
     public updateInterval: number;
-    private lastTime: number;
-    private avgFramesPerSecond: number;
-    private frames: number;
-    private totalFrames: number;
+
+    private _lastTime: number;
+    private _avgFramesPerSecond: number;
+    private _frames: number;
+    private _totalFrames: number;
 
     public constructor(update = 1000) {
         this.updateInterval = update;
-        this.lastTime = performance.now();
-        this.avgFramesPerSecond = 0;
-        this.frames = 0;
-        this.totalFrames = 0;
+
+        this._lastTime = performance.now();
+        this._avgFramesPerSecond = 0;
+        this._frames = 0;
+        this._totalFrames = 0;
     }
 
     /**
@@ -21,17 +23,17 @@ export class Framedata {
      * 
      */
     public update(time = performance.now()): void {
-        this.frames++;
-        this.totalFrames++;
+        this._frames++;
+        this._totalFrames++;
 
         const now = time;
-        const delta = now - this.lastTime;
+        const delta = now - this._lastTime;
 
         if (delta >= this.updateInterval) {
-            const tF = this.frames / (delta / this.updateInterval);
-            this.avgFramesPerSecond = Math.round(tF / (delta / 1000));
-            this.frames -= tF;
-            this.lastTime = now;
+            const tF = this._frames / (delta / this.updateInterval);
+            this._avgFramesPerSecond = Math.round(tF / (delta / 1000));
+            this._frames -= tF;
+            this._lastTime = now;
         }
     }
 
@@ -41,7 +43,7 @@ export class Framedata {
      * 
      */
     public get fps(): number {
-        return this.avgFramesPerSecond;
+        return this._avgFramesPerSecond;
     }
 
 
@@ -51,10 +53,10 @@ export class Framedata {
      * 
      */
     public async measureFps(milliseconds: number): Promise<number> {
-        const frames = this.totalFrames;
+        const frames = this._totalFrames;
 
         await new Timeout(milliseconds);
 
-        return (this.totalFrames - frames) / milliseconds * 1000;
+        return (this._totalFrames - frames) / milliseconds * 1000;
     }
 }

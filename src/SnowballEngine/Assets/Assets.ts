@@ -12,10 +12,10 @@ declare global {
 }
 
 export class Assets {
-    private static readonly assets: Map<string, Asset> = new Map();
+    private static readonly _assets: Map<string, Asset> = new Map();
 
     public static get(id: AssetID): Asset | undefined {
-        return Assets.assets.get(id);
+        return Assets._assets.get(id);
     }
 
     public static delete(id: AssetID): void {
@@ -23,17 +23,17 @@ export class Assets {
 
         if (asset) {
             asset.destroy();
-            Assets.assets.delete(id);
+            Assets._assets.delete(id);
         }
     }
 
     public static set(asset: Asset, name: AssetID): Asset {
-        Assets.assets.set(name, asset);
+        Assets._assets.set(name, asset);
         return asset;
     }
 
     public static async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
-        if (name && Assets.assets.get(name) || !name && Assets.get(<AssetID>path)) {
+        if (name && Assets._assets.get(name) || !name && Assets.get(<AssetID>path)) {
             throw new Error('Asset not loaded: Asset with name/path exists');
         }
 
@@ -45,7 +45,7 @@ export class Assets {
             throw new Error(`Could not load Asset: ${path}; ${JSON.stringify(error)}`);
         }
 
-        Assets.assets.set(name || path, asset);
+        Assets._assets.set(name || path, asset);
 
         return asset;
     }

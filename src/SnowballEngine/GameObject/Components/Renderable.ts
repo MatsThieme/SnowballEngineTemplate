@@ -8,7 +8,6 @@ import { Component } from './Component';
 
 /**@category Component */
 export abstract class Renderable extends Component {
-    private _visible: boolean;
     public alignH: AlignH;
     public alignV: AlignV;
 
@@ -25,6 +24,7 @@ export abstract class Renderable extends Component {
 
     private _sprite?: Sprite | Container;
     private _size: Vector2;
+    private _visible: boolean;
 
     /**
      * 

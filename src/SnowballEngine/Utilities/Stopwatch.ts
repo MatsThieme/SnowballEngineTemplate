@@ -9,7 +9,7 @@ export class Stopwatch {
         if (start) this.start();
     }
 
-    private get now(): number {
+    private get _now(): number {
         if ((<any>window).chrome) return performance.now();
 
         return Math.max(performance.now(), GameTime.highresTimestamp);
@@ -20,13 +20,13 @@ export class Stopwatch {
 
         if (this._stop) return this._stop - this._start;
 
-        return this.now - this._start;
+        return this._now - this._start;
     }
     public set milliseconds(val: number) {
         if (this._stop !== undefined) {
-            this._stop = this.now;
+            this._stop = this._now;
             this._start = this._stop - val;
-        } else this._start = this.now - val;
+        } else this._start = this._now - val;
     }
 
     public get seconds(): number {
@@ -41,14 +41,14 @@ export class Stopwatch {
     }
 
     public start(): void {
-        if (this._stop !== undefined) this._start = this.now - (this._stop - (this._start || 0));
-        else this._start = this.now;
+        if (this._stop !== undefined) this._start = this._now - (this._stop - (this._start || 0));
+        else this._start = this._now;
 
         this._stop = undefined;
     }
 
     public stop(): void {
-        this._stop = this.now;
+        this._stop = this._now;
     }
 
     public reset(): void {

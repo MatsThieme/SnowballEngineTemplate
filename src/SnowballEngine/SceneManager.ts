@@ -2,8 +2,8 @@ import { Scene } from './Scene';
 import { Interval } from './Utilities/Interval';
 
 export class SceneManager {
-    private scenes: Map<SceneName, { initializer: (scene: Scene) => any, scene?: Scene }>;
-    private activeScene?: SceneName;
+    private _scenes: Map<SceneName, { initializer: (scene: Scene) => any, scene?: Scene }>;
+    private _activeScene?: SceneName;
 
     /**
     *
@@ -13,18 +13,18 @@ export class SceneManager {
     public readonly scene?: Scene;
 
     public constructor() {
-        this.scenes = new Map();
+        this._scenes = new Map();
     }
 
     public add(name: SceneName, sceneCb: (scene: Scene) => any): void {
-        this.scenes.set(name, { initializer: sceneCb });
+        this._scenes.set(name, { initializer: sceneCb });
     }
 
     public async load(name: SceneName): Promise<Scene> {
-        if (name === this.activeScene) await this.unload(this.activeScene);
+        if (name === this._activeScene) await this.unload(this._activeScene);
 
 
-        const sO = this.scenes.get(name);
+        const sO = this._scenes.get(name);
 
         if (sO) {
             Interval.clearAll();
@@ -42,10 +42,10 @@ export class SceneManager {
             await sO.scene.start();
 
 
-            if (this.activeScene) await this.unload(this.activeScene);
+            if (this._activeScene) await this.unload(this._activeScene);
 
 
-            this.activeScene = name;
+            this._activeScene = name;
 
 
             return sO.scene;
@@ -55,14 +55,14 @@ export class SceneManager {
     }
 
     public async unload(name: SceneName): Promise<void> {
-        const scene = this.scenes.get(name)?.scene;
+        const scene = this._scenes.get(name)?.scene;
 
         if (scene) {
             await scene.destroy();
 
-            delete this.scenes.get(name)!.scene;
+            delete this._scenes.get(name)!.scene;
 
-            this.activeScene = undefined;
+            this._activeScene = undefined;
         }
     }
 }

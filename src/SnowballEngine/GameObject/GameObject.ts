@@ -27,7 +27,7 @@ export class GameObject {
     public drawPriority: number;
     public hasCollider: boolean;
 
-    private static nextID = 0;
+    private static _nextID = 0;
 
     private __destroyed__: boolean;
     private readonly _components: Component[];
@@ -43,7 +43,7 @@ export class GameObject {
         if (!Scene.currentScene) throw new Error('No Scene loaded!');
         this.scene = Scene.currentScene;
 
-        this.id = GameObject.nextID++;
+        this.id = GameObject._nextID++;
         this.name = `${name} (${this.id})`;
 
         this.scene.gameObjects.set(this.name, this);

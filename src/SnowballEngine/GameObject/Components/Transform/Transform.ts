@@ -16,7 +16,7 @@ export class Transform extends Component implements Transformable {
 
     public readonly id: number;
 
-    private static nextID = 0;
+    private static _nextID = 0;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Transform);
@@ -26,7 +26,7 @@ export class Transform extends Component implements Transformable {
         this.scale = new Vector2(1, 1);
         this.parent = gameObject.parent?.transform;
 
-        this.id = Transform.nextID++;
+        this.id = Transform._nextID++;
     }
 
     public get children(): Transform[] {
@@ -201,7 +201,7 @@ export class Transform extends Component implements Transformable {
             rotation: new Angle(parent.rotation.radian + child.rotation.radian),
             scale: child.scale.clone.scale(parent.scale),
             parent: parent.parent,
-            id: Transform.nextID++
+            id: Transform._nextID++
         };
     }
 
@@ -222,7 +222,7 @@ export class Transform extends Component implements Transformable {
             rotation: new Angle(-child.rotation.radian),
             scale,
             parent,
-            id: Transform.nextID++
+            id: Transform._nextID++
         };
     }
 
@@ -239,7 +239,7 @@ export class Transform extends Component implements Transformable {
             rotation: new Angle(sibling.rotation.radian - targetSibling.rotation.radian),
             scale: Vector2.divide(targetSibling.scale, sibling.scale),
             parent: targetSibling,
-            id: Transform.nextID++
+            id: Transform._nextID++
         }
     }
 
@@ -257,7 +257,7 @@ export class Transform extends Component implements Transformable {
             rotation: new Angle(pixiObject.rotation),
             scale: new Vector2().copy(pixiObject.scale),
             parent,
-            id: (<any>pixiObject).__transformID__ || ((<any>pixiObject).__transformID__ = Transform.nextID++)
+            id: (<any>pixiObject).__transformID__ || ((<any>pixiObject).__transformID__ = Transform._nextID++)
         };
     }
 

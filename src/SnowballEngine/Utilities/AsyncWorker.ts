@@ -4,12 +4,12 @@ import { Interval } from 'SnowballEngine/Utilities/Interval';
 export class AsyncWorker {
     public maxWorkers: number;
 
-    private nextID: number;
+    private _nextID: number;
 
-    private url: string;
+    private _url: string;
 
-    private readonly workers: Worker[];
-    private readonly queue: QueueEntry[];
+    private readonly _workers: Worker[];
+    private readonly _queue: QueueEntry[];
 
     /**
      *
@@ -24,14 +24,14 @@ export class AsyncWorker {
      * 
      */
     public constructor(url: string, maxWorkers = 1, expirationTime = 1000) {
-        this.url = url;
+        this._url = url;
 
         this.maxWorkers = maxWorkers;
 
-        this.workers = [];
-        this.queue = [];
+        this._workers = [];
+        this._queue = [];
 
-        this.nextID = 0;
+        this._nextID = 0;
         this.expirationTime = expirationTime;
     }
 
@@ -45,18 +45,18 @@ export class AsyncWorker {
      */
     public task<T>(data: Record<string, unknown>, progress?: (data: Record<string, unknown>) => void): Promise<T> {
         return new Promise((resolve, reject) => {
-            this.queue.push({ data, progress, resolve: <(value?: Record<string, unknown>) => void>resolve, reject });
+            this._queue.push({ data, progress, resolve: <(value?: Record<string, unknown>) => void>resolve, reject });
             this.work();
         });
     }
 
     private async work(): Promise<void> {
         const worker = await this.getWorker();
-        if (!worker || worker.isBusy || this.queue.length === 0) return;
+        if (!worker || worker.isBusy || this._queue.length === 0) return;
 
         worker.isBusy = true;
 
-        const { data, progress, resolve, reject } = this.queue.splice(0, 1)[0];
+        const { data, progress, resolve, reject } = this._queue.splice(0, 1)[0];
 
         let p = 0;
 
@@ -95,28 +95,28 @@ export class AsyncWorker {
     }
 
     private async getWorker(): Promise<Worker | undefined> {
-        const w = this.workers.filter(w => !w.isBusy);
+        const w = this._workers.filter(w => !w.isBusy);
 
         if (w.length > 0) return w[0];
 
-        if (this.workers.length < this.maxWorkers) return await this.createWorker();
+        if (this._workers.length < this.maxWorkers) return await this.createWorker();
 
         return;
     }
 
     private removeWorker(id: number): void {
-        const i = this.workers.findIndex(v => v.id === id);
+        const i = this._workers.findIndex(v => v.id === id);
         if (i === -1) return;
-        this.workers.splice(i, 1)[0].terminate();
+        this._workers.splice(i, 1)[0].terminate();
     }
 
     private async createWorker(): Promise<Worker> {
-        const worker = new Worker(this.url);
+        const worker = new Worker(this._url);
 
         worker.isBusy = true;
-        worker.id = this.nextID++;
+        worker.id = this._nextID++;
 
-        this.workers.push(worker);
+        this._workers.push(worker);
 
         await this.warmup(worker);
 
@@ -137,7 +137,7 @@ export class AsyncWorker {
 
 
         if (work) {
-            for (let i = 0; i < Math.min(this.queue.length, this.maxWorkers); i++) {
+            for (let i = 0; i < Math.min(this._queue.length, this.maxWorkers); i++) {
                 this.work();
             }
         }
@@ -157,7 +157,7 @@ export class AsyncWorker {
             worker.onerror = () => {
                 worker.onmessage = null;
                 worker.onerror = null;
-                reject(new Error(`Error in worker: ${this.url}`));
+                reject(new Error(`Error in worker: ${this._url}`));
             };
 
             worker.postMessage(undefined);

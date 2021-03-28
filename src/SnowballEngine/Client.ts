@@ -69,14 +69,14 @@ export class Client {
         }
     }
 
-    private static resizeListener?: () => void;
+    private static _resizeListener?: () => void;
 
     public static async init(): Promise<void> {
         const el = Scene.currentScene?.domElement || window;
 
-        if (Client.resizeListener) el.removeEventListener('resize', Client.resizeListener);
+        if (Client._resizeListener) el.removeEventListener('resize', Client._resizeListener);
 
-        Client.resizeListener = () => {
+        Client._resizeListener = () => {
             const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
 
             (<Vector2>Client.resolution).x = (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
@@ -87,7 +87,7 @@ export class Client {
             Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(18.35)); // new Vector2(16, 9).magnitude = 18.35755975068582
         }
 
-        el.addEventListener('resize', Client.resizeListener);
+        el.addEventListener('resize', Client._resizeListener);
 
 
         if (!(<Mutable<typeof Client>>Client).hasMediaPlayPermission) {

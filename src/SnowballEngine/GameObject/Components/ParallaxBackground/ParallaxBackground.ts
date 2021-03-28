@@ -19,7 +19,7 @@ export class ParallaxBackground extends Renderable {
 
     private readonly _backgroundLayers: BackgroundLayer[];
 
-    private aabb: AABB;
+    private _aabb: AABB;
 
     /**
      * 
@@ -33,7 +33,7 @@ export class ParallaxBackground extends Renderable {
         this.cameras = [...gameObject.scene.cameraManager.cameras];
         this.scrollSpeed = 1;
 
-        this.aabb = new AABB(new Vector2(), new Vector2());
+        this._aabb = new AABB(new Vector2(), new Vector2());
 
         this._backgroundLayers = [];
 
@@ -45,7 +45,7 @@ export class ParallaxBackground extends Renderable {
     public onPreRender(camera: Camera): void {
         const i = this.cameras.findIndex(c => c.componentId === camera.componentId);
 
-        if (i === -1 || !camera.aabb.intersects(this.aabb)) return;
+        if (i === -1 || !camera.aabb.intersects(this._aabb)) return;
 
         this.calculateBackgroundForCamera(camera);
     }
@@ -80,8 +80,8 @@ export class ParallaxBackground extends Renderable {
         });
 
 
-        this.aabb.position.copy(t.position);
-        this.aabb.size.set(right - left, top - bot).scale(t.scale);
+        this._aabb.position.copy(t.position);
+        this._aabb.size.set(right - left, top - bot).scale(t.scale);
     }
 
     public addBackground(speed: number, asset: BackgroundLayerAsset): void {
@@ -96,7 +96,7 @@ export class ParallaxBackground extends Renderable {
 
         (<Graphics>this.sprite!.mask).clear()
             .beginFill(0)
-            .drawRect(this.aabb.position.x, this.aabb.position.y, this.aabb.size.x, this.aabb.size.y)
+            .drawRect(this._aabb.position.x, this._aabb.position.y, this._aabb.size.x, this._aabb.size.y)
             .endFill();
     }
 

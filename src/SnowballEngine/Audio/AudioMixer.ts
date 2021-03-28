@@ -20,7 +20,7 @@ export class AudioMixer {
     private readonly _sources: AudioSource[];
     private readonly _mixers: AudioMixer[];
 
-    private connected: boolean;
+    private _connected: boolean;
 
     private constructor() {
         this._id = AudioMixer._nextID++;
@@ -30,7 +30,7 @@ export class AudioMixer {
         this._sources = [];
         this._mixers = [];
 
-        this.connected = false;
+        this._connected = false;
 
         this.connect();
     }
@@ -143,7 +143,7 @@ export class AudioMixer {
 
     private disconnectEffects(): void {
         this._effects.forEach(e => e.node.disconnect());
-        if (this.connected) this.connect(this._destination);
+        if (this._connected) this.connect(this._destination);
     }
 
 
@@ -154,14 +154,14 @@ export class AudioMixer {
 
         this.node.connect(node || AudioListener.node);
 
-        this.connected = true;
+        this._connected = true;
     }
 
     public disconnect(): void {
-        if (!this.connected) return;
+        if (!this._connected) return;
         this.node.disconnect();
 
-        this.connected = false;
+        this._connected = false;
     }
 
     /**
