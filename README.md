@@ -8,7 +8,7 @@ Matter.js not yet integrated && physics currently not working properly
 # SnowballEngine
 
 **SnowballEngine is a 2D TypeScript game engine.**
-It manages scenes, game assets, simulates physics, renders assets, provides a simple structure and more
+It manages scenes, game assets, simulates physics, renders assets, provides a simple structure and more.
 
 ### setup
 <pre>npm i</pre>
@@ -45,12 +45,19 @@ src/
 dist/
 </pre>
 
+#### Behaviours
+[Behaviour](#behaviour)
+
 #### Configurables
-Configurables contains engine files the user will edit during the development process.\
+Configurables contains typedefinition files (.d.ts) the user will edit during the development process.\
 e.g. InputAction.d.ts for input mapping
 
 #### Prefabs
-Prefabs are functions that initialize a GameObject.
+Prefabs are files that export a function to initialize a GameObject.
+
+#### Scenes
+Scenes are files that export a function to initialize a Scene.
+
 
 <br>
 
@@ -88,7 +95,8 @@ export class Game {
 ```
 
 ### Behaviour
-A Behaviour is a Component with user-defined functionality.
+A Behaviour is a Component with user-defined functionality.\
+Base class for all Behaviours.
 
 ### Component
 A Component controls the behavior of the corresponding GameObject.
@@ -110,27 +118,16 @@ It's the audio counterpart of Camera.
 </br>
 
 ### AudioSource
-Emits positional Audio from a file(Asset).
-Can hold an AudioMixer object.
+Emits positional Audio.
+Can hold an AudioMixer object to filter/modify output.
 </br>
 
 ### Behaviour
-Base class for all Behaviours.
+[Behaviour](#behaviour)
 </br>
 
 ### Camera
 A Camera component displays a part of the world on screen.
-</br>
-
-### CircleCollider
-</br>
-
-### CircleRenderer
-Debug renderer, renders the CircleCollider on the same GameObject.
-</br>
-
-### Collider
-Base class for CircleCollider and PolygonCollider.
 </br>
 
 ### Component
@@ -142,16 +139,6 @@ A graphical component for rendering parallax scrolling images.
 </br>
 
 ### ParticleSystem
-</br>
-
-### PolygonCollider
-</br>
-
-### PolygonRenderer
-Debug renderer, renders the PolygonCollider on the same GameObject.
-</br>
-
-### RigidBody
 </br>
 
 ### Texture
