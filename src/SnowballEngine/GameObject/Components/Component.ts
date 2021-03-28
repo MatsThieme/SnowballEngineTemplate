@@ -2,7 +2,6 @@ import { ComponentType } from 'GameObject/ComponentType';
 import { Destroyable } from 'GameObject/Destroy';
 import { GameObject } from 'GameObject/GameObject';
 import { Debug } from 'SnowballEngine/Debug';
-import { clearObject } from 'Utility/Helpers';
 import { Camera } from './Camera';
 
 /**@category Component */
@@ -13,7 +12,6 @@ export abstract class Component implements Destroyable {
     public readonly type: ComponentType;
     public readonly componentId: number;
 
-    private __destroyed__: boolean;
     private _active: boolean;
 
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Component) {
@@ -22,7 +20,6 @@ export abstract class Component implements Destroyable {
         this.componentId = Component._nextCID++;
 
         this._active = true;
-        this.__destroyed__ = false;
     }
 
     /**
@@ -51,26 +48,15 @@ export abstract class Component implements Destroyable {
      * 
      * Remove this from this.gameObject and delete all references.
      * 
-     * @param componentHasNoGameObject internally used in gameObject.removeComponent to prevent a second unnecessary call of gameObject.removeComponent
-     * 
      */
-    public destroy(componentHasNoGameObject = false): void {
-        if (this.__destroyed__ === true || this.onDestroy && this.onDestroy() === false) return;
+    public destroy(): void {
+        if (this.onDestroy) this.onDestroy();
 
-        this.__destroyed__ = true;
-
-        const d = () => {
-            if (componentHasNoGameObject) this.gameObject.removeComponent(this);
-
-            clearObject(this, true);
-        }
-
-        if (this.gameObject.scene.isRunning) (<any>this.gameObject.scene)._destroyCbs.push(d);
-        else d();
+        if (this.gameObject) this.gameObject.removeComponent(this);
     }
 }
 
-export interface Component {
+export interface Component extends Destroyable {
     /**
     *
     * Called before camera renders.
@@ -119,8 +105,7 @@ export interface Component {
     /**
     *
     * Called when the Component is removed from the GameObject.
-    * Return false to cancel destoy.
     *
     */
-    onDestroy?(): boolean;
+    onDestroy?(): void;
 }

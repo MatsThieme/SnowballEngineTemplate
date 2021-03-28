@@ -2,7 +2,6 @@ import { Container } from '@pixi/display';
 import { Debug } from 'SnowballEngine/Debug';
 import { Collision } from 'SnowballEngine/Physics/Collision';
 import { Scene } from 'SnowballEngine/Scene';
-import { clearObject } from 'Utility/Helpers';
 import { Vector2 } from 'Utility/Vector2';
 import { Behaviour } from './Components/Behaviour';
 import { Collider } from './Components/Collider';
@@ -10,6 +9,7 @@ import { Component } from './Components/Component';
 import { RigidBody } from './Components/RigidBody';
 import { Transform } from './Components/Transform/Transform';
 import { ComponentType } from './ComponentType';
+import { Destroy, Destroyable } from './Destroy';
 
 /**
  * 
@@ -17,7 +17,7 @@ import { ComponentType } from './ComponentType';
  * @category Scene
  * 
  */
-export class GameObject {
+export class GameObject implements Destroyable {
     public readonly id: number;
     public readonly name: string;
 
@@ -30,7 +30,6 @@ export class GameObject {
 
     private static _nextID = 0;
 
-    private __destroyed__: boolean;
     private readonly _components: Map<ComponentType, Component[]>;
     private _active: boolean;
     private _parent?: GameObject;
@@ -59,7 +58,6 @@ export class GameObject {
         this.drawPriority = 0;
         this.hasCollider = false;
 
-        this.__destroyed__ = false;
         this._components = new Map();
         this._active = true;
 
@@ -156,6 +154,7 @@ export class GameObject {
             this._components.set(component.type, components);
         } else if (component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap || component.type === ComponentType.ParallaxBackground) {
             const type = component.type;
+            if (component.prepareDestroy) component.prepareDestroy();
             component.destroy();
             throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
@@ -204,7 +203,9 @@ export class GameObject {
 
         if (component.componentId === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
 
-        components.splice(i, 1)[0].destroy(true);
+        const c = components.splice(i, 1)[0];
+        (<Mutable<Partial<T>>><unknown>c).gameObject = undefined;
+        Destroy(c);
     }
 
     /**
@@ -285,13 +286,9 @@ export class GameObject {
      * 
      */
     public addChild(gameObject: GameObject): void {
-        if (gameObject._parent) {
-            gameObject._parent.removeChild(gameObject);
-        }
+        gameObject.setParent(this);
 
         this.children.push(gameObject);
-
-        gameObject.setParent(this);
     }
 
     public removeChild(gameObject: GameObject): void {
@@ -306,7 +303,16 @@ export class GameObject {
         gameObject.setParent(undefined);
     }
 
+    /**
+     *  
+     * Set gameObject to be the parent of this
+     * 
+     */
     private setParent(gameObject: GameObject | undefined): void {
+        if (this._parent) {
+            this._parent.removeChild(this);
+        }
+
         this._parent = gameObject;
 
         this.connectCamera();
@@ -356,30 +362,21 @@ export class GameObject {
         this.container.scale.copyFrom(this.transform.scale);
     }
 
+    public prepareDestroy(): void {
+        [...this._components.values()].flat(1).forEach(c => Destroy(c));
+        this.children.forEach(c => Destroy(c));
+    }
+
     /**
      * 
      * Remove this from scene and delete all references.
      * All components, children and their components will be destroyed.
+     * @internal
      * 
      */
     public destroy(): void {
-        if (this.__destroyed__ !== false) return;
-        this.__destroyed__ = true;
+        this.scene.gameObjects.delete(this.name);
 
-        this.children.forEach(c => c.destroy());
-
-        const d = () => {
-            this.scene.gameObjects.delete(this.name);
-
-            const i = this._parent?.children.findIndex(v => v.name === this.name);
-            if (i && i !== -1) this._parent?.children.splice(i, 1);
-
-            [...this._components.values()].flat(1).forEach(c => c.destroy());
-
-            clearObject(this, true);
-        };
-
-        if (this.scene.isRunning) (<any>this.scene)._destroyCbs.push(d);
-        else d();
+        this.parent?.removeChild(this);
     }
 }

@@ -1,12 +1,12 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
+import { Disposable, Dispose } from 'GameObject/Dispose';
 import { GameTime } from 'SnowballEngine/GameTime';
-import { clearObject } from 'Utility/Helpers';
 import { Vector2 } from 'Utility/Vector2';
 import { SpriteAnimation } from '../AnimatedSprite/SpriteAnimation';
 import { ParticleSystem } from './ParticleSystem';
 
-export class Particle {
+export class Particle implements Disposable {
     private _sprite: Sprite;
     private readonly _container: Container;
     private readonly _particleSettings: ParticleSettings;
@@ -126,12 +126,10 @@ export class Particle {
         return new Vector2(this._sprite.x, this._sprite.y);
     }
 
-    public destroy(): void {
-        if (this.spriteAnimation) this.spriteAnimation.destroy();
+    public dispose(): void {
+        if (this.spriteAnimation) Dispose(this.spriteAnimation);
         else this._sprite.destroy({ children: true, texture: true, baseTexture: false });
 
-        this._container.destroy({ children: true, texture: true, baseTexture: false });
-
-        clearObject(this);
+        if (this._container.destroy) this._container.destroy({ children: true, texture: true, baseTexture: false });
     }
 }

@@ -8,7 +8,6 @@ import { Client } from 'SnowballEngine/Client';
 import { Input } from 'SnowballEngine/Input/Input';
 import { UIElementType } from 'UI/UIElementType';
 import { UIMenu } from 'UI/UIMenu';
-import { clearObject } from 'Utility/Helpers';
 import { Vector2 } from 'Utility/Vector2';
 import { _AABB } from 'Utility/_AABB';
 
@@ -204,6 +203,5 @@ export class UIElement implements Destroyable {
 
     public destroy(): void {
         this.container.destroy();
-        clearObject(this);
     }
 }

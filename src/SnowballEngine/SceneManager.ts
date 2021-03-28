@@ -3,9 +3,6 @@ import { Scene } from './Scene';
 
 /** @category Scene */
 export class SceneManager {
-    private _scenes: Map<SceneName, { initializer: (scene: Scene) => any, scene?: Scene }>;
-    private _activeScene?: SceneName;
-
     /**
     *
     * Returns the loaded Scene instance.
@@ -13,57 +10,42 @@ export class SceneManager {
     */
     public readonly scene?: Scene;
 
+    private _scenes: Map<SceneName, (scene: Scene) => Promise<void> | void>;
+
     public constructor() {
         this._scenes = new Map();
     }
 
-    public add(name: SceneName, sceneCb: (scene: Scene) => any): void {
-        this._scenes.set(name, { initializer: sceneCb });
+    public add(name: SceneName, sceneInitializer: (scene: Scene) => Promise<void> | void): void {
+        this._scenes.set(name, sceneInitializer);
     }
 
     public async load(name: SceneName): Promise<Scene> {
-        if (name === this._activeScene) await this.unload(this._activeScene);
+        const initializer = this._scenes.get(name);
 
-
-        const sO = this._scenes.get(name);
-
-        if (sO) {
+        if (initializer) {
             Interval.clearAll();
 
-            if (!sO.scene) {
-                const scene = new Scene(this, name);
-                (<Mutable<SceneManager>>this).scene = scene;
+            if (this.scene) await this.unload();
 
-                await sO.initializer(scene);
+            const scene = new Scene(this, name);
+            (<Mutable<SceneManager>>this).scene = scene;
 
-                sO.scene = scene;
-            }
+            await initializer(scene);
+            await scene.start();
 
-
-            await sO.scene.start();
-
-
-            if (this._activeScene) await this.unload(this._activeScene);
-
-
-            this._activeScene = name;
-
-
-            return sO.scene;
+            return scene;
         }
 
         throw `No Scene named ${name} found`;
     }
 
-    public async unload(name: SceneName): Promise<void> {
-        const scene = this._scenes.get(name)?.scene;
-
-        if (scene) {
-            await scene.destroy();
-
-            delete this._scenes.get(name)!.scene;
-
-            this._activeScene = undefined;
-        }
+    /**
+     * 
+     * Unload the current scene.
+     * 
+     */
+    public async unload(): Promise<void> {
+        await this.scene?.unload();
     }
 }

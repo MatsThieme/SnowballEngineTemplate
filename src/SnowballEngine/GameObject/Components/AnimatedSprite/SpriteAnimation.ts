@@ -2,10 +2,11 @@ import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
+import { Disposable } from 'GameObject/Dispose';
 import { Debug } from 'SnowballEngine/Debug';
 import { GameTime } from 'SnowballEngine/GameTime';
 
-export class SpriteAnimation {
+export class SpriteAnimation implements Disposable {
     /**
      * 
      * Milliseconds a sprite is shown until it is replaced by another one.
@@ -91,7 +92,7 @@ export class SpriteAnimation {
         this._timer = 0;
     }
 
-    public destroy(): void {
+    public dispose(): void {
         this.container.destroy({ children: true, texture: true, baseTexture: false });
     }
 }

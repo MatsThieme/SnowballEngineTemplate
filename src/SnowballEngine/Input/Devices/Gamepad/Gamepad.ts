@@ -1,3 +1,4 @@
+import { Dispose } from 'GameObject/Dispose';
 import { Input } from 'SnowballEngine/Input/Input';
 import { InputAxis } from 'SnowballEngine/Input/InputAxis';
 import { InputButton } from 'SnowballEngine/Input/InputButton';
@@ -135,7 +136,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
 
     private static onGamepadDisconnected(e: GamepadEvent) {
         if (Gamepad._gamepads[e.gamepad.index]) {
-            Gamepad._gamepads[e.gamepad.index]!.destroy();
+            Dispose(Gamepad._gamepads[e.gamepad.index]!);
             Gamepad._gamepads[e.gamepad.index] = undefined;
         }
     }
@@ -163,7 +164,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
 
     public static reset(): void {
         for (const g of Gamepad.gamepads) {
-            g.destroy();
+            Dispose(g);
         }
 
         Gamepad._gamepads = [];

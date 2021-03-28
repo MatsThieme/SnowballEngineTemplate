@@ -1,6 +1,7 @@
 import { Container } from '@pixi/display';
 import { TilingSprite } from '@pixi/sprite-tiling';
-import { clamp, clearObject } from 'Utility/Helpers';
+import { Disposable } from 'GameObject/Dispose';
+import { clamp } from 'Utility/Helpers';
 import { Vector2 } from 'Utility/Vector2';
 import { Camera } from '../Camera';
 import { Transform } from '../Transform/Transform';
@@ -8,7 +9,7 @@ import { BackgroundLayerAsset } from './BackgroundLayerAsset';
 import { BackgroundLayerSprite } from './BackgroundLayerSprite';
 import { ParallaxBackground } from './ParallaxBackground';
 
-export class BackgroundLayer {
+export class BackgroundLayer implements Disposable {
     /** speed from 0 to 1, 0 == near(no movement), 1 == far(camera speed) */
     public readonly speed: number;
 
@@ -59,9 +60,7 @@ export class BackgroundLayer {
         this.backgroundLayerSprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.backgroundLayerSprite.size.x / 2)));
     }
 
-    public destroy(): void {
+    public dispose(): void {
         this.backgroundLayerSprite.sprite.destroy({ children: true, texture: true, baseTexture: false });
-
-        clearObject(this);
     }
 }

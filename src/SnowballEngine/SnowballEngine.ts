@@ -49,6 +49,7 @@ export * from './GameObject/Components/Transform/Transform';
 export * from './GameObject/Components/Video';
 export * from './GameObject/ComponentType';
 export * from './GameObject/Destroy';
+export * from './GameObject/Dispose';
 export * from './GameObject/GameObject';
 export * from './GameObject/Instantiate';
 export * from './GameTime';
@@ -93,4 +94,3 @@ export * from './UI/UIElements/UITextInputField';
 export * from './UI/UIElementType';
 export * from './UI/UIFonts';
 export * from './UI/UIMenu';
-

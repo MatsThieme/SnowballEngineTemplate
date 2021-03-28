@@ -1,6 +1,5 @@
 import { Camera } from 'GameObject/Components/Camera';
 import { ComponentType } from 'GameObject/ComponentType';
-import { Destroyable } from 'GameObject/Destroy';
 import { GameObject } from 'GameObject/GameObject';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
@@ -10,7 +9,7 @@ import { Vector2 } from 'Utility/Vector2';
 import { PIXI } from './PIXI';
 
 /** @category Camera */
-export class CameraManager implements Destroyable {
+export class CameraManager {
     public readonly cameras: Camera[];
     public renderScale: number;
 

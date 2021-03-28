@@ -1,8 +1,8 @@
-import { Destroyable } from 'GameObject/Destroy';
+import { Disposable } from 'GameObject/Dispose';
 import { InputEvent } from './InputEvent';
 
 /** @category Input */
-export class InputEventTarget implements Destroyable {
+export class InputEventTarget implements Disposable {
     protected _listeners: Map<string, { cb: (e: InputEvent) => any, type: InputAction }>;
 
     public constructor() {
@@ -23,9 +23,7 @@ export class InputEventTarget implements Destroyable {
         this._listeners?.delete(id);
     }
 
-    public destroy(): void {
+    public dispose(): void {
         this._listeners.clear();
-
-        delete (<any>this)._listeners;
     }
 }

@@ -1,10 +1,11 @@
 import { AudioListener } from 'GameObject/Components/AudioListener';
 import { AudioSource } from 'GameObject/Components/AudioSource';
+import { Disposable, Dispose } from 'GameObject/Dispose';
 import { clamp } from 'Utility/Helpers';
 import { AudioEffect } from './AudioEffect';
 
 /** @category Audio */
-export class AudioMixer {
+export class AudioMixer implements Disposable {
     private static _mixers: Map<string, AudioMixer> = new Map();
     private static _nextID = 0;
     private readonly _id: number;
@@ -199,16 +200,15 @@ export class AudioMixer {
         this._sources.forEach(s => s.node.disconnect());
     }
 
-    public destroy(): void {
+    public dispose(): void {
         this.disconnect();
         this.disconnectEffects();
         this.disconnectSources();
-
     }
 
     public static reset(): void {
         for (const mixer of this._mixers.values()) {
-            mixer.destroy();
+            Dispose(mixer);
         }
     }
 }

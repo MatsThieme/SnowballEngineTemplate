@@ -1,5 +1,6 @@
 import { Container } from '@pixi/display';
 import { ComponentType } from 'GameObject/ComponentType';
+import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { GameTime } from 'SnowballEngine/GameTime';
 import { Angle } from 'Utility/Angle';
@@ -81,9 +82,15 @@ export class ParticleSystem extends Renderable {
 
                 this.sprite?.removeChild(particle.container);
 
-                particle.destroy();
+                Dispose(particle);
             }
             else this._particles[i].update();
         }
+    }
+
+    public destroy(): void {
+        this.particles.forEach(p => Dispose(p));
+
+        super.destroy();
     }
 }

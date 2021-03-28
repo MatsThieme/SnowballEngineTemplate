@@ -21,6 +21,11 @@ export class Mouse extends InputEventTarget implements InputDevice {
     private _buttons: InputButton[];
     private _fireListener: boolean;
 
+    private _onMouseDown: (e: MouseEvent) => void;
+    private _onMouseUp: (e: MouseEvent) => void;
+    private _onMouseMove: (e: MouseEvent) => void;
+    private _onContextMenu: (e: MouseEvent) => void;
+
     public constructor() {
         super();
 
@@ -29,40 +34,44 @@ export class Mouse extends InputEventTarget implements InputDevice {
         this._prevPosition = new InputAxis();
         this._fireListener = false;
 
+
+
+        this._onMouseMove = ((e: MouseEvent) => {
+            this._prevPosition.values = this._position.values;
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+
+            this._fireListener = true;
+        }).bind(this);
+
+        this._onMouseUp = ((e: MouseEvent) => {
+            this._prevPosition.values = this._position.values;
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+
+            if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
+
+            this._buttons[e.button].down = false;
+
+            this._fireListener = true;
+        }).bind(this);
+
+        this._onMouseDown = ((e: MouseEvent) => {
+            this._prevPosition.values = this._position.values;
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+
+            if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
+
+            this._buttons[e.button].down = false;
+
+            this._fireListener = true;
+        }).bind(this);
+
+        this._onContextMenu = ((e: MouseEvent) => {
+            e.preventDefault();
+        }).bind(this);
+
+
+
         this.addListeners();
-    }
-
-    private onMouseMove(e: MouseEvent): void {
-        this._prevPosition.values = this._position.values;
-        this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
-
-        this._fireListener = true;
-    }
-
-    private onMouseUp(e: MouseEvent): void {
-        this._prevPosition.values = this._position.values;
-        this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
-
-        if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
-
-        this._buttons[e.button].down = false;
-
-        this._fireListener = true;
-    }
-
-    private onMouseDown(e: MouseEvent): void {
-        this._prevPosition.values = this._position.values;
-        this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
-
-        if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
-
-        this._buttons[e.button].down = true;
-
-        this._fireListener = true;
-    }
-
-    private onContextMenu(e: MouseEvent): void {
-        e.preventDefault()
     }
 
     public getButton(btn: MouseButton): Readonly<InputButton> | undefined {
@@ -104,21 +113,21 @@ export class Mouse extends InputEventTarget implements InputDevice {
     }
 
     private addListeners(): void {
-        window.addEventListener('mousedown', this.onMouseDown.bind(this));
-        window.addEventListener('mouseup', this.onMouseUp.bind(this));
-        window.addEventListener('mousemove', this.onMouseMove.bind(this));
-        if (!projectConfig.settings.allowContextMenu) window.addEventListener('contextmenu', this.onContextMenu.bind(this));
+        window.addEventListener('mousedown', this._onMouseDown);
+        window.addEventListener('mouseup', this._onMouseUp);
+        window.addEventListener('mousemove', this._onMouseMove);
+        if (!projectConfig.settings.allowContextMenu) window.addEventListener('contextmenu', this._onContextMenu);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('mousedown', this.onMouseDown.bind(this));
-        window.removeEventListener('mouseup', this.onMouseUp.bind(this));
-        window.removeEventListener('mousemove', this.onMouseMove.bind(this));
-        window.removeEventListener('contextmenu', this.onContextMenu.bind(this));
+        window.removeEventListener('mousedown', this._onMouseDown);
+        window.removeEventListener('mouseup', this._onMouseUp);
+        window.removeEventListener('mousemove', this._onMouseMove);
+        window.removeEventListener('contextmenu', this._onContextMenu);
     }
 
-    public destroy(): void {
-        super.destroy();
+    public dispose(): void {
+        super.dispose();
         this.removeListeners();
     }
 }

@@ -1,4 +1,5 @@
 import { AudioListener } from 'GameObject/Components/AudioListener';
+import { Destroy } from 'GameObject/Destroy';
 import { Interval } from 'Utility/Interval';
 import { Timeout } from 'Utility/Timeout';
 import AssetDB from '../../../Assets/AssetDB.json';
@@ -23,7 +24,7 @@ export class Assets {
         const asset = Assets.get(id);
 
         if (asset) {
-            asset.destroy();
+            Destroy(asset);
             Assets._assets.delete(id);
         }
     }

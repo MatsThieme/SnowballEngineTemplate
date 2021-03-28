@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
-import { Destroyable } from 'GameObject/Destroy';
+import { Destroy, Destroyable } from 'GameObject/Destroy';
 import { Scene } from 'SnowballEngine/Scene';
 import { Vector2 } from 'Utility/Vector2';
 import { UIElement } from './UIElements/UIElement';
@@ -147,9 +147,13 @@ export class UIMenu implements Destroyable {
         await Promise.all([...this._uiElements.values()].map(e => e.update()));
     }
 
-    public destroy(): void {
+    public prepareDestroy(): void {
         for (const uiElement of this._uiElements.values()) {
-            uiElement.destroy();
+            Destroy(uiElement);
         }
+    }
+
+    public destroy(): void {
+        this.container.destroy();
     }
 }

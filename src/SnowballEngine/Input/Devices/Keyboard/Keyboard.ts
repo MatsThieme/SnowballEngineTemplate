@@ -14,6 +14,9 @@ export class Keyboard extends InputEventTarget implements InputDevice {
     private _fireListener: Map<KeyboardButton, boolean>;
     private _axesKeys: Map<KeyboardAxis, KeyboardButton[]>;
 
+    private _onKeyDown: (e: KeyboardEvent) => void;
+    private _onKeyUp: (e: KeyboardEvent) => void;
+
     public constructor() {
         super();
 
@@ -21,33 +24,37 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         this._fireListener = new Map();
         this._axesKeys = new Map();
 
+
+
+        this._onKeyDown = ((e: KeyboardEvent) => {
+            let btn = this._keys.get(<KeyboardButton>e.code);
+
+            if (!btn) {
+                btn = new InputButton();
+                this._keys.set(<KeyboardButton>e.code, btn);
+            }
+
+            btn.down = true;
+
+            if (!btn.clicked) this._fireListener.set(<KeyboardButton>e.code, true);
+        }).bind(this);
+
+        this._onKeyUp = ((e: KeyboardEvent) => {
+            let btn = this._keys.get(<KeyboardButton>e.code);
+
+            if (!btn) {
+                btn = new InputButton();
+                this._keys.set(<KeyboardButton>e.code, btn);
+            }
+
+            btn.down = false;
+
+            this._fireListener.set(<KeyboardButton>e.code, true);
+        }).bind(this);
+
+
+
         this.addListeners();
-    }
-
-    private onKeyDown(e: KeyboardEvent): void {
-        let btn = this._keys.get(<KeyboardButton>e.code);
-
-        if (!btn) {
-            btn = new InputButton();
-            this._keys.set(<KeyboardButton>e.code, btn);
-        }
-
-        btn.down = true;
-
-        if (!btn.clicked) this._fireListener.set(<KeyboardButton>e.code, true);
-    }
-
-    private onKeyUp(e: KeyboardEvent): void {
-        let btn = this._keys.get(<KeyboardButton>e.code);
-
-        if (!btn) {
-            btn = new InputButton();
-            this._keys.set(<KeyboardButton>e.code, btn);
-        }
-
-        btn.down = false;
-
-        this._fireListener.set(<KeyboardButton>e.code, true);
     }
 
     public getButton(btn: KeyboardButton): Readonly<InputButton> | undefined {
@@ -126,17 +133,17 @@ export class Keyboard extends InputEventTarget implements InputDevice {
     }
 
     private addListeners(): void {
-        window.addEventListener('keydown', this.onKeyDown.bind(this));
-        window.addEventListener('keyup', this.onKeyUp.bind(this));
+        window.addEventListener('keydown', this._onKeyDown);
+        window.addEventListener('keyup', this._onKeyUp);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('keydown', this.onKeyDown.bind(this));
-        window.removeEventListener('keyup', this.onKeyUp.bind(this));
+        window.removeEventListener('keydown', this._onKeyDown);
+        window.removeEventListener('keyup', this._onKeyUp);
     }
 
-    public destroy(): void {
-        super.destroy();
+    public dispose(): void {
+        super.dispose();
         this.removeListeners();
     }
 }

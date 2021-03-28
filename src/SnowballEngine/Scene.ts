@@ -3,6 +3,8 @@ import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Behaviour } from 'GameObject/Components/Behaviour';
 import { Component } from 'GameObject/Components/Component';
 import { ComponentType } from 'GameObject/ComponentType';
+import { Destroy, Destroyable } from 'GameObject/Destroy';
+import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { Input } from 'Input/Input';
 import { UI } from 'UI/UI';
@@ -34,7 +36,7 @@ export class Scene {
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
      * 
      */
-    private readonly _destroyCbs: (() => void)[];
+    private readonly _destroyables: Destroyable[];
 
     public static readonly sceneManager: SceneManager;
     public static readonly currentScene: Scene;
@@ -55,7 +57,7 @@ export class Scene {
         this.ui = new UI();
         this.cameraManager = new CameraManager();
         this.framedata = new Framedata();
-        this._destroyCbs = [];
+        this._destroyables = [];
 
         this.domElement = this.cameraManager.canvas;
         this.domElement.id = this.name;
@@ -183,10 +185,8 @@ export class Scene {
         this.cameraManager.update();
 
 
-        if (this._destroyCbs.length) {
-            this._destroyCbs.forEach(d => d());
-            this._destroyCbs.splice(0);
-        }
+        this.destroy();
+
 
         if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
@@ -248,7 +248,7 @@ export class Scene {
                     i.clear();
                     resolve();
                 }
-            }, 1);
+            }, 10);
         });
     }
 
@@ -261,23 +261,50 @@ export class Scene {
                     i.clear();
                     resolve();
                 }
-            }, 1);
+            }, 10);
         });
     }
 
-    public async destroy(): Promise<void> {
+    /**
+     * 
+     * Register a Destroyable to destroy at the end of the current frame. Used by Destroy(destroyable: Destroyable)
+     * @internal
+     * 
+     */
+    public addDestroyable(destroyable: Destroyable): void {
+        this._destroyables.push(destroyable);
+    }
+
+    /**
+     * 
+     * Destroy all destroyables
+     * 
+     */
+    private destroy(): void {
+        this._destroyables.forEach(d => d.destroy());
+        this._destroyables.splice(0).forEach(d => Dispose(d));
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
+    public async unload(): Promise<void> {
         await this.stop();
 
         for (const gameObject of this.gameObjects.values()) {
-            gameObject.destroy();
+            Destroy(gameObject);
         }
+
+        Destroy(this.ui);
+
+        this.destroy();
 
         this.cameraManager.destroy();
 
-        this.ui.destroy();
-
         AudioMixer.reset();
 
-        clearObject(this);
+        clearObject(this, true);
     }
 }

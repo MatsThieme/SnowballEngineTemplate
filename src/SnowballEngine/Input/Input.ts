@@ -1,3 +1,4 @@
+import { Dispose } from 'GameObject/Dispose';
 import InputMappingAxes from '../../../Assets/InputMappingAxes.json';
 import InputMappingButtons from '../../../Assets/InputMappingButtons.json';
 import { Gamepad } from './Devices/Gamepad/Gamepad';
@@ -66,7 +67,7 @@ export class Input {
             }
         } else {
             if (Input.keyboard) {
-                Input.keyboard.destroy();
+                Dispose(Input.keyboard);
                 delete (<any>Input).keyboard;
             }
         }
@@ -78,7 +79,7 @@ export class Input {
             }
         } else {
             if (Input.mouse) {
-                Input.mouse.destroy();
+                Dispose(Input.mouse);
                 delete (<any>Input).mouse;
             }
         }
@@ -90,7 +91,7 @@ export class Input {
             }
         } else {
             if (Input.touch) {
-                Input.touch.destroy();
+                Dispose(Input.touch);
                 delete (<any>Input).touch;
             }
         }
@@ -175,9 +176,9 @@ export class Input {
     }
 
     public static reset(): void {
-        Input.touch?.destroy();
-        Input.mouse?.destroy();
-        Input.keyboard?.destroy();
+        if (Input.touch) Dispose(Input.touch);
+        if (Input.mouse) Dispose(Input.mouse);
+        if (Input.keyboard) Dispose(Input.keyboard);
         Input.gamepad?.reset();
 
         Input.start();

@@ -87,7 +87,7 @@ export class UIText extends UIElement {
 
     public destroy(): void {
         window.removeEventListener('resize', this._resizeListener);
-        console.log(this.text)
+
         super.destroy();
     }
 }

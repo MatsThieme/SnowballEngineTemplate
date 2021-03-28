@@ -1,5 +1,5 @@
 import { Container } from '@pixi/display';
-import { Destroyable } from 'GameObject/Destroy';
+import { Destroy, Destroyable } from 'GameObject/Destroy';
 import { Debug } from 'SnowballEngine/Debug';
 import { UIMenu } from 'UI/UIMenu';
 import { UIMenuNavigation } from 'UI/UIMenuNavigation';
@@ -61,7 +61,7 @@ export class UI implements Destroyable {
 
         if (menu) {
             this.container.removeChild(menu.container);
-            menu.destroy();
+            Destroy(menu);
             this.menus.delete(name);
         } else {
             Debug.warn(`No Menu identified by ${name}`);
@@ -94,11 +94,13 @@ export class UI implements Destroyable {
 
     }
 
-    public destroy(): void {
+    public prepareDestroy(): void {
         for (const menu of this.menus.values()) {
-            menu.destroy();
+            Destroy(menu);
         }
+    }
 
+    public destroy(): void {
         this.container.destroy();
     }
 }

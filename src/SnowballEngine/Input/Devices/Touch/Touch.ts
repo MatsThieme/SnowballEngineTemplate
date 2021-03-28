@@ -14,6 +14,8 @@ export class Touch extends InputEventTarget implements InputDevice {
     private _button: InputButton;
     private _fireListener: boolean;
 
+    private _onTouchEvent: (e: TouchEvent) => void;
+
     public constructor() {
         super();
 
@@ -21,22 +23,26 @@ export class Touch extends InputEventTarget implements InputDevice {
         this._positions = [];
         this._fireListener = false;
 
+
+
+        this._onTouchEvent = ((e: TouchEvent) => {
+            e.preventDefault();
+
+            this._positions.splice(0);
+
+            for (let i = 0; i < e.touches.length; i++) {
+                const item = e.touches[i];
+                this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio), Math.round(item.clientY * window.devicePixelRatio)]);
+            }
+
+            this._button.down = !!e.touches.length;
+
+            this._fireListener = true;
+        }).bind(this);
+
+
+
         this.addListeners();
-    }
-
-    private onTouchEvent(e: TouchEvent): void {
-        e.preventDefault();
-
-        this._positions.splice(0);
-
-        for (let i = 0; i < e.touches.length; i++) {
-            const item = e.touches[i];
-            this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio), Math.round(item.clientY * window.devicePixelRatio)]);
-        }
-
-        this._button.down = !!e.touches.length;
-
-        this._fireListener = true;
     }
 
     public getButton(btn: TouchButton): Readonly<InputButton> | undefined {
@@ -75,19 +81,19 @@ export class Touch extends InputEventTarget implements InputDevice {
     }
 
     private addListeners(): void {
-        window.addEventListener('touchstart', this.onTouchEvent.bind(this));
-        window.addEventListener('touchend', this.onTouchEvent.bind(this));
-        window.addEventListener('touchmove', this.onTouchEvent.bind(this));
+        window.addEventListener('touchstart', this._onTouchEvent);
+        window.addEventListener('touchend', this._onTouchEvent);
+        window.addEventListener('touchmove', this._onTouchEvent);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('touchstart', this.onTouchEvent.bind(this));
-        window.removeEventListener('touchend', this.onTouchEvent.bind(this));
-        window.removeEventListener('touchmove', this.onTouchEvent.bind(this));
+        window.removeEventListener('touchstart', this._onTouchEvent);
+        window.removeEventListener('touchend', this._onTouchEvent);
+        window.removeEventListener('touchmove', this._onTouchEvent);
     }
 
-    public destroy(): void {
-        super.destroy();
+    public dispose(): void {
+        super.dispose();
         this.removeListeners();
     }
 }

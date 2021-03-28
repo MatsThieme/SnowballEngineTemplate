@@ -2,6 +2,7 @@ import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { AssetType } from 'Assets/AssetType';
 import { ComponentType } from 'GameObject/ComponentType';
+import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { AABB } from 'SnowballEngine/Physics/AABB';
 import { Angle } from 'Utility/Angle';
@@ -104,5 +105,11 @@ export class ParallaxBackground extends Renderable {
         for (const backgroundLayer of this._backgroundLayers) {
             backgroundLayer.updateSpriteForCamera(camera);
         }
+    }
+
+    public destroy(): void {
+        this._backgroundLayers.forEach(l => Dispose(l));
+
+        super.destroy();
     }
 }
