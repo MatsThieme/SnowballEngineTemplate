@@ -5,7 +5,7 @@ import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
 import projectConfig from '../../../SnowballEngineConfig.json';
 import { Client } from '../Client';
-import { D } from '../Debug';
+import { Debug } from '../Debug';
 
 export class PIXI {
     public readonly renderer: Renderer;
@@ -37,7 +37,7 @@ export class PIXI {
     }
 
     public resize(width: number, height: number): void {
-        if (this.renderer.context.isLost) D.warn('context lost');
+        if (this.renderer.context.isLost) Debug.warn('context lost');
         else if (this.renderer.width !== width || this.renderer.height !== height) this.renderer.resize(width, height);
     }
 

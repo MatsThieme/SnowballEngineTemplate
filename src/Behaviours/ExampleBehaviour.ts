@@ -1,4 +1,4 @@
-import { Behaviour, D, GameTime, Input, Vector2 } from 'se';
+import { Behaviour, Debug, GameTime, Input, Vector2 } from 'se';
 
 export class ExampleBehaviour extends Behaviour {
     /**
@@ -24,7 +24,7 @@ export class ExampleBehaviour extends Behaviour {
      * 
      */
     public async start(): Promise<void> {
-        D.log(this.example2);
+        Debug.log(this.example2);
     }
 
     /**

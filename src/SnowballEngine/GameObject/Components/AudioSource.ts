@@ -2,7 +2,7 @@ import { Asset } from '../../Assets/Asset';
 import { AssetType } from '../../Assets/AssetType';
 import { AudioMixer } from '../../Audio/AudioMixer';
 import { Client } from '../../Client';
-import { D } from '../../Debug';
+import { Debug } from '../../Debug';
 import { clamp } from '../../Utilities/Helpers';
 import { Stopwatch } from '../../Utilities/Stopwatch';
 import { ComponentType } from '../ComponentType';
@@ -84,7 +84,7 @@ export class AudioSource extends Component {
 
         const listener = this.gameObject.scene.audioListener;
 
-        if (!listener) return D.warn('No AudioListener');
+        if (!listener) return Debug.warn('No AudioListener');
 
 
         if (this._connected) this.disconnect();
@@ -214,11 +214,11 @@ export class AudioSource extends Component {
      * 
      */
     public play(): void {
-        if (!this.asset) return D.warn('No audio clip set');
+        if (!this.asset) return Debug.warn('No audio clip set');
 
-        if (this._playing) return D.warn('Already playing, stop the playback before calling play');
+        if (this._playing) return Debug.warn('Already playing, stop the playback before calling play');
 
-        if (!Client.hasMediaPlayPermission) return D.warn('Need permission to play media first');
+        if (!Client.hasMediaPlayPermission) return Debug.warn('Need permission to play media first');
 
 
         this.renewNode();
@@ -228,7 +228,7 @@ export class AudioSource extends Component {
             this._playing = false;
 
             const diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;
-            if (diff > 20 && diff < 50) D.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: <820ms`);
+            if (diff > 20 && diff < 50) Debug.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: <820ms`);
 
             if (this._sw.seconds + 0.02 > this._audioBufferNode.buffer!.duration / this._rate) {
                 this._sw.stop();

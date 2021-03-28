@@ -1,7 +1,7 @@
 import { TextStyle } from '@pixi/text';
 import { BitmapFont } from '@pixi/text-bitmap';
 import { Client } from 'SnowballEngine/Client';
-import { D } from '../Debug';
+import { Debug } from '../Debug';
 
 export class UIFonts {
     private static readonly _fonts: Map<UIFont, { style: BitmapTextStyle, font: BitmapFont }>;
@@ -41,7 +41,7 @@ export class UIFonts {
     }
 
     public static remove(name: UIFont): void {
-        if (!UIFonts._fonts.has(name)) return D.warn(`Font with name ${name} does not exist`);
+        if (!UIFonts._fonts.has(name)) return Debug.warn(`Font with name ${name} does not exist`);
 
         BitmapFont.uninstall(name);
 

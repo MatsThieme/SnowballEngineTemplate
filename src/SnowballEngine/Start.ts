@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import projectConfig from '../../SnowballEngineConfig.json';
 import { Game } from '../Game';
 import { Client } from './Client';
-import { D } from './Debug';
+import { Debug } from './Debug';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Input } from './Input/Input';
 import { UIFonts } from './UI/UIFonts';
@@ -11,7 +11,7 @@ import { UIFonts } from './UI/UIFonts';
 PIXI.utils.skipHello(); // don't show PIXIs hello in console
 if (projectConfig.build.isDevelopmentBuild) (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
 
-D.init(); // add global error handlers
+Debug.init(); // add global error handlers
 
 Client.init();
 

@@ -1,5 +1,5 @@
 import { Container } from '@pixi/display';
-import { D } from '../Debug';
+import { Debug } from '../Debug';
 import { Collision } from '../Physics/Collision';
 import { Scene } from '../Scene';
 import { clearObject } from '../Utilities/Helpers';
@@ -181,7 +181,7 @@ export class GameObject {
      */
     public removeComponent<T extends Component>(component: T | number): void {
         if (!component) {
-            D.warn('Component undefined');
+            Debug.warn('Component undefined');
             return;
         }
 
@@ -190,7 +190,7 @@ export class GameObject {
         if (i === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
 
         if (i !== -1) this._components.splice(i, 1)[0].destroy(true);
-        else D.warn('Component not found on gameObject');
+        else Debug.warn('Component not found on gameObject');
     }
 
     /**

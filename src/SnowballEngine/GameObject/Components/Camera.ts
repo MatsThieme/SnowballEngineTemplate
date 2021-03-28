@@ -1,7 +1,7 @@
 import { Graphics } from '@pixi/graphics';
 import { PIXI } from '../../Camera/PIXI';
 import { Client } from '../../Client';
-import { D } from '../../Debug';
+import { Debug } from '../../Debug';
 import { AABB } from '../../Physics/AABB';
 import { clamp } from '../../Utilities/Helpers';
 import { Vector2 } from '../../Utilities/Vector2';
@@ -65,7 +65,7 @@ export class Camera extends Component {
     }
     public set screenSize(val: Vector2) {
         this._screenSize = new Vector2(clamp(0.0001, 100, val.x), clamp(0.0001, 100, val.y));
-        if (val.x !== this._screenSize.x || val.y !== this._screenSize.y) D.warn(`Camera(${this.gameObject.name}).screenSize was clamped to 0.0001-100`);
+        if (val.x !== this._screenSize.x || val.y !== this._screenSize.y) Debug.warn(`Camera(${this.gameObject.name}).screenSize was clamped to 0.0001-100`);
     }
 
     public get aabb(): AABB {

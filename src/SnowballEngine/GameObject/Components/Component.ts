@@ -1,4 +1,4 @@
-import { D } from 'SnowballEngine/Debug';
+import { Debug } from 'SnowballEngine/Debug';
 import { clearObject } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
 import { Destroyable } from '../Destroy';
@@ -35,7 +35,7 @@ export abstract class Component implements Destroyable {
     }
     public set active(val: boolean) {
         if (this.type === ComponentType.Transform) {
-            D.warn(`Can't disable a Transform component`);
+            Debug.warn(`Can't disable a Transform component`);
             return;
         }
 

@@ -1,25 +1,25 @@
 import { default as cloneDeep } from 'lodash.clonedeep';
 import projectConfig from '../../SnowballEngineConfig.json';
 
-export class D {
+export class Debug {
     public static init(): void {
         window.addEventListener('error', (e: ErrorEvent) => {
             e.preventDefault();
 
-            D.error(e.error);
+            Debug.error(e.error);
         });
 
         window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
             e.preventDefault();
 
-            D.error(e.reason);
+            Debug.error(e.reason);
         });
     }
 
     public static log(msg: string | number | boolean | Record<string, unknown>, logstack = false): void {
         if (!projectConfig.build.isDevelopmentBuild) return;
 
-        const o = D.formatMessage('log', msg, logstack ? D.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage('log', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
         if (window.cordova) alert(o.join());
         else console.log(...o);
@@ -28,7 +28,7 @@ export class D {
     public static warn(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
         if (!projectConfig.build.isDevelopmentBuild) return;
 
-        const o = D.formatMessage('warning', msg, logstack ? D.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage('warning', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
         if (window.cordova) alert(o.join());
         else console.warn(...o);
@@ -39,21 +39,21 @@ export class D {
 
         if (typeof msg === 'object' && 'name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
 
-        const o = D.formatMessage('error', msg, logstack ? D.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage('error', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
         if (window.cordova) alert(o.join());
         else console.warn(...o);
     }
 
     private static formatStack(stack = ''): string {
-        return D.formatStackFirefox(stack) || D.formatStackChromium(stack) || D.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
+        return Debug.formatStackFirefox(stack) || Debug.formatStackChromium(stack) || Debug.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
     }
 
     private static formatStackFirefox(stack: string): string {
         return stack.split('\n').slice(1).map(line => {
             const match = line.match(/^(.*?)@http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)$/);
 
-            return D.formatStackLine(match);
+            return Debug.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
 
@@ -61,7 +61,7 @@ export class D {
         return stack.split('\n').slice(2).map(line => {
             const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
 
-            return D.formatStackLine(match);
+            return Debug.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
 
@@ -69,7 +69,7 @@ export class D {
         return stack.split('\n').slice(2).map(line => {
             const match = line.trim().match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
 
-            return D.formatStackLine(match);
+            return Debug.formatStackLine(match);
         }).filter(Boolean).join('\n');
     }
 

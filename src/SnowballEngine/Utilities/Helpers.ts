@@ -1,4 +1,4 @@
-import { D } from '../Debug';
+import { Debug } from '../Debug';
 
 /**
  * 
@@ -41,7 +41,7 @@ export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<
                 resolve(result);
             }
             catch (error) {
-                D.warn(error);
+                Debug.warn(error);
             }
 
             window.removeEventListener('mousedown', end);

@@ -1,4 +1,4 @@
-import { D } from '../../Debug';
+import { Debug } from '../../Debug';
 import { triggerOnUserInputEvent } from '../../Utilities/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
@@ -36,7 +36,7 @@ export class AudioListener extends Component {
 
     public static start(): void {
         AudioListener.context.addEventListener('statechange', () => {
-            D.log(`audio context state change: ${AudioListener.context.state}`);
+            Debug.log(`audio context state change: ${AudioListener.context.state}`);
         });
 
         if (AudioListener.context.state === 'suspended') {

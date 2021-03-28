@@ -2,7 +2,7 @@ import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
 import { Asset } from '../../../Assets/Asset';
 import { AssetType } from '../../../Assets/AssetType';
-import { D } from '../../../Debug';
+import { Debug } from '../../../Debug';
 import { GameTime } from '../../../GameTime';
 
 
@@ -45,7 +45,7 @@ export class SpriteAnimation {
 
         this._sprites = val.map(a => a.getPIXISprite()!).filter(Boolean);
 
-        if (this._sprites.length !== this._assets.length) D.warn('could not create pixi sprite for ' + (this._assets.length - this._sprites.length) + ' assets');
+        if (this._sprites.length !== this._assets.length) Debug.warn('could not create pixi sprite for ' + (this._assets.length - this._sprites.length) + ' assets');
 
         this.container.removeChildren();
 

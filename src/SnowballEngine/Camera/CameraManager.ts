@@ -2,7 +2,7 @@ import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
 import { Scene } from 'SnowballEngine/Scene';
 import { Color } from 'SnowballEngine/Utilities/Color';
 import { Client } from '../Client';
-import { D } from '../Debug';
+import { Debug } from '../Debug';
 import { Camera } from '../GameObject/Components/Camera';
 import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
@@ -76,7 +76,7 @@ export class CameraManager implements Destroyable {
      * 
      */
     public addGameObject(gameObject: GameObject): void {
-        if (this.hasGameObject(gameObject)) return D.warn('GameObject.container is already staged');
+        if (this.hasGameObject(gameObject)) return Debug.warn('GameObject.container is already staged');
 
         this._PIXI.container.addChild(gameObject.container);
 
@@ -90,7 +90,7 @@ export class CameraManager implements Destroyable {
      * 
      */
     public removeGameObject(gameObject: GameObject): void {
-        if (!this.hasGameObject(gameObject)) return D.warn('GameObject not found');
+        if (!this.hasGameObject(gameObject)) return Debug.warn('GameObject not found');
 
         this._PIXI.container.removeChild(gameObject.container);
 
@@ -103,7 +103,7 @@ export class CameraManager implements Destroyable {
 
 
     public update(): void {
-        if (!this.cameras.filter(c => c.active)) return D.warn('No active camera');
+        if (!this.cameras.filter(c => c.active)) return Debug.warn('No active camera');
 
 
         const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
