@@ -1,11 +1,11 @@
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
-import { AssetType } from '../../../Assets/AssetType';
-import { AABB } from '../../../Physics/AABB';
-import { Angle } from '../../../Utilities/Angle';
-import { Vector2 } from '../../../Utilities/Vector2';
-import { ComponentType } from '../../ComponentType';
-import { GameObject } from '../../GameObject';
+import { AssetType } from 'Assets/AssetType';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { AABB } from 'SnowballEngine/Physics/AABB';
+import { Angle } from 'Utility/Angle';
+import { Vector2 } from 'Utility/Vector2';
 import { Camera } from '../Camera';
 import { Renderable } from '../Renderable';
 import { Transform } from '../Transform/Transform';

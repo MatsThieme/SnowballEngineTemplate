@@ -1,6 +1,6 @@
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
-import { Assets, Color, SceneManager, Shape, Timeout } from 'se';
+import { Assets, Color, SceneManager, Shape, Timeout } from 'SE';
 
 export class Game {
     public constructor() {

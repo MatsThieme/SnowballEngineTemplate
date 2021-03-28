@@ -1,4 +1,4 @@
-import projectConfig from '../../../../../SnowballEngineConfig.json';
+import projectConfig from 'Config';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';

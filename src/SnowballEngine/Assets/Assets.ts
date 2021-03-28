@@ -1,7 +1,7 @@
-import { Interval } from 'SnowballEngine/Utilities/Interval';
-import { Timeout } from 'SnowballEngine/Utilities/Timeout';
+import { AudioListener } from 'GameObject/Components/AudioListener';
+import { Interval } from 'Utility/Interval';
+import { Timeout } from 'Utility/Timeout';
 import AssetDB from '../../../Assets/AssetDB.json';
-import { AudioListener } from '../GameObject/Components/AudioListener';
 import { Asset } from './Asset';
 import { AssetType } from './AssetType';
 

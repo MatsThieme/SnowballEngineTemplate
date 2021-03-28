@@ -1,16 +1,16 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { Asset } from 'SnowballEngine/Assets/Asset';
-import { AssetType } from 'SnowballEngine/Assets/AssetType';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { AlignH, AlignV } from 'GameObject/Align';
+import { Destroyable } from 'GameObject/Destroy';
 import { Client } from 'SnowballEngine/Client';
-import { AlignH, AlignV } from 'SnowballEngine/GameObject/Align';
-import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
 import { Input } from 'SnowballEngine/Input/Input';
-import { clearObject } from 'SnowballEngine/Utilities/Helpers';
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
-import { _AABB } from 'SnowballEngine/Utilities/_AABB';
-import { UIElementType } from '../UIElementType';
-import { UIMenu } from '../UIMenu';
+import { UIElementType } from 'UI/UIElementType';
+import { UIMenu } from 'UI/UIMenu';
+import { clearObject } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
+import { _AABB } from 'Utility/_AABB';
 
 /** @category UI */
 export class UIElement implements Destroyable {

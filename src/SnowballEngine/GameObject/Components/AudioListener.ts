@@ -1,11 +1,11 @@
-import { Debug } from '../../Debug';
-import { triggerOnUserInputEvent } from '../../Utilities/Helpers';
+import { Debug } from 'SnowballEngine/Debug';
+import { triggerOnUserInputEvent } from 'Utility/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioSource } from './AudioSource';
 import { Component } from './Component';
 
-/**@category Component */
+/** @category Component */
 export class AudioListener extends Component {
     public static readonly context: AudioContext = new AudioContext();
 

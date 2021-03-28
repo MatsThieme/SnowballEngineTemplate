@@ -1,8 +1,8 @@
 import { Container } from '@pixi/display';
+import { Destroyable } from 'GameObject/Destroy';
 import { Debug } from 'SnowballEngine/Debug';
-import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
-import { UIMenu } from './UIMenu';
-import { UIMenuNavigation } from './UIMenuNavigation';
+import { UIMenu } from 'UI/UIMenu';
+import { UIMenuNavigation } from 'UI/UIMenuNavigation';
 
 /** @category UI */
 export class UI implements Destroyable {

@@ -1,5 +1,5 @@
-import { Angle } from "../../../Utilities/Angle";
-import { Vector2 } from "../../../Utilities/Vector2";
+import { Angle } from 'Utility/Angle';
+import { Vector2 } from 'Utility/Vector2';
 
 export interface Transformable {
     position: Vector2;

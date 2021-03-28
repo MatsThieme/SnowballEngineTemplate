@@ -1,5 +1,5 @@
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
 import { Component } from './Component';
 
 /**@category Component */

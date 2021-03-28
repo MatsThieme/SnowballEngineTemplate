@@ -1,4 +1,4 @@
-import { Behaviour, Debug, GameTime, Input, Vector2 } from 'se';
+import { Behaviour, Debug, GameTime, Input, Vector2 } from 'SE';
 
 export class ExampleBehaviour extends Behaviour {
     /**

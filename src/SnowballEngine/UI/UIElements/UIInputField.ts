@@ -1,5 +1,5 @@
-import { UIElementType } from '../UIElementType';
-import { UIMenu } from '../UIMenu';
+import { UIElementType } from 'UI/UIElementType';
+import { UIMenu } from 'UI/UIMenu';
 import { UIText } from './UIText';
 
 /** @category UI */

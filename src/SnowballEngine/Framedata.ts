@@ -1,4 +1,4 @@
-import { Timeout } from './Utilities/Timeout';
+import { Timeout } from 'Utility/Timeout';
 
 /** @category Scene */
 export class Framedata {

@@ -1,4 +1,4 @@
-import { AudioMixer } from "./AudioMixer";
+import { AudioMixer } from './AudioMixer';
 
 /** @category Audio */
 export abstract class AudioEffect {

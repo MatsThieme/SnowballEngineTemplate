@@ -1,5 +1,5 @@
-import { average, clamp } from './Utilities/Helpers';
-import { Stopwatch } from './Utilities/Stopwatch';
+import { average, clamp } from 'Utility/Helpers';
+import { Stopwatch } from 'Utility/Stopwatch';
 
 /** @category Scene */
 export class GameTime {

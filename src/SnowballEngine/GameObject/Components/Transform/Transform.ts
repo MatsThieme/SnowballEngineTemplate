@@ -1,8 +1,8 @@
 import { DisplayObject } from '@pixi/display';
-import { Angle } from '../../../Utilities/Angle';
-import { Vector2 } from '../../../Utilities/Vector2';
-import { ComponentType } from '../../ComponentType';
-import { GameObject } from '../../GameObject';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { Angle } from 'Utility/Angle';
+import { Vector2 } from 'Utility/Vector2';
 import { Component } from '../Component';
 import { Transformable } from './Transformable';
 import { TransformRealation } from './TransformRelation';

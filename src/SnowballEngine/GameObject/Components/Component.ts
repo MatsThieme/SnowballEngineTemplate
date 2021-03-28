@@ -1,8 +1,8 @@
+import { ComponentType } from 'GameObject/ComponentType';
+import { Destroyable } from 'GameObject/Destroy';
+import { GameObject } from 'GameObject/GameObject';
 import { Debug } from 'SnowballEngine/Debug';
-import { clearObject } from '../../Utilities/Helpers';
-import { ComponentType } from '../ComponentType';
-import { Destroyable } from '../Destroy';
-import { GameObject } from '../GameObject';
+import { clearObject } from 'Utility/Helpers';
 import { Camera } from './Camera';
 
 /**@category Component */

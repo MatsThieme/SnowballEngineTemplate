@@ -1,7 +1,7 @@
+import { Vector2 } from 'Utility/Vector2';
 import { Collider } from '../GameObject/Components/Collider';
 import { TileMap } from '../GameObject/Components/TileMap';
 import { ComponentType } from '../GameObject/ComponentType';
-import { Vector2 } from '../Utilities/Vector2';
 
 /** 
  * @deprecated

@@ -1,4 +1,4 @@
-import { AlignH, Color, Interval, Scene, Shape, UIMenu, UIText } from 'se';
+import { AlignH, Color, Interval, Scene, Shape, UIMenu, UIText } from 'SE';
 
 export function FPSDisplayPrefab(menu: UIMenu): void {
     menu.active = true;

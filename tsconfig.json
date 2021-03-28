@@ -16,8 +16,29 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": "src",
         "paths": {
-            "se": [
+            "SE": [
                 "SnowballEngine/SnowballEngine.ts"
+            ],
+            "Config": [
+                "../SnowballEngineConfig.json"
+            ],
+            "UI/*": [
+                "SnowballEngine/UI/*"
+            ],
+            "Utility/*": [
+                "SnowballEngine/Utilities/*"
+            ],
+            "Input/*": [
+                "SnowballEngine/Input/*"
+            ],
+            "Assets/*": [
+                "SnowballEngine/Assets/*"
+            ],
+            "Audio/*": [
+                "SnowballEngine/Audio/*"
+            ],
+            "GameObject/*": [
+                "SnowballEngine/GameObject/*"
             ]
         }
     }

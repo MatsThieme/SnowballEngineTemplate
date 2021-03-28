@@ -1,6 +1,6 @@
 import { CameraPrefab } from 'Prefabs/CameraPrefab';
 import { LoadingScreenPrefab } from 'Prefabs/LoadingScreenPrefab';
-import { Instantiate, Scene } from 'se';
+import { Instantiate, Scene } from 'SE';
 
 export async function LoadingScreenScene(scene: Scene) {
     await Instantiate('Camera', CameraPrefab);

@@ -1,5 +1,5 @@
+import { Vector2 } from 'Utility/Vector2';
 import { Collider } from '../GameObject/Components/Collider';
-import { Vector2 } from '../Utilities/Vector2';
 
 /** 
  * @deprecated

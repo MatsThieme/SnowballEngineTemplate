@@ -1,9 +1,9 @@
-import { AABB } from '../../Physics/AABB';
-import { PhysicsMaterial } from '../../Physics/PhysicsMaterial';
-import { Vector2 } from '../../Utilities/Vector2';
-import { AlignH, AlignV } from '../Align';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
+import { AlignH, AlignV } from 'GameObject/Align';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { AABB } from 'SnowballEngine/Physics/AABB';
+import { PhysicsMaterial } from 'SnowballEngine/Physics/PhysicsMaterial';
+import { Vector2 } from 'Utility/Vector2';
 import { Collider } from './Collider';
 
 /**@category Component */

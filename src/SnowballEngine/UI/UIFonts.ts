@@ -1,7 +1,7 @@
 import { TextStyle } from '@pixi/text';
 import { BitmapFont } from '@pixi/text-bitmap';
 import { Client } from 'SnowballEngine/Client';
-import { Debug } from '../Debug';
+import { Debug } from 'SnowballEngine/Debug';
 
 /** @category UI */
 export class UIFonts {

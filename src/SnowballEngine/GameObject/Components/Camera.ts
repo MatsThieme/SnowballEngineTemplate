@@ -1,10 +1,10 @@
 import { Graphics } from '@pixi/graphics';
-import { PIXI } from '../../Camera/PIXI';
-import { Client } from '../../Client';
-import { Debug } from '../../Debug';
-import { AABB } from '../../Physics/AABB';
-import { clamp } from '../../Utilities/Helpers';
-import { Vector2 } from '../../Utilities/Vector2';
+import { PIXI } from 'SnowballEngine/Camera/PIXI';
+import { Client } from 'SnowballEngine/Client';
+import { Debug } from 'SnowballEngine/Debug';
+import { AABB } from 'SnowballEngine/Physics/AABB';
+import { clamp } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';

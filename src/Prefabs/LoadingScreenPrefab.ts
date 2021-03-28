@@ -1,4 +1,4 @@
-import { AlignH, AlignV, Color, Interval, Shape, UIMenu, UIText, Vector2 } from 'se';
+import { AlignH, AlignV, Color, Interval, Shape, UIMenu, UIText, Vector2 } from 'SE';
 
 export function LoadingScreenPrefab(menu: UIMenu) {
     menu.addUIElement(UIText, text => {

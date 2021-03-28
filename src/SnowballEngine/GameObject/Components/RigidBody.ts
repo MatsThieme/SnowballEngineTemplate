@@ -1,9 +1,9 @@
-import { GameTime } from '../../GameTime';
-import { Collision } from '../../Physics/Collision';
-import { Physics } from '../../Physics/Physics';
-import { Vector2 } from '../../Utilities/Vector2';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { GameTime } from 'SnowballEngine/GameTime';
+import { Collision } from 'SnowballEngine/Physics/Collision';
+import { Physics } from 'SnowballEngine/Physics/Physics';
+import { Vector2 } from 'Utility/Vector2';
 import { CircleCollider } from './CircleCollider';
 import { Collider } from './Collider';
 import { Component } from './Component';

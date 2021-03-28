@@ -1,4 +1,4 @@
-import { Destroyable } from '../GameObject/Destroy';
+import { Destroyable } from 'GameObject/Destroy';
 import { InputEvent } from './InputEvent';
 
 /** @category Input */

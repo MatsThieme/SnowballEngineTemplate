@@ -1,9 +1,9 @@
 import { Container } from '@pixi/display';
-import { Debug } from '../Debug';
-import { Collision } from '../Physics/Collision';
-import { Scene } from '../Scene';
-import { clearObject } from '../Utilities/Helpers';
-import { Vector2 } from '../Utilities/Vector2';
+import { Debug } from 'SnowballEngine/Debug';
+import { Collision } from 'SnowballEngine/Physics/Collision';
+import { Scene } from 'SnowballEngine/Scene';
+import { clearObject } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { Behaviour } from './Components/Behaviour';
 import { Collider } from './Components/Collider';
 import { Component } from './Components/Component';

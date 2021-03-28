@@ -1,7 +1,7 @@
-import { Asset } from '../../Assets/Asset';
-import { AssetType } from '../../Assets/AssetType';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
 import { Renderable } from './Renderable';
 
 /**

@@ -1,10 +1,10 @@
-import { Asset } from '../../Assets/Asset';
-import { AssetType } from '../../Assets/AssetType';
-import { AudioMixer } from '../../Audio/AudioMixer';
-import { Client } from '../../Client';
-import { Debug } from '../../Debug';
-import { clamp } from '../../Utilities/Helpers';
-import { Stopwatch } from '../../Utilities/Stopwatch';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { AudioMixer } from 'SnowballEngine/Audio/AudioMixer';
+import { Client } from 'SnowballEngine/Client';
+import { Debug } from 'SnowballEngine/Debug';
+import { clamp } from 'Utility/Helpers';
+import { Stopwatch } from 'Utility/Stopwatch';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';

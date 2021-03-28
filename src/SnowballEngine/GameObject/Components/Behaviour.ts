@@ -1,5 +1,5 @@
-import { Collision } from '../../Physics/Collision';
-import { Scene } from '../../Scene';
+import { Collision } from 'SnowballEngine/Physics/Collision';
+import { Scene } from 'SnowballEngine/Scene';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { Component } from './Component';

@@ -1,4 +1,4 @@
-import { Interval } from 'SnowballEngine/Utilities/Interval';
+import { Interval } from './Interval';
 
 /** @category Utility */
 export class AsyncWorker {

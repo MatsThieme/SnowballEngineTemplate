@@ -1,4 +1,4 @@
-import { Vector2 } from '../Utilities/Vector2';
+import { Vector2 } from 'Utility/Vector2';
 
 /** 
  * @deprecated

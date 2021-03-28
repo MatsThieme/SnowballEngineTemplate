@@ -2,7 +2,7 @@ import { TextStyleAlign } from '@pixi/text';
 import { BitmapText } from '@pixi/text-bitmap';
 import { Client } from 'SnowballEngine/Client';
 import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'SnowballEngine/Utilities/Color';
+import { Color } from 'Utility/Color';
 import { UIElementType } from '../UIElementType';
 import { UIFonts } from '../UIFonts';
 import { UIMenu } from '../UIMenu';

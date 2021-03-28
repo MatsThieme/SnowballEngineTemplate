@@ -1,11 +1,11 @@
+import projectConfig from 'Config';
+import { AudioListener } from 'GameObject/Components/AudioListener';
+import { Input } from 'Input/Input';
 import * as PIXI from 'pixi.js';
-import projectConfig from '../../SnowballEngineConfig.json';
+import { UIFonts } from 'UI/UIFonts';
 import { Game } from '../Game';
 import { Client } from './Client';
 import { Debug } from './Debug';
-import { AudioListener } from './GameObject/Components/AudioListener';
-import { Input } from './Input/Input';
-import { UIFonts } from './UI/UIFonts';
 
 
 PIXI.utils.skipHello(); // don't show PIXIs hello in console

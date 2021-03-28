@@ -1,6 +1,6 @@
 import { Container } from '@pixi/display';
-import { ComponentType } from '../../ComponentType';
-import { GameObject } from '../../GameObject';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
 import { Renderable } from '../Renderable';
 import { SpriteAnimation } from './SpriteAnimation';
 

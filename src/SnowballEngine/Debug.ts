@@ -1,5 +1,5 @@
 import { default as cloneDeep } from 'lodash.clonedeep';
-import projectConfig from '../../SnowballEngineConfig.json';
+import projectConfig from 'Config';
 
 export class Debug {
     public static init(): void {

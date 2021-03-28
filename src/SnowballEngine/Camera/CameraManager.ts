@@ -1,12 +1,12 @@
-import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
+import { Camera } from 'GameObject/Components/Camera';
+import { ComponentType } from 'GameObject/ComponentType';
+import { Destroyable } from 'GameObject/Destroy';
+import { GameObject } from 'GameObject/GameObject';
+import { Client } from 'SnowballEngine/Client';
+import { Debug } from 'SnowballEngine/Debug';
 import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'SnowballEngine/Utilities/Color';
-import { Client } from '../Client';
-import { Debug } from '../Debug';
-import { Camera } from '../GameObject/Components/Camera';
-import { ComponentType } from '../GameObject/ComponentType';
-import { GameObject } from '../GameObject/GameObject';
-import { Vector2 } from '../Utilities/Vector2';
+import { Color } from 'Utility/Color';
+import { Vector2 } from 'Utility/Vector2';
 import { PIXI } from './PIXI';
 
 /** @category Camera */

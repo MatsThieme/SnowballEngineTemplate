@@ -1,4 +1,4 @@
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
+import { Vector2 } from './Vector2';
 
 /** @category Utility */
 export class _AABB {

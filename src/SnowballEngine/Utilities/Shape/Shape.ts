@@ -1,8 +1,8 @@
-import { Asset } from 'SnowballEngine/Assets/Asset';
-import { AssetType } from 'SnowballEngine/Assets/AssetType';
-import { Canvas } from '../Canvas';
-import { Color } from '../Color';
-import { Vector2 } from '../Vector2';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { Canvas } from 'Utility/Canvas';
+import { Color } from 'Utility/Color';
+import { Vector2 } from 'Utility/Vector2';
 
 /** @category Utility */
 export class Shape {

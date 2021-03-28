@@ -1,7 +1,7 @@
 import { CameraPrefab } from 'Prefabs/CameraPrefab';
 import { ExampleGameObjectPrefab } from 'Prefabs/ExampleGameObjectPrefab';
 import { FPSDisplayPrefab } from 'Prefabs/FPSDisplayPrefab';
-import { Instantiate, Scene } from 'se';
+import { Instantiate, Scene } from 'SE';
 
 export async function MainScene(scene: Scene) {
     // add gameobjects to scene

@@ -1,9 +1,9 @@
 import isMobile from 'ismobilejs';
+import { triggerOnUserInputEvent } from 'Utility/Helpers';
+import { Timeout } from 'Utility/Timeout';
+import { Vector2 } from 'Utility/Vector2';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Scene } from './Scene';
-import { triggerOnUserInputEvent } from './Utilities/Helpers';
-import { Timeout } from './Utilities/Timeout';
-import { Vector2 } from './Utilities/Vector2';
 
 export class Client {
     public static platform: 'android' | 'ios' | 'browser' | 'windows' | 'osx' = <any>(window.cordova || {}).platformId || 'browser';

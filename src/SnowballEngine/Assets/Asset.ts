@@ -1,9 +1,9 @@
 import { BaseTexture, Texture } from '@pixi/core';
 import { Rectangle } from '@pixi/math';
 import { Sprite } from '@pixi/sprite';
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
-import { Canvas } from '../Utilities/Canvas';
-import { clearObject } from '../Utilities/Helpers';
+import { Canvas } from 'Utility/Canvas';
+import { clearObject } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { AssetType } from './AssetType';
 
 /** @category Asset Management */

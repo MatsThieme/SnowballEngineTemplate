@@ -1,6 +1,6 @@
-import { AudioListener } from '../../GameObject/Components/AudioListener';
-import { AudioEffect } from '../AudioEffect';
-import { AudioMixer } from '../AudioMixer';
+import { AudioEffect } from 'Audio/AudioEffect';
+import { AudioMixer } from 'Audio/AudioMixer';
+import { AudioListener } from 'GameObject/Components/AudioListener';
 
 /** @category Audio */
 export class AudioEffectVolume extends AudioEffect {

@@ -1,5 +1,5 @@
+import { Interval } from 'Utility/Interval';
 import { Scene } from './Scene';
-import { Interval } from './Utilities/Interval';
 
 /** @category Scene */
 export class SceneManager {

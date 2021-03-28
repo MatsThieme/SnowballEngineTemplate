@@ -1,9 +1,9 @@
 import { Container } from '@pixi/display';
-import { GameTime } from '../../../GameTime';
-import { Angle } from '../../../Utilities/Angle';
-import { Vector2 } from '../../../Utilities/Vector2';
-import { ComponentType } from '../../ComponentType';
-import { GameObject } from '../../GameObject';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { GameTime } from 'SnowballEngine/GameTime';
+import { Angle } from 'Utility/Angle';
+import { Vector2 } from 'Utility/Vector2';
 import { Renderable } from '../Renderable';
 import { Particle } from './Particle';
 

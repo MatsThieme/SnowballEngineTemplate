@@ -1,7 +1,7 @@
 import { Container } from '@pixi/display';
 import { TilingSprite } from '@pixi/sprite-tiling';
-import { clamp, clearObject } from '../../../Utilities/Helpers';
-import { Vector2 } from '../../../Utilities/Vector2';
+import { clamp, clearObject } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { Camera } from '../Camera';
 import { Transform } from '../Transform/Transform';
 import { BackgroundLayerAsset } from './BackgroundLayerAsset';

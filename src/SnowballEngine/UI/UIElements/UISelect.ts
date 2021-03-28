@@ -2,12 +2,12 @@ import { BitmapText } from '@pixi/text-bitmap';
 import { Client } from 'SnowballEngine/Client';
 import { Input } from 'SnowballEngine/Input/Input';
 import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'SnowballEngine/Utilities/Color';
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
-import { _AABB } from 'SnowballEngine/Utilities/_AABB';
-import { UIElementType } from '../UIElementType';
-import { UIFonts } from '../UIFonts';
-import { UIMenu } from '../UIMenu';
+import { UIElementType } from 'UI/UIElementType';
+import { UIFonts } from 'UI/UIFonts';
+import { UIMenu } from 'UI/UIMenu';
+import { Color } from 'Utility/Color';
+import { Vector2 } from 'Utility/Vector2';
+import { _AABB } from 'Utility/_AABB';
 import { UIElement } from './UIElement';
 
 /** @category UI */

@@ -1,5 +1,5 @@
 import { ExampleBehaviour } from 'Behaviours/ExampleBehaviour';
-import { Assets, GameObject, Texture } from 'se';
+import { Assets, GameObject, Texture } from 'SE';
 
 export async function ExampleGameObjectPrefab(gameObject: GameObject) {
     gameObject.addComponent(Texture, texture => {

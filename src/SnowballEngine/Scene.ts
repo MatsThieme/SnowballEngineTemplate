@@ -1,20 +1,20 @@
-import { AudioMixer } from './Audio/AudioMixer';
+import { AudioMixer } from 'Audio/AudioMixer';
+import { AudioListener } from 'GameObject/Components/AudioListener';
+import { Behaviour } from 'GameObject/Components/Behaviour';
+import { Component } from 'GameObject/Components/Component';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { Input } from 'Input/Input';
+import { UI } from 'UI/UI';
+import { UIFonts } from 'UI/UIFonts';
+import { clearObject } from 'Utility/Helpers';
+import { Interval } from 'Utility/Interval';
 import { CameraManager } from './Camera/CameraManager';
 import { Client } from './Client';
 import { Framedata } from './Framedata';
-import { AudioListener } from './GameObject/Components/AudioListener';
-import { Behaviour } from './GameObject/Components/Behaviour';
-import { Component } from './GameObject/Components/Component';
-import { ComponentType } from './GameObject/ComponentType';
-import { GameObject } from './GameObject/GameObject';
 import { GameTime } from './GameTime';
-import { Input } from './Input/Input';
 import { Collision } from './Physics/Collision';
 import { SceneManager } from './SceneManager';
-import { UI } from './UI/UI';
-import { UIFonts } from './UI/UIFonts';
-import { clearObject } from './Utilities/Helpers';
-import { Interval } from './Utilities/Interval';
 
 /** @category Scene */
 export class Scene {

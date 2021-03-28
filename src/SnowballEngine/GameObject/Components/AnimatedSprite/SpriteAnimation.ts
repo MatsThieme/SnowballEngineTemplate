@@ -1,10 +1,9 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { Asset } from '../../../Assets/Asset';
-import { AssetType } from '../../../Assets/AssetType';
-import { Debug } from '../../../Debug';
-import { GameTime } from '../../../GameTime';
-
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { Debug } from 'SnowballEngine/Debug';
+import { GameTime } from 'SnowballEngine/GameTime';
 
 export class SpriteAnimation {
     /**

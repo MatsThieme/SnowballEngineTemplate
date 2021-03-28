@@ -15,7 +15,14 @@ module.exports = {
         extensions: ['.ts', '.js'],
         modules: ['node_modules', 'src'],
         alias: {
-            se: path.resolve(__dirname, 'src/SnowballEngine/SnowballEngine.ts')
+            SE: path.resolve(__dirname, 'src/SnowballEngine/SnowballEngine.ts'),
+            Config: path.resolve(__dirname, 'SnowballEngineConfig.json'),
+            UI: path.resolve(__dirname, 'src/SnowballEngine/UI/'),
+            Utility: path.resolve(__dirname, 'src/SnowballEngine/Utilities/'),
+            Input: path.resolve(__dirname, 'src/SnowballEngine/Input/'),
+            Assets: path.resolve(__dirname, 'src/SnowballEngine/Assets/'),
+            Audio: path.resolve(__dirname, 'src/SnowballEngine/Audio/'),
+            GameObject: path.resolve(__dirname, 'src/SnowballEngine/GameObject/')
         }
     },
     output: {

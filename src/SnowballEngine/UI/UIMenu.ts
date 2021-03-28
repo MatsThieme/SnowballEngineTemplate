@@ -1,10 +1,10 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { AssetType } from 'SnowballEngine/Assets/AssetType';
-import { Destroyable } from 'SnowballEngine/GameObject/Destroy';
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
-import { Asset } from '../Assets/Asset';
-import { Scene } from '../Scene';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
+import { Destroyable } from 'GameObject/Destroy';
+import { Scene } from 'SnowballEngine/Scene';
+import { Vector2 } from 'Utility/Vector2';
 import { UIElement } from './UIElements/UIElement';
 
 /** @category UI */

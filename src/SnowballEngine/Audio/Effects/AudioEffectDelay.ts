@@ -1,7 +1,7 @@
-import { AudioListener } from '../../GameObject/Components/AudioListener';
-import { clamp } from '../../Utilities/Helpers';
-import { AudioEffect } from '../AudioEffect';
-import { AudioMixer } from '../AudioMixer';
+import { AudioEffect } from 'Audio/AudioEffect';
+import { AudioMixer } from 'Audio/AudioMixer';
+import { AudioListener } from 'GameObject/Components/AudioListener';
+import { clamp } from 'Utility/Helpers';
 
 /** @category Audio */
 export class AudioEffectDelay extends AudioEffect {

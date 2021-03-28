@@ -1,8 +1,8 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { GameTime } from '../../../GameTime';
-import { clearObject } from '../../../Utilities/Helpers';
-import { Vector2 } from '../../../Utilities/Vector2';
+import { GameTime } from 'SnowballEngine/GameTime';
+import { clearObject } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { SpriteAnimation } from '../AnimatedSprite/SpriteAnimation';
 import { ParticleSystem } from './ParticleSystem';
 

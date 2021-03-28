@@ -3,9 +3,9 @@ import { Renderer } from '@pixi/core';
 import { Container } from '@pixi/display';
 import { Graphics } from '@pixi/graphics';
 import { Sprite } from '@pixi/sprite';
-import projectConfig from '../../../SnowballEngineConfig.json';
-import { Client } from '../Client';
-import { Debug } from '../Debug';
+import projectConfig from 'Config';
+import { Client } from 'SnowballEngine/Client';
+import { Debug } from 'SnowballEngine/Debug';
 
 export class PIXI {
     public readonly renderer: Renderer;

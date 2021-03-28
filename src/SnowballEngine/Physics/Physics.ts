@@ -1,10 +1,10 @@
+import { AsyncWorker } from 'Utility/AsyncWorker';
+import { Vector2 } from 'Utility/Vector2';
 import { CircleCollider } from '../GameObject/Components/CircleCollider';
 import { PolygonCollider } from '../GameObject/Components/PolygonCollider';
 import { TileMap } from '../GameObject/Components/TileMap';
 import { ComponentType } from '../GameObject/ComponentType';
 import { GameObject } from '../GameObject/GameObject';
-import { AsyncWorker } from '../Utilities/AsyncWorker';
-import { Vector2 } from '../Utilities/Vector2';
 import { AABB } from './AABB';
 import { Collision } from './Collision';
 import { worker } from './CollisionWorker';

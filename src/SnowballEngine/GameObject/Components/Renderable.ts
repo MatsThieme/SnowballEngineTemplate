@@ -1,9 +1,9 @@
 import { Container } from '@pixi/display';
 import { Sprite } from '@pixi/sprite';
-import { Vector2 } from '../../Utilities/Vector2';
-import { AlignH, AlignV } from '../Align';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
+import { AlignH, AlignV } from 'GameObject/Align';
+import { ComponentType } from 'GameObject/ComponentType';
+import { GameObject } from 'GameObject/GameObject';
+import { Vector2 } from 'Utility/Vector2';
 import { Component } from './Component';
 
 /**@category Component */

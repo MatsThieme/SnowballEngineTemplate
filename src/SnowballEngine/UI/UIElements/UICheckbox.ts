@@ -1,15 +1,15 @@
 import { Sprite } from '@pixi/sprite';
 import { BitmapText } from '@pixi/text-bitmap';
-import { Asset } from 'SnowballEngine/Assets/Asset';
-import { AssetType } from 'SnowballEngine/Assets/AssetType';
+import { Asset } from 'Assets/Asset';
+import { AssetType } from 'Assets/AssetType';
 import { Client } from 'SnowballEngine/Client';
 import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'SnowballEngine/Utilities/Color';
-import { Shape } from 'SnowballEngine/Utilities/Shape/Shape';
-import { Vector2 } from 'SnowballEngine/Utilities/Vector2';
-import { UIElementType } from '../UIElementType';
-import { UIFonts } from '../UIFonts';
-import { UIMenu } from '../UIMenu';
+import { UIElementType } from 'UI/UIElementType';
+import { UIFonts } from 'UI/UIFonts';
+import { UIMenu } from 'UI/UIMenu';
+import { Color } from 'Utility/Color';
+import { Shape } from 'Utility/Shape/Shape';
+import { Vector2 } from 'Utility/Vector2';
 import { UIElement } from './UIElement';
 
 /** @category UI */

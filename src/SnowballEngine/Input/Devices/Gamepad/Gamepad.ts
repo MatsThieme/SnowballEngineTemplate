@@ -1,8 +1,8 @@
-import { Input } from '../../Input';
-import { InputAxis } from '../../InputAxis';
-import { InputButton } from '../../InputButton';
-import { InputEvent } from '../../InputEvent';
-import { InputEventTarget } from '../../InputEventTarget';
+import { Input } from 'SnowballEngine/Input/Input';
+import { InputAxis } from 'SnowballEngine/Input/InputAxis';
+import { InputButton } from 'SnowballEngine/Input/InputButton';
+import { InputEvent } from 'SnowballEngine/Input/InputEvent';
+import { InputEventTarget } from 'SnowballEngine/Input/InputEventTarget';
 import { InputDevice } from '../InputDevice';
 import { InputDeviceType } from '../InputDeviceType';
 import { GamepadAxis } from './GamepadAxis';

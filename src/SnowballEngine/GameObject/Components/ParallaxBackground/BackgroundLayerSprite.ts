@@ -1,5 +1,5 @@
 import { TilingSprite } from '@pixi/sprite-tiling';
-import { Vector2 } from '../../../Utilities/Vector2';
+import { Vector2 } from 'Utility/Vector2';
 import { BackgroundLayerAsset } from './BackgroundLayerAsset';
 
 export /** @internal */
