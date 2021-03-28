@@ -21,7 +21,7 @@ export class GameObject {
     public readonly id: number;
     public readonly name: string;
 
-    public children: GameObject[];
+    public readonly children: GameObject[];
 
     public scene: Scene;
 
@@ -31,7 +31,7 @@ export class GameObject {
     private static _nextID = 0;
 
     private __destroyed__: boolean;
-    private readonly _components: Component[];
+    private readonly _components: Map<ComponentType, Component[]>;
     private _active: boolean;
     private _parent?: GameObject;
 
@@ -60,7 +60,7 @@ export class GameObject {
         this.hasCollider = false;
 
         this.__destroyed__ = false;
-        this._components = [];
+        this._components = new Map();
         this._active = true;
 
         this.addComponent(Transform);
@@ -91,26 +91,32 @@ export class GameObject {
     /**
      *
      * Returns the only rigidbody present on parents, children and this recursively.
+     * @deprecated
      *
      */
     public get rigidbody(): RigidBody {
         const rb = this.getComponent<RigidBody>(ComponentType.RigidBody);
 
         if (!rb) {
-            this._components.push(new RigidBody(this))
+            this.addComponent(RigidBody);
             return this.rigidbody;
         }
 
         return rb;
     }
 
+    public get parent(): GameObject | undefined {
+        return this._parent;
+    }
+
     /**
      * 
      * Returns all collider on parents, children and this recursively.
+     * @deprecated
      * 
      */
     public get collider(): Collider[] {
-        return [...this.getComponents<Collider>(ComponentType.Collider), ...this.getComponentsInChildren<Collider>(ComponentType.Collider), ...this.getComponentsInParents<Collider>(ComponentType.Collider)];
+        return [...this.getComponents<Collider>(ComponentType.Collider), ...this.getComponentsInChildren<Collider>(ComponentType.Collider)];
     }
 
 
@@ -132,7 +138,7 @@ export class GameObject {
      * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
-    public async addComponent<T extends Component>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T | null> {
+    public async addComponent<T extends Component>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T> {
         const component = new type(this);
 
         if (component.type !== ComponentType.Camera &&
@@ -145,10 +151,13 @@ export class GameObject {
             component.type === ComponentType.Camera && this.getComponents(ComponentType.Camera).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
             component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0) {
-            this._components.push(component);
+            const components = this._components.get(component.type) || [];
+            components.push(component);
+            this._components.set(component.type, components);
         } else if (component.type === ComponentType.Camera || component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap) {
+            const type = component.type;
             component.destroy();
-            return null;
+            throw new Error(`Can't add component(type: ${type})`);
         }
 
         if ((component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) && !this.rigidbody) this.addComponent(RigidBody);
@@ -178,20 +187,24 @@ export class GameObject {
     /**
      * 
      * Remove a component.
+     * Component will be destroyed by default.
      * 
      */
-    public removeComponent<T extends Component>(component: T | number): void {
-        if (!component) {
-            Debug.warn('Component undefined');
-            return;
-        }
+    public removeComponent<T extends Component>(component: T, destroy = true): void {
+        if (!component) return Debug.warn('Component undefined');
 
-        const i = this._components.findIndex(c => c.componentId === (typeof component === 'number' ? component : component.componentId));
+        const components = this._components.get(component.type);
 
-        if (i === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
+        if (!components) return Debug.warn('Component not found on gameObject');
 
-        if (i !== -1) this._components.splice(i, 1)[0].destroy(true);
-        else Debug.warn('Component not found on gameObject');
+        const i = components.findIndex(c => c.componentId === component.componentId);
+
+        if (i === -1) return Debug.warn('Component not found on gameObject');
+
+
+        if (component.componentId === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
+
+        components.splice(i, 1)[0].destroy(true);
     }
 
     /**
@@ -200,13 +213,16 @@ export class GameObject {
      * 
      */
     public getComponents<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
-        return <T[]>this._components.filter((c: Component) => {
-            if (typeof type === 'number') {
-                return c.type === type ||
-                    type === ComponentType.Component ||
-                    type === ComponentType.Collider && (c.type === ComponentType.CircleCollider || c.type === ComponentType.PolygonCollider || c.type === ComponentType.TileMap)
-            }
+        if (typeof type === 'number') {
+            if (this._components.has(type)) return <T[]>this._components.get(type);
+            if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat(1);
+            if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.Video)];
+            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.PolygonCollider)];
 
+            return [];
+        }
+
+        return <T[]>[...this._components.values()].flat(1).filter((c: Component) => {
             return c.constructor.name === type.name || c instanceof type;
         });
     }
@@ -217,14 +233,17 @@ export class GameObject {
      *
      */
     public getComponent<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
-        for (const c of this._components) {
-            if (typeof type === 'number') {
-                if (c.type === type ||
-                    type === ComponentType.Component ||
-                    type === ComponentType.Collider && (c.type === ComponentType.CircleCollider || c.type === ComponentType.PolygonCollider || c.type === ComponentType.TileMap)) return <T>c;
-                continue;
-            }
+        if (typeof type === 'number') {
+            if (this._components.has(type)) return <T>this._components.get(type)![0];
+            if (type === ComponentType.Component) return <T>[...this._components.values()].flat(1)[0];
+            if (type === ComponentType.Renderable) return this.getComponent(ComponentType.AnimatedSprite) || this.getComponent(ComponentType.ParallaxBackground) || this.getComponent(ComponentType.ParticleSystem) || this.getComponent(ComponentType.Texture) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.Video);
+            if (type === ComponentType.Collider) return this.getComponent(ComponentType.PolygonCollider);
 
+            return undefined;
+        }
+
+
+        for (const c of [...this._components.values()].flat(1)) {
             if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
@@ -260,14 +279,6 @@ export class GameObject {
         return undefined;
     }
 
-    public getComponentsInParents<T extends Component>(type: Constructor<T> | ComponentType): T[] {
-        return [...(this._parent?.getComponents(type) || []), ...(this._parent?.getComponentsInParents(type) || [])];
-    }
-
-    public getComponentInParents<T extends Component>(type: Constructor<T> | ComponentType): T | undefined {
-        return this._parent?.getComponent(type) || this._parent?.getComponentInParents(type);
-    }
-
     /**
      * 
      * Add a child gameObject.
@@ -301,10 +312,6 @@ export class GameObject {
         this.connectCamera();
     }
 
-    public get parent(): GameObject | undefined {
-        return this._parent;
-    }
-
     /**
      * 
      * Update children, behaviours, ParticleSystem, AnimatedSprite and AudioListener.
@@ -322,15 +329,17 @@ export class GameObject {
 
         this.children.forEach(c => c.update(currentCollisions));
 
-        for (const c of this._components) {
-            if (c.type === ComponentType.ParticleSystem ||
-                c.type === ComponentType.AnimatedSprite ||
-                c.type === ComponentType.AudioListener ||
-                c.type === ComponentType.Texture ||
-                c.type === ComponentType.ParallaxBackground ||
-                c.type === ComponentType.Renderable ||
-                c.type === ComponentType.TileMap)
-                (<any>c).update();
+        for (const ctype of this._components) {
+            for (const c of ctype[1]) {
+                if (c.type === ComponentType.ParticleSystem ||
+                    c.type === ComponentType.AnimatedSprite ||
+                    c.type === ComponentType.AudioListener ||
+                    c.type === ComponentType.Texture ||
+                    c.type === ComponentType.ParallaxBackground ||
+                    c.type === ComponentType.Renderable ||
+                    c.type === ComponentType.TileMap)
+                    (<any>c).update();
+            }
         }
 
         if (!this.container.children.length) return;
@@ -365,7 +374,7 @@ export class GameObject {
             const i = this._parent?.children.findIndex(v => v.name === this.name);
             if (i && i !== -1) this._parent?.children.splice(i, 1);
 
-            this._components.forEach(c => c.destroy());
+            [...this._components.values()].flat(1).forEach(c => c.destroy());
 
             clearObject(this, true);
         };

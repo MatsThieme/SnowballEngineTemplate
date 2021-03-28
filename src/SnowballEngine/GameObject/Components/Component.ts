@@ -60,7 +60,7 @@ export abstract class Component implements Destroyable {
         this.__destroyed__ = true;
 
         const d = () => {
-            if (componentHasNoGameObject) this.gameObject.removeComponent(this.componentId);
+            if (componentHasNoGameObject) this.gameObject.removeComponent(this);
 
             clearObject(this, true);
         }
