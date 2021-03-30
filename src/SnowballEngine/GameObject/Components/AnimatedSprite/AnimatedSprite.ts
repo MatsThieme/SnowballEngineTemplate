@@ -1,11 +1,12 @@
 import { Container } from '@pixi/display';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
+import { AnimatedSpriteEventTypes } from 'Utility/Events/EventTypes';
 import { Renderable } from '../Renderable';
 import { SpriteAnimation } from './SpriteAnimation';
 
-/**@category Component */
-export class AnimatedSprite extends Renderable {
+/** @category Component */
+export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };
 
     private _spriteAnimations: Map<string, SpriteAnimation> = new Map();

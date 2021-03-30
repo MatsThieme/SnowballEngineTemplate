@@ -2,6 +2,7 @@ import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
+import { VideoEventTypes } from 'Utility/Events/EventTypes';
 import { Renderable } from './Renderable';
 
 /**
@@ -10,7 +11,7 @@ import { Renderable } from './Renderable';
  * @category Component
  * 
  */
-export class Video extends Renderable {
+export class Video extends Renderable<VideoEventTypes> {
     private _asset?: Asset;
 
     public constructor(gameObject: GameObject) {
@@ -24,6 +25,11 @@ export class Video extends Renderable {
         if (val?.type === AssetType.Video) {
             this._asset = val;
             this.sprite = val.getPIXISprite();
-        } else this.sprite = this._asset = undefined;
+
+            (<HTMLVideoElement>val.data).onended = () => this.dispatchEvent('end');
+        } else {
+            if (this._asset) (<HTMLVideoElement>this._asset.data).onended = null;
+            this.sprite = this._asset = undefined;
+        }
     }
 }

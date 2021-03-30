@@ -2,7 +2,8 @@ import { Graphics } from '@pixi/graphics';
 import { PIXI } from 'SnowballEngine/Camera/PIXI';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
-import { AABB } from 'SnowballEngine/Physics/AABB';
+import { AABB } from 'Utility/AABB';
+import { CameraEventTypes } from 'Utility/Events/EventTypes';
 import { clamp } from 'Utility/Helpers';
 import { Vector2 } from 'Utility/Vector2';
 import { ComponentType } from '../ComponentType';
@@ -13,7 +14,7 @@ import { Component } from './Component';
  * @category Component
  * @category Camera 
  */
-export class Camera extends Component {
+export class Camera extends Component<CameraEventTypes>  {
     /**
     *
     * camera position in vw and vh.
@@ -71,6 +72,11 @@ export class Camera extends Component {
         if (val.x !== this._screenSize.x || val.y !== this._screenSize.y) Debug.warn(`Camera(${this.gameObject.name}).screenSize was clamped to 0.0001-100`);
     }
 
+    /**
+     * 
+     * Global AABB
+     * 
+     */
     public get aabb(): AABB {
         if (this._aabb) return this._aabb;
 
@@ -78,7 +84,7 @@ export class Camera extends Component {
 
         const size = this.size.scale(globalTransform.scale);
 
-        return this._aabb = new AABB(size, globalTransform.position.clone.sub(Vector2.divide(size, 2)));
+        return this._aabb = new AABB(globalTransform.position, size.scale(0.5));
     }
 
     public update(pixi: PIXI): void {

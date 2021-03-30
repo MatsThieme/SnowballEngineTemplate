@@ -3,11 +3,12 @@ import { Sprite } from '@pixi/sprite';
 import { AlignH, AlignV } from 'GameObject/Align';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
+import { RenderableEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Component } from './Component';
 
-/**@category Component */
-export abstract class Renderable extends Component {
+/** @category Component */
+export abstract class Renderable<EventTypes extends RenderableEventTypes> extends Component<EventTypes> {
     public alignH: AlignH;
     public alignV: AlignV;
 
@@ -17,7 +18,7 @@ export abstract class Renderable extends Component {
     /**
      * 
      * Only if renderable.sprite is a container!
-     * Resize container when a child is added, has to be set before sprite.
+     * Resize container when a child is added. Set before sprite.
      * 
      */
     public autoResizeContainer: boolean;

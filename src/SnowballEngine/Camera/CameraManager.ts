@@ -119,8 +119,7 @@ export class CameraManager {
         for (const camera of this.cameras.sort((a, b) => a.zIndex - b.zIndex)) {
             if (camera.active) {
                 for (const component of components) {
-                    if (component.onPreRender)
-                        component.onPreRender(camera);
+                    component.dispatchEvent('prerender', camera);
                 }
 
 
@@ -128,8 +127,7 @@ export class CameraManager {
 
 
                 for (const component of components) {
-                    if (component.onPostRender)
-                        component.onPostRender(camera);
+                    component.dispatchEvent('postrender', camera);
                 }
             }
         }

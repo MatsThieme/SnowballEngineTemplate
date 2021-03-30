@@ -2,10 +2,11 @@ import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
+import { TextureEventTypes } from 'Utility/Events/EventTypes';
 import { Renderable } from './Renderable';
 
-/**@category Component */
-export class Texture extends Renderable {
+/** @category Component */
+export class Texture extends Renderable<TextureEventTypes>  {
     private _asset?: Asset;
 
     public constructor(gameObject: GameObject) {

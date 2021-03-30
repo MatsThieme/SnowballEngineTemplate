@@ -1,22 +1,20 @@
 import { average, clamp } from 'Utility/Helpers';
-import { Stopwatch } from 'Utility/Stopwatch';
 
 /** @category Scene */
 export class GameTime {
-    private static _lastTime = 0;
+    /**
+     *
+     * Returns duration of the last frame in milliseconds.
+     * 
+     */
+    public static readonly deltaTime: number = 5;
 
-    private static _deltaTime = 5;
-    private static _deltaTimeSeconds = 0.005;
-
-    private static readonly _t: number[] = [];
-    private static _clampDeltatime = 10;
-
-    private static readonly _startTime: number = performance.now();
-
-    private static _time = 0;
-
-    private static _sw = new Stopwatch();
-
+    /**
+     *
+     * Returns duration of the last frame in seconds.
+     * 
+     */
+    public static readonly deltaTimeSeconds: number = 0.005;
 
     /**
      * 
@@ -33,73 +31,58 @@ export class GameTime {
     public static maxDeltaTime = 1000;
 
     /**
+     * 
+     * The clamped(or not) deltas added since the start of the game.
+     * 
+     */
+    public static readonly gameTimeSinceStart: number = 0;
+
+    /**
+     * 
+     * High resolution timestamp from the beginning of the current frame.
+     * 
+     */
+    public static readonly frameStart: number = 0;
+
+
+    private static readonly _deltas: number[] = [];
+    private static _clampDeltatime = 10;
+
+    private static readonly _startTime: number = performance.now();
+
+
+    /**
      *
-     * Returns duration of the last frame in milliseconds.
-     * 
-     */
-    public static get deltaTime(): number {
-        return GameTime._deltaTime;
-    }
-
-    /**
+     * This is the time in milliseconds since the start of the game.
      *
-     * Returns duration of the last frame in seconds.
-     * 
      */
-    public static get deltaTimeSeconds(): number {
-        return GameTime._deltaTimeSeconds;
-    }
-
-
-    /**
-    *
-    * The time at the beginning of this frame. This is the time in milliseconds since the start of the game.
-    *
-    */
-    public static get time(): number {
-        return GameTime._time;
-    }
-
-    public static get now(): number {
-        return GameTime._time + GameTime._sw.milliseconds;
+    public static get timeSinceStart(): number {
+        return performance.now() - GameTime._startTime;
     }
 
     /**
-     * 
-     * returns the app time in milliseconds after the last update.
-     * 
-     */
-    public static get lastUpdate(): number {
-        return GameTime._lastTime;
-    }
-
-    public static readonly highresTimestamp: number = 0;
-
-    /**
-     * @internal
      * 
      * Calculates and clamps the delta time since last call.
+     * @internal
      * 
      */
     public static update(time: number): void {
-        const t = time - GameTime._startTime;
-        const d = t - GameTime._lastTime;
-        GameTime._deltaTime = GameTime.clampDeltatime ? Math.min(d, GameTime._clampDeltatime) : d;
-        GameTime._deltaTimeSeconds = GameTime._deltaTime / 1000;
-        GameTime._t.unshift(d);
+        // calculate delta time
+        const delta = time - GameTime.frameStart;
 
-        GameTime._time += GameTime.deltaTime;
-        GameTime._sw = new Stopwatch();
+        (<Mutable<typeof GameTime>>GameTime).deltaTime = GameTime.clampDeltatime ? Math.min(delta, GameTime._clampDeltatime) : delta;
+        (<Mutable<typeof GameTime>>GameTime).deltaTimeSeconds = GameTime.deltaTime / 1000;
 
 
-        const avgDelta = average(...GameTime._t);
+        (<Mutable<typeof GameTime>>GameTime).gameTimeSinceStart += GameTime.deltaTime;
 
+        // clamp delta time
+        GameTime._deltas.unshift(delta);
+        const avgDelta = average(...GameTime._deltas);
         GameTime._clampDeltatime = clamp(0, GameTime.maxDeltaTime, avgDelta * 1.1);
+        GameTime._deltas.splice(~~(500 / avgDelta));
 
-        GameTime._t.splice(~~(500 / avgDelta));
 
-        GameTime._lastTime = t;
-
-        (<any>GameTime).highresTimestamp = time;
+        (<Mutable<typeof GameTime>>GameTime).frameStart = time;
     }
 }

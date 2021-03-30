@@ -177,7 +177,7 @@ async function start() {
     const config = await prepare.config();
 
     if (_createADB) await createADB();
-    if (_updateADB || config.build.updateADB) await updateADB();
+    if (_updateADB || (_build || _debugbuild) && config.build.updateADB) await updateADB();
     if (_build) await build(config);
     if (_debugbuild) await debugbuild(config);
     if (_server) await server();

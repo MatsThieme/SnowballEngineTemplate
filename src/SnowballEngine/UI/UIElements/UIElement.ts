@@ -8,8 +8,8 @@ import { Client } from 'SnowballEngine/Client';
 import { Input } from 'SnowballEngine/Input/Input';
 import { UIElementType } from 'UI/UIElementType';
 import { UIMenu } from 'UI/UIMenu';
+import { AABB } from 'Utility/AABB';
 import { Vector2 } from 'Utility/Vector2';
-import { _AABB } from 'Utility/_AABB';
 
 /** @category UI */
 export class UIElement implements Destroyable {
@@ -46,7 +46,7 @@ export class UIElement implements Destroyable {
 
     protected _backgroundSprite?: Sprite;
 
-    public readonly aabb: _AABB;
+    public readonly aabb: AABB;
 
     protected _scaledPadding: Vector2;
 
@@ -69,7 +69,7 @@ export class UIElement implements Destroyable {
 
         this._menu = menu;
 
-        this.aabb = new _AABB();
+        this.aabb = new AABB();
 
         this._scaledPadding = new Vector2();
     }

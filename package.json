@@ -3,7 +3,7 @@
         "build": "node SEB --b",
         "debugbuild": "node SEB --d",
         "createadb": "node SEB --c",
-        "updateadb": "node SEB --m",
+        "updateadb": "node SEB --u",
         "server": "node SEB --s",
         "lint": "eslint . --ext .ts --ignore-path src/SnowballEngine",
         "lintfix": "eslint . --ext .ts --ignore-path src/SnowballEngine --fix",

@@ -2,17 +2,23 @@ import { DisplayObject } from '@pixi/display';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
 import { Angle } from 'Utility/Angle';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { TransformEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Component } from '../Component';
 import { Transformable } from './Transformable';
-import { TransformRealation } from './TransformRelation';
+import { TransformRelation } from './TransformRelation';
 
-/**@category Component */
-export class Transform extends Component implements Transformable {
+/** @category Component */
+export class Transform extends Component<TransformEventTypes> implements Transformable {
     public position: Vector2;
     public rotation: Angle;
     public scale: Vector2;
     public parent?: Transform;
+
+    private _prevPosition: Vector2;
+    private _prevRotation: Angle;
+    private _prevScale: Vector2;
 
     public readonly id: number;
 
@@ -26,11 +32,27 @@ export class Transform extends Component implements Transformable {
         this.scale = new Vector2(1, 1);
         this.parent = gameObject.parent?.transform;
 
+        this._prevPosition = this.position.clone;
+        this._prevRotation = this.rotation.clone;
+        this._prevScale = this.scale.clone;
+
+
         this.id = Transform._nextID++;
+
+        this.addListener('change', new EventHandler(this.onChange.bind(this)));
+        this.addListener('parentchange', new EventHandler(this.onParentChange.bind(this)));
     }
 
     public get children(): Transform[] {
         return this.gameObject.getComponentsInChildren(ComponentType.Transform);
+    }
+
+    private onParentChange(position?: Readonly<Vector2>, scale?: Readonly<Vector2>, rotation?: Readonly<Angle>) {
+        this.children.forEach(c => c.dispatchEvent('parentchange', position, scale, rotation));
+    }
+
+    private onChange(position?: Readonly<Vector2>, scale?: Readonly<Vector2>, rotation?: Readonly<Angle>) {
+        this.children.forEach(c => c.dispatchEvent('parentchange', position, scale, rotation));
     }
 
     /**
@@ -53,6 +75,29 @@ export class Transform extends Component implements Transformable {
         return Transform.toGlobal(this);
     }
 
+    protected update(): void {
+        let pos;
+        let rot;
+        let scale;
+
+        if (!this.position.equal(this._prevPosition)) {
+            this._prevPosition.copy(this.position);
+            pos = this._prevPosition;
+        }
+
+        if (!this.rotation.equal(this._prevRotation)) {
+            this._prevRotation.radian = this.rotation.radian;
+            rot = this._prevRotation;
+        }
+
+        if (!this.scale.equal(this._prevScale)) {
+            this._prevScale.copy(this.scale);
+            scale = this._prevScale;
+        }
+
+        if (pos || rot || scale) this.dispatchEvent('change', pos, scale, rot);
+    }
+
     /**
      * 
      * Find the relation between two transformables
@@ -62,7 +107,7 @@ export class Transform extends Component implements Transformable {
      * @param transform2
      * 
      */
-    public static findRelation(transform1: Transformable, transform2: Transformable): TransformRealation | undefined {
+    public static findRelation(transform1: Transformable, transform2: Transformable): TransformRelation | undefined {
         if (transform1.id === transform2.id) return;
 
         let thParent = 1;
@@ -109,7 +154,7 @@ export class Transform extends Component implements Transformable {
      * @param relation transform = transform1, localTransform = transform2; will be computed if not provided
      * 
      */
-    public static toLocal(transform: Transformable, localTransform: Transformable, relation?: TransformRealation): Transformable {
+    public static toLocal(transform: Transformable, localTransform: Transformable, relation?: TransformRelation): Transformable {
         if (!relation || relation.thParentOf1 !== undefined && relation.thParentOf2 !== undefined || relation.transform1.id !== transform.id || relation.transform2.id !== localTransform.id) relation = Transform.findRelation(transform, localTransform);
 
         if (!relation) {

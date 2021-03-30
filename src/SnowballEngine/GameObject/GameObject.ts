@@ -1,12 +1,10 @@
 import { Container } from '@pixi/display';
 import { Debug } from 'SnowballEngine/Debug';
-import { Collision } from 'SnowballEngine/Physics/Collision';
 import { Scene } from 'SnowballEngine/Scene';
+import { ComponentEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Behaviour } from './Components/Behaviour';
-import { Collider } from './Components/Collider';
 import { Component } from './Components/Component';
-import { RigidBody } from './Components/RigidBody';
 import { Transform } from './Components/Transform/Transform';
 import { ComponentType } from './ComponentType';
 import { Destroy, Destroyable } from './Destroy';
@@ -30,7 +28,7 @@ export class GameObject implements Destroyable {
 
     private static _nextID = 0;
 
-    private readonly _components: Map<ComponentType, Component[]>;
+    private readonly _components: Map<ComponentType, Component<ComponentEventTypes>[]>;
     private _active: boolean;
     private _parent?: GameObject;
 
@@ -86,35 +84,8 @@ export class GameObject implements Destroyable {
         this.container.parent.sortChildren();
     }
 
-    /**
-     *
-     * Returns the only rigidbody present on parents, children and this recursively.
-     * @deprecated
-     *
-     */
-    public get rigidbody(): RigidBody {
-        const rb = this.getComponent<RigidBody>(ComponentType.RigidBody);
-
-        if (!rb) {
-            this.addComponent(RigidBody);
-            return this.rigidbody;
-        }
-
-        return rb;
-    }
-
     public get parent(): GameObject | undefined {
         return this._parent;
-    }
-
-    /**
-     * 
-     * Returns all collider on parents, children and this recursively.
-     * @deprecated
-     * 
-     */
-    public get collider(): Collider[] {
-        return [...this.getComponents<Collider>(ComponentType.Collider), ...this.getComponentsInChildren<Collider>(ComponentType.Collider)];
     }
 
 
@@ -136,7 +107,7 @@ export class GameObject implements Destroyable {
      * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
-    public async addComponent<T extends Component>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T> {
+    public async addComponent<T extends Component<ComponentEventTypes>>(type: Constructor<T>, ...initializer: ((component: T) => void | Promise<void>)[]): Promise<T> {
         const component = new type(this);
 
         if (component.type !== ComponentType.Transform &&
@@ -159,9 +130,7 @@ export class GameObject implements Destroyable {
             throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
 
-        if ((component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) && !this.rigidbody) this.addComponent(RigidBody);
 
-        if (component.type === ComponentType.CircleCollider || component.type === ComponentType.PolygonCollider || component.type === ComponentType.TileMap) this.hasCollider = true;
 
         if (component.type === ComponentType.AudioListener) (<Mutable<Scene>>this.scene).audioListener = <any>component;
 
@@ -173,10 +142,10 @@ export class GameObject implements Destroyable {
         }
 
         if (component.type === ComponentType.Behaviour) {
-            if ((<Behaviour><unknown>component).awake) await (<Behaviour><unknown>component).awake!();
+            await (<Behaviour><unknown>component).dispatchEvent('awake');
             if (this.scene.isRunning || this.scene.isStarting) {
-                if ((<Behaviour><unknown>component).start) await (<Behaviour><unknown>component).start!();
-                (<any>component).__initialized__ = true;
+                await (<Behaviour><unknown>component).dispatchEvent('start');
+                (<Mutable<Behaviour>><unknown>component).__initialized__ = true;
             }
         }
 
@@ -189,7 +158,7 @@ export class GameObject implements Destroyable {
      * Component will be destroyed by default.
      * 
      */
-    public removeComponent<T extends Component>(component: T, destroy = true): void {
+    public removeComponent<T extends Component<ComponentEventTypes>>(component: T, destroy = true): void {
         if (!component) return Debug.warn('Component undefined');
 
         const components = this._components.get(component.type);
@@ -213,7 +182,7 @@ export class GameObject implements Destroyable {
      * Returns all components of type.
      * 
      */
-    public getComponents<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
+    public getComponents<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         if (typeof type === 'number') {
             if (this._components.has(type)) return <T[]>this._components.get(type);
             if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat(1);
@@ -223,7 +192,7 @@ export class GameObject implements Destroyable {
             return [];
         }
 
-        return <T[]>[...this._components.values()].flat(1).filter((c: Component) => {
+        return <T[]>[...this._components.values()].flat(1).filter((c: Component<ComponentEventTypes>) => {
             return c.constructor.name === type.name || c instanceof type;
         });
     }
@@ -233,7 +202,7 @@ export class GameObject implements Destroyable {
      * Returns the first component of type.
      *
      */
-    public getComponent<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
+    public getComponent<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         if (typeof type === 'number') {
             if (this._components.has(type)) return <T>this._components.get(type)![0];
             if (type === ComponentType.Component) return <T>[...this._components.values()].flat(1)[0];
@@ -256,14 +225,8 @@ export class GameObject implements Destroyable {
      * Get components of type of direct children
      *
      */
-    public getComponentsInChildren<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
-        const ret: T[] = [];
-
-        for (const child of this.children) {
-            ret.push(...child.getComponents(type));
-        }
-
-        return ret;
+    public getComponentsInChildren<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
+        return this.children.flatMap(c => c.getComponents(type));
     }
 
     /**
@@ -271,7 +234,7 @@ export class GameObject implements Destroyable {
      * Get component of type of direct children
      * 
      */
-    public getComponentInChildren<T extends Component>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
+    public getComponentInChildren<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         for (const child of this.children) {
             const c = child.getComponent(type);
             if (c) return c;
@@ -323,28 +286,19 @@ export class GameObject implements Destroyable {
      * Update children, behaviours, ParticleSystem, AnimatedSprite and AudioListener.
      * 
      */
-    public async update(currentCollisions: Collision[]): Promise<void> {
-        if (!this._parent && this.active && this.hasCollider) this.rigidbody.update(currentCollisions);
-
-
+    public async update(): Promise<void> {
         if (this.active) {
             for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
-                if (b.__initialized__ && b.active && b.update) await b.update();
+                if (b.__initialized__ && b.active) await b.dispatchEvent('update');
             }
         }
 
-        this.children.forEach(c => c.update(currentCollisions));
+        this.children.forEach(c => c.update());
 
         for (const ctype of this._components) {
             for (const c of ctype[1]) {
-                if (c.type === ComponentType.ParticleSystem ||
-                    c.type === ComponentType.AnimatedSprite ||
-                    c.type === ComponentType.AudioListener ||
-                    c.type === ComponentType.Texture ||
-                    c.type === ComponentType.ParallaxBackground ||
-                    c.type === ComponentType.Renderable ||
-                    c.type === ComponentType.TileMap)
-                    (<any>c).update();
+                if (c.type !== ComponentType.Camera)
+                    (<Component<ComponentEventTypes>>c).dispatchEvent('update');
             }
         }
 

@@ -47,6 +47,10 @@ export class Angle {
         return deg;
     }
 
+    public equal(other: Angle): boolean {
+        return this._radian === other._radian || this._degree === other._degree;
+    }
+
     public get clone(): Angle {
         return new Angle(undefined, this.degree);
     }

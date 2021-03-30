@@ -1,7 +1,7 @@
 import { Vector2 } from './Vector2';
 
 /** @category Utility */
-export class _AABB {
+export class AABB {
     public readonly position: Vector2;
     public readonly halfExtents: Vector2;
 
@@ -59,7 +59,7 @@ export class _AABB {
     }
 
 
-    public intersects(other: _AABB): boolean {
+    public intersects(other: AABB): boolean {
         return this._left < other._right && this._right > other._left && this._bottom < other._top && this._top > other._bottom;
     }
 
@@ -82,7 +82,7 @@ export class _AABB {
      * Returns this 
      * 
      */
-    public copy(aabb: _AABB): _AABB {
+    public copy(aabb: AABB): AABB {
         this.setPosition(aabb.position);
         this.setHalfExtents(aabb.halfExtents);
 

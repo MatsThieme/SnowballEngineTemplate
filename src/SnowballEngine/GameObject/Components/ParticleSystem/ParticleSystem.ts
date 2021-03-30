@@ -4,12 +4,13 @@ import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { GameTime } from 'SnowballEngine/GameTime';
 import { Angle } from 'Utility/Angle';
+import { ParticleSystemEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Renderable } from '../Renderable';
 import { Particle } from './Particle';
 
-/**@category Component */
-export class ParticleSystem extends Renderable {
+/** @category Component */
+export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
     public readonly particleSettings: ParticleSettings;
     public readonly emissionSettings: EmissionSettings;
 
@@ -77,7 +78,7 @@ export class ParticleSystem extends Renderable {
 
 
         for (let i = this._particles.length - 1; i >= 0; i--) {
-            if (this._particles[i].endTime < GameTime.time) {
+            if (this._particles[i].endTime < GameTime.gameTimeSinceStart) {
                 const particle = this._particles.splice(i, 1)[0];
 
                 this.sprite?.removeChild(particle.container);

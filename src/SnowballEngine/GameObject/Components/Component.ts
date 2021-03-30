@@ -2,10 +2,13 @@ import { ComponentType } from 'GameObject/ComponentType';
 import { Destroyable } from 'GameObject/Destroy';
 import { GameObject } from 'GameObject/GameObject';
 import { Debug } from 'SnowballEngine/Debug';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { ComponentEventTypes } from 'Utility/Events/EventTypes';
 import { Camera } from './Camera';
 
-/**@category Component */
-export abstract class Component implements Destroyable {
+/** @category Component */
+export abstract class Component<EventTypes extends ComponentEventTypes> extends EventTarget<EventTypes> implements Destroyable {
     private static _nextCID = 0;
 
     public readonly gameObject: GameObject;
@@ -15,11 +18,31 @@ export abstract class Component implements Destroyable {
     private _active: boolean;
 
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Component) {
+        super();
+
         this.gameObject = gameObject;
         this.type = type;
         this.componentId = Component._nextCID++;
 
         this._active = true;
+
+        this.addListeners();
+    }
+
+    /**
+     * 
+     * Called in a Deriving constructor.
+     * 
+     */
+    private addListeners(): void {
+        if (this.onPreRender) this.addListener('prerender', new EventHandler(this.onPreRender.bind(this)));
+        if (this.onPostRender) this.addListener('postrender', new EventHandler(this.onPostRender.bind(this)));
+        if (this.onEnable) this.addListener('enable', new EventHandler(this.onEnable.bind(this)));
+        if (this.onDisable) this.addListener('disable', new EventHandler(this.onDisable.bind(this)));
+        if (this.earlyUpdate) this.addListener('earlyupdate', new EventHandler(this.earlyUpdate.bind(this)));
+        if (this.update) this.addListener('update', new EventHandler(this.update.bind(this)));
+        if (this.lateUpdate) this.addListener('lateupdate', new EventHandler(this.lateUpdate.bind(this)));
+        if (this.onDestroy) this.addListener('destroy', new EventHandler(this.onDestroy.bind(this)));
     }
 
     /**
@@ -40,8 +63,8 @@ export abstract class Component implements Destroyable {
 
         this._active = val;
 
-        if (this.onEnable && val) this.onEnable();
-        else if (this.onDisable && !val) this.onDisable();
+        if (val) this.dispatchEvent('enable');
+        else this.dispatchEvent('disable');
     }
 
     /**
@@ -50,62 +73,66 @@ export abstract class Component implements Destroyable {
      * 
      */
     public destroy(): void {
-        if (this.onDestroy) this.onDestroy();
+        this.dispatchEvent('destroy');
 
         if (this.gameObject) this.gameObject.removeComponent(this);
     }
-}
-
-export interface Component extends Destroyable {
-    /**
-    *
-    * Called before camera renders.
-    *
-    */
-    onPreRender?(renderingCamera: Camera): void;
-
-    /**
-    *
-    * Called after camera rendered.
-    *
-    */
-    onPostRender?(renderingCamera: Camera): void;
-
 
     /**
      *
      * Called after component.active is set to false.
      *
      */
-    onEnable?(): void;
+    protected onEnable?(): void;
+    /**
+     *
+     * Called after component.active is set to true.
+     *
+     */
+    protected onDisable?(): void;
+
+    /**
+     *
+     * Called before camera renders.
+     *
+     */
+    protected onPreRender?(renderingCamera: Camera): void | Promise<void>;
 
     /**
     *
-    * Called after component.active is set to true.
+    * Called after camera rendered.
     *
     */
-    onDisable?(): void;
+    protected onPostRender?(renderingCamera: Camera): void | Promise<void>;
 
+
+    /**
+    *
+    * Called before any GameObject is updated.
+    *
+    */
+    protected earlyUpdate?(): void | Promise<void>;
 
     /**
     *
     * Called once every frame.
     *
     */
-    update?(...args: unknown[]): void;
+    protected update?(...args: unknown[]): void | Promise<void>;
 
     /**
     *
-    * Called after all GameObjects and Components update method is called.
+    * Called after all GameObjects are updated.
     *
     */
-    lateUpdate?(): void;
-
+    protected lateUpdate?(): void | Promise<void>;
 
     /**
-    *
-    * Called when the Component is removed from the GameObject.
-    *
-    */
-    onDestroy?(): void;
+     * 
+     * Called before this is destroyed.
+     * 
+     */
+    protected onDestroy?(): void;
 }
+
+export interface Component<EventTypes extends ComponentEventTypes> extends Destroyable { }

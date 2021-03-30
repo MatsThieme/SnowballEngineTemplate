@@ -30,7 +30,7 @@ export class Particle implements Disposable {
 
         this.velocity = vel.clone.scale(particleSystem.particleSettings.velocity);
 
-        this.startTime = GameTime.time;
+        this.startTime = GameTime.gameTimeSinceStart;
         this.endTime = this.startTime + this._particleSettings.lifeTime;
 
         this.particleSystem = particleSystem;
@@ -109,17 +109,17 @@ export class Particle implements Disposable {
      * 
      */
     public get alpha(): number {
-        if (GameTime.time < this.startTime + this._particleSettings.fadeIn) {
-            return (GameTime.time - this.startTime) / this._particleSettings.fadeIn;
-        } else if (GameTime.time > this.endTime - this._particleSettings.fadeOut) {
-            return 1 - (GameTime.time - this.endTime + this._particleSettings.fadeOut) / this._particleSettings.fadeOut;
+        if (GameTime.gameTimeSinceStart < this.startTime + this._particleSettings.fadeIn) {
+            return (GameTime.gameTimeSinceStart - this.startTime) / this._particleSettings.fadeIn;
+        } else if (GameTime.gameTimeSinceStart > this.endTime - this._particleSettings.fadeOut) {
+            return 1 - (GameTime.gameTimeSinceStart - this.endTime + this._particleSettings.fadeOut) / this._particleSettings.fadeOut;
         }
 
         return 1;
     }
 
     public get size(): Vector2 {
-        return this._particleSettings.endSize ? Vector2.lerp(this._particleSettings.startSize, this._particleSettings.endSize, (GameTime.time - this.startTime) / this._particleSettings.lifeTime) : this._particleSettings.startSize;
+        return this._particleSettings.endSize ? Vector2.lerp(this._particleSettings.startSize, this._particleSettings.endSize, (GameTime.gameTimeSinceStart - this.startTime) / this._particleSettings.lifeTime) : this._particleSettings.startSize;
     }
 
     public get position(): Vector2 {

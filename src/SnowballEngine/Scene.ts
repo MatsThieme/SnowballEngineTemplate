@@ -15,7 +15,6 @@ import { CameraManager } from './Camera/CameraManager';
 import { Client } from './Client';
 import { Framedata } from './Framedata';
 import { GameTime } from './GameTime';
-import { Collision } from './Physics/Collision';
 import { SceneManager } from './SceneManager';
 
 /** @category Scene */
@@ -27,6 +26,13 @@ export class Scene {
     public readonly audioListener?: AudioListener;
     public readonly domElement: HTMLCanvasElement;
     public readonly name: string;
+
+    /**
+     * 
+     * If true, GameObjects and components are not updated.
+     * 
+     */
+    public pause: boolean;
 
     private _requestAnimationFrameHandle?: number;
     private _updateComplete?: boolean;
@@ -61,6 +67,8 @@ export class Scene {
 
         this.domElement = this.cameraManager.canvas;
         this.domElement.id = this.name;
+
+        this.pause = false;
     }
 
 
@@ -137,44 +145,22 @@ export class Scene {
 
         Input.update();
 
-        const gameObjects = [...this.gameObjects.values()];
-
-        const scenePaused = [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
+        const scenePaused = this.pause || [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
 
         if (!scenePaused) {
-            // gameObjects.forEach(gO => gO.getComponents<Collider>(ComponentType.Collider).forEach(c => c.update()));
-
-            // const idPairs: number[] = [];
-            // const collisionPromises: Promise<Collision>[] = [];
-
-
-            // const gOs = gameObjects.filter(gO => gO.active && gO.hasCollider && !gO.parent);
-
-
-            // for (const gO1 of gOs) {
-            //     for (const gO2 of gOs) {
-            //         const id = gO1.id > gO2.id ? cantorPairingFunction(gO1.id, gO2.id) : cantorPairingFunction(gO2.id, gO1.id);
-
-            //         ((gO1.id + gO2.id) / 2) * (gO1.id + gO2.id + 1) + gO2.id;
-
-            //         if (!idPairs[id] && gO1.id !== gO2.id) {
-            //             collisionPromises.push(...Physics.collision(gO1, gO2));
-            //             idPairs[id] = 1;
-            //         }
-            //     }
-            // }
-
-            const collisions: Collision[] = [];
-
-            // for (const c of await Promise.all(collisionPromises)) {
-            //     collisions.push(c);
-            // }
-
-            await Promise.all(gameObjects.map(gameObject => gameObject.update(collisions)));
+            const gameObjects = [...this.gameObjects.values()];
 
             for (const gO of gameObjects) {
                 for (const c of gO.getComponents(ComponentType.Component)) {
-                    if (c.lateUpdate) c.lateUpdate();
+                    await c.dispatchEvent('earlyupdate');
+                }
+            }
+
+            await Promise.all(gameObjects.map(gameObject => gameObject.update()));
+
+            for (const gO of gameObjects) {
+                for (const c of gO.getComponents(ComponentType.Component)) {
+                    await c.dispatchEvent('lateupdate');
                 }
             }
         }
@@ -208,8 +194,8 @@ export class Scene {
         for (const gameObject of this.gameObjects.values()) {
             for (const c of gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
                 if (!c.__initialized__) {
-                    if (c.start) await c.start();
-                    (<any>c).__initialized__ = true;
+                    await c.dispatchEvent('start');
+                    (<Mutable<Behaviour>>c).__initialized__ = true;
                 }
             }
         }

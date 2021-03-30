@@ -12,7 +12,7 @@ export class Stopwatch {
     private get _now(): number {
         if ((<any>window).chrome) return performance.now();
 
-        return Math.max(performance.now(), GameTime.highresTimestamp);
+        return Math.max(performance.now(), GameTime.frameStart);
     }
 
     public get milliseconds(): number {

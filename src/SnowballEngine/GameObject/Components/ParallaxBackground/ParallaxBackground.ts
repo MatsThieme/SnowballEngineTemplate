@@ -4,8 +4,9 @@ import { AssetType } from 'Assets/AssetType';
 import { ComponentType } from 'GameObject/ComponentType';
 import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
-import { AABB } from 'SnowballEngine/Physics/AABB';
+import { AABB } from 'Utility/AABB';
 import { Angle } from 'Utility/Angle';
+import { ParallaxBackgroundEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Camera } from '../Camera';
 import { Renderable } from '../Renderable';
@@ -13,8 +14,8 @@ import { Transform } from '../Transform/Transform';
 import { BackgroundLayer } from './BackgroundLayer';
 import { BackgroundLayerAsset } from './BackgroundLayerAsset';
 
-/**@category Component */
-export class ParallaxBackground extends Renderable {
+/** @category Component */
+export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes> {
     public cameras: Camera[];
     public scrollSpeed: number;
 
@@ -46,7 +47,7 @@ export class ParallaxBackground extends Renderable {
     public onPreRender(camera: Camera): void {
         const i = this.cameras.findIndex(c => c.componentId === camera.componentId);
 
-        if (i === -1 || !camera.aabb.intersects(this._aabb)) return;
+        if (i === -1 || !this._aabb.intersects(camera.aabb)) return;
 
         this.calculateBackgroundForCamera(camera);
     }
@@ -80,9 +81,8 @@ export class ParallaxBackground extends Renderable {
             parent: this.gameObject.transform
         });
 
-
-        this._aabb.position.copy(t.position);
-        this._aabb.size.set(right - left, top - bot).scale(t.scale);
+        this._aabb.setHalfExtents({ x: (right - left) / 2 * t.scale.x, y: (top - bot) / 2 * t.scale.y });
+        this._aabb.setPosition(t.position.add(this._aabb.halfExtents));
     }
 
     public addBackground(speed: number, asset: BackgroundLayerAsset): void {
@@ -97,7 +97,7 @@ export class ParallaxBackground extends Renderable {
 
         (<Graphics>this.sprite!.mask).clear()
             .beginFill(0)
-            .drawRect(this._aabb.position.x, this._aabb.position.y, this._aabb.size.x, this._aabb.size.y)
+            .drawRect(this._aabb.left, this._aabb.bottom, this._aabb.width, this._aabb.height)
             .endFill();
     }
 

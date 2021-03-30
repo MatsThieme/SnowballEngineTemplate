@@ -2,16 +2,14 @@ import { Container } from '@pixi/display';
 import { Assets } from 'Assets/Assets';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
-import { AABB } from 'SnowballEngine/Physics/AABB';
-import { PhysicsMaterial } from 'SnowballEngine/Physics/PhysicsMaterial';
+import { TileMapEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Renderable } from './Renderable';
 
-/**@category Component */
-export class TileMap extends Renderable {
+/** @category Component */
+export class TileMap extends Renderable<TileMapEventTypes> {
     public tileSize: Vector2;
     private _tileMap: (1 | 0)[][];
-    public material: PhysicsMaterial;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.TileMap);
@@ -20,7 +18,6 @@ export class TileMap extends Renderable {
 
         this.tileSize = new Vector2(1, 1);
         this._tileMap = [];
-        this.material = new PhysicsMaterial();
     }
 
     /**
@@ -69,9 +66,7 @@ export class TileMap extends Renderable {
         return this._tileMap;
     }
 
-    public get AABB(): AABB {
-        return new AABB(new Vector2(this._tileMap.length > 0 ? this._tileMap[0].length : 0, this._tileMap.length).scale(this.tileSize).scale(this.gameObject.transform.scale), this.position);
-    }
+
 
     //public pointToTilemapSpace(pos: Vector2) {
     //    return new Vector2(Math.floor((pos.x - this.position.x) / this.tileSize.x), (this.collisionMap.length - 1) - Math.floor((pos.y - this.position.y) / this.tileSize.y));

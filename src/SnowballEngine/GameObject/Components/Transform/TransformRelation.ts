@@ -6,7 +6,7 @@ import { Transformable } from './Transformable';
  * transfrom1 is the th(thParentOf2) parent of transform2
  *
  */
-export interface TransformRealation {
+export interface TransformRelation {
     transform1: Transformable,
 
     /**

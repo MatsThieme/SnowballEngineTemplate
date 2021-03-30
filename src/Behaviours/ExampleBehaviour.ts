@@ -7,23 +7,26 @@ export class ExampleBehaviour extends Behaviour {
      * 
      */
     example1 = 123;
-    example2!: number;
+    example2!: string;
 
     /**
      * 
      * Called after the behavior has been added to the game object.
      * 
      */
-    async awake() {
-        this.example2 = 123;
+    protected awake() {
+        this.example2 = 'start';
+
+        Debug.log('awake');
     }
 
     /**
      * 
      * Called on scene start, if scene is running it's called immediately after awake.
+     * Other GameObjects and components may be accessed.
      * 
      */
-    async start() {
+    protected start() {
         Debug.log(this.example2);
     }
 
@@ -32,7 +35,7 @@ export class ExampleBehaviour extends Behaviour {
      * Called once every frame.
      * 
      */
-    async update() {
+    protected update() {
         // rotate the gameObject holding the texture component
         this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
 

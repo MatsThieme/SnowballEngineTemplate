@@ -1,4 +1,5 @@
 import { Debug } from 'SnowballEngine/Debug';
+import { AudioListenerEventTypes } from 'Utility/Events/EventTypes';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
@@ -6,7 +7,7 @@ import { AudioSource } from './AudioSource';
 import { Component } from './Component';
 
 /** @category Component */
-export class AudioListener extends Component {
+export class AudioListener extends Component<AudioListenerEventTypes>  {
     public static readonly context: AudioContext = new AudioContext();
 
     public static readonly node: AudioDestinationNode = AudioListener.context.destination;

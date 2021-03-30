@@ -3,6 +3,7 @@ import { AssetType } from 'Assets/AssetType';
 import { AudioMixer } from 'SnowballEngine/Audio/AudioMixer';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
+import { AudioSourceEventTypes } from 'Utility/Events/EventTypes';
 import { clamp } from 'Utility/Helpers';
 import { Stopwatch } from 'Utility/Stopwatch';
 import { ComponentType } from '../ComponentType';
@@ -10,8 +11,8 @@ import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';
 import { Component } from './Component';
 
-/**@category Component */
-export class AudioSource extends Component {
+/** @category Component */
+export class AudioSource extends Component<AudioSourceEventTypes>  {
     public readonly node: PannerNode;
 
     public playGlobally: boolean;

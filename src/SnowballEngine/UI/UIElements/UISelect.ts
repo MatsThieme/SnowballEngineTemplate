@@ -5,9 +5,9 @@ import { Scene } from 'SnowballEngine/Scene';
 import { UIElementType } from 'UI/UIElementType';
 import { UIFonts } from 'UI/UIFonts';
 import { UIMenu } from 'UI/UIMenu';
+import { AABB } from 'Utility/AABB';
 import { Color } from 'Utility/Color';
 import { Vector2 } from 'Utility/Vector2';
-import { _AABB } from 'Utility/_AABB';
 import { UIElement } from './UIElement';
 
 /** @category UI */
@@ -126,7 +126,7 @@ export class UISelect extends UIElement {
             if (this._extended) {
                 if (this.click) {
                     for (const [label, text] of this._labels) {
-                        const aabb = new _AABB(new Vector2(this.container.position.x + text.x + this._width / 2, this.container.position.y + text.y + text.height / 2), new Vector2(this._width / 2 + this.padding.x, text.height / 2));
+                        const aabb = new AABB(new Vector2(this.container.position.x + text.x + this._width / 2, this.container.position.y + text.y + text.height / 2), new Vector2(this._width / 2 + this.padding.x, text.height / 2));
 
                         if (aabb.intersectsPoint(this.downPosition!)) {
                             this.setValue(label);
