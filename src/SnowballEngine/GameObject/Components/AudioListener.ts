@@ -30,7 +30,7 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this._sources = new Map();
 
 
-        for (const gO of [...this.gameObject.scene.gameObjects.values()]) {
+        for (const gO of GameObject.gameObjects) {
             for (const source of [...gO.getComponents(AudioSource)]) source.connect();
         }
     }

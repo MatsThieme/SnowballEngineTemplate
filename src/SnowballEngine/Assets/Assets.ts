@@ -1,5 +1,4 @@
 import { AudioListener } from 'GameObject/Components/AudioListener';
-import { Destroy } from 'GameObject/Destroy';
 import { Interval } from 'Utility/Interval';
 import { Timeout } from 'Utility/Timeout';
 import AssetDB from '../../../Assets/AssetDB.json';
@@ -20,13 +19,14 @@ export class Assets {
         return Assets._assets.get(id);
     }
 
+    /**
+     * 
+     * Removes the Asset from the DB.
+     * Does not destroy the Asset. 
+     * 
+     */
     public static delete(id: AssetID): void {
-        const asset = Assets.get(id);
-
-        if (asset) {
-            Destroy(asset);
-            Assets._assets.delete(id);
-        }
+        Assets._assets.delete(id);
     }
 
     public static set(asset: Asset, name: AssetID): Asset {
@@ -47,7 +47,8 @@ export class Assets {
             throw new Error(`Could not load Asset: ${path}; ${JSON.stringify(error)}`);
         }
 
-        Assets._assets.set(name || path, asset);
+        Assets._assets.set(path, asset);
+        if (name) Assets._assets.set(name, asset);
 
         return asset;
     }
@@ -132,8 +133,7 @@ export class Assets {
         const p: Promise<Asset>[] = [];
 
         for (const path in db) {
-            const name = <AssetID>Object.keys(db[path])[0];
-            p.push(Assets.load(path, db[path].type, (<string>name) !== 'type' ? name : undefined));
+            p.push(Assets.load(path, db[path].type, <AssetID>Object.keys(db[path]).find(k => k !== 'type')));
         }
 
         for (const ap of p) {

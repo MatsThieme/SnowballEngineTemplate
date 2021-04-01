@@ -67,6 +67,11 @@ export class Asset implements Destroyable {
         }
     }
 
+    /**
+     * 
+     * Draw image data mirrored to a canvas and override the original image data. Returns this.
+     * 
+     */
     public mirrorImage(x?: boolean, y?: boolean): Asset {
         if (this.type !== AssetType.Image) {
             throw new Error('type !== AssetType.Image');
@@ -103,7 +108,7 @@ export class Asset implements Destroyable {
             throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
         }
 
-        if (this.type === AssetType.Image) this.mirrorImage(this.image!.mirrorX && !this._image!.mirroredX, this.image!.mirrorY && !this._image!.mirroredY);
+        if (this.type === AssetType.Image) this.mirrorImage(this.image!.mirrorX !== this._image!.mirroredX, this.image!.mirrorY !== this._image!.mirroredY);
 
 
         const sprite = new Sprite(this.getPIXITexture(x, y, width, height)!);
@@ -118,8 +123,10 @@ export class Asset implements Destroyable {
             throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
         }
 
-        if (!x && !y && !width && !height && !(this.image || this.video)!.x && !(this.image || this.video)!.y && !(this.image || this.video)!.width && !(this.image || this.video)!.height) return new Texture(<BaseTexture>(this.image || this.video)!.baseTexture);
-        else return new Texture(<BaseTexture>(this.image || this.video)!.baseTexture, new Rectangle(x || (this.image || this.video)!.x, y || (this.image || this.video)!.y, width === undefined ? (this.image || this.video)!.width || (this.image || this.video)!.size.x : width, height === undefined ? this.image!.height || (this.image || this.video)!.size.y : height));
+        const thing = this.image! || this.video!;
+
+        if (!x && !y && !width && !height && !thing.x && !thing.y && !thing.width && !thing.height) return new Texture(<BaseTexture>thing.baseTexture);
+        else return new Texture(<BaseTexture>thing.baseTexture, new Rectangle(x || thing.x, y || thing.y, width === undefined ? thing.width || thing.size.x : width, height === undefined ? this.image!.height || thing.size.y : height));
     }
 
     public clone(): Asset {

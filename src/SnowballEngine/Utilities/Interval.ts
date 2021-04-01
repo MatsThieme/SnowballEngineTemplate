@@ -6,7 +6,7 @@ export class Interval {
     public readonly handle: number;
     public readonly counter: number;
 
-    public constructor(cb: (interval: Interval) => any, ms: number, dontClearOnUnload = false) {
+    public constructor(cb: (interval: Interval) => unknown | Promise<unknown>, ms: number, dontClearOnUnload = false) {
         this.handle = window.setInterval(async () => {
             await cb(this);
             (<Mutable<Interval>>this).counter++;

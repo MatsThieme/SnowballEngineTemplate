@@ -20,7 +20,6 @@ import { SceneManager } from './SceneManager';
 /** @category Scene */
 export class Scene {
     public readonly cameraManager: CameraManager;
-    public readonly gameObjects: Map<string, GameObject>;
     public readonly ui: UI;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
@@ -53,13 +52,12 @@ export class Scene {
 
         this.name = name;
 
-
         Input.reset();
         Client.init();
+        GameObject.init();
 
         if (!(<any>UIFonts)._fonts) UIFonts.init();
 
-        this.gameObjects = new Map();
         this.ui = new UI();
         this.cameraManager = new CameraManager();
         this.framedata = new Framedata();
@@ -99,26 +97,6 @@ export class Scene {
         return !!this._requestAnimationFrameHandle;
     }
 
-
-    /**
-     * 
-     * Returns GameObject if present in Scene.
-     * 
-     */
-    public find(name: string): GameObject | undefined {
-        return this.gameObjects.get(name) || this.gameObjects.get([...this.gameObjects.keys()].find(n => (n.match(/(.*) \(\d+\)/) || '')[1] === name) || '');
-    }
-
-    /**
-     *
-     * Returns all GameObjects of the given name.
-     *
-     */
-    public findAll(name: string): GameObject[] {
-        return [...this.gameObjects.entries()].filter(e => (e[0].match(/(.*) \(\d+\)/) || '')[1] === name).map(e => e[1]);
-    }
-
-
     /**
      * @internal
      * 
@@ -128,9 +106,6 @@ export class Scene {
      * GameTime
      * Input
      * framedata
-     * collider
-     * collisions
-     * rigidbodies
      * gameObjects
      * ui
      * cameraManager
@@ -148,21 +123,11 @@ export class Scene {
         const scenePaused = this.pause || [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
 
         if (!scenePaused) {
-            const gameObjects = [...this.gameObjects.values()];
+            await Component.earlyupdate();
 
-            for (const gO of gameObjects) {
-                for (const c of gO.getComponents(ComponentType.Component)) {
-                    await c.dispatchEvent('earlyupdate');
-                }
-            }
+            await GameObject.update();
 
-            await Promise.all(gameObjects.map(gameObject => gameObject.update()));
-
-            for (const gO of gameObjects) {
-                for (const c of gO.getComponents(ComponentType.Component)) {
-                    await c.dispatchEvent('lateupdate');
-                }
-            }
+            await Component.lateupdate();
         }
 
 
@@ -171,7 +136,7 @@ export class Scene {
         this.cameraManager.update();
 
 
-        this.destroy();
+        this.destroyDestroyables();
 
 
         if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
@@ -191,7 +156,7 @@ export class Scene {
         (<any>GameObject).nextID = (<any>Component).nextID = 0;
 
 
-        for (const gameObject of this.gameObjects.values()) {
+        for (const gameObject of GameObject.gameObjects) {
             for (const c of gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
                 if (!c.__initialized__) {
                     await c.dispatchEvent('start');
@@ -208,6 +173,7 @@ export class Scene {
     /**
      *
      * Stop scene.
+     * @internal
      *
      */
     public async stop(): Promise<void> {
@@ -266,7 +232,7 @@ export class Scene {
      * Destroy all destroyables
      * 
      */
-    private destroy(): void {
+    private destroyDestroyables(): void {
         this._destroyables.forEach(d => d.destroy());
         this._destroyables.splice(0).forEach(d => Dispose(d));
     }
@@ -279,15 +245,13 @@ export class Scene {
     public async unload(): Promise<void> {
         await this.stop();
 
-        for (const gameObject of this.gameObjects.values()) {
-            Destroy(gameObject);
-        }
+        Destroy(GameObject);
 
         Destroy(this.ui);
 
-        this.destroy();
+        Destroy(this.cameraManager);
 
-        this.cameraManager.destroy();
+        this.destroyDestroyables();
 
         AudioMixer.reset();
 

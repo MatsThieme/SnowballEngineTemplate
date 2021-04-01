@@ -1,5 +1,5 @@
 import { Camera } from 'GameObject/Components/Camera';
-import { ComponentType } from 'GameObject/ComponentType';
+import { Component } from 'GameObject/Components/Component';
 import { GameObject } from 'GameObject/GameObject';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
@@ -105,20 +105,15 @@ export class CameraManager {
     public update(): void {
         if (!this.cameras.filter(c => c.active)) return Debug.warn('No active camera');
 
-
         const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
         this._PIXI.resize(canvasSize.x, canvasSize.y);
 
         this._PIXI.renderer.clear();
 
 
-        const gameObjects = [...this.cameras[0].gameObject.scene.gameObjects.values()];
-        const components = gameObjects.flatMap(gameObject => gameObject.getComponents(ComponentType.Component));
-
-
         for (const camera of this.cameras.sort((a, b) => a.zIndex - b.zIndex)) {
             if (camera.active) {
-                for (const component of components) {
+                for (const component of Component.components) {
                     component.dispatchEvent('prerender', camera);
                 }
 
@@ -126,7 +121,7 @@ export class CameraManager {
                 camera.update(this._PIXI);
 
 
-                for (const component of components) {
+                for (const component of Component.components) {
                     component.dispatchEvent('postrender', camera);
                 }
             }

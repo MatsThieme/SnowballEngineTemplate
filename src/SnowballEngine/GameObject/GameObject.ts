@@ -16,6 +16,10 @@ import { Destroy, Destroyable } from './Destroy';
  * 
  */
 export class GameObject implements Destroyable {
+    private static _nextID = 0;
+
+    public static readonly gameObjects: GameObject[];
+
     public readonly id: number;
     public readonly name: string;
 
@@ -24,9 +28,7 @@ export class GameObject implements Destroyable {
     public scene: Scene;
 
     public drawPriority: number;
-    public hasCollider: boolean;
 
-    private static _nextID = 0;
 
     private readonly _components: Map<ComponentType, Component<ComponentEventTypes>[]>;
     private _active: boolean;
@@ -38,23 +40,24 @@ export class GameObject implements Destroyable {
     public readonly transform!: Transform;
 
     public constructor(name: string) {
+        if (name.includes('/')) throw new Error('Name must not include /');
+
         if (!Scene.currentScene) throw new Error('No Scene loaded!');
         this.scene = Scene.currentScene;
 
         this.id = GameObject._nextID++;
-        this.name = `${name} (${this.id})`;
+        this.name = name;
 
-        this.scene.gameObjects.set(this.name, this);
+        GameObject.gameObjects[this.id] = this;
 
         this.container = new Container();
-        this.container.name = this.name;
+        this.container.name = name;
 
 
         this.children = [];
 
 
         this.drawPriority = 0;
-        this.hasCollider = false;
 
         this._components = new Map();
         this._active = true;
@@ -187,7 +190,7 @@ export class GameObject implements Destroyable {
             if (this._components.has(type)) return <T[]>this._components.get(type);
             if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat(1);
             if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.Video)];
-            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.PolygonCollider)];
+            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.Collider)];
 
             return [];
         }
@@ -207,7 +210,7 @@ export class GameObject implements Destroyable {
             if (this._components.has(type)) return <T>this._components.get(type)![0];
             if (type === ComponentType.Component) return <T>[...this._components.values()].flat(1)[0];
             if (type === ComponentType.Renderable) return this.getComponent(ComponentType.AnimatedSprite) || this.getComponent(ComponentType.ParallaxBackground) || this.getComponent(ComponentType.ParticleSystem) || this.getComponent(ComponentType.Texture) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.Video);
-            if (type === ComponentType.Collider) return this.getComponent(ComponentType.PolygonCollider);
+            if (type === ComponentType.Collider) return this.getComponent(ComponentType.Collider);
 
             return undefined;
         }
@@ -329,8 +332,96 @@ export class GameObject implements Destroyable {
      * 
      */
     public destroy(): void {
-        this.scene.gameObjects.delete(this.name);
+        delete GameObject.gameObjects[this.id];
 
-        this.parent?.removeChild(this);
+        if (this.parent) this.parent.removeChild(this);
+    }
+
+    public static async update(): Promise<void> {
+        await Promise.all(GameObject.gameObjects.map(gameObject => gameObject.update()));
+    }
+
+    /**
+     * 
+     * For performance reasons, it is recommended to not use this function every frame. Instead, cache the result in a member variable at startup.
+     * @param query name of a gameObject or a/path/to/a/gameObject or /an/absolute/path
+     * @param gameObjects 
+     * 
+     */
+    public static find(query: string, gameObjects?: GameObject[]): GameObject | undefined {
+        if (!/^\/?\w+(?:\/\w+)*$/.test(query)) throw new Error('Wrong query format');
+
+        if (!gameObjects) {
+            if (query[0] === '/') {
+                const gOs = [];
+
+                for (const g of GameObject.gameObjects) {
+                    if (!g.parent) gOs.push(g);
+                }
+
+                return GameObject.find(query, gOs);
+            } else {
+                const gOs = [];
+
+                const names = query.split('/');
+
+                if (names.length === 0) return undefined;
+
+                for (const g of GameObject.gameObjects) {
+                    if (g.name === names[0]) gOs.push(...g.children);
+                }
+
+                if (gOs.length === 0) return undefined;
+
+                return GameObject.find(names.slice(1).join('/'), gOs);
+            }
+        }
+
+        if (query[0] === '/') query = query.substr(1);
+
+        if (!query.includes('/')) {
+            for (const g of gameObjects) {
+                if (g.name === query) return g;
+            }
+
+            return undefined;
+        }
+
+        let children: GameObject[] | undefined = gameObjects;
+
+        const names = query.split('/');
+
+        for (const name of names) {
+            const g = GameObject.find(name, children);
+
+            if (!g) return undefined;
+
+            if (g.name === name && g.name === names[names.length - 1]) return g;
+            else children = g.children;
+        }
+
+        return undefined;
+    }
+
+    /**
+     * 
+     * Returns GameObject with name if exists.
+     * 
+     */
+    public static get(id: number): GameObject | undefined {
+        return GameObject.gameObjects[id];
+    }
+
+    public static prepareDestroy(): void {
+        for (const gameObject of GameObject.gameObjects) {
+            Destroy(gameObject);
+        }
+    }
+
+    public static destroy(): void { }
+
+    public static init(): void {
+        (<any>GameObject)._nextID = 0;
+        (<Mutable<typeof GameObject>>GameObject).gameObjects = [];
     }
 }

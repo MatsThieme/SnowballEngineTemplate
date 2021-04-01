@@ -229,7 +229,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
             this._playing = false;
 
             const diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;
-            if (diff > 20 && diff < 50) Debug.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: <820ms`);
+            if (diff > 20 && diff < 50) Debug.warn(`Inaccurate time measurement detected: ${((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate) * 1000).toFixed(3)}ms, tolerance: < 20ms`);
 
             if (this._sw.seconds + 0.02 > this._audioBufferNode.buffer!.duration / this._rate) {
                 this._sw.stop();

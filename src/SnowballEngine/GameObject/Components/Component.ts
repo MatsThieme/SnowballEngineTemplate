@@ -10,7 +10,13 @@ import { Camera } from './Camera';
 /** @category Component */
 export abstract class Component<EventTypes extends ComponentEventTypes> extends EventTarget<EventTypes> implements Destroyable {
     private static _nextCID = 0;
+    public static readonly components: Component<ComponentEventTypes>[] = [];
 
+    /**
+     * 
+     * A reference to the owning GameObject.
+     * 
+     */
     public readonly gameObject: GameObject;
     public readonly type: ComponentType;
     public readonly componentId: number;
@@ -25,6 +31,8 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
         this.componentId = Component._nextCID++;
 
         this._active = true;
+
+        Component.components.push(this);
 
         this.addListeners();
     }
@@ -75,7 +83,21 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
     public destroy(): void {
         this.dispatchEvent('destroy');
 
+        Component.components.splice(Component.components.findIndex(c => c.componentId === this.componentId), 1);
+
         if (this.gameObject) this.gameObject.removeComponent(this);
+    }
+
+    public static async earlyupdate(): Promise<void> {
+        for (const component of Component.components) {
+            await component.dispatchEvent('earlyupdate');
+        }
+    }
+
+    public static async lateupdate(): Promise<void> {
+        for (const component of Component.components) {
+            await component.dispatchEvent('lateupdate');
+        }
     }
 
     /**
