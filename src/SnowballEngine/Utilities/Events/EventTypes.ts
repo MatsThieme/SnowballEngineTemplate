@@ -24,6 +24,7 @@ export type CameraEventTypes = {} & ComponentEventTypes;
 export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
 export type ParticleSystemEventTypes = {} & RenderableEventTypes;
 export type RigidbodyEventTypes = {} & ComponentEventTypes;
+export type TextEventTypes = {} & ComponentEventTypes;
 export type TextureEventTypes = {} & RenderableEventTypes;
 export type TileMapEventTypes = {} & RenderableEventTypes;
 export type TransformEventTypes = { change: [position?: Readonly<Vector2>, scale?: Readonly<Vector2>, rotation?: Readonly<Angle>], parentchange: [position?: Readonly<Vector2>, scale?: Readonly<Vector2>, rotation?: Readonly<Angle>] } & ComponentEventTypes; export type VideoEventTypes = { end: [] } & RenderableEventTypes;

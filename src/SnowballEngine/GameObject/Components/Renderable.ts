@@ -23,8 +23,8 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
      */
     public autoResizeContainer: boolean;
 
-    private _sprite?: Sprite | Container;
-    private _size: Vector2;
+    protected _sprite?: Sprite | Container;
+    protected _size: Vector2;
     private _visible: boolean;
 
     /**
@@ -44,13 +44,13 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.autoResizeContainer = false;
     }
 
-    public onEnable(): void {
+    protected onEnable(): void {
         if (this._sprite) {
             this._sprite.visible = this._visible;
         }
     }
 
-    public onDisable(): void {
+    protected onDisable(): void {
         if (this._sprite) {
             this._sprite.visible = false;
         }
@@ -103,7 +103,20 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
             if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
 
+
             this.connectCamera();
+
+            this._sprite!.parent.sortChildren();
+        }
+    }
+
+    public get zIndex(): number {
+        return this._sprite ? this._sprite.zIndex : 0;
+    }
+    public set zIndex(val: number) {
+        if (this._sprite) {
+            this._sprite.zIndex = val;
+            this._sprite.parent.sortChildren();
         }
     }
 
@@ -146,27 +159,29 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.gameObject.container.removeChild(this._sprite);
     }
 
-    public update(): void {
+    protected update(): void {
         if (this._sprite && this.active) {
-            // update anchor/pivot
-            const anchor = new Vector2(this.alignH === AlignH.Left ? 0 : this.alignH === AlignH.Center ? 0.5 : 1, this.alignV === AlignV.Top ? 0 : this.alignV === AlignV.Center ? 0.5 : 1);
+            const anchor = new Vector2(this.alignH, this.alignV);
 
             if ('anchor' in this._sprite) {
                 this._sprite.anchor.copyFrom(anchor);
-                this._sprite.width = this._size.x;
-                this._sprite.height = this._size.y;
-            }
+                this._sprite.position.copyFrom(this.position);
+            } else {
+                const bounds = this._sprite.getLocalBounds();
 
-            this._sprite.position.copyFrom(this.position);
+                this._sprite.position.copyFrom(new Vector2().copy(this.position).sub(new Vector2(bounds.width, bounds.height).scale(anchor)));
+            }
         }
     }
 
     public destroy(): void {
         this.disconnectCamera();
 
-        if (this.sprite) {
-            this.sprite.destroy({ children: true, texture: true, baseTexture: false });
-            this.sprite = undefined;
+        if (this._sprite) {
+            this.disconnectCamera();
+
+            this._sprite.destroy({ children: true, texture: true, baseTexture: false });
+            this._sprite = undefined;
         }
 
         super.destroy();
