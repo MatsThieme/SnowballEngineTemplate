@@ -87,26 +87,20 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_clampdeltatime" class="tsd-kind-icon">_clamp<wbr>Deltatime</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_deltatime" class="tsd-kind-icon">_delta<wbr>Time</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_deltatimeseconds" class="tsd-kind-icon">_delta<wbr>Time<wbr>Seconds</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_lasttime" class="tsd-kind-icon">_last<wbr>Time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_deltas" class="tsd-kind-icon">_deltas</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_starttime" class="tsd-kind-icon">_start<wbr>Time</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_sw" class="tsd-kind-icon">_sw</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_t" class="tsd-kind-icon">_t</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="gametime.html#_time" class="tsd-kind-icon">_time</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#clampdeltatime" class="tsd-kind-icon">clamp<wbr>Deltatime</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#highrestimestamp" class="tsd-kind-icon">highres<wbr>Timestamp</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#deltatimeseconds" class="tsd-kind-icon">delta<wbr>Time<wbr>Seconds</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#framestart" class="tsd-kind-icon">frame<wbr>Start</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#gametimesincestart" class="tsd-kind-icon">game<wbr>Time<wbr>Since<wbr>Start</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="gametime.html#maxdeltatime" class="tsd-kind-icon">max<wbr>Delta<wbr>Time</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#deltatimeseconds" class="tsd-kind-icon">delta<wbr>Time<wbr>Seconds</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#lastupdate" class="tsd-kind-icon">last<wbr>Update</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#now" class="tsd-kind-icon">now</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#time" class="tsd-kind-icon">time</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="gametime.html#timesincestart" class="tsd-kind-icon">time<wbr>Since<wbr>Start</a></li>
 							</ul>
 						</section>
 					</div>
@@ -137,37 +131,17 @@
 					<div class="tsd-signature tsd-kind-icon">_clamp<wbr>Deltatime<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 10</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L12">src/SnowballEngine/GameTime.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L49">src/SnowballEngine/GameTime.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_deltatime" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _delta<wbr>Time</h3>
-					<div class="tsd-signature tsd-kind-icon">_delta<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 5</span></div>
+					<a name="_deltas" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _deltas</h3>
+					<div class="tsd-signature tsd-kind-icon">_deltas<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L8">src/SnowballEngine/GameTime.ts:8</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_deltatimeseconds" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _delta<wbr>Time<wbr>Seconds</h3>
-					<div class="tsd-signature tsd-kind-icon">_delta<wbr>Time<wbr>Seconds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.005</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L9">src/SnowballEngine/GameTime.ts:9</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_lasttime" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _last<wbr>Time</h3>
-					<div class="tsd-signature tsd-kind-icon">_last<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L6">src/SnowballEngine/GameTime.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L48">src/SnowballEngine/GameTime.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -177,37 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">_start<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L14">src/SnowballEngine/GameTime.ts:14</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_sw" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _sw</h3>
-					<div class="tsd-signature tsd-kind-icon">_sw<span class="tsd-signature-symbol">:</span> <a href="stopwatch.html" class="tsd-signature-type" data-tsd-kind="Class">Stopwatch</a><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L18">src/SnowballEngine/GameTime.ts:18</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_t" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _t</h3>
-					<div class="tsd-signature tsd-kind-icon">_t<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L11">src/SnowballEngine/GameTime.ts:11</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="_time" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _time</h3>
-					<div class="tsd-signature tsd-kind-icon">_time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L16">src/SnowballEngine/GameTime.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L51">src/SnowballEngine/GameTime.ts:51</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -217,7 +161,7 @@
 					<div class="tsd-signature tsd-kind-icon">clamp<wbr>Deltatime<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L26">src/SnowballEngine/GameTime.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L24">src/SnowballEngine/GameTime.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -227,14 +171,64 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
-					<a name="highrestimestamp" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> highres<wbr>Timestamp</h3>
-					<div class="tsd-signature tsd-kind-icon">highres<wbr>Timestamp<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<a name="deltatime" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> delta<wbr>Time</h3>
+					<div class="tsd-signature tsd-kind-icon">delta<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 5</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L76">src/SnowballEngine/GameTime.ts:76</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L10">src/SnowballEngine/GameTime.ts:10</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns duration of the last frame in milliseconds.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="deltatimeseconds" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> delta<wbr>Time<wbr>Seconds</h3>
+					<div class="tsd-signature tsd-kind-icon">delta<wbr>Time<wbr>Seconds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0.005</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L17">src/SnowballEngine/GameTime.ts:17</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Returns duration of the last frame in seconds.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="framestart" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> frame<wbr>Start</h3>
+					<div class="tsd-signature tsd-kind-icon">frame<wbr>Start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L45">src/SnowballEngine/GameTime.ts:45</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>High resolution timestamp from the beginning of the current frame.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="gametimesincestart" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> game<wbr>Time<wbr>Since<wbr>Start</h3>
+					<div class="tsd-signature tsd-kind-icon">game<wbr>Time<wbr>Since<wbr>Start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L38">src/SnowballEngine/GameTime.ts:38</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The clamped(or not) deltas added since the start of the game.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
 					<a name="maxdeltatime" class="tsd-anchor"></a>
@@ -242,7 +236,7 @@
 					<div class="tsd-signature tsd-kind-icon">max<wbr>Delta<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1000</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L33">src/SnowballEngine/GameTime.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L31">src/SnowballEngine/GameTime.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -255,104 +249,21 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="deltatime" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> delta<wbr>Time</h3>
+					<a name="timesincestart" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> time<wbr>Since<wbr>Start</h3>
 					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> deltaTime<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> timeSinceStart<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L40">src/SnowballEngine/GameTime.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameTime.ts#L59">src/SnowballEngine/GameTime.ts:59</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns duration of the last frame in milliseconds.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="deltatimeseconds" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> delta<wbr>Time<wbr>Seconds</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> deltaTimeSeconds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L49">src/SnowballEngine/GameTime.ts:49</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns duration of the last frame in seconds.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="lastupdate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> last<wbr>Update</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> lastUpdate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L72">src/SnowballEngine/GameTime.ts:72</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>returns the app time in milliseconds after the last update.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="now" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> now</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> now<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L63">src/SnowballEngine/GameTime.ts:63</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-					<a name="time" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> time</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> time<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameTime.ts#L59">src/SnowballEngine/GameTime.ts:59</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>The time at the beginning of this frame. This is the time in milliseconds since the start of the game.</p>
+									<p>This is the time in milliseconds since the start of the game.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -383,49 +294,31 @@
 								<a href="gametime.html#_clampdeltatime" class="tsd-kind-icon">_clamp<wbr>Deltatime</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_deltatime" class="tsd-kind-icon">_delta<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_deltatimeseconds" class="tsd-kind-icon">_delta<wbr>Time<wbr>Seconds</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_lasttime" class="tsd-kind-icon">_last<wbr>Time</a>
+								<a href="gametime.html#_deltas" class="tsd-kind-icon">_deltas</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 								<a href="gametime.html#_starttime" class="tsd-kind-icon">_start<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_sw" class="tsd-kind-icon">_sw</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_t" class="tsd-kind-icon">_t</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="gametime.html#_time" class="tsd-kind-icon">_time</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="gametime.html#clampdeltatime" class="tsd-kind-icon">clamp<wbr>Deltatime</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#highrestimestamp" class="tsd-kind-icon">highres<wbr>Timestamp</a>
+								<a href="gametime.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="gametime.html#deltatimeseconds" class="tsd-kind-icon">delta<wbr>Time<wbr>Seconds</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="gametime.html#framestart" class="tsd-kind-icon">frame<wbr>Start</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="gametime.html#gametimesincestart" class="tsd-kind-icon">game<wbr>Time<wbr>Since<wbr>Start</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
 								<a href="gametime.html#maxdeltatime" class="tsd-kind-icon">max<wbr>Delta<wbr>Time</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#deltatime" class="tsd-kind-icon">delta<wbr>Time</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#deltatimeseconds" class="tsd-kind-icon">delta<wbr>Time<wbr>Seconds</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#lastupdate" class="tsd-kind-icon">last<wbr>Update</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#now" class="tsd-kind-icon">now</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
-								<a href="gametime.html#time" class="tsd-kind-icon">time</a>
+								<a href="gametime.html#timesincestart" class="tsd-kind-icon">time<wbr>Since<wbr>Start</a>
 							</li>
 						</ul>
 					</li>

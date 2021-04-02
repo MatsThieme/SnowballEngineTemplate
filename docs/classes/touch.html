@@ -100,6 +100,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="touch.html#_button" class="tsd-kind-icon">_button</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="touch.html#_firelistener" class="tsd-kind-icon">_fire<wbr>Listener</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="touch.html#_listeners" class="tsd-kind-icon">_listeners</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="touch.html#_ontouchevent" class="tsd-kind-icon">_on<wbr>Touch<wbr>Event</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="touch.html#_positions" class="tsd-kind-icon">_positions</a></li>
 							</ul>
 						</section>
@@ -108,10 +109,9 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="touch.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="touch.html#addlisteners" class="tsd-kind-icon">add<wbr>Listeners</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="touch.html#destroy" class="tsd-kind-icon">destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="touch.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="touch.html#getaxis" class="tsd-kind-icon">get<wbr>Axis</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="touch.html#getbutton" class="tsd-kind-icon">get<wbr>Button</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="touch.html#ontouchevent" class="tsd-kind-icon">on<wbr>Touch<wbr>Event</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="touch.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="touch.html#removelisteners" class="tsd-kind-icon">remove<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="touch.html#update" class="tsd-kind-icon">update</a></li>
@@ -133,7 +133,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L15">src/SnowballEngine/Input/Devices/Touch/Touch.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L17">src/SnowballEngine/Input/Devices/Touch/Touch.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="touch.html" class="tsd-signature-type" data-tsd-kind="Class">Touch</a></h4>
@@ -149,7 +149,7 @@
 					<div class="tsd-signature tsd-kind-icon">_button<span class="tsd-signature-symbol">:</span> <a href="inputbutton.html" class="tsd-signature-type" data-tsd-kind="Class">InputButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L14">src/SnowballEngine/Input/Devices/Touch/Touch.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L14">src/SnowballEngine/Input/Devices/Touch/Touch.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +159,7 @@
 					<div class="tsd-signature tsd-kind-icon">_fire<wbr>Listener<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L15">src/SnowballEngine/Input/Devices/Touch/Touch.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L15">src/SnowballEngine/Input/Devices/Touch/Touch.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -170,9 +170,40 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#_listeners">_listeners</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/InputEventTarget.ts#L6">src/SnowballEngine/Input/InputEventTarget.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/InputEventTarget.ts#L6">src/SnowballEngine/Input/InputEventTarget.ts:6</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_ontouchevent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _on<wbr>Touch<wbr>Event</h3>
+					<div class="tsd-signature tsd-kind-icon">_on<wbr>Touch<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TouchEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L17">src/SnowballEngine/Input/Devices/Touch/Touch.ts:17</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TouchEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>e: <span class="tsd-signature-type">TouchEvent</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_positions" class="tsd-anchor"></a>
@@ -180,7 +211,7 @@
 					<div class="tsd-signature tsd-kind-icon">_positions<span class="tsd-signature-symbol">:</span> <a href="inputaxis.html" class="tsd-signature-type" data-tsd-kind="Class">InputAxis</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L13">src/SnowballEngine/Input/Devices/Touch/Touch.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L13">src/SnowballEngine/Input/Devices/Touch/Touch.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -198,7 +229,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/InputEventTarget.ts#L17">src/SnowballEngine/Input/InputEventTarget.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/InputEventTarget.ts#L17">src/SnowballEngine/Input/InputEventTarget.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L77">src/SnowballEngine/Input/Devices/Touch/Touch.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L83">src/SnowballEngine/Input/Devices/Touch/Touch.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -258,17 +289,17 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-					<a name="destroy" class="tsd-anchor"></a>
-					<h3>destroy</h3>
+					<a name="dispose" class="tsd-anchor"></a>
+					<h3>dispose</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#destroy">destroy</a></p>
+								<p>Overrides <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L89">src/SnowballEngine/Input/Devices/Touch/Touch.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L95">src/SnowballEngine/Input/Devices/Touch/Touch.ts:95</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -286,7 +317,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/inputdevice.html">InputDevice</a>.<a href="../interfaces/inputdevice.html#getaxis">getAxis</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L48">src/SnowballEngine/Input/Devices/Touch/Touch.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L54">src/SnowballEngine/Input/Devices/Touch/Touch.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -310,7 +341,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/inputdevice.html">InputDevice</a>.<a href="../interfaces/inputdevice.html#getbutton">getButton</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L42">src/SnowballEngine/Input/Devices/Touch/Touch.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L48">src/SnowballEngine/Input/Devices/Touch/Touch.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -320,29 +351,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="inputbutton.html" class="tsd-signature-type" data-tsd-kind="Class">InputButton</a><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
-					<a name="ontouchevent" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> on<wbr>Touch<wbr>Event</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Touch<wbr>Event<span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TouchEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L27">src/SnowballEngine/Input/Devices/Touch/Touch.ts:27</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>e: <span class="tsd-signature-type">TouchEvent</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -357,7 +365,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#removelistener">removeListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/InputEventTarget.ts#L22">src/SnowballEngine/Input/InputEventTarget.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/InputEventTarget.ts#L22">src/SnowballEngine/Input/InputEventTarget.ts:22</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -380,7 +388,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L83">src/SnowballEngine/Input/Devices/Touch/Touch.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L89">src/SnowballEngine/Input/Devices/Touch/Touch.ts:89</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -397,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L52">src/SnowballEngine/Input/Devices/Touch/Touch.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Input/Devices/Touch/Touch.ts#L58">src/SnowballEngine/Input/Devices/Touch/Touch.ts:58</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -434,6 +442,9 @@
 								<a href="touch.html#_listeners" class="tsd-kind-icon">_listeners</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="touch.html#_ontouchevent" class="tsd-kind-icon">_on<wbr>Touch<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="touch.html#_positions" class="tsd-kind-icon">_positions</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -443,16 +454,13 @@
 								<a href="touch.html#addlisteners" class="tsd-kind-icon">add<wbr>Listeners</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="touch.html#destroy" class="tsd-kind-icon">destroy</a>
+								<a href="touch.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="touch.html#getaxis" class="tsd-kind-icon">get<wbr>Axis</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="touch.html#getbutton" class="tsd-kind-icon">get<wbr>Button</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-								<a href="touch.html#ontouchevent" class="tsd-kind-icon">on<wbr>Touch<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="touch.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>

@@ -61,14 +61,13 @@
 				<a href="#status" id="status" style="color: inherit; text-decoration: none;">
 					<h2>Status:</h2>
 				</a>
-				<p>PIXI.js integrated for rendering game assets, ui is still rendered using a 2d context
-					<br>
-				Matter.js not yet integrated &amp;&amp; physics currently not working properly</p>
+				<p>Matter.js not yet integrated</p>
+				<p><a href="https://matsthieme.github.io/SnowballEngineTemplate">Documentation</a></p>
 				<a href="#snowballengine" id="snowballengine" style="color: inherit; text-decoration: none;">
 					<h1>SnowballEngine</h1>
 				</a>
 				<p><strong>SnowballEngine is a 2D TypeScript game engine.</strong>
-				It manages scenes, game assets, simulates physics, renders assets, provides a simple structure and more</p>
+				SnowballEngine manages scenes, game assets, simulates physics, renders assets and provides an easy to understand structure similar to Unity. It integrates <a href="https://github.com/pixijs/pixi.js">pixi.js</a> for fast rendering and <a href="https://github.com/liabru/matter-js">matter-js</a> for accurate and performant physics simulation, including collision detection and resolution.</p>
 				<a href="#setup" id="setup" style="color: inherit; text-decoration: none;">
 					<h3>setup</h3>
 				</a>
@@ -77,22 +76,36 @@
 					<h3>build</h3>
 				</a>
 				<pre>npm run build</pre>
+				<pre>node SEB --b</pre>
+				<pre>node SEB -build</pre>
 				<a href="#debug-build" id="debug-build" style="color: inherit; text-decoration: none;">
 					<h3>debug build</h3>
 				</a>
-				<pre>npm run builddebug</pre>
-				<a href="#generate-assetdbjson-from-assets-folder" id="generate-assetdbjson-from-assets-folder" style="color: inherit; text-decoration: none;">
-					<h3>generate AssetDB.json from Assets folder</h3>
+				<pre>npm run debugbuild</pre>
+				<pre>node SEB --d</pre>
+				<pre>node SEB -debugbuild</pre>
+				<a href="#generate-assetdbjson" id="generate-assetdbjson" style="color: inherit; text-decoration: none;">
+					<h3>generate AssetDB.json</h3>
 				</a>
-				<pre>npm run newadb</pre>
-				<a href="#generate-assetdbjson-from-assets-folder-and-merge-with-existing-assetdbjson" id="generate-assetdbjson-from-assets-folder-and-merge-with-existing-assetdbjson" style="color: inherit; text-decoration: none;">
-					<h3>generate AssetDB.json from Assets folder and merge with existing AssetDB.json</h3>
+				<pre>npm run createadb</pre>
+				<pre>node SEB --c</pre>
+				<pre>node SEB -createADB</pre>
+				<a href="#update-assetdbjson" id="update-assetdbjson" style="color: inherit; text-decoration: none;">
+					<h3>update AssetDB.json</h3>
 				</a>
-				<pre>npm run mnewadb</pre>
+				<pre>npm run updateadb</pre>
+				<pre>node SEB --u</pre>
+				<pre>node SEB -updateADB</pre>
 				<a href="#start-debug-server" id="start-debug-server" style="color: inherit; text-decoration: none;">
 					<h3>start debug server</h3>
 				</a>
 				<pre>npm run server</pre>
+				<pre>npm SEB --s</pre>
+				<pre>npm SEB -server</pre>
+				<a href="#generate-documentation" id="generate-documentation" style="color: inherit; text-decoration: none;">
+					<h3>generate documentation</h3>
+				</a>
+				<pre>npm run doc</pre>
 				<br>
 				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
 					<h2>Getting Started</h2>
@@ -111,14 +124,22 @@ src/
   Game.ts
 dist/
 </pre>
+				<a href="#behaviours" id="behaviours" style="color: inherit; text-decoration: none;">
+					<h4>Behaviours</h4>
+				</a>
+				<p><a href="#behaviour">Behaviour</a></p>
 				<a href="#configurables" id="configurables" style="color: inherit; text-decoration: none;">
 					<h4>Configurables</h4>
 				</a>
-				<p>Configurables contains engine files the user will edit during the development process.<br>e.g. InputAction.d.ts for input mapping</p>
+				<p>Configurables contains typedefinition files (.d.ts) the user will edit during the development process.<br>e.g. InputAction.d.ts for input mapping</p>
 				<a href="#prefabs" id="prefabs" style="color: inherit; text-decoration: none;">
 					<h4>Prefabs</h4>
 				</a>
-				<p>Prefabs are functions that initialize a GameObject.</p>
+				<p>Prefabs contains files that export a function to initialize a GameObject.</p>
+				<a href="#scenes" id="scenes" style="color: inherit; text-decoration: none;">
+					<h4>Scenes</h4>
+				</a>
+				<p>Scenes contains files that export a function to initialize a Scene.</p>
 				<br>
 				<a href="#engine-code-structure" id="engine-code-structure" style="color: inherit; text-decoration: none;">
 					<h3>Engine code structure</h3>
@@ -130,130 +151,142 @@ SceneManager
       Component
     UI
 </pre>
-				<a href="#the-main-file-39gamets39-looks-like-this" id="the-main-file-39gamets39-looks-like-this" style="color: inherit; text-decoration: none;">
-					<h3>The main file &#39;Game.ts&#39; looks like this</h3>
+				<a href="#the-main-file-39gamets39-may-look-like-this" id="the-main-file-39gamets39-may-look-like-this" style="color: inherit; text-decoration: none;">
+					<h3>The main file &#39;Game.ts&#39; may look like this</h3>
 				</a>
 				<pre><code class="language-typescript"><span style="color: #D73A49">import</span><span style="color: #24292E"> { LoadingScreenScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/LoadingScreenScene&#039;</span><span style="color: #24292E">;</span>
 <span style="color: #D73A49">import</span><span style="color: #24292E"> { MainScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/MainScene&#039;</span><span style="color: #24292E">;</span>
-<span style="color: #D73A49">import</span><span style="color: #24292E"> { Assets, SceneManager } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;se&#039;</span><span style="color: #24292E">;</span>
+<span style="color: #D73A49">import</span><span style="color: #24292E"> { Assets, SceneManager } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;SE&#039;</span><span style="color: #24292E">;</span>
 
 <span style="color: #D73A49">export</span><span style="color: #24292E"> </span><span style="color: #D73A49">class</span><span style="color: #24292E"> </span><span style="color: #6F42C1">Game</span><span style="color: #24292E"> {</span>
 <span style="color: #24292E">    </span><span style="color: #D73A49">public</span><span style="color: #24292E"> </span><span style="color: #D73A49">constructor</span><span style="color: #24292E">() {</span>
 <span style="color: #24292E">        </span><span style="color: #005CC5">this</span><span style="color: #24292E">.</span><span style="color: #6F42C1">initialize</span><span style="color: #24292E">(</span><span style="color: #D73A49">new</span><span style="color: #24292E"> </span><span style="color: #6F42C1">SceneManager</span><span style="color: #24292E">());</span>
 <span style="color: #24292E">    }</span>
 <span style="color: #24292E">    </span><span style="color: #D73A49">private</span><span style="color: #24292E"> </span><span style="color: #D73A49">async</span><span style="color: #24292E"> </span><span style="color: #6F42C1">initialize</span><span style="color: #24292E">(</span><span style="color: #E36209">sceneManager</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #6F42C1">SceneManager</span><span style="color: #24292E">)</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #6F42C1">Promise</span><span style="color: #24292E">&lt;</span><span style="color: #005CC5">void</span><span style="color: #24292E">&gt; {</span>
-<span style="color: #24292E">        sceneManager.</span><span style="color: #6F42C1">add</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Loadingscreen&#039;</span><span style="color: #24292E">, LoadingScreenScene);</span>
-<span style="color: #24292E">        sceneManager.</span><span style="color: #6F42C1">add</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Game&#039;</span><span style="color: #24292E">, MainScene);</span>
+<span style="color: #24292E">        sceneManager.</span><span style="color: #6F42C1">add</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Loading Screen Scene&#039;</span><span style="color: #24292E">, LoadingScreenScene);</span>
+<span style="color: #24292E">        sceneManager.</span><span style="color: #6F42C1">add</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Main Scene&#039;</span><span style="color: #24292E">, MainScene);</span>
 
-<span style="color: #24292E">        </span><span style="color: #D73A49">await</span><span style="color: #24292E"> sceneManager.</span><span style="color: #6F42C1">load</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Loadingscreen&#039;</span><span style="color: #24292E">);</span>
+<span style="color: #24292E">        </span><span style="color: #D73A49">await</span><span style="color: #24292E"> sceneManager.</span><span style="color: #6F42C1">load</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Loading Screen Scene&#039;</span><span style="color: #24292E">);</span>
 
 <span style="color: #24292E">        </span><span style="color: #D73A49">await</span><span style="color: #24292E"> Assets.</span><span style="color: #6F42C1">loadFromAssetDB</span><span style="color: #24292E">();</span>
 
-<span style="color: #24292E">        </span><span style="color: #D73A49">await</span><span style="color: #24292E"> sceneManager.</span><span style="color: #6F42C1">load</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Game&#039;</span><span style="color: #24292E">);</span>
+<span style="color: #24292E">        </span><span style="color: #D73A49">await</span><span style="color: #24292E"> sceneManager.</span><span style="color: #6F42C1">load</span><span style="color: #24292E">(</span><span style="color: #032F62">&#039;Main Scene&#039;</span><span style="color: #24292E">);</span>
 <span style="color: #24292E">    }</span>
 <span style="color: #24292E">}</span>
 </code></pre>
-				<a href="#behaviour" id="behaviour" style="color: inherit; text-decoration: none;">
-					<h3>Behaviour</h3>
+				<a href="#scenemanager" id="scenemanager" style="color: inherit; text-decoration: none;">
+					<h3>SceneManager</h3>
 				</a>
-				<p>A Behaviour is a Component with user-defined functionality.</p>
-				<a href="#component" id="component" style="color: inherit; text-decoration: none;">
-					<h3>Component</h3>
+				<p>A SceneManager instance loads Scenes and stores their Initializer-function.</p>
+				<a href="#scene" id="scene" style="color: inherit; text-decoration: none;">
+					<h3>Scene</h3>
 				</a>
-				<p>A Component controls the behavior of the corresponding GameObject.</p>
+				<p>A Scene manages GameObjects and the userinterface. It contains the gameloop.</p>
 				<a href="#gameobject" id="gameobject" style="color: inherit; text-decoration: none;">
 					<h3>GameObject</h3>
 				</a>
 				<p>A GameObject is a container for components.
 				It has a Transform component by default.</p>
+				<a href="#component" id="component" style="color: inherit; text-decoration: none;">
+					<h3>Component</h3>
+				</a>
+				<p>A Component controls the behavior of the corresponding GameObject.</p>
+				<a href="#behaviour" id="behaviour" style="color: inherit; text-decoration: none;">
+					<h3>Behaviour</h3>
+				</a>
+				<p>A Behaviour is a Component with user-defined functionality.<br>The Base class for all Behaviours.</p>
 				<br>
 				<a href="#components" id="components" style="color: inherit; text-decoration: none;">
 					<h2>Components</h2>
 				</a>
-				<a href="#animatedsprite" id="animatedsprite" style="color: inherit; text-decoration: none;">
-					<h3>AnimatedSprite</h3>
+				<a href="#animatedsprite-extends-renderable" id="animatedsprite-extends-renderable" style="color: inherit; text-decoration: none;">
+					<h3>AnimatedSprite extends Renderable</h3>
 				</a>
-				<p>Switch between multiple SpriteAnimations
+				<p>Manages SpriteAnimation objects to render and switch sprite animations.
+					</br>
 				</br></p>
 				<a href="#audiolistener" id="audiolistener" style="color: inherit; text-decoration: none;">
 					<h3>AudioListener</h3>
 				</a>
 				<p>Can exist once per scene, it&#39;s the &quot;ears&quot; of the player.
 					It&#39;s the audio counterpart of Camera.
+					</br>
 				</br></p>
 				<a href="#audiosource" id="audiosource" style="color: inherit; text-decoration: none;">
 					<h3>AudioSource</h3>
 				</a>
-				<p>Emits positional Audio from a file(Asset).
-					Can hold an AudioMixer object.
+				<p>Emits positional Audio.
+					Can hold an AudioMixer object to filter/modify output.
+					</br>
 				</br></p>
 				<a href="#behaviour-1" id="behaviour-1" style="color: inherit; text-decoration: none;">
 					<h3>Behaviour</h3>
 				</a>
-				<p>Base class for all Behaviours.
+				<p>A Behaviour is a Component with user-defined functionality.<br>The Base class for all Behaviours.
+					</br>
 				</br></p>
 				<a href="#camera" id="camera" style="color: inherit; text-decoration: none;">
 					<h3>Camera</h3>
 				</a>
-				<p>A Camera component displays a part of the world on screen.
-				</br></p>
-				<a href="#circlecollider" id="circlecollider" style="color: inherit; text-decoration: none;">
-					<h3>CircleCollider</h3>
-				</a>
-				</br>
-				<a href="#circlerenderer" id="circlerenderer" style="color: inherit; text-decoration: none;">
-					<h3>CircleRenderer</h3>
-				</a>
-				<p>Debug renderer, renders the CircleCollider on the same GameObject.
-				</br></p>
-				<a href="#collider" id="collider" style="color: inherit; text-decoration: none;">
-					<h3>Collider</h3>
-				</a>
-				<p>Base class for CircleCollider and PolygonCollider.
+				<p>The size and position of a camera component specify which area of the scene is rendered to the screen.
+					</br>
 				</br></p>
 				<a href="#component-1" id="component-1" style="color: inherit; text-decoration: none;">
 					<h3>Component</h3>
 				</a>
-				<p>Base class for all components.
+				<p>The Base class for all components.
+					</br>
+				</br></p>
+				<a href="#renderable" id="renderable" style="color: inherit; text-decoration: none;">
+					<h3>Renderable</h3>
+				</a>
+				<p>The Base class for all renderable components.
+					Examlpes are <a href="#texture">Texture</a>, <a href="#video">Video</a>, <a href="#parallaxbackground">ParallaxBackground</a> and <a href="text">Text</a>.
+					</br>
 				</br></p>
 				<a href="#parallaxbackground" id="parallaxbackground" style="color: inherit; text-decoration: none;">
 					<h3>ParallaxBackground</h3>
 				</a>
-				<p>A graphical component for rendering parallax scrolling images.
+				<p>A graphical component for rendering parallax scrolling images. <a href="https://en.wikipedia.org/wiki/Parallax_scrolling">Wikipedia: Parallax scrolling</a>
+					</br>
 				</br></p>
 				<a href="#particlesystem" id="particlesystem" style="color: inherit; text-decoration: none;">
 					<h3>ParticleSystem</h3>
 				</a>
 				</br>
-				<a href="#polygoncollider" id="polygoncollider" style="color: inherit; text-decoration: none;">
-					<h3>PolygonCollider</h3>
-				</a>
 				</br>
-				<a href="#polygonrenderer" id="polygonrenderer" style="color: inherit; text-decoration: none;">
-					<h3>PolygonRenderer</h3>
+				<a href="#text" id="text" style="color: inherit; text-decoration: none;">
+					<h3>Text</h3>
 				</a>
-				<p>Debug renderer, renders the PolygonCollider on the same GameObject.
+				<p>Render a string.
+					</br>
 				</br></p>
-				<a href="#rigidbody" id="rigidbody" style="color: inherit; text-decoration: none;">
-					<h3>RigidBody</h3>
-				</a>
-				</br>
 				<a href="#texture" id="texture" style="color: inherit; text-decoration: none;">
 					<h3>Texture</h3>
 				</a>
-				<p>Controls the rendering of an image.
+				<p>Render an image.
+					</br>
 				</br></p>
 				<a href="#tilemap" id="tilemap" style="color: inherit; text-decoration: none;">
 					<h3>TileMap</h3>
 				</a>
-				</br>
+				<p>Render a tilemap and collide with other objects.
+					</br>
+				</br></p>
 				<a href="#transform" id="transform" style="color: inherit; text-decoration: none;">
 					<h3>Transform</h3>
 				</a>
-				<p>A Transform Component stores position, rotation and scale of their GameObject.
+				<p>The Transform Component is by default added to every GameObject on creation, only one Transform is allowed per GameObject.
+					A Transform Component stores position, rotation and scale of their GameObject.
 					A child-GameObjects Transform is relative to their parents.
+					</br>
 				</br></p>
-				<br>
+				<a href="#video" id="video" style="color: inherit; text-decoration: none;">
+					<h3>Video</h3>
+				</a>
+				<p>Render a Video/Movie, playback is controlled through an HTMLVideoElement.
+					</br>
+				</br></p>
 				<a href="#assets" id="assets" style="color: inherit; text-decoration: none;">
 					<h2>Assets</h2>
 				</a>
@@ -272,9 +305,9 @@ SceneManager
 				<a href="#assetdb" id="assetdb" style="color: inherit; text-decoration: none;">
 					<h3>AssetDB</h3>
 				</a>
-				<p>Assets/AssetDB.json contains information about all assets.<br>It can be generated with <code>npm run newadb</code>.</p>
+				<p>Assets/AssetDB.json contains all asset information required for loading.<br>It can be generated with <code><a href="#generate-assetdbjson">npm run createadb</a></code>.</p>
 				<p>Typescript signature of &#39;AssetDB.json&#39;s content:</p>
-				<pre><code class="language-typescript"><span style="color: #D73A49">type</span><span style="color: #24292E"> </span><span style="color: #6F42C1">AssetDB</span><span style="color: #24292E"> </span><span style="color: #D73A49">=</span><span style="color: #24292E"> { [</span><span style="color: #E36209">path</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #005CC5">string</span><span style="color: #24292E">]</span><span style="color: #D73A49">:</span><span style="color: #24292E"> { </span><span style="color: #E36209">type</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #6F42C1">AssetType</span><span style="color: #24292E">, </span><span style="color: #032F62">&quot;asset name&quot;</span><span style="color: #D73A49">?:</span><span style="color: #24292E"> </span><span style="color: #005CC5">0</span><span style="color: #24292E"> } };</span>
+				<pre><code class="language-typescript"><span style="color: #D73A49">type</span><span style="color: #24292E"> </span><span style="color: #6F42C1">AssetDB</span><span style="color: #24292E"> </span><span style="color: #D73A49">=</span><span style="color: #24292E"> { [</span><span style="color: #E36209">path</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #005CC5">string</span><span style="color: #24292E">]</span><span style="color: #D73A49">:</span><span style="color: #24292E"> { </span><span style="color: #E36209">type</span><span style="color: #D73A49">:</span><span style="color: #24292E"> </span><span style="color: #6F42C1">AssetType</span><span style="color: #24292E">, </span><span style="color: #032F62">&quot;optional asset name&quot;</span><span style="color: #D73A49">?:</span><span style="color: #24292E"> </span><span style="color: #005CC5">0</span><span style="color: #24292E"> } };</span>
 </code></pre>
 				<br>
 				<a href="#inputmapping" id="inputmapping" style="color: inherit; text-decoration: none;">
@@ -398,31 +431,22 @@ SceneManager
 						<a href="classes/canvas.html" class="tsd-kind-icon">Canvas</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/circlecollider.html" class="tsd-kind-icon">Circle<wbr>Collider</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/circlerenderer.html" class="tsd-kind-icon">Circle<wbr>Renderer</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/client.html" class="tsd-kind-icon">Client</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/collider.html" class="tsd-kind-icon">Collider</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/collision.html" class="tsd-kind-icon">Collision</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/color.html" class="tsd-kind-icon">Color</a>
 					</li>
-					<li class=" tsd-kind-class">
+					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/component.html" class="tsd-kind-icon">Component</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/debug.html" class="tsd-kind-icon">Debug</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/face.html" class="tsd-kind-icon">Face</a>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/eventhandler.html" class="tsd-kind-icon">Event<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/eventtarget.html" class="tsd-kind-icon">Event<wbr>Target</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/framedata.html" class="tsd-kind-icon">Framedata</a>
@@ -458,9 +482,6 @@ SceneManager
 						<a href="classes/keyboard.html" class="tsd-kind-icon">Keyboard</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/line.html" class="tsd-kind-icon">Line</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/mouse.html" class="tsd-kind-icon">Mouse</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -475,23 +496,8 @@ SceneManager
 					<li class=" tsd-kind-class">
 						<a href="classes/particlesystem.html" class="tsd-kind-icon">Particle<wbr>System</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/physics.html" class="tsd-kind-icon">Physics</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/physicsmaterial.html" class="tsd-kind-icon">Physics<wbr>Material</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/polygoncollider.html" class="tsd-kind-icon">Polygon<wbr>Collider</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/polygonrenderer.html" class="tsd-kind-icon">Polygon<wbr>Renderer</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/projection.html" class="tsd-kind-icon">Projection</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/rigidbody.html" class="tsd-kind-icon">Rigid<wbr>Body</a>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/renderable.html" class="tsd-kind-icon">Renderable</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/scene.html" class="tsd-kind-icon">Scene</a>
@@ -507,6 +513,9 @@ SceneManager
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/stopwatch.html" class="tsd-kind-icon">Stopwatch</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/text.html" class="tsd-kind-icon">Text</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/texture.html" class="tsd-kind-icon">Texture</a>
@@ -562,9 +571,6 @@ SceneManager
 					<li class=" tsd-kind-class">
 						<a href="classes/video.html" class="tsd-kind-icon">Video</a>
 					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/_aabb.html" class="tsd-kind-icon">_AABB</a>
-					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/backgroundlayerasset.html" class="tsd-kind-icon">Background<wbr>Layer<wbr>Asset</a>
 					</li>
@@ -575,16 +581,25 @@ SceneManager
 						<a href="interfaces/destroyable.html" class="tsd-kind-icon">Destroyable</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/disposable.html" class="tsd-kind-icon">Disposable</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/inputdevice.html" class="tsd-kind-icon">Input<wbr>Device</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/inputevent.html" class="tsd-kind-icon">Input<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#eventtype" class="tsd-kind-icon">Event<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#keyboardaxis" class="tsd-kind-icon">Keyboard<wbr>Axis</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#destroy" class="tsd-kind-icon">Destroy</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#dispose" class="tsd-kind-icon">Dispose</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#instantiate" class="tsd-kind-icon">Instantiate</a>

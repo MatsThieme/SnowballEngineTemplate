@@ -9,6 +9,7 @@ import { TextEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Renderable } from './Renderable';
 
+/** @category Component */
 export class Text extends Renderable<TextEventTypes>{
     private _bitmapText: BitmapText;
 

@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="component.html" class="tsd-signature-type" data-tsd-kind="Class">Component</a>
+						<a href="component.html" class="tsd-signature-type" data-tsd-kind="Class">Component</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CameraEventTypes</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">Camera</span>
@@ -99,6 +99,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="camera.html#screenposition" class="tsd-kind-icon">screen<wbr>Position</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#type" class="tsd-kind-icon">type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="camera.html#zindex" class="tsd-kind-icon">z<wbr>Index</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="camera.html#components" class="tsd-kind-icon">components</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -113,16 +114,22 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="camera.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="camera.html#destroy" class="tsd-kind-icon">destroy</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#lateupdate" class="tsd-kind-icon">late<wbr>Update</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#ondestroy" class="tsd-kind-icon">on<wbr>Destroy</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#ondisable" class="tsd-kind-icon">on<wbr>Disable</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#onenable" class="tsd-kind-icon">on<wbr>Enable</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#onpostrender" class="tsd-kind-icon">on<wbr>Post<wbr>Render</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="camera.html#onprerender" class="tsd-kind-icon">on<wbr>Pre<wbr>Render</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="camera.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#earlyupdate" class="tsd-kind-icon">early<wbr>Update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#lateupdate" class="tsd-kind-icon">late<wbr>Update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#ondestroy" class="tsd-kind-icon">on<wbr>Destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#ondisable" class="tsd-kind-icon">on<wbr>Disable</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#onenable" class="tsd-kind-icon">on<wbr>Enable</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#onpostrender" class="tsd-kind-icon">on<wbr>Post<wbr>Render</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="camera.html#onprerender" class="tsd-kind-icon">on<wbr>Pre<wbr>Render</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="camera.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="camera.html#update" class="tsd-kind-icon">update</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="camera.html#worldtocamera" class="tsd-kind-icon">world<wbr>ToCamera</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="camera.html#worldtocamerapoint" class="tsd-kind-icon">world<wbr>ToCamera<wbr>Point</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="camera.html#earlyupdate-1" class="tsd-kind-icon">earlyupdate</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="camera.html#lateupdate-1" class="tsd-kind-icon">lateupdate</a></li>
 							</ul>
 						</section>
 					</div>
@@ -141,7 +148,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="component.html">Component</a>.<a href="component.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L33">src/SnowballEngine/GameObject/Components/Camera.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L34">src/SnowballEngine/GameObject/Components/Camera.ts:34</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -163,7 +170,7 @@
 					<div class="tsd-signature tsd-kind-icon">_aabb<span class="tsd-signature-symbol">:</span> <a href="aabb.html" class="tsd-signature-type" data-tsd-kind="Class">AABB</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L33">src/SnowballEngine/GameObject/Components/Camera.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L34">src/SnowballEngine/GameObject/Components/Camera.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +180,7 @@
 					<div class="tsd-signature tsd-kind-icon">_screen<wbr>Size<span class="tsd-signature-symbol">:</span> <a href="vector2.html" class="tsd-signature-type" data-tsd-kind="Class">Vector2</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L31">src/SnowballEngine/GameObject/Components/Camera.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L32">src/SnowballEngine/GameObject/Components/Camera.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -183,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">_size<span class="tsd-signature-symbol">:</span> <a href="vector2.html" class="tsd-signature-type" data-tsd-kind="Class">Vector2</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L32">src/SnowballEngine/GameObject/Components/Camera.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L33">src/SnowballEngine/GameObject/Components/Camera.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -194,7 +201,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#componentid">componentId</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L14">src/SnowballEngine/GameObject/Components/Component.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L22">src/SnowballEngine/GameObject/Components/Component.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -205,9 +212,14 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#gameobject">gameObject</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L12">src/SnowballEngine/GameObject/Components/Component.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L20">src/SnowballEngine/GameObject/Components/Component.ts:20</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the owning GameObject.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="screenposition" class="tsd-anchor"></a>
@@ -215,7 +227,7 @@
 					<div class="tsd-signature tsd-kind-icon">screen<wbr>Position<span class="tsd-signature-symbol">:</span> <a href="vector2.html" class="tsd-signature-type" data-tsd-kind="Class">Vector2</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L22">src/SnowballEngine/GameObject/Components/Camera.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L23">src/SnowballEngine/GameObject/Components/Camera.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -231,7 +243,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L13">src/SnowballEngine/GameObject/Components/Component.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L21">src/SnowballEngine/GameObject/Components/Component.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -241,7 +253,7 @@
 					<div class="tsd-signature tsd-kind-icon">z<wbr>Index<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L29">src/SnowballEngine/GameObject/Components/Camera.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L30">src/SnowballEngine/GameObject/Components/Camera.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -249,6 +261,17 @@
 							<p>higher value -&gt; later drawn</p>
 						</div>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="components" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> components</h3>
+					<div class="tsd-signature tsd-kind-icon">components<span class="tsd-signature-symbol">:</span> <a href="component.html" class="tsd-signature-type" data-tsd-kind="Class">Component</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#components">components</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L13">src/SnowballEngine/GameObject/Components/Component.ts:13</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -263,9 +286,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L74">src/SnowballEngine/GameObject/Components/Camera.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L80">src/SnowballEngine/GameObject/Components/Camera.ts:80</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Global AABB</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="aabb.html" class="tsd-signature-type" data-tsd-kind="Class">AABB</a></h4>
 						</li>
 					</ul>
@@ -281,7 +309,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L33">src/SnowballEngine/GameObject/Components/Component.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L61">src/SnowballEngine/GameObject/Components/Component.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -294,7 +322,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L36">src/SnowballEngine/GameObject/Components/Component.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L64">src/SnowballEngine/GameObject/Components/Component.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -323,7 +351,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L66">src/SnowballEngine/GameObject/Components/Camera.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L67">src/SnowballEngine/GameObject/Components/Camera.ts:67</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -336,7 +364,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L69">src/SnowballEngine/GameObject/Components/Camera.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L70">src/SnowballEngine/GameObject/Components/Camera.ts:70</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -365,7 +393,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L54">src/SnowballEngine/GameObject/Components/Camera.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L55">src/SnowballEngine/GameObject/Components/Camera.ts:55</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -378,7 +406,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L57">src/SnowballEngine/GameObject/Components/Camera.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L58">src/SnowballEngine/GameObject/Components/Camera.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -399,6 +427,39 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="addlistener" class="tsd-anchor"></a>
+					<h3>add<wbr>Listener</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#addlistener">addListener</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Utilities/Events/EventTarget.ts#L11">src/SnowballEngine/Utilities/Events/EventTarget.ts:11</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">ComponentEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 					<a name="destroy" class="tsd-anchor"></a>
 					<h3>destroy</h3>
@@ -410,64 +471,119 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="component.html">Component</a>.<a href="component.html#destroy">destroy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L115">src/SnowballEngine/GameObject/Components/Camera.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L121">src/SnowballEngine/GameObject/Components/Camera.ts:121</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="dispatchevent" class="tsd-anchor"></a>
+					<h3>dispatch<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Event&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#dispatchevent">dispatchEvent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Utilities/Events/EventTarget.ts#L20">src/SnowballEngine/Utilities/Events/EventTarget.ts:20</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">ComponentEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="earlyupdate" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> early<wbr>Update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">early<wbr>Update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#earlyupdate">earlyUpdate</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L136">src/SnowballEngine/GameObject/Components/Component.ts:136</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Called before any GameObject is updated.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="lateupdate" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> late<wbr>Update</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">late<wbr>Update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> late<wbr>Update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">late<wbr>Update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#lateupdate">lateUpdate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L116">src/SnowballEngine/GameObject/Components/Component.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L150">src/SnowballEngine/GameObject/Components/Component.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Called after all GameObjects and Components update method is called.</p>
+									<p>Called after all GameObjects are updated.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="ondestroy" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Destroy</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Destroy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#ondestroy">onDestroy</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L125">src/SnowballEngine/GameObject/Components/Component.ts:125</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L157">src/SnowballEngine/GameObject/Components/Component.ts:157</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Called when the Component is removed from the GameObject.
-									Return false to cancel destoy.</p>
+									<p>Called before this is destroyed.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="ondisable" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Disable</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Disable</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">on<wbr>Disable<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
@@ -475,7 +591,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#ondisable">onDisable</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L101">src/SnowballEngine/GameObject/Components/Component.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L114">src/SnowballEngine/GameObject/Components/Component.ts:114</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -487,10 +603,10 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="onenable" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Enable</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Enable</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 						<li class="tsd-signature tsd-kind-icon">on<wbr>Enable<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
@@ -498,7 +614,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#onenable">onEnable</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L94">src/SnowballEngine/GameObject/Components/Component.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L108">src/SnowballEngine/GameObject/Components/Component.ts:108</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -510,18 +626,18 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="onpostrender" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Post<wbr>Render</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Post<wbr>Render<span class="tsd-signature-symbol">(</span>renderingCamera<span class="tsd-signature-symbol">: </span><a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Post<wbr>Render</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Post<wbr>Render<span class="tsd-signature-symbol">(</span>renderingCamera<span class="tsd-signature-symbol">: </span><a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#onpostrender">onPostRender</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L86">src/SnowballEngine/GameObject/Components/Component.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L128">src/SnowballEngine/GameObject/Components/Component.ts:128</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,22 +651,22 @@
 									<h5>renderingCamera: <a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="onprerender" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Pre<wbr>Render</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Pre<wbr>Render<span class="tsd-signature-symbol">(</span>renderingCamera<span class="tsd-signature-symbol">: </span><a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> on<wbr>Pre<wbr>Render</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Pre<wbr>Render<span class="tsd-signature-symbol">(</span>renderingCamera<span class="tsd-signature-symbol">: </span><a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#onprerender">onPreRender</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Component.ts#L79">src/SnowballEngine/GameObject/Components/Component.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L121">src/SnowballEngine/GameObject/Components/Component.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -562,6 +678,39 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>renderingCamera: <a href="camera.html" class="tsd-signature-type" data-tsd-kind="Class">Camera</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="removelistener" class="tsd-anchor"></a>
+					<h3>remove<wbr>Listener</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#removelistener">removeListener</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/Utilities/Events/EventTarget.ts#L16">src/SnowballEngine/Utilities/Events/EventTarget.ts:16</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">ComponentEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -579,7 +728,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="component.html">Component</a>.<a href="component.html#update">update</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L84">src/SnowballEngine/GameObject/Components/Camera.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L90">src/SnowballEngine/GameObject/Components/Camera.ts:90</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -602,7 +751,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L107">src/SnowballEngine/GameObject/Components/Camera.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L113">src/SnowballEngine/GameObject/Components/Camera.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -625,7 +774,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/c34e1a7/src/SnowballEngine/GameObject/Components/Camera.ts#L111">src/SnowballEngine/GameObject/Components/Camera.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Camera.ts#L117">src/SnowballEngine/GameObject/Components/Camera.ts:117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -635,6 +784,42 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="vector2.html" class="tsd-signature-type" data-tsd-kind="Class">Vector2</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="earlyupdate-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> earlyupdate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">earlyupdate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#earlyupdate-1">earlyupdate</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L91">src/SnowballEngine/GameObject/Components/Component.ts:91</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+					<a name="lateupdate-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> lateupdate</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">lateupdate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="component.html">Component</a>.<a href="component.html#lateupdate-1">lateupdate</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/6cf59c2/src/SnowballEngine/GameObject/Components/Component.ts#L97">src/SnowballEngine/GameObject/Components/Component.ts:97</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -682,6 +867,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="camera.html#zindex" class="tsd-kind-icon">z<wbr>Index</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="camera.html#components" class="tsd-kind-icon">components</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="camera.html#aabb" class="tsd-kind-icon">aabb</a>
 							</li>
@@ -694,26 +882,38 @@
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="camera.html#size" class="tsd-kind-icon">size</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="camera.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="camera.html#destroy" class="tsd-kind-icon">destroy</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="camera.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="camera.html#earlyupdate" class="tsd-kind-icon">early<wbr>Update</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#lateupdate" class="tsd-kind-icon">late<wbr>Update</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#ondestroy" class="tsd-kind-icon">on<wbr>Destroy</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#ondisable" class="tsd-kind-icon">on<wbr>Disable</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#onenable" class="tsd-kind-icon">on<wbr>Enable</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#onpostrender" class="tsd-kind-icon">on<wbr>Post<wbr>Render</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="camera.html#onprerender" class="tsd-kind-icon">on<wbr>Pre<wbr>Render</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="camera.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
 								<a href="camera.html#update" class="tsd-kind-icon">update</a>
@@ -723,6 +923,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="camera.html#worldtocamerapoint" class="tsd-kind-icon">world<wbr>ToCamera<wbr>Point</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="camera.html#earlyupdate-1" class="tsd-kind-icon">earlyupdate</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
+								<a href="camera.html#lateupdate-1" class="tsd-kind-icon">lateupdate</a>
 							</li>
 						</ul>
 					</li>

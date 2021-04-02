@@ -25,6 +25,8 @@ export * from './GameObject/Components/ParallaxBackground/BackgroundLayerSprite'
 export * from './GameObject/Components/ParallaxBackground/ParallaxBackground';
 export * from './GameObject/Components/ParticleSystem/Particle';
 export * from './GameObject/Components/ParticleSystem/ParticleSystem';
+export * from './GameObject/Components/Renderable';
+export * from './GameObject/Components/Text';
 export * from './GameObject/Components/Texture';
 export * from './GameObject/Components/TileMap';
 export * from './GameObject/Components/Transform/Transform';
