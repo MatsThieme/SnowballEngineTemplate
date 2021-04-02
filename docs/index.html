@@ -127,7 +127,7 @@ dist/
 				<a href="#behaviours" id="behaviours" style="color: inherit; text-decoration: none;">
 					<h4>Behaviours</h4>
 				</a>
-				<p><a href="#behaviour">Behaviour</a></p>
+				<p>Contains files with classes derived from Behaviour.</p>
 				<a href="#configurables" id="configurables" style="color: inherit; text-decoration: none;">
 					<h4>Configurables</h4>
 				</a>
@@ -140,20 +140,15 @@ dist/
 					<h4>Scenes</h4>
 				</a>
 				<p>Scenes contains files that export a function to initialize a Scene.</p>
-				<br>
-				<a href="#engine-code-structure" id="engine-code-structure" style="color: inherit; text-decoration: none;">
-					<h3>Engine code structure</h3>
+				<a href="#snowballengine-1" id="snowballengine-1" style="color: inherit; text-decoration: none;">
+					<h4>SnowballEngine</h4>
 				</a>
-				<pre>
-SceneManager
-  Scene
-    GameObject
-      Component
-    UI
-</pre>
-				<a href="#the-main-file-39gamets39-may-look-like-this" id="the-main-file-39gamets39-may-look-like-this" style="color: inherit; text-decoration: none;">
-					<h3>The main file &#39;Game.ts&#39; may look like this</h3>
+				<p>SnowballEngine contains all the GameEngine files.</p>
+				<a href="#gamets" id="gamets" style="color: inherit; text-decoration: none;">
+					<h4>Game.ts</h4>
 				</a>
+				<p>Your entry point.
+				It may look like this:</p>
 				<pre><code class="language-typescript"><span style="color: #D73A49">import</span><span style="color: #24292E"> { LoadingScreenScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/LoadingScreenScene&#039;</span><span style="color: #24292E">;</span>
 <span style="color: #D73A49">import</span><span style="color: #24292E"> { MainScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/MainScene&#039;</span><span style="color: #24292E">;</span>
 <span style="color: #D73A49">import</span><span style="color: #24292E"> { Assets, SceneManager } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;SE&#039;</span><span style="color: #24292E">;</span>
@@ -174,6 +169,7 @@ SceneManager
 <span style="color: #24292E">    }</span>
 <span style="color: #24292E">}</span>
 </code></pre>
+				</br>
 				<a href="#scenemanager" id="scenemanager" style="color: inherit; text-decoration: none;">
 					<h3>SceneManager</h3>
 				</a>
@@ -181,7 +177,7 @@ SceneManager
 				<a href="#scene" id="scene" style="color: inherit; text-decoration: none;">
 					<h3>Scene</h3>
 				</a>
-				<p>A Scene manages GameObjects and the userinterface. It contains the gameloop.</p>
+				<p>A Scene manages GameObjects and the user interface. It contains the gameloop.</p>
 				<a href="#gameobject" id="gameobject" style="color: inherit; text-decoration: none;">
 					<h3>GameObject</h3>
 				</a>
@@ -191,10 +187,16 @@ SceneManager
 					<h3>Component</h3>
 				</a>
 				<p>A Component controls the behavior of the corresponding GameObject.</p>
-				<a href="#behaviour" id="behaviour" style="color: inherit; text-decoration: none;">
-					<h3>Behaviour</h3>
+				<a href="#engine-code-structure" id="engine-code-structure" style="color: inherit; text-decoration: none;">
+					<h3>Engine code structure</h3>
 				</a>
-				<p>A Behaviour is a Component with user-defined functionality.<br>The Base class for all Behaviours.</p>
+				<pre>
+SceneManager
+  Scene
+    GameObject
+      Component
+    UI
+</pre>
 				<br>
 				<a href="#components" id="components" style="color: inherit; text-decoration: none;">
 					<h2>Components</h2>
@@ -219,7 +221,7 @@ SceneManager
 					Can hold an AudioMixer object to filter/modify output.
 					</br>
 				</br></p>
-				<a href="#behaviour-1" id="behaviour-1" style="color: inherit; text-decoration: none;">
+				<a href="#behaviour" id="behaviour" style="color: inherit; text-decoration: none;">
 					<h3>Behaviour</h3>
 				</a>
 				<p>A Behaviour is a Component with user-defined functionality.<br>The Base class for all Behaviours.
@@ -241,7 +243,7 @@ SceneManager
 					<h3>Renderable</h3>
 				</a>
 				<p>The Base class for all renderable components.
-					Examlpes are <a href="#texture">Texture</a>, <a href="#video">Video</a>, <a href="#parallaxbackground">ParallaxBackground</a> and <a href="text">Text</a>.
+					Examlpes are <a href="#texture">Texture</a>, <a href="#video">Video</a>, <a href="#parallaxbackground">ParallaxBackground</a> and <a href="#text">Text</a>.
 					</br>
 				</br></p>
 				<a href="#parallaxbackground" id="parallaxbackground" style="color: inherit; text-decoration: none;">

@@ -57,7 +57,7 @@ dist/
 </pre>
 
 #### Behaviours
-[Behaviour](#behaviour)
+Contains files with classes derived from Behaviour.
 
 #### Configurables
 Configurables contains typedefinition files (.d.ts) the user will edit during the development process.\
@@ -69,20 +69,12 @@ Prefabs contains files that export a function to initialize a GameObject.
 #### Scenes
 Scenes contains files that export a function to initialize a Scene.
 
+#### SnowballEngine
+SnowballEngine contains all the GameEngine files.
 
-<br>
-
-### Engine code structure
-<pre>
-SceneManager
-  Scene
-    GameObject
-      Component
-    UI
-</pre>
-
-
-### The main file 'Game.ts' may look like this
+#### Game.ts
+Your entry point.
+It may look like this:
 ```typescript
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
@@ -105,11 +97,13 @@ export class Game {
 }
 ```
 
+</br>
+
 ### SceneManager
 A SceneManager instance loads Scenes and stores their Initializer-function.
 
 ### Scene
-A Scene manages GameObjects and the userinterface. It contains the gameloop.
+A Scene manages GameObjects and the user interface. It contains the gameloop.
 
 ### GameObject
 A GameObject is a container for components.
@@ -118,9 +112,14 @@ It has a Transform component by default.
 ### Component
 A Component controls the behavior of the corresponding GameObject.
 
-### Behaviour
-A Behaviour is a Component with user-defined functionality.\
-The Base class for all Behaviours.
+### Engine code structure
+<pre>
+SceneManager
+  Scene
+    GameObject
+      Component
+    UI
+</pre>
 
 
 <br>
@@ -161,7 +160,7 @@ The Base class for all components.
 
 ### Renderable
 The Base class for all renderable components.
-Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#parallaxbackground) and [Text](text).
+Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#parallaxbackground) and [Text](#text).
 </br>
 </br>
 
