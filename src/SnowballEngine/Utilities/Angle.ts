@@ -2,6 +2,8 @@ import { Vector2 } from './Vector2';
 
 /** @category Utility */
 export class Angle {
+    private static _2pi: number = Math.PI * 2;
+
     private _radian?: number;
     private _degree?: number;
 
@@ -18,48 +20,63 @@ export class Angle {
     }
 
     public get radian(): number {
-        if (!this._radian && this._degree) this._radian = this._degree * Math.PI / 180;
-        return <number>this._radian;
+        if (typeof this._radian === 'number') return this._radian;
+        else if (typeof this._degree === 'number') return this._radian = this._degree * Math.PI / 180 % Angle._2pi;
+
+        return this._radian = this._degree = 0;
     }
     public set radian(val: number) {
-        this._radian = this.normalizeRadian(val);
+        this._radian = Angle.normalizeRadian(val);
         this._degree = undefined;
     }
 
     public get degree(): number {
-        if (!this._degree && this._radian) this._degree = this._radian * 180 / Math.PI;
-        return <number>this._degree;
+        if (typeof this._degree === 'number') return this._degree;
+        else if (typeof this._radian === 'number') return this._degree = this._radian * 180 / Math.PI % 360;
+
+        return this._degree = this._radian = 0;
     }
     public set degree(val: number) {
-        this._degree = this.normalizeDegree(val);
+        this._degree = Angle.normalizeDegree(val);
         this._radian = undefined;
     }
 
-    private normalizeRadian(radian: number): number {
-        radian %= Math.PI * 2;
-        if (radian < 0) radian += Math.PI * 2;
+    public get clone(): Angle {
+        return new Angle(this._radian);
+    }
+
+    public static normalizeRadian(radian: number): number {
+        radian %= Angle._2pi;
+        if (radian < 0) radian += Angle._2pi;
         return radian;
     }
 
-    private normalizeDegree(deg: number): number {
+    public static normalizeDegree(deg: number): number {
         deg %= 360;
         if (deg < 0) deg += 360;
         return deg;
     }
 
-    public equal(other: Angle): boolean {
-        return this._radian === other._radian || this._degree === other._degree;
+    public equal(other: IAngle, tolerance: number = 0.0000001): boolean {
+        return Math.abs(this.radian - other.radian) < tolerance;
     }
 
-    public get clone(): Angle {
-        return new Angle(undefined, this.degree);
+    /**
+     * 
+     * Returns this 
+     * 
+     */
+    public copy(angle: IAngle): Angle {
+        this.radian = angle.radian;
+
+        return this;
     }
 
     public toVector2(): Vector2 {
         return new Vector2(Math.cos(this.radian), Math.sin(this.radian));
     }
 
-    public static random(range: Angle = Angle.max): Angle {
+    public static random(range: IAngle = Angle.max): Angle {
         return new Angle(Math.random() * range.radian);
     }
 

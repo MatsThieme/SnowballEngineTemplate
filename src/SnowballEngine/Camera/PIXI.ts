@@ -6,6 +6,7 @@ import { Sprite } from '@pixi/sprite';
 import projectConfig from 'Config';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
+import { Canvas } from 'Utility/Canvas';
 
 export class PIXI {
     public readonly renderer: Renderer;
@@ -18,22 +19,26 @@ export class PIXI {
             height,
             antialias: projectConfig.settings.PIXIjsAntialiasing,
             useContextAlpha: projectConfig.settings.transparentBackground,
+            backgroundAlpha: projectConfig.settings.transparentBackgroundAlpha,
             powerPreference: Client.isMobile ? 'low-power' : 'high-performance',
-            clearBeforeRender: false
+            clearBeforeRender: false,
+            view: new Canvas(innerWidth, innerHeight)
         });
+
+        this.renderer.plugins.interaction.destroy();
 
         this.renderer.textureGC.mode = GC_MODES.AUTO;
 
         this.container = new Container();
         this.container.interactiveChildren = false;
 
-        this.container.name = 'Renderer';
+        this.container.name = 'Game Renderer';
 
         this.container.mask = new Graphics();
     }
 
-    public get canvas(): HTMLCanvasElement {
-        return this.renderer.view;
+    public get canvas(): Canvas {
+        return <Canvas>this.renderer.view;
     }
 
     public resize(width: number, height: number): void {

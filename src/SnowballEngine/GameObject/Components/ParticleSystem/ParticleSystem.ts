@@ -59,7 +59,7 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
      * Move and emit particles.
      * 
      */
-    public update(): void {
+    protected override update(): void {
         super.update();
 
         if (!this.active || !this._asset) return;
@@ -67,7 +67,7 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
         this._timer += GameTime.deltaTimeSeconds;
 
         while (this._timer >= 1 / this.emissionSettings.emission && this._particles.length < this.emissionSettings.maxParticles) {
-            const particle = new Particle(this, Vector2.up.rotateAroundTo(new Vector2(), Angle.random(this.emissionSettings.angle)).setLength(this.particleSettings.velocity));
+            const particle = new Particle(this, Vector2.up.rotateAroundBy(new Vector2(), Angle.random(this.emissionSettings.angle)).setLength(this.particleSettings.velocity));
 
             this.sprite!.addChild(particle.container);
 
@@ -89,7 +89,7 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
         }
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this.particles.forEach(p => Dispose(p));
 
         super.destroy();

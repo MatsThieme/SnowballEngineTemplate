@@ -1,4 +1,5 @@
 import { Angle } from './Angle';
+import { random } from './Helpers';
 
 /** @category Utility */
 export class Vector2 implements IVector2 {
@@ -48,8 +49,9 @@ export class Vector2 implements IVector2 {
      * Subtract vectors from v.
      * 
      */
-    public static sub(v: IVector2, ...vectors: IVector2[]): Vector2 {
-        return vectors.reduce((a: Vector2, b: IVector2) => { a.x -= b.x; a.y -= b.y; return a; }, new Vector2(v.x, v.y));
+    public static sub(v: IVector2, ov: IVector2, ...vectors: IVector2[]): Vector2 {
+        if (vectors.length) return vectors.reduce((a: Vector2, b: IVector2) => { a.x -= b.x; a.y -= b.y; return a; }, new Vector2(v.x - ov.x, v.y - ov.y));
+        else return new Vector2(v.x - ov.x, v.y - ov.y);
     }
 
     /**
@@ -131,7 +133,7 @@ export class Vector2 implements IVector2 {
      * Returns this for chainability.
      *
      */
-    public rotateAroundTo(rotatePoint: IVector2, angle: Angle): Vector2 {
+    public rotateAroundBy(rotatePoint: IVector2, angle: Angle): Vector2 {
         const s = Math.sin(-angle.radian);
         const c = Math.cos(-angle.radian);
 
@@ -446,5 +448,14 @@ export class Vector2 implements IVector2 {
 
     public static lerp(a: IVector2, b: IVector2, t: number): Vector2 {
         return new Vector2(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+    }
+
+    public static from(vec: IVector2): Vector2 {
+        return new Vector2(vec.x, vec.y);
+    }
+
+    public static get random(): Vector2 {
+        const range = Math.random() * 2 ** 10;
+        return new Vector2(random(-range, range), random(-range, range));
     }
 }

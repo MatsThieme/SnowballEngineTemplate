@@ -13,9 +13,9 @@ export class AABB {
     private _width: number;
     private _height: number;
 
-    public constructor(position = new Vector2(), halfExtents = new Vector2()) {
-        this.position = position;
-        this.halfExtents = halfExtents;
+    public constructor(position?: IVector2, halfExtents?: IVector2) {
+        this.position = position ? Vector2.from(position) : new Vector2();
+        this.halfExtents = halfExtents ? Vector2.from(halfExtents) : new Vector2();
 
         this._top = this._bottom = this._left = this._right = this._width = this._height = 0;
 

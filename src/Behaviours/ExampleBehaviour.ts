@@ -11,10 +11,10 @@ export class ExampleBehaviour extends Behaviour {
 
     /**
      * 
-     * Called after the behavior has been added to the game object.
+     * Called after the behavior has been added to the GameObject.
      * 
      */
-    protected awake() {
+    awake() {
         this.example2 = 'start';
 
         Debug.log('awake');
@@ -26,7 +26,7 @@ export class ExampleBehaviour extends Behaviour {
      * Other GameObjects and components may be accessed.
      * 
      */
-    protected start() {
+    start() {
         Debug.log(this.example2);
     }
 
@@ -35,11 +35,33 @@ export class ExampleBehaviour extends Behaviour {
      * Called once every frame.
      * 
      */
-    protected update() {
-        // rotate the gameObject holding the texture component
+    update() {
+        this.example1 += 1;
+
+
         this.gameObject.transform.rotation.degree += 36 * GameTime.deltaTime / 1000;
 
         // move the object if there is user input
-        this.gameObject.transform.position.add(new Vector2(Input.getAxis('MoveHorizontal').values[0] * GameTime.deltaTimeSeconds * 10, Input.getAxis('MoveVertical').values[0] * GameTime.deltaTimeSeconds * 10));
+        const horizontal = Input.getAxis('MoveHorizontal');
+        const vertical = Input.getAxis('MoveVertical');
+        if (horizontal.active || vertical.active) this.gameObject.transform.position.add(new Vector2(horizontal.values[0] * GameTime.deltaTimeSeconds * 5, vertical.values[0] * GameTime.deltaTimeSeconds * 5));
+    }
+
+    /**
+     * 
+     * Called whenever a collider on this.gameObject enters a collision.
+     * 
+     */
+    onCollisionEnter() {
+        console.log('collision enter');
+    }
+
+    /**
+     * 
+     * Called whenever a collider on this.gameObject exits a collision.
+     * 
+     */
+    onCollisionExit() {
+        console.log('collision enter');
     }
 }

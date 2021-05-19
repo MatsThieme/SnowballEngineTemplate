@@ -1,5 +1,5 @@
 /** @category Input */
-export enum MouseButton {
+export const enum MouseButton {
     Left,
     Scrollwheel,
     Right

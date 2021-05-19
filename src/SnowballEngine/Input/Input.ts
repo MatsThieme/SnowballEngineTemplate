@@ -31,8 +31,8 @@ export class Input {
             Gamepad.init();
         }
 
-        Input.inputMappingButtons = new InputMapping(<any>InputMappingButtons);
-        Input.inputMappingAxes = new InputMapping(<any>InputMappingAxes);
+        Input.inputMappingButtons = <InputMapping>InputMappingButtons;
+        Input.inputMappingAxes = <InputMapping>InputMappingAxes;
     }
 
     /**
@@ -157,6 +157,7 @@ export class Input {
      * 
      * Listener will only be added to existing devices.
      * If Input.devices changes afterwards, existing listeners won't be added to new devices, but removed from removed devices
+     * A GamePad is connected
      * 
      */
     public static addListener(type: InputAction, cb: (event: InputEvent) => any, id: string = 'inputListenerID' + Math.random() + performance.now(), devices: InputDeviceType = 0b1111): string {

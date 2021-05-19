@@ -61,11 +61,11 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this.connect();
     }
 
-    public onEnable(): void {
+    protected override onEnable(): void {
         this.connect();
     }
 
-    public onDisable(): void {
+    protected override onDisable(): void {
         this.disconnect();
     }
 
@@ -291,7 +291,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this._audioBufferNode.connect(this.node);
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this.disconnect();
 
         super.destroy();

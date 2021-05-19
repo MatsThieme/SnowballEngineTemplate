@@ -1,7 +1,9 @@
 import { Container } from '@pixi/display';
 import { Debug } from 'SnowballEngine/Debug';
 import { Scene } from 'SnowballEngine/Scene';
-import { ComponentEventTypes } from 'Utility/Events/EventTypes';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { ComponentEventTypes, GameObjectEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Behaviour } from './Components/Behaviour';
 import { Component } from './Components/Component';
@@ -15,7 +17,7 @@ import { Destroy, Destroyable } from './Destroy';
  * @category Scene
  * 
  */
-export class GameObject implements Destroyable {
+export class GameObject extends EventTarget<GameObjectEventTypes> implements Destroyable {
     private static _nextID = 0;
 
     public static readonly gameObjects: GameObject[];
@@ -36,10 +38,11 @@ export class GameObject implements Destroyable {
 
     public readonly container: Container;
 
-
     public readonly transform!: Transform;
 
     public constructor(name: string) {
+        super();
+
         if (name.includes('/')) throw new Error('Name must not include /');
 
         if (!Scene.currentScene) throw new Error('No Scene loaded!');
@@ -67,6 +70,21 @@ export class GameObject implements Destroyable {
         this.transform = this.getComponent(ComponentType.Transform)!;
 
         this.connectCamera();
+
+
+        this.transform.addListener('change', new EventHandler((transform, posDiff, rotDiff, scaleDiff) => {
+            if (posDiff) {
+                this.container.position.copyFrom(Vector2.from(this.transform.position).scale(new Vector2(1, -1)));
+            }
+
+            if (rotDiff) {
+                this.container.rotation = this.transform.rotation.radian;
+            }
+
+            if (scaleDiff) {
+                this.container.scale.copyFrom(this.transform.scale);
+            }
+        }));
     }
 
     public get active(): boolean {
@@ -90,7 +108,6 @@ export class GameObject implements Destroyable {
     public get parent(): GameObject | undefined {
         return this._parent;
     }
-
 
     private connectCamera(): void {
         if (this.container.parent) this.disconnectCamera();
@@ -118,24 +135,23 @@ export class GameObject implements Destroyable {
             component.type !== ComponentType.AudioListener &&
             component.type !== ComponentType.TileMap &&
             component.type !== ComponentType.ParallaxBackground ||
-            component.type === ComponentType.RigidBody && this.getComponents(ComponentType.RigidBody).length === 0 ||
+            component.type === ComponentType.RigidBody && !GameObject.componentInTree(this, ComponentType.RigidBody) && !GameObject.componentInParents(this, ComponentType.Collider) ||
             component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
             component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0 ||
             component.type === ComponentType.ParallaxBackground && this.getComponents(ComponentType.ParallaxBackground).length === 0) {
+
             const components = this._components.get(component.type) || [];
             components.push(component);
             this._components.set(component.type, components);
-        } else if (component.type === ComponentType.Transform || component.type === ComponentType.RigidBody || component.type === ComponentType.AudioListener || component.type === ComponentType.TileMap || component.type === ComponentType.ParallaxBackground) {
+
+        } else {
             const type = component.type;
             if (component.prepareDestroy) component.prepareDestroy();
+            (<Mutable<Component<ComponentEventTypes>>>component).destroyed = true;
             component.destroy();
             throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
-
-
-
-        if (component.type === ComponentType.AudioListener) (<Mutable<Scene>>this.scene).audioListener = <any>component;
 
 
         if (initializer) {
@@ -144,13 +160,11 @@ export class GameObject implements Destroyable {
             }
         }
 
-        if (component.type === ComponentType.Behaviour) {
-            await (<Behaviour><unknown>component).dispatchEvent('awake');
-            if (this.scene.isRunning || this.scene.isStarting) {
-                await (<Behaviour><unknown>component).dispatchEvent('start');
-                (<Mutable<Behaviour>><unknown>component).__initialized__ = true;
-            }
-        }
+        await (<Behaviour><unknown>component).dispatchEvent('awake');
+        if (this.scene.isRunning || this.scene.isStarting) await (<Behaviour><unknown>component).dispatchEvent('start');
+
+
+        this.dispatchEvent('componentadd', component);
 
         return component;
     }
@@ -161,7 +175,7 @@ export class GameObject implements Destroyable {
      * Component will be destroyed by default.
      * 
      */
-    public removeComponent<T extends Component<ComponentEventTypes>>(component: T, destroy = true): void {
+    public removeComponent<T extends Component<ComponentEventTypes>>(component: T): void {
         if (!component) return Debug.warn('Component undefined');
 
         const components = this._components.get(component.type);
@@ -172,12 +186,19 @@ export class GameObject implements Destroyable {
 
         if (i === -1) return Debug.warn('Component not found on gameObject');
 
+        if (component.type === ComponentType.RigidBody) {
+            if (GameObject.componentInTree(this, ComponentType.Collider)) Debug.warn(`Can't remove RigidBody component, remove colliders first`);
+        }
 
-        if (component.componentId === this.scene.audioListener?.componentId) (<Mutable<Scene>>this.scene).audioListener = undefined;
 
-        const c = components.splice(i, 1)[0];
-        (<Mutable<Partial<T>>><unknown>c).gameObject = undefined;
-        Destroy(c);
+        this.dispatchEvent('componentremove', component);
+
+        components.splice(i, 1)[0];
+
+        if (!component.destroyed) {
+            (<Mutable<Component<ComponentEventTypes>>>component).destroyed = true;
+            Destroy(component);
+        }
     }
 
     /**
@@ -190,7 +211,7 @@ export class GameObject implements Destroyable {
             if (this._components.has(type)) return <T[]>this._components.get(type);
             if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat(1);
             if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.Video)];
-            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.Collider)];
+            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
 
             return [];
         }
@@ -208,9 +229,13 @@ export class GameObject implements Destroyable {
     public getComponent<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         if (typeof type === 'number') {
             if (this._components.has(type)) return <T>this._components.get(type)![0];
-            if (type === ComponentType.Component) return <T>[...this._components.values()].flat(1)[0];
+            if (type === ComponentType.Component) {
+                for (const components of this._components.values()) {
+                    if (components[0]) return <T>components[0];
+                }
+            }
             if (type === ComponentType.Renderable) return this.getComponent(ComponentType.AnimatedSprite) || this.getComponent(ComponentType.ParallaxBackground) || this.getComponent(ComponentType.ParticleSystem) || this.getComponent(ComponentType.Texture) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.Video);
-            if (type === ComponentType.Collider) return this.getComponent(ComponentType.Collider);
+            if (type === ComponentType.Collider) return this.getComponent(ComponentType.CircleCollider) || this.getComponent(ComponentType.PolygonCollider) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.TerrainCollider) || this.getComponent(ComponentType.RectangleCollider);
 
             return undefined;
         }
@@ -255,6 +280,8 @@ export class GameObject implements Destroyable {
         gameObject.setParent(this);
 
         this.children.push(gameObject);
+
+        this.dispatchEvent('childadd', gameObject);
     }
 
     public removeChild(gameObject: GameObject): void {
@@ -267,6 +294,8 @@ export class GameObject implements Destroyable {
         this.children.splice(i, 1);
 
         gameObject.setParent(undefined);
+
+        this.dispatchEvent('childremove', gameObject);
     }
 
     /**
@@ -282,43 +311,59 @@ export class GameObject implements Destroyable {
         this._parent = gameObject;
 
         this.connectCamera();
+
+        this.dispatchEvent('parentchanged', gameObject);
+        this.children.forEach(c => c.dispatchEvent('parentchanged', gameObject));
     }
 
     /**
      * 
-     * Update children, behaviours, ParticleSystem, AnimatedSprite and AudioListener.
+     * @internal
      * 
      */
-    public async update(): Promise<void> {
-        if (this.active) {
-            for (const b of this.getComponents<Behaviour>(ComponentType.Behaviour)) {
-                if (b.__initialized__ && b.active) await b.dispatchEvent('update');
-            }
-        }
-
-        this.children.forEach(c => c.update());
-
-        for (const ctype of this._components) {
-            for (const c of ctype[1]) {
-                if (c.type !== ComponentType.Camera)
-                    (<Component<ComponentEventTypes>>c).dispatchEvent('update');
-            }
-        }
-
-        if (!this.container.children.length) return;
-
-        // update PIXI container
-
-        // position
-        this.container.position.copyFrom(this.transform.position.clone.scale(new Vector2(1, -1)));
-
-        // rotation
-        this.container.rotation = this.transform.rotation.radian;
-
-        // scale
-        this.container.scale.copyFrom(this.transform.scale);
+    public static componentInTree<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
+        return gameObject.getComponent<T>(type) || GameObject.componentInParents<T>(gameObject, type) || GameObject.componentInChild<T>(gameObject, type);
     }
 
+    /**
+     * 
+     * @internal
+     * 
+     */
+    public static componentInParents<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
+        while (gameObject.parent) {
+            const c = gameObject.parent.getComponent<T>(type);
+
+            if (c) return c;
+
+            gameObject = gameObject.parent;
+        }
+
+        return undefined;
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
+    public static componentInChild<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
+        const c = gameObject.getComponentInChildren<T>(type);
+        if (c) return c;
+
+        for (const child of gameObject.children) {
+            const c = GameObject.componentInChild<T>(child, type)
+            if (c) return c;
+        }
+
+        return undefined;
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
     public prepareDestroy(): void {
         [...this._components.values()].flat(1).forEach(c => Destroy(c));
         this.children.forEach(c => Destroy(c));
@@ -335,10 +380,6 @@ export class GameObject implements Destroyable {
         delete GameObject.gameObjects[this.id];
 
         if (this.parent) this.parent.removeChild(this);
-    }
-
-    public static async update(): Promise<void> {
-        await Promise.all(GameObject.gameObjects.map(gameObject => gameObject.update()));
     }
 
     /**
@@ -368,6 +409,7 @@ export class GameObject implements Destroyable {
                 if (names.length === 0) return undefined;
 
                 for (const g of GameObject.gameObjects) {
+                    if (g.name === names[0] && names.length === 1) return g;
                     if (g.name === names[0]) gOs.push(...g.children);
                 }
 
@@ -405,7 +447,7 @@ export class GameObject implements Destroyable {
 
     /**
      * 
-     * Returns GameObject with name if exists.
+     * Returns GameObject with id if exists.
      * 
      */
     public static get(id: number): GameObject | undefined {
@@ -417,8 +459,6 @@ export class GameObject implements Destroyable {
             Destroy(gameObject);
         }
     }
-
-    public static destroy(): void { }
 
     public static init(): void {
         (<any>GameObject)._nextID = 0;

@@ -5,15 +5,20 @@ export enum ComponentType {
     AudioSource,
     Behaviour,
     Camera,
-    Collider,
     Component,
     ParallaxBackground,
     ParticleSystem,
     Renderable,
-    RigidBody,
     Text,
     Texture,
-    TileMap,
     Transform,
-    Video
+    Video,
+
+    Collider,
+    CircleCollider,
+    PolygonCollider,
+    TileMap,
+    TerrainCollider,
+    RectangleCollider,
+    RigidBody
 }

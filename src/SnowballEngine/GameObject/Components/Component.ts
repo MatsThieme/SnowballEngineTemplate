@@ -21,6 +21,8 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
     public readonly type: ComponentType;
     public readonly componentId: number;
 
+    public readonly destroyed: boolean;
+
     private _active: boolean;
 
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Component) {
@@ -30,19 +32,14 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
         this.type = type;
         this.componentId = Component._nextCID++;
 
+        this.destroyed = false;
+
         this._active = true;
 
         Component.components.push(this);
 
-        this.addListeners();
-    }
-
-    /**
-     * 
-     * Called in a Deriving constructor.
-     * 
-     */
-    private addListeners(): void {
+        if (this.awake) this.addListener('awake', new EventHandler(this.awake.bind(this)));
+        if (this.start) this.addListener('start', new EventHandler(this.start.bind(this)));
         if (this.onPreRender) this.addListener('prerender', new EventHandler(this.onPreRender.bind(this)));
         if (this.onPostRender) this.addListener('postrender', new EventHandler(this.onPostRender.bind(this)));
         if (this.onEnable) this.addListener('enable', new EventHandler(this.onEnable.bind(this)));
@@ -85,20 +82,43 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
 
         Component.components.splice(Component.components.findIndex(c => c.componentId === this.componentId), 1);
 
-        if (this.gameObject) this.gameObject.removeComponent(this);
+        if (!this.destroyed) this.gameObject.removeComponent(this);
+
+        (<Mutable<Component<ComponentEventTypes>>>this).destroyed = true;
     }
 
     public static async earlyupdate(): Promise<void> {
         for (const component of Component.components) {
-            await component.dispatchEvent('earlyupdate');
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('earlyupdate');
+        }
+    }
+
+    public static async update(): Promise<void> {
+        for (const component of Component.components) {
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('update');
         }
     }
 
     public static async lateupdate(): Promise<void> {
         for (const component of Component.components) {
-            await component.dispatchEvent('lateupdate');
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('lateupdate');
         }
     }
+
+
+    /**
+     *
+     * Called after the behavior has been added to the GameObject.
+     *
+     */
+    protected awake?(): Promise<void> | void;
+
+    /**
+     * 
+     * Called on scene start, if scene is running it's called by the constructor.
+     * 
+     */
+    protected start?(): Promise<void> | void;
 
     /**
      *
@@ -126,7 +146,6 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
     *
     */
     protected onPostRender?(renderingCamera: Camera): void | Promise<void>;
-
 
     /**
     *

@@ -75,10 +75,10 @@ export class Text extends Renderable<TextEventTypes>{
      * If x or y are 0, the width or height will be calculated to match the original aspect ratio.
      * 
      */
-    public get size(): Vector2 {
+    public override get size(): Vector2 {
         return this._size;
     }
-    public set size(val: Vector2) {
+    public override set size(val: Vector2) {
         this._size = val;
 
         if (val.x === 0 && val.y === 0) Debug.warn('size === (0, 0)');
@@ -103,7 +103,7 @@ export class Text extends Renderable<TextEventTypes>{
         }
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         window.removeEventListener('resize', this._resizeListener);
 
         super.destroy();

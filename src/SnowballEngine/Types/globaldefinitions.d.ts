@@ -1,4 +1,6 @@
 import { TextStyleFill, TextStyleFontVariant, TextStyleFontWeight, TextStyleLineJoin, TextStyleTextBaseline, TEXT_GRADIENT } from "@pixi/text";
+import { Angle } from 'Utility/Angle';
+import { Vector2 } from 'Utility/Vector2';
 
 declare global {
     type Constructor<T> = new (...args: any[]) => T;
@@ -26,10 +28,34 @@ declare global {
     }
 
 
+
     interface IVector2 {
         x: number;
         y: number;
     }
+
+    interface IAngle {
+        radian: number;
+        degree: number;
+    }
+
+
+    interface Transformable {
+        position: Vector2;
+        rotation: Angle;
+        scale: Vector2;
+        parent?: ITransformable,
+        readonly id: number
+    }
+
+    interface ITransformable {
+        position: IVector2;
+        rotation: IAngle;
+        scale: IVector2;
+        parent?: ITransformable,
+        readonly id: number
+    }
+
 
 
     interface BitmapTextStyle {

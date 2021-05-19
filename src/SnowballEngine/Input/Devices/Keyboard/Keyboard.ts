@@ -106,7 +106,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
             const btn = <KeyboardButton | undefined>Input.inputMappingButtons.keyboard[type];
             const ax = <KeyboardAxis | undefined>Input.inputMappingAxes.keyboard[type];
 
-            if (!btn && !ax || btn && !this._fireListener.get(btn) && !ax) continue;
+            if (btn === undefined && ax === undefined || btn && !this._fireListener.get(btn) && !ax) continue;
 
 
             if (ax) {
@@ -119,8 +119,8 @@ export class Keyboard extends InputEventTarget implements InputDevice {
             const e: InputEvent = {
                 type,
                 deviceType: InputDeviceType.Keyboard,
-                axis: ax ? this.getAxis(ax) : undefined,
-                button: btn ? this.getButton(btn) : undefined,
+                axis: ax !== undefined ? this.getAxis(ax) : undefined,
+                button: btn !== undefined ? this.getButton(btn) : undefined,
                 device: this
             }
 
@@ -142,7 +142,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         window.removeEventListener('keyup', this._onKeyUp);
     }
 
-    public dispose(): void {
+    public override dispose(): void {
         super.dispose();
         this.removeListeners();
     }

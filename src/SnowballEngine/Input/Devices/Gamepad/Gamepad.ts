@@ -92,13 +92,13 @@ export class Gamepad extends InputEventTarget implements InputDevice {
             const btn = <GamepadButton | undefined>Input.inputMappingButtons.gamepad[type];
             const ax = <GamepadAxis | undefined>Input.inputMappingAxes.gamepad[type];
 
-            if (!btn && !ax) continue;
+            if (btn === undefined && ax === undefined) continue;
 
             const e: InputEvent = {
                 type,
                 deviceType: InputDeviceType.Gamepad,
-                axis: ax ? this.getAxis(ax) : undefined,
-                button: btn ? this.getButton(btn) : undefined,
+                axis: ax !== undefined ? this.getAxis(ax) : undefined,
+                button: btn !== undefined ? this.getButton(btn) : undefined,
                 device: this
             }
 
@@ -116,15 +116,6 @@ export class Gamepad extends InputEventTarget implements InputDevice {
     public static getAxis(key: number): Readonly<InputAxis> | undefined {
         return Gamepad.gamepads[0]?.getAxis(key);
     }
-
-    // private static updateGamepads(): void {
-    //     const gpads = [...<globalThis.Gamepad[]>navigator.getGamepads()].filter(g => g?.mapping === 'standard');
-
-    //     for (let i = 0; i < Math.max(gpads.length, Gamepad._gamepads.length); i++) {
-    //         if (!Gamepad._gamepads[i] && gpads[i]) Gamepad._gamepads[i] = new Gamepad(gpads[i]);
-    //         if (Gamepad._gamepads[i] && !gpads[i]) Gamepad._gamepads[i] = undefined;
-    //     }
-    // }
 
     public static get gamepads(): Gamepad[] {
         return <Gamepad[]>Gamepad._gamepads.filter(Boolean);

@@ -2,9 +2,13 @@
     "touch": {
         "Trigger": 0
     },
-    "keyboard": {},
+    "keyboard": {
+        "Jump": "Space"
+    },
     "mouse": {
         "Trigger": 0
     },
-    "gamepad": {}
+    "gamepad": {
+        "Jump": 0
+    }
 }

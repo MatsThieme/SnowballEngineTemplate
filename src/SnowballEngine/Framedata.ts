@@ -47,7 +47,6 @@ export class Framedata {
         return this._avgFramesPerSecond;
     }
 
-
     /**
      * 
      * measure fps for milliseconds

@@ -82,7 +82,7 @@ export class UISelect extends UIElement {
         console.log(value);
     }
 
-    protected updateBounds(): void {
+    protected override updateBounds(): void {
         if (this._backgroundSprite) this._backgroundSprite.visible = false; // ignore background in getLocalBounds()
 
         const bounds = this.container.getLocalBounds();
@@ -103,7 +103,7 @@ export class UISelect extends UIElement {
         }
     }
 
-    public update(): boolean {
+    public override update(): boolean {
         if (!super.update()) return false;
 
 
@@ -211,7 +211,7 @@ export class UISelect extends UIElement {
         this.container.addChild(text);
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         window.removeEventListener('resize', this._resizeListener);
 
         super.destroy();

@@ -44,13 +44,13 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.autoResizeContainer = false;
     }
 
-    protected onEnable(): void {
+    protected override onEnable(): void {
         if (this._sprite) {
             this._sprite.visible = this._visible;
         }
     }
 
-    protected onDisable(): void {
+    protected override onDisable(): void {
         if (this._sprite) {
             this._sprite.visible = false;
         }
@@ -159,7 +159,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.gameObject.container.removeChild(this._sprite);
     }
 
-    protected update(): void {
+    protected override update(): void {
         if (this._sprite && this.active) {
             const anchor = new Vector2(this.alignH, this.alignV);
 
@@ -174,7 +174,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         }
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this.disconnectCamera();
 
         if (this._sprite) {

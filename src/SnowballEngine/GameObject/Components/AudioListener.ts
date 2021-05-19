@@ -1,4 +1,5 @@
 import { Debug } from 'SnowballEngine/Debug';
+import { Scene } from 'SnowballEngine/Scene';
 import { AudioListenerEventTypes } from 'Utility/Events/EventTypes';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
 import { ComponentType } from '../ComponentType';
@@ -21,6 +22,8 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioListener);
 
+        (<Mutable<Scene>>this.gameObject.scene).audioListener = this;
+
         this.node = AudioListener.context.createGain();
         this.node.connect(AudioListener.node);
 
@@ -30,8 +33,8 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this._sources = new Map();
 
 
-        for (const gO of GameObject.gameObjects) {
-            for (const source of [...gO.getComponents(AudioSource)]) source.connect();
+        for (const c of Component.components) {
+            if (c.type === ComponentType.AudioSource) (<AudioSource>c).connect();
         }
     }
 
@@ -45,11 +48,11 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         }
     }
 
-    public onEnable(): void {
+    protected override onEnable(): void {
         this.node.connect(AudioListener.node);
     }
 
-    public onDisable(): void {
+    protected override onDisable(): void {
         this.node.disconnect();
     }
 
@@ -61,7 +64,7 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this._sources.delete(audioSource.componentId);
     }
 
-    public update(): void {
+    protected override update(): void {
         const globalTransform = this.gameObject.transform.toGlobal();
 
         for (const source of this._sources.values()) {
@@ -83,12 +86,14 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this.node.gain.value = this.volume;
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         for (const s of [...this._sources.values()]) {
             s.disconnect();
         }
 
         this._sources.clear();
+
+        (<Mutable<Scene>>this.gameObject.scene).audioListener = undefined;
 
         super.destroy();
     }

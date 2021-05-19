@@ -1,5 +1,5 @@
 /** @category Input */
-export enum MouseAxis {
+export const enum MouseAxis {
     Position,
     PositionHorizontal,
     PositionVertical,

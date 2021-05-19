@@ -5,6 +5,7 @@
     "settings": {
         "allowContextMenu": false,
         "transparentBackground": false,
+        "transparentBackgroundAlpha": 0,
         "PIXIjsAntialiasing": true
     },
     "cordova-settings": {

@@ -43,10 +43,10 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
         });
     }
 
-    public update(): void {
+    protected override update(): void {
         super.update();
 
-        if (!this.active || !this.sprite) return;
+        if (!this.sprite) return;
 
         this._spriteAnimations.get(this._activeAnimation)?.update();
 

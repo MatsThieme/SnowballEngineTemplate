@@ -1,12 +1,9 @@
-## Status:
-Matter.js not yet integrated
-
-[Documentation](https://matsthieme.github.io/SnowballEngineTemplate)
-
 # SnowballEngine
 
-**SnowballEngine is a 2D TypeScript game engine.**
-SnowballEngine manages scenes, game assets, simulates physics, renders assets and provides an easy to understand structure similar to Unity. It integrates [pixi.js](https://github.com/pixijs/pixi.js) for fast rendering and [matter-js](https://github.com/liabru/matter-js) for accurate and performant physics simulation, including collision detection and resolution.
+SnowballEngine is a resolution independent 2D TypeScript game engine.
+SnowballEngine manages scenes, game assets, simulates physics, renders assets and provides an easy to understand structure similar to Unity. It integrates [pixi.js](https://github.com/pixijs/pixi.js) for fast rendering and [matter-js](https://github.com/liabru/matter-js) for accurate and performant physics simulation.
+
+[Documentation](https://matsthieme.github.io/SnowballEngineTemplate)
 
 ### setup
 <pre>npm i</pre>
@@ -60,21 +57,19 @@ dist/
 Contains files with classes derived from Behaviour.
 
 #### Configurables
-Configurables contains typedefinition files (.d.ts) the user will edit during the development process.\
-e.g. InputAction.d.ts for input mapping
+Contains typedefinition files (.d.ts) the user may edit during the development process, e.g. InputAction.d.ts for input mapping
 
 #### Prefabs
-Prefabs contains files that export a function to initialize a GameObject.
+Contains files that export a function to initialize a GameObject.
 
 #### Scenes
-Scenes contains files that export a function to initialize a Scene.
+Contains files that export a function to initialize a Scene.
 
 #### SnowballEngine
-SnowballEngine contains all the GameEngine files.
+Contains all the GameEngine files.
 
 #### Game.ts
-Your entry point.
-It may look like this:
+Game.ts is the entry point, it may look like this:
 ```typescript
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
@@ -103,7 +98,7 @@ export class Game {
 A SceneManager instance loads Scenes and stores their Initializer-function.
 
 ### Scene
-A Scene manages GameObjects and the user interface. It contains the gameloop.
+A Scene manages GameObjects and the graphical user interface. It contains the gameloop.
 
 ### GameObject
 A GameObject is a container for components.
@@ -125,14 +120,14 @@ SceneManager
 <br>
 
 ## Components
-### AnimatedSprite extends Renderable
+### AnimatedSprite implements Renderable
 Manages SpriteAnimation objects to render and switch sprite animations.
 </br>
 </br>
 
 ### AudioListener
 Can exist once per scene, it's the "ears" of the player.
-It's the audio counterpart of Camera.
+It's the audio equivalent of Camera.
 </br>
 </br>
 
@@ -164,26 +159,26 @@ Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#paralla
 </br>
 </br>
 
-### ParallaxBackground
+### ParallaxBackground implements Renderable
 A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling)
 </br>
 </br>
 
-### ParticleSystem
+### ParticleSystem implements Renderable
 </br>
 </br>
 
-### Text
+### Text implements Renderable
 Render a string.
 </br>
 </br>
 
-### Texture
+### Texture implements Renderable
 Render an image.
 </br>
 </br>
 
-### TileMap
+### TileMap implements Renderable
 Render a tilemap and collide with other objects.
 </br>
 </br>
@@ -195,7 +190,7 @@ A child-GameObjects Transform is relative to their parents.
 </br>
 </br>
 
-### Video
+### Video implements Renderable
 Render a Video/Movie, playback is controlled through an HTMLVideoElement.
 </br>
 </br>
@@ -240,3 +235,8 @@ interface InputMapping {
     touch: { [key in InputAction]?: TouchButton | TouchAxis }
 }
 ```
+
+
+### Units
+#### Angles
+All angles are clockwise. To allow and simplify the mixed use of radian and degree, [Angle](src/SnowballEngine/Utilities/Angle.ts) objects are used.

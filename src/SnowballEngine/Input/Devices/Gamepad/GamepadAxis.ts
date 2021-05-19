@@ -1,5 +1,5 @@
 /** @category Input */
-export enum GamepadAxis {
+export const enum GamepadAxis {
     LeftStickHorizontal,
     LeftStickVertical,
     RightStickHorizontal,

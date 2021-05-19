@@ -44,7 +44,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
     }
 
 
-    public onPreRender(camera: Camera): void {
+    protected override onPreRender(camera: Camera): void {
         const i = this.cameras.findIndex(c => c.componentId === camera.componentId);
 
         if (i === -1 || !this._aabb.intersects(camera.aabb)) return;
@@ -52,7 +52,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
         this.calculateBackgroundForCamera(camera);
     }
 
-    public recalculateAABB(): void {
+    private recalculateAABB(): void {
         let top = 0;
         let bot = 0;
         let right = 0;
@@ -73,16 +73,10 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
         }
 
 
-        const t = Transform.toGlobal({
-            position: new Vector2(left, bot),
-            scale: new Vector2(1, 1),
-            rotation: new Angle(),
-            id: -1,
-            parent: this.gameObject.transform
-        });
+        const t = Transform.toGlobal(Transform.createTransformable(new Vector2(left, bot), new Vector2(1, 1), new Angle(), this.gameObject.transform));
 
         this._aabb.setHalfExtents({ x: (right - left) / 2 * t.scale.x, y: (top - bot) / 2 * t.scale.y });
-        this._aabb.setPosition(t.position.add(this._aabb.halfExtents));
+        this._aabb.setPosition(Vector2.add(t.position, this._aabb.halfExtents));
     }
 
     public addBackground(speed: number, asset: BackgroundLayerAsset): void {
@@ -107,7 +101,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
         }
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this._backgroundLayers.forEach(l => Dispose(l));
 
         super.destroy();

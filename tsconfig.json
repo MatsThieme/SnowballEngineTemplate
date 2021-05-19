@@ -11,9 +11,10 @@
         "sourceMap": true,
         "strict": true,
         "noImplicitAny": true,
-        "noImplicitReturns": true,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
+        "noImplicitOverride": false,
+        "downlevelIteration": true, // support es5 compilation
         "baseUrl": "src",
         "paths": {
             "SE": [

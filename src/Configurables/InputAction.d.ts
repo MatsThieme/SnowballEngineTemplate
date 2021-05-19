@@ -1,3 +1,4 @@
 declare type InputAction = 'Trigger' | 'PointerPosition' |
     'MoveHorizontal' |
-    'MoveVertical';
+    'MoveVertical' |
+    'Jump';

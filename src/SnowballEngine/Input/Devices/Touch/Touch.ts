@@ -64,11 +64,13 @@ export class Touch extends InputEventTarget implements InputDevice {
             const btn = <TouchButton | undefined>Input.inputMappingButtons.touch[type];
             const ax = <TouchAxis | undefined>Input.inputMappingAxes.touch[type];
 
+            if (btn === undefined && ax === undefined) continue;
+
             const e: InputEvent = {
                 type,
                 deviceType: InputDeviceType.Touch,
-                axis: ax ? this.getAxis(ax) : undefined,
-                button: btn ? this.getButton(btn) : undefined,
+                axis: ax !== undefined ? this.getAxis(ax) : undefined,
+                button: btn !== undefined ? this.getButton(btn) : undefined,
                 device: this
             }
 
@@ -92,7 +94,7 @@ export class Touch extends InputEventTarget implements InputDevice {
         window.removeEventListener('touchmove', this._onTouchEvent);
     }
 
-    public dispose(): void {
+    public override dispose(): void {
         super.dispose();
         this.removeListeners();
     }

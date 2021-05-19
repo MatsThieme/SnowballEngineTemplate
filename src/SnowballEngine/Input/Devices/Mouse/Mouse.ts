@@ -60,7 +60,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
-            this._buttons[e.button].down = false;
+            this._buttons[e.button].down = true;
 
             this._fireListener = true;
         }).bind(this);
@@ -96,13 +96,16 @@ export class Mouse extends InputEventTarget implements InputDevice {
             const btn = <MouseButton | undefined>Input.inputMappingButtons.mouse[type];
             const ax = <MouseAxis | undefined>Input.inputMappingAxes.mouse[type];
 
+            if (btn === undefined && ax === undefined) continue;
+
             const e: InputEvent = {
                 type,
                 deviceType: InputDeviceType.Mouse,
-                axis: ax ? this.getAxis(ax) : undefined,
-                button: btn ? this.getButton(btn) : undefined,
+                axis: ax !== undefined ? this.getAxis(ax) : undefined,
+                button: btn !== undefined ? this.getButton(btn) : undefined,
                 device: this
             }
+
 
             if (!e.axis && !e.button) continue;
 
@@ -126,7 +129,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
         window.removeEventListener('contextmenu', this._onContextMenu);
     }
 
-    public dispose(): void {
+    public override dispose(): void {
         super.dispose();
         this.removeListeners();
     }

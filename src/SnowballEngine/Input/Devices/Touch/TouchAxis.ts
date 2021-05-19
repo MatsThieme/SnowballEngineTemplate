@@ -1,5 +1,5 @@
 /** @category Input */
-export enum TouchAxis {
+export const enum TouchAxis {
     TouchPoint0,
     TouchPoint1,
     TouchPoint2,

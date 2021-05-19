@@ -123,7 +123,7 @@ export class UICheckbox extends UIElement {
      * Update checked property.
      * 
      */
-    public update(): boolean {
+    public override update(): boolean {
         if (!super.update()) return false;
 
         if (this.click) {

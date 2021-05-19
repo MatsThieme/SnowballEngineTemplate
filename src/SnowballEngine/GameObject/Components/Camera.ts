@@ -87,13 +87,13 @@ export class Camera extends Component<CameraEventTypes>  {
         return this._aabb = new AABB(globalTransform.position, size.scale(0.5));
     }
 
-    public update(pixi: PIXI): void {
+    public render(pixi: PIXI): void {
         if (!this.active) return;
 
         const globalTransform = this.gameObject.transform.toGlobal();
 
         pixi.container.scale.copyFrom(new Vector2(pixi.canvas.width / this.size.x / (100 / this.screenSize.x), pixi.canvas.height / this.size.y / (100 / this.screenSize.y)).scale(globalTransform.scale));
-        pixi.container.position.copyFrom(this.worldToCameraPoint(globalTransform.position).add(new Vector2(pixi.canvas.width / (100 / this.screenPosition.x), pixi.canvas.height / (100 / this.screenPosition.y))));
+        pixi.container.position.copyFrom(this.worldToCameraPoint(Vector2.from(globalTransform.position)).add(new Vector2(pixi.canvas.width / (100 / this.screenPosition.x), pixi.canvas.height / (100 / this.screenPosition.y))));
         pixi.container.rotation = -globalTransform.rotation.radian;
 
 
@@ -118,7 +118,7 @@ export class Camera extends Component<CameraEventTypes>  {
         return this.worldToCamera(new Vector2(-point.x + this.size.x / 2, point.y + this.size.y / 2)).floor();
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this.gameObject.scene.cameraManager.removeCamera(this);
 
         super.destroy();

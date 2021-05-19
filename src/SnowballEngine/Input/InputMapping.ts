@@ -8,23 +8,10 @@ import { TouchAxis } from './Devices/Touch/TouchAxis';
 import { TouchButton } from './Devices/Touch/TouchButton';
 
 /** @category Input */
-export class InputMapping {
+export interface InputMapping {
     readonly [key: string]: any;
-    public readonly keyboard: Readonly<{ [key in InputAction]?: KeyboardButton | KeyboardAxis }>;
-    public readonly mouse: Readonly<{ [key in InputAction]?: MouseButton | MouseAxis }>;
-    public readonly gamepad: Readonly<{ [key in InputAction]?: GamepadButton | GamepadAxis }>;
-    public readonly touch: Readonly<{ [key in InputAction]?: TouchButton | TouchAxis }>;
-
-    public constructor(mapping: InputMapping) {
-        this.keyboard = <any>{};
-        this.mouse = <any>{};
-        this.gamepad = <any>{};
-        this.touch = <any>{};
-
-        Object.assign(this, mapping);
-    }
-
-    public serialize(): string {
-        return JSON.stringify(this);
-    }
+    readonly keyboard: Readonly<{ [key in InputAction]?: KeyboardButton | KeyboardAxis }>;
+    readonly mouse: Readonly<{ [key in InputAction]?: MouseButton | MouseAxis }>;
+    readonly gamepad: Readonly<{ [key in InputAction]?: GamepadButton | GamepadAxis }>;
+    readonly touch: Readonly<{ [key in InputAction]?: TouchButton | TouchAxis }>;
 }

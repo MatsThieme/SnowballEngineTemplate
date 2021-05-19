@@ -1,4 +1,4 @@
 /** @category Input */
-export enum TouchButton {
+export const enum TouchButton {
     Touch
 }

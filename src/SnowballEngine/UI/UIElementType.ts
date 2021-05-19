@@ -1,5 +1,5 @@
 /** @category UI */
-export enum UIElementType {
+export const enum UIElementType {
     Text,
     Button,
     Checkbox,

@@ -1,5 +1,5 @@
-import { default as cloneDeep } from 'lodash.clonedeep';
 import projectConfig from 'Config';
+import { default as cloneDeep } from 'lodash.clonedeep';
 
 export class Debug {
     public static init(): void {
@@ -21,7 +21,7 @@ export class Debug {
 
         const o = Debug.formatMessage('log', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o.join());
+        if (window.cordova) alert(o.join(' '));
         else console.log(...o);
     }
 
@@ -30,7 +30,7 @@ export class Debug {
 
         const o = Debug.formatMessage('warning', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o.join());
+        if (window.cordova) alert(o.join(' '));
         else console.warn(...o);
     }
 
@@ -41,7 +41,7 @@ export class Debug {
 
         const o = Debug.formatMessage('error', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (window.cordova) alert(o.join());
+        if (window.cordova) alert(o.join(' '));
         else console.warn(...o);
     }
 

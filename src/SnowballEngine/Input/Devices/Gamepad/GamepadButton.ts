@@ -1,5 +1,5 @@
 /** @category Input */
-export enum GamepadButton {
+export const enum GamepadButton {
     South,
     East,
     West,

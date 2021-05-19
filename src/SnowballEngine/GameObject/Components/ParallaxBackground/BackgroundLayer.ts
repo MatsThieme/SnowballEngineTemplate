@@ -55,7 +55,7 @@ export class BackgroundLayer implements Disposable {
     }
 
     public updateSpriteForCamera(camera: Camera): void {
-        const spritePos = Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position.sub(this.backgroundLayerSprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
+        const spritePos = Vector2.sub(Transform.toLocal(camera.gameObject.transform, Transform.fromPIXI(this._container, this._parallaxBackground.gameObject.transform)).position, this.backgroundLayerSprite.spriteCenter).scale(new Vector2(this.speed, -this.speed));
 
         this.backgroundLayerSprite.sprite.position.copyFrom(spritePos.add(new Vector2(this.backgroundLayerSprite.size.x / 2)));
     }

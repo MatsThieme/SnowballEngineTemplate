@@ -52,7 +52,7 @@ export abstract class UIInputField<T extends number | string> extends UIText {
         this.focused = true;
     }
 
-    public update(): boolean {
+    public override update(): boolean {
         if (!super.update()) return false;
 
         if (this.domElement.value != this._bitmapText.text) {
@@ -67,7 +67,7 @@ export abstract class UIInputField<T extends number | string> extends UIText {
         return true;
     }
 
-    public destroy(): void {
+    public override destroy(): void {
         this.domElement.remove();
 
         this.domElement.removeEventListener('blur', this.elOnBlur.bind(this));

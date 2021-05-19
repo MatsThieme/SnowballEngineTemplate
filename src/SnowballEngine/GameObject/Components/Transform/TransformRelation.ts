@@ -1,5 +1,3 @@
-import { Transformable } from './Transformable';
-
 /**
  * 
  * transfrom2 is the th(thParentOf1) parent of transform1
@@ -7,7 +5,7 @@ import { Transformable } from './Transformable';
  *
  */
 export interface TransformRelation {
-    transform1: Transformable,
+    transform1: ITransformable,
 
     /**
     *
@@ -16,7 +14,7 @@ export interface TransformRelation {
     */
     thParentOf1?: number,
 
-    transform2: Transformable,
+    transform2: ITransformable,
 
     /**
     *

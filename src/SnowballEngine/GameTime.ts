@@ -28,7 +28,7 @@ export class GameTime {
      * Highest clamped delta time
      * 
      */
-    public static maxDeltaTime = 1000;
+    public static maxDeltaTime = 50;
 
     /**
      * 

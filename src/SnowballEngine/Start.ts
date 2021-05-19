@@ -2,6 +2,7 @@ import projectConfig from 'Config';
 import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Input } from 'Input/Input';
 import * as PIXI from 'pixi.js';
+import { Ticker } from 'pixi.js';
 import { UIFonts } from 'UI/UIFonts';
 import { Game } from '../Game';
 import { Client } from './Client';
@@ -9,6 +10,7 @@ import { Debug } from './Debug';
 
 
 PIXI.utils.skipHello(); // don't show PIXIs hello in console
+Ticker.system.autoStart = false;
 if (projectConfig.build.isDevelopmentBuild) (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
 
 Debug.init(); // add global error handlers

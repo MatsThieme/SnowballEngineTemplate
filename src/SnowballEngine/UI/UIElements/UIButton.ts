@@ -8,7 +8,7 @@ export class UIButton extends UIText {
         super(menu, UIElementType.Button);
     }
 
-    public update(): boolean {
+    public override update(): boolean {
         if (!super.update()) return false;
 
         if (this.click && this.onInput) {

@@ -1,5 +1,5 @@
 /** @category Asset Management */
-export enum AssetType {
+export const enum AssetType {
     Image,
     Audio,
     Video,

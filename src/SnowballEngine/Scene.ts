@@ -1,20 +1,23 @@
 import { AudioMixer } from 'Audio/AudioMixer';
 import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Behaviour } from 'GameObject/Components/Behaviour';
+import { Collider } from 'GameObject/Components/Collider';
 import { Component } from 'GameObject/Components/Component';
-import { ComponentType } from 'GameObject/ComponentType';
+import { RigidBody } from 'GameObject/Components/RigidBody';
 import { Destroy, Destroyable } from 'GameObject/Destroy';
 import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { Input } from 'Input/Input';
 import { UI } from 'UI/UI';
 import { UIFonts } from 'UI/UIFonts';
+import { Canvas } from 'Utility/Canvas';
 import { clearObject } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
 import { CameraManager } from './Camera/CameraManager';
 import { Client } from './Client';
 import { Framedata } from './Framedata';
 import { GameTime } from './GameTime';
+import { Physics } from './Physics/Physics';
 import { SceneManager } from './SceneManager';
 
 /** @category Scene */
@@ -23,8 +26,9 @@ export class Scene {
     public readonly ui: UI;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
-    public readonly domElement: HTMLCanvasElement;
+    public readonly domElement: Canvas;
     public readonly name: string;
+    public readonly physics: Physics;
 
     /**
      * 
@@ -67,6 +71,8 @@ export class Scene {
         this.domElement.id = this.name;
 
         this.pause = false;
+
+        this.physics = new Physics();
     }
 
 
@@ -77,15 +83,6 @@ export class Scene {
      */
     public get isStarting(): boolean {
         return this._requestAnimationFrameHandle === -1;
-    }
-
-    /**
-     * 
-     * Returns true if scene start() has been called.
-     * 
-     */
-    public get isStarted(): boolean {
-        return typeof this._requestAnimationFrameHandle === 'number';
     }
 
     /**
@@ -123,10 +120,20 @@ export class Scene {
         const scenePaused = this.pause || [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
 
         if (!scenePaused) {
+            await Behaviour.earlyupdate();
             await Component.earlyupdate();
 
-            await GameObject.update();
 
+            RigidBody.updateBody();
+            Collider.updateBody();
+            this.physics.update();
+            RigidBody.updateTransform();
+
+
+            await Behaviour.update();
+            await Component.update();
+
+            await Behaviour.lateupdate();
             await Component.lateupdate();
         }
 
@@ -153,16 +160,8 @@ export class Scene {
     public async start(): Promise<void> {
         this._requestAnimationFrameHandle = -1; // set isStarting true
 
-        (<any>GameObject).nextID = (<any>Component).nextID = 0;
-
-
-        for (const gameObject of GameObject.gameObjects) {
-            for (const c of gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-                if (!c.__initialized__) {
-                    await c.dispatchEvent('start');
-                    (<Mutable<Behaviour>>c).__initialized__ = true;
-                }
-            }
+        for (const component of Component.components) {
+            await component.dispatchEvent('start');
         }
 
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
@@ -245,11 +244,13 @@ export class Scene {
     public async unload(): Promise<void> {
         await this.stop();
 
-        Destroy(GameObject);
+        GameObject.prepareDestroy();
 
         Destroy(this.ui);
 
         Destroy(this.cameraManager);
+
+        Destroy(this.physics);
 
         this.destroyDestroyables();
 
