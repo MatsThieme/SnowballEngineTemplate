@@ -1,4 +1,5 @@
 import { MoveBehaviour } from 'Behaviours/MoveBehaviour';
+import { CircleCollider } from 'GameObject/Components/CircleCollider';
 import { RectangleCollider } from 'GameObject/Components/RectangleCollider';
 import { RigidBody } from 'GameObject/Components/RigidBody';
 import { Color, GameObject, Shape, Texture } from 'SE';
@@ -13,9 +14,9 @@ export function ColliderTest(gameObject: GameObject): void {
 
     gameObject.addComponent(MoveBehaviour);
     gameObject.addComponent(RigidBody);
-    gameObject.addComponent(RectangleCollider);
+    gameObject.addComponent(CircleCollider);
     gameObject.addComponent(Texture, texture => {
-        texture.asset = Shape.createRect(Color.blue);
+        texture.asset = Shape.createCircle(Color.blue);
     });
 
     gameObject.transform.rotation.degree = 10;
