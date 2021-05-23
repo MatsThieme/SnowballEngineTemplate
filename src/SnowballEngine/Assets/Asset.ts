@@ -2,7 +2,7 @@ import { BaseTexture, Texture } from '@pixi/core';
 import { Rectangle } from '@pixi/math';
 import { Sprite } from '@pixi/sprite';
 import { Destroyable } from 'GameObject/Destroy';
-import { Canvas } from 'Utility/Canvas';
+import { Canvas } from 'Utility/Canvas/Canvas';
 import { Vector2 } from 'Utility/Vector2';
 import { AssetType } from './AssetType';
 

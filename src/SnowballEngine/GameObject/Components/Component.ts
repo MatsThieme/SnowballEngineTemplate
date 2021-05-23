@@ -19,9 +19,9 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
      */
     public readonly gameObject: GameObject;
     public readonly type: ComponentType;
-    public readonly componentId: number;
+    public readonly componentID: number;
 
-    public readonly destroyed: boolean;
+    public readonly __destroyed__: boolean;
 
     private _active: boolean;
 
@@ -30,24 +30,24 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
 
         this.gameObject = gameObject;
         this.type = type;
-        this.componentId = Component._nextCID++;
+        this.componentID = Component._nextCID++;
 
-        this.destroyed = false;
+        this.__destroyed__ = false;
 
         this._active = true;
 
         Component.components.push(this);
 
-        if (this.awake) this.addListener('awake', new EventHandler(this.awake.bind(this)));
-        if (this.start) this.addListener('start', new EventHandler(this.start.bind(this)));
-        if (this.onPreRender) this.addListener('prerender', new EventHandler(this.onPreRender.bind(this)));
-        if (this.onPostRender) this.addListener('postrender', new EventHandler(this.onPostRender.bind(this)));
-        if (this.onEnable) this.addListener('enable', new EventHandler(this.onEnable.bind(this)));
-        if (this.onDisable) this.addListener('disable', new EventHandler(this.onDisable.bind(this)));
-        if (this.earlyUpdate) this.addListener('earlyupdate', new EventHandler(this.earlyUpdate.bind(this)));
-        if (this.update) this.addListener('update', new EventHandler(this.update.bind(this)));
-        if (this.lateUpdate) this.addListener('lateupdate', new EventHandler(this.lateUpdate.bind(this)));
-        if (this.onDestroy) this.addListener('destroy', new EventHandler(this.onDestroy.bind(this)));
+        if (this.awake) this.addListener('awake', new EventHandler(this.awake, this));
+        if (this.start) this.addListener('start', new EventHandler(this.start, this));
+        if (this.onPreRender) this.addListener('prerender', new EventHandler(this.onPreRender, this));
+        if (this.onPostRender) this.addListener('postrender', new EventHandler(this.onPostRender, this));
+        if (this.onEnable) this.addListener('enable', new EventHandler(this.onEnable, this));
+        if (this.onDisable) this.addListener('disable', new EventHandler(this.onDisable, this));
+        if (this.earlyUpdate) this.addListener('earlyupdate', new EventHandler(this.earlyUpdate, this));
+        if (this.update) this.addListener('update', new EventHandler(this.update, this));
+        if (this.lateUpdate) this.addListener('lateupdate', new EventHandler(this.lateUpdate, this));
+        if (this.onDestroy) this.addListener('destroy', new EventHandler(this.onDestroy, this));
     }
 
     /**
@@ -59,12 +59,12 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
         return this._active;
     }
     public set active(val: boolean) {
+        if (this._active === val) return;
+
         if (this.type === ComponentType.Transform) {
-            Debug.warn(`Can't disable a Transform component`);
+            Debug.warn('A Component of type Transform may can not be inactive');
             return;
         }
-
-        if (this._active === val) return;
 
         this._active = val;
 
@@ -80,11 +80,12 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
     public destroy(): void {
         this.dispatchEvent('destroy');
 
-        Component.components.splice(Component.components.findIndex(c => c.componentId === this.componentId), 1);
+        if (!this.__destroyed__) {
+            (<Mutable<Component<ComponentEventTypes>>>this).__destroyed__ = true;
+            this.gameObject.removeComponent(this);
+        }
 
-        if (!this.destroyed) this.gameObject.removeComponent(this);
-
-        (<Mutable<Component<ComponentEventTypes>>>this).destroyed = true;
+        Component.components.splice(Component.components.findIndex(c => c.componentID === this.componentID), 1);
     }
 
     public static async earlyupdate(): Promise<void> {

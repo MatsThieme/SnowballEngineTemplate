@@ -153,6 +153,10 @@ export class Color {
         return new Color(255, 0, 0);
     }
 
+    public static get purple(): Color {
+        return new Color(128, 0, 128);
+    }
+
     public static get green(): Color {
         return new Color(0, 255, 0);
     }

@@ -1,4 +1,4 @@
-import { RigidBody } from 'GameObject/Components/RigidBody';
+import { Rigidbody } from 'GameObject/Components/Rigidbody';
 import { CameraPrefab } from 'Prefabs/CameraPrefab';
 import { ExampleGameObjectPrefab } from 'Prefabs/ExampleGameObjectPrefab';
 import { ColliderTest } from 'Prefabs/FirstColliderTest';
@@ -32,7 +32,7 @@ export async function MainScene(scene: Scene) {
 
             if (!rect) return;
 
-            const rb = rect.getComponent<RigidBody>(ComponentType.RigidBody);
+            const rb = rect.getComponent<Rigidbody>(ComponentType.Rigidbody);
 
             if (!rb) return;
 

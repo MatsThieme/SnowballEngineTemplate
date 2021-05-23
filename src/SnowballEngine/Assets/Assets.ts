@@ -1,6 +1,6 @@
 import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Interval } from 'Utility/Interval';
-import { Timeout } from 'Utility/Timeout';
+import { Timeout } from 'Utility/Timeout/Timeout';
 import AssetDB from '../../../Assets/AssetDB.json';
 import { Asset } from './Asset';
 import { AssetType } from './AssetType';

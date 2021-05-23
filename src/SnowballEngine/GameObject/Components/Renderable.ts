@@ -12,7 +12,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     public alignH: AlignH;
     public alignV: AlignV;
 
-    /** split tilemap into two components then remove this property */
     public position: Vector2;
 
     /**
@@ -93,7 +92,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._sprite = val;
 
         if (val) {
-            val.name = this.constructor.name + ' (' + this.componentId + ')';
+            val.name = this.constructor.name + ' (' + this.componentID + ')';
 
             if (val.width + val.height !== 0 && this._size.x + this._size.y === 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
             else if (this.autoResizeContainer) {
@@ -165,7 +164,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
             if ('anchor' in this._sprite) {
                 this._sprite.anchor.copyFrom(anchor);
-                this._sprite.position.copyFrom(this.position);
+                this._sprite.position.copyFrom(this.position.clone.scale(new Vector2(1, -1)));
             } else {
                 const bounds = this._sprite.getLocalBounds();
 

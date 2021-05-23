@@ -31,6 +31,7 @@ export class SceneManager {
             const scene = new Scene(this, name);
             (<Mutable<SceneManager>>this).scene = scene;
 
+
             await initializer(scene);
             await scene.start();
 

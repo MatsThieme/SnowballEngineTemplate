@@ -3,14 +3,14 @@ import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Behaviour } from 'GameObject/Components/Behaviour';
 import { Collider } from 'GameObject/Components/Collider';
 import { Component } from 'GameObject/Components/Component';
-import { RigidBody } from 'GameObject/Components/RigidBody';
+import { Rigidbody } from 'GameObject/Components/Rigidbody';
 import { Destroy, Destroyable } from 'GameObject/Destroy';
 import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { Input } from 'Input/Input';
 import { UI } from 'UI/UI';
 import { UIFonts } from 'UI/UIFonts';
-import { Canvas } from 'Utility/Canvas';
+import { Canvas } from 'Utility/Canvas/Canvas';
 import { clearObject } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
 import { CameraManager } from './Camera/CameraManager';
@@ -108,7 +108,9 @@ export class Scene {
      * cameraManager
      * 
      */
-    private async update(time: number) {
+    private async update(time: number): Promise<void> {
+        if (!this._requestAnimationFrameHandle) return;
+
         this._updateComplete = false;
 
         GameTime.update(time);
@@ -124,10 +126,10 @@ export class Scene {
             await Component.earlyupdate();
 
 
-            RigidBody.updateBody();
+            Rigidbody.updateBody();
             Collider.updateBody();
             this.physics.update();
-            RigidBody.updateTransform();
+            Rigidbody.updateTransform();
 
 
             await Behaviour.update();
@@ -160,9 +162,11 @@ export class Scene {
     public async start(): Promise<void> {
         this._requestAnimationFrameHandle = -1; // set isStarting true
 
-        for (const component of Component.components) {
-            await component.dispatchEvent('start');
+        for (const go of GameObject.gameObjects) {
+            go.start();
         }
+
+
 
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
@@ -223,7 +227,9 @@ export class Scene {
      * 
      */
     public addDestroyable(destroyable: Destroyable): void {
-        this._destroyables.push(destroyable);
+        const i = this._destroyables.findIndex(d => d.__destroyID === destroyable.__destroyID);
+
+        if (i === -1) this._destroyables.push(destroyable);
     }
 
     /**

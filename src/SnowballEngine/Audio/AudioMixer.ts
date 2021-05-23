@@ -79,7 +79,7 @@ export class AudioMixer implements Disposable {
      * 
      */
     public removeChild(mixer: AudioMixer | number): AudioMixer | undefined {
-        const id = typeof mixer === 'number' ? mixer : this._sources.findIndex(s => s.componentId === mixer._id);
+        const id = typeof mixer === 'number' ? mixer : this._sources.findIndex(s => s.componentID === mixer._id);
 
         if (id === -1) return;
 
@@ -114,7 +114,7 @@ export class AudioMixer implements Disposable {
      * 
      */
     public removeEffect(effect: AudioEffect | number): void {
-        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentId === effect.id);
+        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentID === effect.id);
         if (id === -1) return;
 
         const reconnect = this._effects.length > 0;
@@ -182,7 +182,7 @@ export class AudioMixer implements Disposable {
      *
      */
     public removeSource(source: AudioSource | number): void {
-        const id = typeof source === 'number' ? source : this._sources.findIndex(s => s.componentId === source.componentId);
+        const id = typeof source === 'number' ? source : this._sources.findIndex(s => s.componentID === source.componentID);
         if (id === -1) return;
 
         this.disconnectSources();

@@ -58,7 +58,7 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     /**
      * 
      * Set position, rotation and scale without triggering the modified event.
-     * Used by Collider to set position, rotation and scale. Needed to track if a body needs to be updated.
+     * Used by Rigidbody to set position, rotation and scale. Needed to track if a body needs to be updated.
      * @internal
      * 
      */
@@ -348,6 +348,8 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     public static toGlobal(transform: ITransformable): Transformable {
+        if (!transform.parent) return Transform.clone(<Transformable>transform);
+
         while (transform.parent) {
             transform = Transform.toParent(transform, transform.parent);
         }

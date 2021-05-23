@@ -20,5 +20,5 @@ export enum ComponentType {
     TileMap,
     TerrainCollider,
     RectangleCollider,
-    RigidBody
+    Rigidbody
 }

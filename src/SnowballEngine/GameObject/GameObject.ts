@@ -40,7 +40,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
     public readonly transform!: Transform;
 
-    public constructor(name: string) {
+
+    private _initialized: boolean
+
+    public constructor(name: string, initialized = true) {
         super();
 
         if (name.includes('/')) throw new Error('Name must not include /');
@@ -64,6 +67,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         this._components = new Map();
         this._active = true;
+
+        this._initialized = initialized;
 
         this.addComponent(Transform);
 
@@ -121,6 +126,18 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         else this._parent.container.removeChild(this.container);
     }
 
+    public async start(): Promise<void> {
+        for (const component of [...this._components.values()].flat()) {
+            await component.dispatchEvent('start');
+        }
+
+        this.container.position.copyFrom(Vector2.from(this.transform.position).scale(new Vector2(1, -1)));
+        this.container.rotation = this.transform.rotation.radian;
+        this.container.scale.copyFrom(this.transform.scale);
+
+        this._initialized = true;
+    }
+
     /** 
      *  
      * @param initializer Callbacks are executed after component creation.
@@ -131,11 +148,11 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         const component = new type(this);
 
         if (component.type !== ComponentType.Transform &&
-            component.type !== ComponentType.RigidBody &&
+            component.type !== ComponentType.Rigidbody &&
             component.type !== ComponentType.AudioListener &&
             component.type !== ComponentType.TileMap &&
             component.type !== ComponentType.ParallaxBackground ||
-            component.type === ComponentType.RigidBody && !GameObject.componentInTree(this, ComponentType.RigidBody) && !GameObject.componentInParents(this, ComponentType.Collider) ||
+            component.type === ComponentType.Rigidbody && !GameObject.componentInTree(this, ComponentType.Rigidbody) && !GameObject.componentInParents(this, ComponentType.Collider) ||
             component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
             component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0 ||
@@ -148,7 +165,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         } else {
             const type = component.type;
             if (component.prepareDestroy) component.prepareDestroy();
-            (<Mutable<Component<ComponentEventTypes>>>component).destroyed = true;
+            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ = true;
             component.destroy();
             throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
@@ -160,8 +177,9 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
             }
         }
 
+
         await (<Behaviour><unknown>component).dispatchEvent('awake');
-        if (this.scene.isRunning || this.scene.isStarting) await (<Behaviour><unknown>component).dispatchEvent('start');
+        if (this._initialized) await (<Behaviour><unknown>component).dispatchEvent('start');
 
 
         this.dispatchEvent('componentadd', component);
@@ -182,12 +200,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         if (!components) return Debug.warn('Component not found on gameObject');
 
-        const i = components.findIndex(c => c.componentId === component.componentId);
+        const i = components.findIndex(c => c.componentID === component.componentID);
 
         if (i === -1) return Debug.warn('Component not found on gameObject');
 
-        if (component.type === ComponentType.RigidBody) {
-            if (GameObject.componentInTree(this, ComponentType.Collider)) Debug.warn(`Can't remove RigidBody component, remove colliders first`);
+        if (component.type === ComponentType.Rigidbody) {
+            if (GameObject.componentInTree(this, ComponentType.Collider)) Debug.warn(`Can't remove Rigidbody component, remove colliders first`);
         }
 
 
@@ -195,8 +213,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         components.splice(i, 1)[0];
 
-        if (!component.destroyed) {
-            (<Mutable<Component<ComponentEventTypes>>>component).destroyed = true;
+        if (!component.__destroyed__) {
+            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ = true;
             Destroy(component);
         }
     }
@@ -365,7 +383,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public prepareDestroy(): void {
-        [...this._components.values()].flat(1).forEach(c => Destroy(c));
+        [...this._components.values()].flat().forEach(c => Destroy(c));
         this.children.forEach(c => Destroy(c));
     }
 
@@ -390,7 +408,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public static find(query: string, gameObjects?: GameObject[]): GameObject | undefined {
-        if (!/^\/?\w+(?:\/\w+)*$/.test(query)) throw new Error('Wrong query format');
+        if (!/^\/?[^\/]+(?:\/[^\/]+)*$/.test(query)) throw new Error('Wrong query format');
 
         if (!gameObjects) {
             if (query[0] === '/') {

@@ -6,7 +6,7 @@ import { Sprite } from '@pixi/sprite';
 import projectConfig from 'Config';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
-import { Canvas } from 'Utility/Canvas';
+import { Canvas } from 'Utility/Canvas/Canvas';
 
 export class PIXI {
     public readonly renderer: Renderer;

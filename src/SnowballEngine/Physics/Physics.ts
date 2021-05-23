@@ -1,34 +1,36 @@
-import { Collider } from 'GameObject/Components/Collider';
-import { Component } from 'GameObject/Components/Component';
-import { RigidBody } from 'GameObject/Components/RigidBody';
-import { ComponentType } from 'GameObject/ComponentType';
 import { Destroyable } from 'GameObject/Destroy';
 import { Composite, Engine, Events } from 'matter-js';
 import { Client } from 'SnowballEngine/Client';
 import { GameTime } from 'SnowballEngine/GameTime';
 import { Scene } from 'SnowballEngine/Scene';
-import { Canvas } from 'Utility/Canvas';
+import { Canvas } from 'Utility/Canvas/Canvas';
 import { Vector2 } from 'Utility/Vector2';
 
 export class Physics implements Destroyable {
     public readonly engine: Engine;
     public drawDebug: boolean;
-
+    public readonly gravity: Vector2;
     private readonly _canvas: Canvas;
     private _lastDelta: number = 1000 / 60;
 
-    private _worldScale!: number;
+    /**
+     * 
+     * Used to scale matterjs' size dependent options like gravity and body.slop
+     * default = 0.001
+     * 
+     */
+    public worldScale: number;
 
     public constructor() {
         this.drawDebug = false;
+        this.worldScale = 0.001;
+
+        this.gravity = new Vector2(0, -0.01 * this.worldScale);
 
         this.engine = Engine.create();
-        this.engine.world.gravity.y = -1;
+        this.engine.world.gravity.y = 0;
         this.engine.enableSleeping = false;
 
-
-        this._worldScale = 1;
-        this.worldScale = 0.01;
 
         Events.on(this.engine, 'collisionStart', event => {
             for (const pair of event.pairs) {
@@ -54,38 +56,6 @@ export class Physics implements Destroyable {
         this._canvas.style.zIndex = '1';
 
         document.body.appendChild(this._canvas);
-    }
-
-    /**
-     * 
-     * Used to scale matterjs' size dependent options like gravity and body.slop
-     * default = 0.01
-     * 
-     */
-    public get worldScale(): number {
-        return this._worldScale;
-    }
-    public set worldScale(val: number) {
-        for (const c of Component.components) {
-            if (c.type >= ComponentType.Collider && c.type <= ComponentType.RigidBody) {
-                (<any><Collider | RigidBody>c)._bodyOptions.slop = 0.05 * val;
-                (<Collider | RigidBody>c).body.slop = 0.05 * val;
-            }
-        }
-
-        this.engine.world.gravity.scale = this.engine.world.gravity.scale / this._worldScale * val;
-        this.engine.broadphase.bucketHeight = this.engine.broadphase.bucketHeight / this._worldScale * val;
-        this.engine.broadphase.bucketWidth = this.engine.broadphase.bucketWidth / this._worldScale * val;
-
-        this._worldScale = val;
-    }
-
-    public get gravity(): Vector2 {
-        return Vector2.from(this.engine.world.gravity);
-    }
-    public set gravity(val: IVector2) {
-        this.engine.world.gravity.x = val.x;
-        this.engine.world.gravity.y = val.y;
     }
 
     public get positionIterations(): number {
@@ -154,6 +124,19 @@ export class Physics implements Destroyable {
         ctx.lineWidth = 1;
         ctx.strokeStyle = '#fff';
         ctx.stroke();
+
+        ctx.fillStyle = '#fff';
+
+        for (let i = 0; i < parts.length; i++) {
+            const vertices = parts[i].vertices;
+            if (!vertices.length) continue;
+
+            for (let j = 0; j < vertices.length; j++) {
+                ctx.beginPath();
+                ctx.arc((vertices[j].x + position.x) * scale.x + ctx.canvas.width / 2, (vertices[j].y + position.y) * scale.y + ctx.canvas.height / 2, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
     }
 
 

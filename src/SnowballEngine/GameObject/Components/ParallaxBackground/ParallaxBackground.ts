@@ -45,7 +45,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
 
 
     protected override onPreRender(camera: Camera): void {
-        const i = this.cameras.findIndex(c => c.componentId === camera.componentId);
+        const i = this.cameras.findIndex(c => c.componentID === camera.componentID);
 
         if (i === -1 || !this._aabb.intersects(camera.aabb)) return;
 

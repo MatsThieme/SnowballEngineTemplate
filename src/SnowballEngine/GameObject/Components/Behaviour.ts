@@ -27,9 +27,9 @@ export class Behaviour extends Component<BehaviourEventTypes> {
         Behaviour._behaviours.push(this);
 
         this.addListener('destroy', new EventHandler(() => {
-            const i = Behaviour._behaviours.findIndex(b => b.componentId === this.componentId);
-            if (i === -1) throw new Error('destroyed behaviour not found, componentId: ' + this.componentId);
-            Behaviour._behaviours.splice(i);
+            const i = Behaviour._behaviours.findIndex(b => b.componentID === this.componentID);
+            if (i === -1) throw new Error('destroyed behaviour not found, componentId: ' + this.componentID);
+            Behaviour._behaviours.splice(i, 1);
         }));
     }
 

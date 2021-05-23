@@ -1,6 +1,6 @@
 import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
-import { Canvas } from 'Utility/Canvas';
+import { Canvas } from 'Utility/Canvas/Canvas';
 import { Color } from 'Utility/Color';
 import { Vector2 } from 'Utility/Vector2';
 

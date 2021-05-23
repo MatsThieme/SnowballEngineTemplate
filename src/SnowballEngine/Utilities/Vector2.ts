@@ -1,3 +1,4 @@
+import { Debug } from 'SnowballEngine/Debug';
 import { Angle } from './Angle';
 import { random } from './Helpers';
 
@@ -122,7 +123,7 @@ export class Vector2 implements IVector2 {
      * Returns the average of passed vectors.
      * 
      */
-    public static average(...vectors: IVector2[]): Vector2 {
+    public static average(vectors: IVector2[]): Vector2 {
         return Vector2.divide(Vector2.add(...vectors), vectors.length);
     }
 
@@ -259,6 +260,8 @@ export class Vector2 implements IVector2 {
      *
      */
     public setLength(length: number): Vector2 {
+        if (this.x === 0 && this.y === 0) Debug.warn('vec.setLength x==0 && y==0');
+
         const mag = this.magnitude;
         if (this.x !== 0) this.x /= mag;
         if (this.y !== 0) this.y /= mag;
@@ -457,5 +460,19 @@ export class Vector2 implements IVector2 {
     public static get random(): Vector2 {
         const range = Math.random() * 2 ** 10;
         return new Vector2(random(-range, range), random(-range, range));
+    }
+
+    public static removeDuplicates(vs: Vector2[]): Vector2[] {
+        const v: Vector2[] = [];
+
+        for (const vec of vs) {
+            if (v.findIndex(x => x.equal(vec)) === -1) v.push(vec);
+        }
+
+        return v;
+    }
+
+    public static equal(v1: IVector2, v2: IVector2): boolean {
+        return v1.x === v2.x && v1.y === v2.y;
     }
 }

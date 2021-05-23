@@ -57,11 +57,11 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
     }
 
     public addSource(audioSource: AudioSource): void {
-        this._sources.set(audioSource.componentId, audioSource);
+        this._sources.set(audioSource.componentID, audioSource);
     }
 
     public removeSource(audioSource: AudioSource): void {
-        this._sources.delete(audioSource.componentId);
+        this._sources.delete(audioSource.componentID);
     }
 
     protected override update(): void {

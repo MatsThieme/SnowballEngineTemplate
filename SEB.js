@@ -117,7 +117,7 @@ const utility = {
 
             assetDB[p] = {
                 type: utility.getAssetType(p)
-            }
+            };
         }
 
         return assetDB;
@@ -203,7 +203,8 @@ async function build(config) {
     webpackConfig.plugins = [new HtmlWebpackPlugin({
         title: config.title,
         meta: { description: config.description },
-        template: './src/index.html'
+        template: './src/index.html',
+        inject: 'body'
     })];
 
     await new Promise(resolve => webpack(webpackConfig, (err, stats) => err || stats.hasErrors() ? console.log(err || stats.toString()) : resolve()));
@@ -234,7 +235,8 @@ async function debugbuild(config) {
         meta: {
             description: config.description,
         },
-        template: './src/index.html'
+        template: './src/index.html',
+        inject: 'body'
     })];
 
     await new Promise(resolve => webpack(webpackConfig, (err, stats) => err || stats.hasErrors() ? console.log(err || stats.toString()) : resolve()));

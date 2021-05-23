@@ -24,13 +24,5 @@ export function Canvas(width, height) {
         return id;
     }
 
-    Object.defineProperty(c, 'inDOM', {
-        get: function () {
-            if (!c.id) c.id = findId();
-
-            return !!document.getElementById(c.id);
-        }
-    });
-
     return c;
 }
