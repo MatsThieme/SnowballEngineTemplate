@@ -25,8 +25,8 @@ export class UICheckbox extends UIElement {
 
     private _bitmapText: BitmapText;
 
-    public constructor(menu: UIMenu) {
-        super(menu, UIElementType.Checkbox);
+    public constructor(menu: UIMenu, name: string) {
+        super(menu, name, UIElementType.Checkbox);
 
         this._checked = true;
 

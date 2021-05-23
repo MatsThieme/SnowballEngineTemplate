@@ -14,8 +14,8 @@ export class UIText extends UIElement {
 
     private readonly _resizeListener: () => void;
 
-    public constructor(menu: UIMenu, type: UIElementType = UIElementType.Text) {
-        super(menu, type);
+    public constructor(menu: UIMenu, name: string, type: UIElementType = UIElementType.Text) {
+        super(menu, name, type);
 
         this._bitmapText = new BitmapText('', { fontName: menu.font || Scene.currentScene.ui.font });
 

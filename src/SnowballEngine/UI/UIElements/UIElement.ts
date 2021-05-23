@@ -13,7 +13,7 @@ import { Vector2 } from 'Utility/Vector2';
 
 /** @category UI */
 export class UIElement implements Destroyable {
-    public readonly id: number;
+    public readonly name: string;
 
     public readonly type: UIElementType;
 
@@ -39,7 +39,6 @@ export class UIElement implements Destroyable {
     public onInput?: (uiElement: this) => void;
     public onHover?: (uiElement: this) => void;
 
-    private static _nextID = 0;
 
     protected _menu: UIMenu;
     protected _background?: Asset;
@@ -50,9 +49,8 @@ export class UIElement implements Destroyable {
 
     protected _scaledPadding: Vector2;
 
-    public constructor(menu: UIMenu, type: UIElementType) {
-        this.id = UIElement._nextID++;
-
+    public constructor(menu: UIMenu, name: string, type: UIElementType) {
+        this.name = name;
         this.type = type;
         this.container = new Container();
 
@@ -198,7 +196,7 @@ export class UIElement implements Destroyable {
      * 
      */
     public remove(): void {
-        this._menu.removeUIElement(this.id);
+        this._menu.removeUIElement(this.name);
     }
 
     public destroy(): void {

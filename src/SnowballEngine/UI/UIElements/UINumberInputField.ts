@@ -4,8 +4,8 @@ import { UIInputField } from './UIInputField';
 
 /** @category UI */
 export class UINumberInputField extends UIInputField<number> {
-    public constructor(menu: UIMenu) {
-        super(menu, UIElementType.NumberInputField);
+    public constructor(menu: UIMenu, name: string) {
+        super(menu, name, UIElementType.NumberInputField);
 
         this.value = this._prevValue = 0;
     }

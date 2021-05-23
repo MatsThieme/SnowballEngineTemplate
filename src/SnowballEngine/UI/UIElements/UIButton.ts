@@ -4,8 +4,8 @@ import { UIText } from './UIText';
 
 /** @category UI */
 export class UIButton extends UIText {
-    public constructor(menu: UIMenu) {
-        super(menu, UIElementType.Button);
+    public constructor(menu: UIMenu, name: string) {
+        super(menu, name, UIElementType.Button);
     }
 
     public override update(): boolean {

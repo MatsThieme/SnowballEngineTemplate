@@ -23,8 +23,8 @@ export class UISelect extends UIElement {
     private _labels: Map<string, BitmapText>;
     private _width: number;
 
-    public constructor(menu: UIMenu) {
-        super(menu, UIElementType.Select);
+    public constructor(menu: UIMenu, name: string) {
+        super(menu, name, UIElementType.Select);
 
         this.value = '';
         this._extended = false;

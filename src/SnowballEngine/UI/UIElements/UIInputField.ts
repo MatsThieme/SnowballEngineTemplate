@@ -15,8 +15,8 @@ export abstract class UIInputField<T extends number | string> extends UIText {
      */
     public length: number;
 
-    public constructor(menu: UIMenu, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
-        super(menu, type);
+    public constructor(menu: UIMenu, name: string, type: UIElementType.NumberInputField | UIElementType.TextInputField) {
+        super(menu, name, type);
 
         this.domElement = document.createElement('input');
         this.domElement.type = type === UIElementType.TextInputField ? 'text' : UIElementType.NumberInputField ? 'number' : '';

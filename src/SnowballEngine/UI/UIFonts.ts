@@ -17,8 +17,7 @@ export class UIFonts {
 
         this.add('Default-Normal', new TextStyle({
             fontFamily: 'Verdana, Tahoma, sans-serif',
-            fontSize: 5,
-            padding: 100
+            fontSize: 5
         }));
 
         this.add('Default-Large', new TextStyle({

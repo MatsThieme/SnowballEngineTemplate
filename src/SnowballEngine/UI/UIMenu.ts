@@ -30,7 +30,7 @@ export class UIMenu implements Destroyable {
     private _active: boolean;
     private _background?: Asset;
     private _backgroundSprite?: Sprite;
-    private readonly _uiElements: Map<number, UIElement>;
+    private readonly _uiElements: { [key: string]: UIElement };
 
     public constructor(name: UIMenuName) {
         this.pauseScene = true;
@@ -38,7 +38,7 @@ export class UIMenu implements Destroyable {
         this.name = name;
 
         this._active = false;
-        this._uiElements = new Map();
+        this._uiElements = {};
     }
 
     public get active(): boolean {
@@ -106,10 +106,10 @@ export class UIMenu implements Destroyable {
      * Add a UIElement to this. The newly created UIElement can be adjusted within the callback.
      * 
      */
-    public addUIElement<T extends UIElement>(type: Constructor<T>, ...initializer: ((uiElement: T) => void)[]): T {
+    public addUIElement<T extends UIElement>(name: string, type: Constructor<T>, ...initializer: ((uiElement: T) => void)[]): T {
         const e = new type(this);
 
-        this._uiElements.set(e.id, e);
+        this._uiElements[name] = e;
 
         this.container.addChild(e.container);
 
@@ -122,18 +122,22 @@ export class UIMenu implements Destroyable {
         return e;
     }
 
+    public getUIElement<T extends UIElement>(name: string): T | undefined {
+        return <T>this._uiElements[name];
+    }
+
     /**
      * 
-     * Removes the UIElement with the given id if present.
+     * Removes the UIElement with the given name if present.
      * 
      */
-    public removeUIElement(id: number): void {
-        const el = this._uiElements.get(id);
+    public removeUIElement(name: string): void {
+        const el = this._uiElements[name];
 
         if (el) {
             this.container.removeChild(el.container);
             el.destroy();
-            this._uiElements.delete(id);
+            delete this._uiElements[name];
         }
     }
 
@@ -144,11 +148,11 @@ export class UIMenu implements Destroyable {
      * 
      */
     public async update(): Promise<void> {
-        await Promise.all([...this._uiElements.values()].map(e => e.update()));
+        await Promise.all(Object.values(this._uiElements).map(e => e.update()));
     }
 
     public prepareDestroy(): void {
-        for (const uiElement of this._uiElements.values()) {
+        for (const uiElement of Object.values(this._uiElements)) {
             Destroy(uiElement);
         }
     }

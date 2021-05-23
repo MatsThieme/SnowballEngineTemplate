@@ -54,7 +54,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         this.id = GameObject._nextID++;
         this.name = name;
 
-        GameObject.gameObjects[this.id] = this;
+        GameObject.gameObjects.push(this);
 
         this.container = new Container();
         this.container.name = name;
@@ -204,9 +204,6 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         if (i === -1) return Debug.warn('Component not found on gameObject');
 
-        if (component.type === ComponentType.Rigidbody) {
-            if (GameObject.componentInTree(this, ComponentType.Collider)) Debug.warn(`Can't remove Rigidbody component, remove colliders first`);
-        }
 
 
         this.dispatchEvent('componentremove', component);
@@ -395,7 +392,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public destroy(): void {
-        delete GameObject.gameObjects[this.id];
+        const i = GameObject.gameObjects.findIndex(g => g.id === this.id);
+        GameObject.gameObjects.splice(i, 1);
 
         if (this.parent) this.parent.removeChild(this);
     }
@@ -469,7 +467,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public static get(id: number): GameObject | undefined {
-        return GameObject.gameObjects[id];
+        const i = GameObject.gameObjects.findIndex(g => g.id === id);
+        return i !== -1 ? GameObject.gameObjects[i] : undefined;
     }
 
     public static prepareDestroy(): void {
