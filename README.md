@@ -7,7 +7,7 @@ SnowballEngine manages scenes, game assets, simulates physics, renders assets an
 
 
 ### Example games:
-[Tetrong](https://matsthieme.github.io/Tetrong/dist)
+[Tetrong](https://github.com/MatsThieme/Tetrong)
 
 <br>
 
