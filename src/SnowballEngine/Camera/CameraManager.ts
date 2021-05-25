@@ -4,7 +4,6 @@ import { GameObject } from 'GameObject/GameObject';
 import { Client } from 'SnowballEngine/Client';
 import { Debug } from 'SnowballEngine/Debug';
 import { Scene } from 'SnowballEngine/Scene';
-import { Canvas } from 'Utility/Canvas/Canvas';
 import { Color } from 'Utility/Color';
 import { Vector2 } from 'Utility/Vector2';
 import { PIXI } from './PIXI';
@@ -29,10 +28,10 @@ export class CameraManager {
         this._PIXI.uiContainer = Scene.currentScene.ui.container;
 
 
-        this.backgroundColor = Color.lightblue;
+        this.backgroundColor = Color.deepskyblue;
     }
 
-    public get canvas(): Canvas {
+    public get canvas(): HTMLCanvasElement {
         return this._PIXI.canvas;
     }
 

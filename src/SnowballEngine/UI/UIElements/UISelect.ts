@@ -79,7 +79,6 @@ export class UISelect extends UIElement {
         if (this.value === value) return;
 
         (<Mutable<UISelect>>this).value = this._bitmapText.text = value;
-        console.log(value);
     }
 
     protected override updateBounds(): void {

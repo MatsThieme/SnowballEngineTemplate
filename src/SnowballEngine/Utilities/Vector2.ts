@@ -253,6 +253,34 @@ export class Vector2 implements IVector2 {
     }
 
     /**
+     *
+     * Sets this.x to 1 while keeping the ratio.
+     * 
+     * Returns this for chainability.
+     * 
+     */
+    public normalizeX(): Vector2 {
+        if (this.y !== 0 && this.x !== 0) this.y /= this.x;
+        this.x = 1;
+
+        return this;
+    }
+
+    /**
+     *
+     * Sets this.y to 1 while keeping the ratio.
+     * 
+     * Returns this for chainability.
+     * 
+     */
+    public normalizeY(): Vector2 {
+        if (this.x !== 0 && this.y !== 0) this.x /= this.y;
+        this.y = 1;
+
+        return this;
+    }
+
+    /**
      * 
      * Set magnitude of this to length.
      * 

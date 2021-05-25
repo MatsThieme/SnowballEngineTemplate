@@ -106,6 +106,9 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
         }
     }
 
+    public static reset(): void {
+        this._nextCID = 0;
+    }
 
     /**
      *

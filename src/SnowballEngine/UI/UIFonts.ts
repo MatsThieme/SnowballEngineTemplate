@@ -5,7 +5,8 @@ import { Debug } from 'SnowballEngine/Debug';
 
 /** @category UI */
 export class UIFonts {
-    private static readonly _fonts: Map<UIFont, { style: BitmapTextStyle, font: BitmapFont }>;
+    private static readonly _fonts: Map<UIFont, { style: BitmapTextStyle, font: BitmapFont, bytes: number }>;
+    private static lastInnerHeight: number = 0;
 
     public static init(): void {
         (<any>UIFonts)._fonts = new Map();
@@ -26,24 +27,54 @@ export class UIFonts {
         }));
 
         window.addEventListener('resize', () => {
-            UIFonts.update();
+            if (Client.resolution.y !== this.lastInnerHeight) {
+                UIFonts.update();
+                this.lastInnerHeight = Client.resolution.y;
+            }
         });
     }
 
-    public static add(name: UIFont, style: BitmapTextStyle, chars: string | string[] | string[][] = BitmapFont.ASCII): void {
+    public static get bytesUsed(): number {
+        let bytes = 0;
+
+        for (const f of this._fonts.values()) {
+            bytes += f.bytes;
+        }
+
+        return bytes;
+    }
+
+    public static add(name: UIFont, style: BitmapTextStyle, chars: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:-/\\&%$"!.,() '): void {
         if (UIFonts._fonts.has(name)) throw new Error(`Font with name ${name} exists`);
 
         if (typeof style.fontSize !== 'number') throw new Error('FontStyle.fontSize must be of type number');
 
-        const resolution = <number>style.fontSize / 100 * (Client.resolution.y / <number>style.fontSize);
+        const fontSize = Math.floor(style.fontSize / 100 * Client.resolution.y);
+        const strokeThickness = Math.floor((style.strokeThickness || 0) / 100 * Client.resolution.y);
 
-        UIFonts._fonts.set(name, { style, font: BitmapFont.from(name, style, { resolution: Math.round(512 * resolution) / 512, textureHeight: Math.round(512 * resolution), textureWidth: Math.round(512 * resolution), chars }) });
+        let width = fontSize * 1.5 * chars.length;
+        if (width > 4096) width /= Math.ceil(width / 4096);
+        width = Math.round(width);
+
+        const font = BitmapFont.from(name, { ...style, fontSize, strokeThickness }, { resolution: 1, textureHeight: Math.round(fontSize * 1.3), textureWidth: width, chars });
+
+        const pageTextures = font.pageTextures;
+
+        let size = 0;
+
+        for (const id in pageTextures) {
+            size += pageTextures[id].baseTexture.width * pageTextures[id].baseTexture.height;
+        }
+
+        size *= 4;
+
+        UIFonts._fonts.set(name, { style, font, bytes: size });
     }
 
     public static remove(name: UIFont): void {
         if (!UIFonts._fonts.has(name)) return Debug.warn(`Font with name ${name} does not exist`);
 
-        BitmapFont.uninstall(name);
+        UIFonts._fonts.get(name)!.font.destroy();
 
         UIFonts._fonts.delete(name);
     }

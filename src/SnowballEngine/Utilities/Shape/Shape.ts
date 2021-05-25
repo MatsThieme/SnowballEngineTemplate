@@ -27,7 +27,7 @@ export class Shape {
 
             shape(context, canvas);
 
-            return new Asset('Shape.createSprite', AssetType.Image, canvas);
+            return new Asset('Shape.createSprite' + performance.now() + Math.random(), AssetType.Image, canvas);
         }
     }
 

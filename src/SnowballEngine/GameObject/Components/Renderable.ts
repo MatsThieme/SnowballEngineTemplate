@@ -92,6 +92,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._sprite = val;
 
         if (val) {
+            val.interactive = true;
             val.name = this.constructor.name + ' (' + this.componentID + ')';
 
             if (val.width + val.height !== 0 && this._size.x + this._size.y === 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
@@ -177,8 +178,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.disconnectCamera();
 
         if (this._sprite) {
-            this.disconnectCamera();
-
             this._sprite.destroy({ children: true, texture: true, baseTexture: false });
             this._sprite = undefined;
         }

@@ -57,7 +57,9 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this.node.positionZ.value = this._zPosition;
 
         this._connected = false;
+    }
 
+    protected override start(): void {
         this.connect();
     }
 
@@ -226,6 +228,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
 
         this._playing = true;
         this._audioBufferNode.onended = () => {
+            if (this.__destroyed__ === null) return;
             this._playing = false;
 
             const diff = Math.abs((this._sw.seconds - this._audioBufferNode.buffer!.duration / this._rate)) * 1000;

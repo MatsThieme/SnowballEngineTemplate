@@ -29,15 +29,24 @@ export class Camera extends Component<CameraEventTypes>  {
      */
     public zIndex: number;
 
+    /**
+     * 
+     * if necessary draw more than specified in size to fit size into screen size and use the screen size aspect ratio
+     * 
+     */
+    public fitAspectRatio: boolean;
+
     private _screenSize: Vector2;
     private _size: Vector2;
     private _aabb?: AABB;
+
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Camera);
 
         this.screenPosition = new Vector2();
         this.zIndex = 0;
+        this.fitAspectRatio = false;
 
 
         this._screenSize = new Vector2(100, 100);
@@ -50,10 +59,23 @@ export class Camera extends Component<CameraEventTypes>  {
     /**
     *
     * size in world units to display.
+    * @returns the actual to render world size, fitAspectRatio can impact the returned size
     *
     */
     public get size(): Vector2 {
-        return this._size.clone;
+        if (!this.fitAspectRatio) return this._size.clone;
+
+        const pxSize = this._screenSize.clone.scale(Client.resolution).scale(0.01).setLength(this._size.magnitude);
+        const size = this._size.clone;
+
+
+        if (pxSize.x < size.x) {
+            pxSize.normalizeX().scale(size.x);
+        } else if (pxSize.y < size.y) {
+            pxSize.normalizeY().scale(size.y);
+        } else return size;
+
+        return pxSize;
     }
     public set size(val: Vector2) {
         this._size = val;
@@ -74,7 +96,7 @@ export class Camera extends Component<CameraEventTypes>  {
 
     /**
      * 
-     * Global AABB
+     * world AABB
      * 
      */
     public get aabb(): AABB {

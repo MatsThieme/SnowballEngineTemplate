@@ -20,25 +20,24 @@ export class PIXI {
             antialias: projectConfig.settings.PIXIjsAntialiasing,
             useContextAlpha: projectConfig.settings.transparentBackground,
             backgroundAlpha: projectConfig.settings.transparentBackgroundAlpha,
-            powerPreference: Client.isMobile ? 'low-power' : 'high-performance',
+            powerPreference: 'low-power' || Client.isMobile ? 'low-power' : 'high-performance',
             clearBeforeRender: false,
             view: new Canvas(innerWidth, innerHeight)
         });
 
-        this.renderer.plugins.interaction.destroy();
+        // this.renderer.plugins.interaction.destroy();
 
         this.renderer.textureGC.mode = GC_MODES.AUTO;
 
         this.container = new Container();
-        this.container.interactiveChildren = false;
 
         this.container.name = 'Game Renderer';
 
         this.container.mask = new Graphics();
     }
 
-    public get canvas(): Canvas {
-        return <Canvas>this.renderer.view;
+    public get canvas(): HTMLCanvasElement {
+        return this.renderer.view;
     }
 
     public resize(width: number, height: number): void {
@@ -62,7 +61,8 @@ export class PIXI {
     }
 
     public destroy(): void {
-        this.container.destroy({ children: true, texture: true, baseTexture: false });
+        this.uiContainer.destroy(true);
+        this.container.destroy(true);
         this.renderer.destroy();
     }
 }

@@ -6,7 +6,12 @@ export class Interval {
     public readonly handle: number;
     public readonly counter: number;
 
-    public constructor(cb: (interval: Interval) => unknown | Promise<unknown>, ms: number, dontClearOnUnload = false) {
+    /**
+     * 
+     * Intervals are cleared when the current scene is unloaded except clearOnUnload is set to false.
+     * 
+     */
+    public constructor(cb: (interval: Interval) => unknown | Promise<unknown>, ms: number, clearOnUnload = true) {
         this.handle = window.setInterval(async () => {
             await cb(this);
             (<Mutable<Interval>>this).counter++;
@@ -14,7 +19,7 @@ export class Interval {
 
         this.counter = 0;
 
-        if (!dontClearOnUnload) (<Mutable<Interval[]>>Interval.intervals).push(this);
+        if (clearOnUnload) (<Mutable<Interval[]>>Interval.intervals).push(this);
     }
 
     public clear(): void {

@@ -10,7 +10,6 @@ import { GameObject } from 'GameObject/GameObject';
 import { Input } from 'Input/Input';
 import { UI } from 'UI/UI';
 import { UIFonts } from 'UI/UIFonts';
-import { Canvas } from 'Utility/Canvas/Canvas';
 import { clearObject } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
 import { CameraManager } from './Camera/CameraManager';
@@ -26,7 +25,7 @@ export class Scene {
     public readonly ui: UI;
     public readonly framedata: Framedata;
     public readonly audioListener?: AudioListener;
-    public readonly domElement: Canvas;
+    public readonly domElement: HTMLCanvasElement;
     public readonly name: string;
     public readonly physics: Physics;
 
@@ -58,7 +57,8 @@ export class Scene {
 
         Input.reset();
         Client.init();
-        GameObject.init();
+        GameObject.reset();
+        Component.reset();
 
         if (!(<any>UIFonts)._fonts) UIFonts.init();
 
@@ -254,11 +254,16 @@ export class Scene {
 
         Destroy(this.ui);
 
-        Destroy(this.cameraManager);
-
         Destroy(this.physics);
 
         this.destroyDestroyables();
+
+
+        Destroy(this.cameraManager);
+
+
+        this.destroyDestroyables();
+
 
         AudioMixer.reset();
 

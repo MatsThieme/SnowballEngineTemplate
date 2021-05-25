@@ -22,8 +22,6 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioListener);
 
-        (<Mutable<Scene>>this.gameObject.scene).audioListener = this;
-
         this.node = AudioListener.context.createGain();
         this.node.connect(AudioListener.node);
 
@@ -36,6 +34,10 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         for (const c of Component.components) {
             if (c.type === ComponentType.AudioSource) (<AudioSource>c).connect();
         }
+    }
+
+    protected override awake(): void {
+        (<Mutable<Scene>>this.gameObject.scene).audioListener = this;
     }
 
     public static start(): void {

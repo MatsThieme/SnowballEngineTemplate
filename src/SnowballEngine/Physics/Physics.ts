@@ -1,3 +1,4 @@
+import projectConfig from 'Config';
 import { Destroyable } from 'GameObject/Destroy';
 import { Composite, Engine, Events } from 'matter-js';
 import { Client } from 'SnowballEngine/Client';
@@ -55,7 +56,7 @@ export class Physics implements Destroyable {
         this._canvas = new Canvas(innerWidth, innerHeight);
         this._canvas.style.zIndex = '1';
 
-        document.body.appendChild(this._canvas);
+        if (projectConfig.build.isDevelopmentBuild) document.body.appendChild(this._canvas);
     }
 
     public get positionIterations(): number {
@@ -143,6 +144,8 @@ export class Physics implements Destroyable {
     public update(): void {
         Engine.update(this.engine, GameTime.deltaTime, GameTime.deltaTime / this._lastDelta);
         this._lastDelta = GameTime.deltaTime;
+
+        if (!projectConfig.build.isDevelopmentBuild) return;
 
         if (this.drawDebug) {
             const camera = Scene.currentScene.cameraManager.cameras[0];

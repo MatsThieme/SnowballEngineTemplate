@@ -392,10 +392,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public destroy(): void {
+        if (this.parent) this.parent.removeChild(this);
+
+        this.container.destroy({ children: false, texture: true, baseTexture: false });
+
         const i = GameObject.gameObjects.findIndex(g => g.id === this.id);
         GameObject.gameObjects.splice(i, 1);
-
-        if (this.parent) this.parent.removeChild(this);
     }
 
     /**
@@ -477,7 +479,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         }
     }
 
-    public static init(): void {
+    public static reset(): void {
         (<any>GameObject)._nextID = 0;
         (<Mutable<typeof GameObject>>GameObject).gameObjects = [];
     }
