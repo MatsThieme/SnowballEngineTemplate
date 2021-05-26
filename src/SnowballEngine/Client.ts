@@ -1,5 +1,6 @@
 import isMobile from 'ismobilejs';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
+import { Interval } from 'Utility/Interval';
 import { Timeout } from 'Utility/Timeout/Timeout';
 import { Vector2 } from 'Utility/Vector2';
 import { AudioListener } from './GameObject/Components/AudioListener';
@@ -70,11 +71,16 @@ export class Client {
     }
 
     private static _resizeListener?: () => void;
+    private static _resizeInterval?: Interval;
 
     public static async init(): Promise<void> {
         const el = Scene.currentScene?.domElement || window;
 
-        if (Client._resizeListener) el.removeEventListener('resize', Client._resizeListener);
+        if (Client._resizeListener) {
+            el.removeEventListener('resize', Client._resizeListener);
+            debugger
+            if (Client._resizeInterval) Client._resizeInterval.clear();
+        }
 
         Client._resizeListener = () => {
             const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
@@ -84,10 +90,18 @@ export class Client {
 
             (<Vector2>Client.resolution).round();
 
-            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(18.35)); // new Vector2(16, 9).magnitude = 18.35755975068582
+            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude));
         }
 
         el.addEventListener('resize', Client._resizeListener);
+
+        Client._resizeInterval = new Interval(() => {
+            if (window.innerWidth !== Client.resolution.x || window.innerHeight !== Client.resolution.y) {
+                window.dispatchEvent(new Event('resize'));
+            }
+        }, 1000, false);
+
+        if (!document.onfullscreenchange) document.onfullscreenchange = () => window.dispatchEvent(new Event('resize'));
 
 
         if (!(<Mutable<typeof Client>>Client).hasMediaPlayPermission) {
