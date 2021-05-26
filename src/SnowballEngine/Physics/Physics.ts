@@ -1,6 +1,8 @@
 import projectConfig from 'Config';
+import { Behaviour } from 'GameObject/Components/Behaviour';
+import { ComponentType } from 'GameObject/ComponentType';
 import { Destroyable } from 'GameObject/Destroy';
-import { Composite, Engine, Events } from 'matter-js';
+import { Composite, Engine, Events, IEventCollision } from 'matter-js';
 import { Client } from 'SnowballEngine/Client';
 import { GameTime } from 'SnowballEngine/GameTime';
 import { Scene } from 'SnowballEngine/Scene';
@@ -33,24 +35,9 @@ export class Physics implements Destroyable {
         this.engine.enableSleeping = false;
 
 
-        Events.on(this.engine, 'collisionStart', event => {
-            for (const pair of event.pairs) {
-                Events.trigger(pair.bodyA, 'collisionStart', event);
-                Events.trigger(pair.bodyB, 'collisionStart', event);
-            }
-        });
-        Events.on(this.engine, 'collisionActive', event => {
-            for (const pair of event.pairs) {
-                Events.trigger(pair.bodyA, 'collisionActive', event);
-                Events.trigger(pair.bodyB, 'collisionActive', event);
-            }
-        });
-        Events.on(this.engine, 'collisionEnd', event => {
-            for (const pair of event.pairs) {
-                Events.trigger(pair.bodyA, 'collisionEnd', event);
-                Events.trigger(pair.bodyB, 'collisionEnd', event);
-            }
-        });
+        Events.on(this.engine, 'collisionStart', this.collisionEventHandler);
+        Events.on(this.engine, 'collisionActive', this.collisionEventHandler);
+        Events.on(this.engine, 'collisionEnd', this.collisionEventHandler);
 
 
         this._canvas = new Canvas(innerWidth, innerHeight);
@@ -85,6 +72,54 @@ export class Physics implements Destroyable {
     }
     public set timeScale(val: number) {
         this.engine.timing.timeScale = val;
+    }
+
+    private collisionEventHandler(event: IEventCollision<Engine>) {
+        const collisionEventName = event.name === 'collisionStart' ? 'collisionenter' : event.name === 'collisionActive' ? 'collisionactive' : 'collisionexit';
+        const triggerEventName = event.name === 'collisionStart' ? 'triggerenter' : event.name === 'collisionActive' ? 'triggeractive' : 'triggerexit';
+
+        for (const pair of event.pairs) {
+            let event: CollisionEvent = {
+                collider: pair.bodyA.collider,
+                otherCollider: pair.bodyB.collider,
+                contacts: pair.activeContacts.map((c: Contact) => ({ ...c, vertex: { ...c.vertex } })),
+                friction: pair.friction,
+                frictionStatic: pair.frictionStatic,
+                matterPairID: <string><unknown>pair.id,
+                inverseMass: pair.inverseMass,
+                restitution: pair.restitution,
+                separation: pair.separation,
+                slop: pair.slop
+            };
+
+
+            if (!pair.bodyA.gameObject || !pair.bodyB.gameObject || !('getComponents' in pair.bodyA.gameObject) || !('getComponents' in pair.bodyB.gameObject)) debugger;
+
+
+            for (const behavior of pair.bodyA.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
+                if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
+                else behavior.dispatchEvent(collisionEventName, event);
+            }
+
+
+            event = {
+                collider: pair.bodyB.collider,
+                otherCollider: pair.bodyA.collider,
+                contacts: event.contacts,
+                friction: pair.friction,
+                frictionStatic: pair.frictionStatic,
+                matterPairID: <string><unknown>pair.id,
+                inverseMass: pair.inverseMass,
+                restitution: pair.restitution,
+                separation: pair.separation,
+                slop: pair.slop
+            };
+
+            for (const behavior of pair.bodyB.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
+                if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
+                else behavior.dispatchEvent(collisionEventName, event);
+            }
+        }
     }
 
     private debugDraw(position: IVector2, size: IVector2): void {

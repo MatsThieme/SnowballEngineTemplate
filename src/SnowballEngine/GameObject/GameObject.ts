@@ -135,6 +135,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         this.container.rotation = this.transform.rotation.radian;
         this.container.scale.copyFrom(this.transform.scale);
 
+        for (const c of this.children) {
+            c.start();
+        }
+
         this._initialized = true;
     }
 
@@ -224,7 +228,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     public getComponents<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         if (typeof type === 'number') {
             if (this._components.has(type)) return <T[]>this._components.get(type);
-            if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat(1);
+            if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat();
             if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.Video)];
             if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
 
@@ -380,8 +384,25 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public prepareDestroy(): void {
-        [...this._components.values()].flat().forEach(c => Destroy(c));
-        this.children.forEach(c => Destroy(c));
+        const destroyables: Destroyable[] = [...[...this._components.values()].flat(), ...this.children];
+
+        const destroyInFrames = this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
+
+        for (const d of destroyables) {
+            d.__destroyInFrames__ = destroyInFrames;
+            Destroy(d);
+        }
+    }
+
+    private getMaxDestroyInFrames(gameObject: GameObject = this, max?: number): number | undefined {
+        const components = [...gameObject._components.values()].flat();
+
+        max = Math.max(max || 0, components.reduce((p, c) => {
+            if (c.__destroyInFrames__ !== undefined && p < c.__destroyInFrames__) return c.__destroyInFrames__;
+            else return p;
+        }, 0));
+
+        return gameObject.children.map(c => c.getMaxDestroyInFrames(c, max)).filter(Boolean).sort((a, b) => b! - a!)[0];
     }
 
     /**
@@ -392,7 +413,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public destroy(): void {
-        if (this.parent) this.parent.removeChild(this);
+        if (this.parent && this.parent.removeChild) this.parent.removeChild(this);
 
         this.container.destroy({ children: false, texture: true, baseTexture: false });
 
@@ -484,3 +505,5 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         (<Mutable<typeof GameObject>>GameObject).gameObjects = [];
     }
 }
+
+export interface GameObject extends EventTarget<GameObjectEventTypes>, Destroyable { }

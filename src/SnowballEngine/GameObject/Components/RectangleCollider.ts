@@ -9,6 +9,6 @@ export class RectangleCollider extends Collider {
     }
 
     protected buildBody(options: IChamferableBodyDefinition): Body {
-        return this.setGameObjectOnBody(Bodies.rectangle(0, 0, 1, 1, { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale }));
+        return this.addPropertiesToBody(Bodies.rectangle(0, 0, 1, 1, { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale }));
     }
 }

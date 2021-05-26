@@ -78,7 +78,6 @@ export class Client {
 
         if (Client._resizeListener) {
             el.removeEventListener('resize', Client._resizeListener);
-            debugger
             if (Client._resizeInterval) Client._resizeInterval.clear();
         }
 

@@ -8,9 +8,13 @@ let nextID = 0;
  * Destroy will execute prepareDestroy(if exists) and add it to the current Scenes destroyables. The Scene will execute destroy on each destroyable and Dispose it. The result is an empty object.
  * @category Scene 
  * 
-*/
-export function Destroy(destroyable: Destroyable): void {
-    destroyable.__destroyID = nextID++;
+ */
+export function Destroy(destroyable: Destroyable, inFrames?: number): void {
+    destroyable.__destroyID__ = nextID++;
+    if (inFrames !== undefined && (destroyable.__destroyInFrames__ === undefined || inFrames > destroyable.__destroyInFrames__)) {
+        destroyable.__destroyInFrames__ = inFrames;
+    }
+
     Scene.currentScene.addDestroyable(destroyable);
 
     if (destroyable.prepareDestroy) destroyable.prepareDestroy();
@@ -22,6 +26,13 @@ export interface Destroyable extends Disposable {
     prepareDestroy?(): void;
     /** @internal */
     destroy(): void;
-
-    __destroyID?: number;
+    /** @internal */
+    __destroyID__?: number;
+    /** 
+     * 
+     * frames after beeing Destroy()ed before it's actually destroyed
+     * @internal 
+     * 
+     */
+    __destroyInFrames__?: number;
 }

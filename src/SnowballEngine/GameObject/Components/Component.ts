@@ -72,6 +72,14 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
         else this.dispatchEvent('disable');
     }
 
+    public prepareDestroy(): void {
+        if (this.gameObject.__destroyInFrames__ !== undefined && this.__destroyInFrames__ !== undefined && this.gameObject.__destroyInFrames__ > this.__destroyInFrames__) this.__destroyInFrames__ = this.gameObject.__destroyInFrames__;
+        else if (this.gameObject.__destroyInFrames__ !== undefined && this.__destroyInFrames__ !== undefined && this.gameObject.__destroyInFrames__ < this.__destroyInFrames__) this.gameObject.__destroyInFrames__ = this.__destroyInFrames__;
+
+        if (this.gameObject.__destroyInFrames__ !== undefined && this.__destroyInFrames__ === undefined) this.__destroyInFrames__ = this.gameObject.__destroyInFrames__;
+        else if (this.gameObject.__destroyInFrames__ === undefined && this.__destroyInFrames__ !== undefined) this.gameObject.__destroyInFrames__ = this.__destroyInFrames__;
+    }
+
     /**
      * 
      * Remove this from this.gameObject and delete all references.
@@ -90,19 +98,19 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
 
     public static async earlyupdate(): Promise<void> {
         for (const component of Component.components) {
-            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('earlyupdate');
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour && component.__destroyInFrames__ === undefined) await component.dispatchEvent('earlyupdate');
         }
     }
 
     public static async update(): Promise<void> {
         for (const component of Component.components) {
-            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('update');
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour && component.__destroyInFrames__ === undefined) await component.dispatchEvent('update');
         }
     }
 
     public static async lateupdate(): Promise<void> {
         for (const component of Component.components) {
-            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour) await component.dispatchEvent('lateupdate');
+            if (component.gameObject.active && component.active && component.type !== ComponentType.Behaviour && component.__destroyInFrames__ === undefined) await component.dispatchEvent('lateupdate');
         }
     }
 

@@ -52,8 +52,8 @@ export class ExampleBehaviour extends Behaviour {
      * Called whenever a collider on this.gameObject enters a collision.
      * 
      */
-    onCollisionEnter() {
-        console.log('collision enter');
+    onCollisionEnter(e: any) {
+        console.log(e);
     }
 
     /**

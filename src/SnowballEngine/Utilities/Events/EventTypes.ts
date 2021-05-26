@@ -2,7 +2,6 @@ import { Camera } from 'GameObject/Components/Camera';
 import { Component } from 'GameObject/Components/Component';
 import { Transform } from 'GameObject/Components/Transform/Transform';
 import { GameObject } from 'GameObject/GameObject';
-import { Engine, IEventCollision } from 'matter-js';
 
 export type ComponentEventTypes = {
     awake: [],
@@ -20,12 +19,12 @@ export type ComponentEventTypes = {
 export type RenderableEventTypes = {} & ComponentEventTypes;
 
 export type BehaviourEventTypes = {
-    collisionenter: [collision: IEventCollision<Engine>],
-    collisionactive: [collision: IEventCollision<Engine>],
-    collisionexit: [collision: IEventCollision<Engine>],
-    triggerenter: [collision: IEventCollision<Engine>],
-    triggeractive: [collision: IEventCollision<Engine>],
-    triggerexit: [collision: IEventCollision<Engine>]
+    collisionenter: [collision: CollisionEvent],
+    collisionactive: [collision: CollisionEvent],
+    collisionexit: [collision: CollisionEvent],
+    triggerenter: [collision: CollisionEvent],
+    triggeractive: [collision: CollisionEvent],
+    triggerexit: [collision: CollisionEvent]
 } & ComponentEventTypes;
 
 export type AnimatedSpriteEventTypes = {} & RenderableEventTypes;

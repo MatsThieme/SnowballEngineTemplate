@@ -126,7 +126,7 @@ SceneManager
 <br>
 
 ## Components
-### AnimatedSprite implements Renderable
+### AnimatedSprite
 Manages SpriteAnimation objects to render and switch sprite animations.
 </br>
 </br>
@@ -165,38 +165,37 @@ Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#paralla
 </br>
 </br>
 
-### ParallaxBackground implements Renderable
+### ParallaxBackground
 A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling)
 </br>
 </br>
 
-### ParticleSystem implements Renderable
+### ParticleSystem
 </br>
 </br>
 
-### Text implements Renderable
+### Text
 Render a string.
 </br>
 </br>
 
-### Texture implements Renderable
+### Texture
 Render an image.
 </br>
 </br>
 
-### TileMap implements Renderable
+### TileMap
 Render a tilemap and collide with other objects.
 </br>
 </br>
 
 ### Transform
-The Transform Component is by default added to every GameObject on creation, only one Transform is allowed per GameObject.
-A Transform Component stores position, rotation and scale of their GameObject.
-A child-GameObjects Transform is relative to their parents.
+The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject.
+A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children.
 </br>
 </br>
 
-### Video implements Renderable
+### Video
 Render a Video/Movie, playback is controlled through an HTMLVideoElement.
 </br>
 </br>

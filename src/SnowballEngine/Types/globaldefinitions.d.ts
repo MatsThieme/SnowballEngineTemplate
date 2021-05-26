@@ -1,4 +1,6 @@
 import { TextStyleFill, TextStyleFontVariant, TextStyleFontWeight, TextStyleLineJoin, TextStyleTextBaseline, TEXT_GRADIENT } from "@pixi/text";
+import { Collider } from 'GameObject/Components/Collider';
+import { GameObject } from 'GameObject/GameObject';
 import { Angle } from 'Utility/Angle';
 import { Vector2 } from 'Utility/Vector2';
 
@@ -77,5 +79,36 @@ declare global {
         stroke?: string | number;
         strokeThickness?: number;
         textBaseline?: TextStyleTextBaseline;
+    }
+
+    interface Contact {
+        id: string,
+        normalImpulse: number,
+        tangentImpulse: number,
+        vertex: {
+            x: number,
+            y: number,
+            index: number
+        }
+    }
+
+    interface CollisionEvent {
+        collider: Collider,
+        otherCollider: Collider,
+        contacts: Contact[],
+        friction: number,
+        frictionStatic: number,
+        matterPairID: string,
+        inverseMass: number,
+        restitution: number,
+        separation: number,
+        slop: number
+    }
+}
+
+declare module 'matter-js' {
+    interface Body {
+        gameObject: GameObject;
+        collider: Collider;
     }
 }

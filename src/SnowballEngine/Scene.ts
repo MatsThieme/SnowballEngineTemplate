@@ -12,6 +12,7 @@ import { UI } from 'UI/UI';
 import { UIFonts } from 'UI/UIFonts';
 import { clearObject } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
+import { Stopwatch } from 'Utility/Stopwatch';
 import { CameraManager } from './Camera/CameraManager';
 import { Client } from './Client';
 import { Framedata } from './Framedata';
@@ -59,6 +60,8 @@ export class Scene {
         Client.init();
         GameObject.reset();
         Component.reset();
+        Stopwatch.reset();
+        AudioMixer.reset();
 
         if (!(<any>UIFonts)._fonts) UIFonts.init();
 
@@ -114,6 +117,8 @@ export class Scene {
         this._updateComplete = false;
 
         GameTime.update(time);
+
+        Stopwatch.update();
 
         this.framedata.update();
 
@@ -227,7 +232,7 @@ export class Scene {
      * 
      */
     public addDestroyable(destroyable: Destroyable): void {
-        const i = this._destroyables.findIndex(d => d.__destroyID === destroyable.__destroyID);
+        const i = this._destroyables.findIndex(d => d.__destroyID__ === destroyable.__destroyID__);
 
         if (i === -1) this._destroyables.push(destroyable);
     }
@@ -237,9 +242,13 @@ export class Scene {
      * Destroy all destroyables
      * 
      */
-    private destroyDestroyables(): void {
-        this._destroyables.forEach(d => d.destroy());
-        this._destroyables.splice(0).forEach(d => Dispose(d));
+    private destroyDestroyables(force?: boolean): void {
+        for (let i = this._destroyables.length - 1; i >= 0; i--) {
+            if (!this._destroyables[i].__destroyInFrames__ || force) {
+                this._destroyables[i].destroy();
+                Dispose(this._destroyables.splice(i, 1)[0]);
+            } else (<number>this._destroyables[i].__destroyInFrames__)--;
+        }
     }
 
     /**
@@ -256,7 +265,7 @@ export class Scene {
 
         Destroy(this.physics);
 
-        this.destroyDestroyables();
+        this.destroyDestroyables(true);
 
 
         Destroy(this.cameraManager);
@@ -264,8 +273,6 @@ export class Scene {
 
         this.destroyDestroyables();
 
-
-        AudioMixer.reset();
 
         clearObject(this, true);
     }

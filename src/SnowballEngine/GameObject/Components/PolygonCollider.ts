@@ -23,7 +23,7 @@ export class PolygonCollider extends Collider {
     }
 
     protected buildBody(options: IChamferableBodyDefinition): Body {
-        return this.setGameObjectOnBody(Bodies.fromVertices(0, 0, [this._verticies], { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale }, false, 0.001, 0.01));
+        return this.addPropertiesToBody(Bodies.fromVertices(0, 0, [this._verticies], { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale }, false, 0.001, 0.01));
     }
 
     public static sidesToVerticies(sides: [Vector2, Vector2][]): Vector2[] {

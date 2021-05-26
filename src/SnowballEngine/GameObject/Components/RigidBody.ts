@@ -31,11 +31,11 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         this._bodyNeedUpdate = true;
 
 
-        const listener = new EventHandler(((t, p, r, s) => { if (r || p) this._bodyNeedUpdate = true; this.updateBody(); }), this);
+        const listener = new EventHandler(((t, p, r, s) => { if (r || p) this._bodyNeedUpdate = true; }), this);
 
         this.gameObject.transform.addListener('modified', listener);
         this.gameObject.transform.addListener('parentmodified', listener);
-        this.gameObject.addListener('parentchanged', new EventHandler((() => { this._bodyNeedUpdate = true; this.updateBody(); }), this));
+        this.gameObject.addListener('parentchanged', new EventHandler((() => { this._bodyNeedUpdate = true; }), this));
 
         this.ignoreGravity = false;
 
@@ -245,12 +245,15 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         Events.off(this.gameObject.scene.physics.engine, 'beforeUpdate', this._gravityUpdateListener);
     }
 
-    public override destroy(): void {
-        Composite.remove(this.gameObject.scene.physics.engine.world, this.body);
-
-        Rigidbody._rigidBodies.splice(Rigidbody._rigidBodies.findIndex(rb => rb.componentID === this.componentID), 1);
-
+    public override prepareDestroy(): void {
+        this.disconnect();
         this.removeListeners();
+
+        super.prepareDestroy();
+    }
+
+    public override destroy(): void {
+        Rigidbody._rigidBodies.splice(Rigidbody._rigidBodies.findIndex(rb => rb.componentID === this.componentID), 1);
 
         super.destroy();
     }
@@ -280,13 +283,13 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
 
     public static updateTransform(): void {
         for (const rb of Rigidbody._rigidBodies) {
-            if (!rb.static) rb.updateTransform();
+            if (!rb.static && rb.__destroyInFrames__ === undefined) rb.updateTransform();
         }
     }
 
     public static updateBody(): void {
         for (const rb of Rigidbody._rigidBodies) {
-            if (rb._bodyNeedUpdate) rb.updateBody();
+            if (rb._bodyNeedUpdate && rb.__destroyInFrames__ === undefined) rb.updateBody();
         }
     }
 }

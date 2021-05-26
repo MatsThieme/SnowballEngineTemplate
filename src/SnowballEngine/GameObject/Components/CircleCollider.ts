@@ -9,6 +9,6 @@ export class CircleCollider extends Collider {
     }
 
     protected buildBody(options: IChamferableBodyDefinition): Body {
-        return this.setGameObjectOnBody(Bodies.polygon(0, 0, 50, 0.5, <any>{ ...options, circleRadius: 1, slop: 0.05 * this.gameObject.scene.physics.worldScale }));
+        return this.addPropertiesToBody(Bodies.polygon(0, 0, 50, 0.5, <any>{ ...options, circleRadius: 1, slop: 0.05 * this.gameObject.scene.physics.worldScale }));
     }
 }

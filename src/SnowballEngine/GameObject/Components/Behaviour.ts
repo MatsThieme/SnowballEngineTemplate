@@ -1,4 +1,3 @@
-import { Engine, IEventCollision } from 'matter-js';
 import { Scene } from 'SnowballEngine/Scene';
 import { EventHandler } from 'Utility/Events/EventHandler';
 import { BehaviourEventTypes } from 'Utility/Events/EventTypes';
@@ -45,58 +44,58 @@ export class Behaviour extends Component<BehaviourEventTypes> {
      * Called whenever a collider on this.gameObject enters a collision.
      * 
      */
-    protected onCollisionEnter?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onCollisionEnter?(matterCollisionEvent: CollisionEvent): void;
 
     /**
      * 
      * Called after a collider entered a collision as long as the collision is active.
      * 
      */
-    protected onCollisionActive?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onCollisionActive?(matterCollisionEvent: CollisionEvent): void;
 
     /**
      * 
      * Called whenever a collider on this.gameObject exits a collision.
      * 
      */
-    protected onCollisionExit?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onCollisionExit?(matterCollisionEvent: CollisionEvent): void;
 
     /**
      * 
      * Called if an other gameObjects collider intersects this.gameObject.collider.
      * 
      */
-    protected onTriggerEnter?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onTriggerEnter?(matterCollisionEvent: CollisionEvent): void;
 
     /**
      * 
      * Called if an other gameObjects collider intersects this.gameObject.collider.
      * 
      */
-    protected onTriggerActive?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onTriggerActive?(matterCollisionEvent: CollisionEvent): void;
 
     /**
      * 
      * Called if an other gameObjects collider intersects this.gameObject.collider.
      * 
      */
-    protected onTriggerExit?(matterCollisionEvent: IEventCollision<Engine>): void;
+    protected onTriggerExit?(matterCollisionEvent: CollisionEvent): void;
 
     public static async earlyupdate(): Promise<void> {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active) await behavior.dispatchEvent('earlyupdate');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) await behavior.dispatchEvent('earlyupdate');
         }
     }
 
     public static async update(): Promise<void> {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active) await behavior.dispatchEvent('update');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) await behavior.dispatchEvent('update');
         }
     }
 
     public static async lateupdate(): Promise<void> {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active) await behavior.dispatchEvent('lateupdate');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) await behavior.dispatchEvent('lateupdate');
         }
     }
 }

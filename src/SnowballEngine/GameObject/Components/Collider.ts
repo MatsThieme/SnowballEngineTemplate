@@ -1,11 +1,10 @@
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
-import { Body, Bounds, Composite, Engine, Events, IChamfer, IChamferableBodyDefinition, IEventCollision } from 'matter-js';
+import { Body, Bounds, Composite, IChamfer, IChamferableBodyDefinition } from 'matter-js';
 import { Debug } from 'SnowballEngine/Debug';
 import { EventHandler } from 'Utility/Events/EventHandler';
 import { ColliderEventTypes, GameObjectEventTypes, TransformEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
-import { Behaviour } from './Behaviour';
 import { Component } from './Component';
 import { Rigidbody } from './Rigidbody';
 import { Transform } from './Transform/Transform';
@@ -15,10 +14,6 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     public parts?: Body[];
 
     protected _currentScale: Vector2;
-
-    protected readonly _onCollisionStart: (event: IEventCollision<Engine>) => void;
-    protected readonly _onCollisionActive: (event: IEventCollision<Engine>) => void;
-    protected readonly _onCollisionEnd: (event: IEventCollision<Engine>) => void;
 
     protected readonly _onTransformChange: EventHandler<TransformEventTypes['modified']>;
     protected readonly _onTransformParentChange: EventHandler<TransformEventTypes['parentmodified']>;
@@ -49,10 +44,6 @@ export abstract class Collider extends Component<ColliderEventTypes> {
         this._rotationNeedUpdate = true;
         this._scaleNeedUpdate = true;
         this._isConnected = false;
-
-        this._onCollisionStart = this.onCollisionStart.bind(this);
-        this._onCollisionActive = this.onCollisionActive.bind(this);
-        this._onCollisionEnd = this.onCollisionEnd.bind(this);
 
         this._onTransformChange = new EventHandler((t, p, r, s) => {
             if (p) this._positionNeedUpdate = true;
@@ -221,18 +212,6 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     protected addListeners(): void {
-        if (this.parts) {
-            for (const part of this.parts) {
-                Events.on(part, 'collisionStart', this._onCollisionStart);
-                Events.on(part, 'collisionActive', this._onCollisionActive);
-                Events.on(part, 'collisionEnd', this._onCollisionEnd);
-            }
-        } else {
-            Events.on(this.body, 'collisionStart', this._onCollisionStart);
-            Events.on(this.body, 'collisionActive', this._onCollisionActive);
-            Events.on(this.body, 'collisionEnd', this._onCollisionEnd);
-        }
-
         this.gameObject.transform.addListener('modified', this._onTransformChange);
         this.gameObject.transform.addListener('parentmodified', this._onTransformParentChange);
         this.gameObject.addListener('parentchanged', this._onGameObjectParentComponentChange);
@@ -240,62 +219,10 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     protected removeListeners(): void {
-        if (this.parts) {
-            for (const part of this.parts) {
-                Events.off(part, 'collisionStart', this._onCollisionStart);
-                Events.off(part, 'collisionActive', this._onCollisionActive);
-                Events.off(part, 'collisionEnd', this._onCollisionEnd);
-            }
-        } else {
-            Events.off(this.body, 'collisionStart', this._onCollisionStart);
-            Events.off(this.body, 'collisionActive', this._onCollisionActive);
-            Events.off(this.body, 'collisionEnd', this._onCollisionEnd);
-        }
-
         this.gameObject.transform.removeListener('modified', this._onTransformChange);
         this.gameObject.transform.removeListener('parentmodified', this._onTransformParentChange);
         this.gameObject.removeListener('parentchanged', this._onGameObjectParentComponentChange);
         this.gameObject.removeListener('componentadd', this._onGameObjectParentComponentChange);
-    }
-
-    private isPartOfCollision(event: IEventCollision<Engine>): boolean {
-        return this.parts && this.parts.some(p => event.pairs.some(pair => pair.bodyA.id === p.id || pair.bodyB.id === p.id)) || <any>this.body && event.pairs.some(pair => pair.bodyA.id === this.body!.id || pair.bodyB.id === this.body!.id);
-    }
-
-    private onCollisionStart(event: IEventCollision<Engine>): void {
-        if (!this.isPartOfCollision(event)) return;
-
-        let isSensor = event.pairs.some(pair => pair.bodyA.isSensor || pair.bodyB.isSensor);
-        let isCollider = event.pairs.some(pair => !pair.bodyA.isSensor || !pair.bodyB.isSensor);
-
-        for (const behaviour of this.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if (isSensor) behaviour.dispatchEvent('triggerenter', event);
-            else if (isCollider) behaviour.dispatchEvent('collisionenter', event);
-        }
-    }
-
-    private onCollisionActive(event: IEventCollision<Engine>): void {
-        if (!this.isPartOfCollision(event)) return;
-
-        let isSensor = event.pairs.some(pair => pair.bodyA.isSensor || pair.bodyB.isSensor);
-        let isCollider = event.pairs.some(pair => !pair.bodyA.isSensor || !pair.bodyB.isSensor);
-
-        for (const behaviour of this.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if (isSensor) behaviour.dispatchEvent('triggeractive', event);
-            else if (isCollider) behaviour.dispatchEvent('collisionactive', event);
-        }
-    }
-
-    private onCollisionEnd(event: IEventCollision<Engine>): void {
-        if (!this.isPartOfCollision(event)) return;
-
-        let isSensor = event.pairs.some(pair => pair.bodyA.isSensor || pair.bodyB.isSensor);
-        let isCollider = event.pairs.some(pair => !pair.bodyA.isSensor || !pair.bodyB.isSensor);
-
-        for (const behaviour of this.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-            if (isSensor) behaviour.dispatchEvent('triggerexit', event);
-            else if (isCollider) behaviour.dispatchEvent('collisionexit', event);
-        }
     }
 
     public applyTransformToBody(): void {
@@ -379,8 +306,9 @@ export abstract class Collider extends Component<ColliderEventTypes> {
      * Must be called by derived classes in buildBody
      *  
      */
-    protected setGameObjectOnBody(body: Body): Body {
+    protected addPropertiesToBody(body: Body): Body {
         (<any>body).gameObject = this.gameObject;
+        (<any>body).collider = this;
         return body;
     }
 
@@ -437,7 +365,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
             const handlerComponentRemove = new EventHandler<GameObjectEventTypes['componentremove']>(c => {
                 if (c.type === ComponentType.Rigidbody) {
                     c.gameObject.removeListener('componentremove', handlerComponentRemove);
-                    this.findRigidBody();
+                    if (this.findRigidBody) this.findRigidBody();
                 }
             });
 
@@ -447,19 +375,21 @@ export abstract class Collider extends Component<ColliderEventTypes> {
         return !!this._rigidBody;
     }
 
-    public override destroy(): void {
+    public override prepareDestroy(): void {
+        this.__destroyInFrames__ = 1;
+
         this.removeListeners();
 
         this.disconnect();
 
-        super.destroy();
+        super.prepareDestroy();
     }
 
     public static updateBody(): void {
         const cs: Collider[] = [];
 
         for (const c of Collider._colliders) {
-            if (!c._rigidBody && (c._positionNeedUpdate || c._rotationNeedUpdate || c._scaleNeedUpdate)) c.applyTransformToBody();
+            if (!c._rigidBody && (c._positionNeedUpdate || c._rotationNeedUpdate || c._scaleNeedUpdate) && c.__destroyInFrames__ === undefined) c.applyTransformToBody();
             else if (c._rigidBody && !GameObject.componentInParents(c.gameObject, ComponentType.Collider)) cs.push(c);
         }
 
@@ -467,16 +397,13 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
         function updateChildCollider(cs: Collider[]): void {
             for (const c of cs) {
-                if (c._positionNeedUpdate || c._rotationNeedUpdate || c._scaleNeedUpdate) c.applyTransformToBody();
+                if ((c._positionNeedUpdate || c._rotationNeedUpdate || c._scaleNeedUpdate) && c.__destroyInFrames__ === undefined) c.applyTransformToBody();
                 updateChildCollider(c.gameObject.getComponentsInChildren<Collider>(ComponentType.Collider));
             }
         }
     }
 
     public rebuild(): void {
-        if (this.body) this.removeListeners();
-
-
         const connected = this._isConnected;
         if (connected) this.disconnect();
 
@@ -501,14 +428,10 @@ export abstract class Collider extends Component<ColliderEventTypes> {
         if (this._rigidBody) {
             this._rigidBody.updateBody();
         }
-
-        this.addListeners();
     }
 
     private toBody(): void {
         if (!this.body || !this.parts || this._isConnected) return;
-
-        this.removeListeners();
 
         if (this.parts.length === 1 && this.body.id === this.parts[0].id) {
             this.body.parts = [this.body];
@@ -522,15 +445,11 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
         this.parts = undefined;
 
-        this.setGameObjectOnBody(this.body);
-
-        this.addListeners();
+        this.addPropertiesToBody(this.body);
     }
 
     private toParts(): void {
         if (!this.body || this._isConnected) return;
-
-        this.removeListeners();
 
         if (this.body.parts.length === 1) {
             this.parts = [this.body];
@@ -540,10 +459,8 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
         for (const part of this.parts) {
             part.parent = part;
-            this.setGameObjectOnBody(part);
+            this.addPropertiesToBody(part);
             part.collisionFilter = { ...this._bodyOptions.collisionFilter };
         }
-
-        this.addListeners();
     }
 }
