@@ -121,12 +121,13 @@ const utility = {
      * @returns AssetDB object
      */
     readAssets: async (path) => {
-        if (path === resolve(assetpath, 'icon')) return {};
-
         const assetDB = {};
 
         for (const p of await utility.listDir(path)) {
             if (p === 'AssetDB.json' || p === 'InputMappingButtons.json' || p === 'InputMappingAxes.json') continue;
+
+            if (resolve(p) === resolve(assetpath, 'icon')) continue;
+
 
             const type = utility.getAssetType(p);
 
