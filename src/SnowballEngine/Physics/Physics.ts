@@ -92,12 +92,8 @@ export class Physics implements Destroyable {
                 slop: pair.slop
             };
 
-
-            if (!pair.bodyA.gameObject || !pair.bodyB.gameObject || !('getComponents' in pair.bodyA.gameObject) || !('getComponents' in pair.bodyB.gameObject)) debugger;
-
-
             for (const behavior of pair.bodyA.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-                if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
+                if (event.collider.isTrigger) behavior.dispatchEvent(event.collider.isTrigger ? triggerEventName : collisionEventName, event);
                 else behavior.dispatchEvent(collisionEventName, event);
             }
 

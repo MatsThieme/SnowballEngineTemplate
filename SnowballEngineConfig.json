@@ -11,14 +11,32 @@
     "cordova-settings": {
         "id": "com.SnowballEngine.Template",
         "author": {
-            "name": "",
-            "email": "",
-            "href": ""
+            "name": "Template",
+            "email": "Template@SnowballEngine",
+            "href": "https://github.com/MatsThieme/SnowballEngineTemplate"
         },
-        "plugins": []
+        "access": {},
+        "allow-intent": [],
+        "preference": {
+            "FullScreen": true,
+            "Orientation": "landscape"
+        },
+        "icons": [],
+        "platform-android": {
+            "access": {},
+            "allow-intent": [],
+            "preference": {
+                "FullScreen": true,
+                "Orientation": "landscape"
+            },
+            "icons": []
+        }
     },
     "build": {
         "isDevelopmentBuild": true,
-        "updateADB": true
+        "updateADB": true,
+        "platforms": [
+            "android"
+        ]
     }
 }

@@ -1,11 +1,22 @@
-const { writeFile, mkdir, readdir, lstat, unlink, rmdir, copyFile, stat, access } = require('fs');
+const { writeFile, mkdir, readdir, lstat, unlink, rmdir, copyFile, stat, access, exists } = require('fs');
 const { resolve, join } = require('path');
 const { createServer } = require('http');
 const { readFile } = require('fs');
 const { getType } = require('mime');
-const webpack = require('webpack');
 const { promisify } = require('util');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { exec } = require('child_process');
+
+const distpath = resolve('dist');
+const assetpath = resolve('Assets');
+const distassetpath = resolve('dist/Assets');
+const configpath = resolve('SnowballEngineConfig.json');
+const assetDBpath = resolve('Assets/AssetDB.json');
+
+
+const port = 3000;
+
 
 
 const utility = {
@@ -110,14 +121,16 @@ const utility = {
      * @returns AssetDB object
      */
     readAssets: async (path) => {
+        if (path === resolve(assetpath, 'icon')) return {};
+
         const assetDB = {};
 
         for (const p of await utility.listDir(path)) {
             if (p === 'AssetDB.json' || p === 'InputMappingButtons.json' || p === 'InputMappingAxes.json') continue;
 
-            assetDB[p] = {
-                type: utility.getAssetType(p)
-            };
+            const type = utility.getAssetType(p);
+
+            assetDB[p] = { type };
         }
 
         return assetDB;
@@ -141,6 +154,12 @@ const utility = {
     }
 };
 
+const _build = utility.getProcessParameter('-build') || utility.getProcessParameter('--b');
+const _debugbuild = utility.getProcessParameter('-debugbuild') || utility.getProcessParameter('--d');
+const _createADB = utility.getProcessParameter('-createADB') || utility.getProcessParameter('--c');
+const _updateADB = utility.getProcessParameter('-updateADB') || utility.getProcessParameter('--u');
+const _server = utility.getProcessParameter('-server') || utility.getProcessParameter('--s');
+
 const prepare = {
     cleanup: async () => {
         try {
@@ -149,25 +168,120 @@ const prepare = {
         await utility.mkdir(distpath);
     },
     config: async () => {
-        return await utility.readJSONFile(configpath);
+        return prepare._config || (prepare._config = await utility.readJSONFile(configpath));
     }
 };
 
+const cordova = {
+    _path: resolve(__dirname, 'cordova'),
+    buildConfigXML: async () => {
+        const config = await prepare.config();
+        const cordovaConfig = config['cordova-settings'];
 
-const distpath = resolve('dist');
-const assetpath = resolve('Assets');
-const distassetpath = resolve('dist/Assets');
-const configpath = resolve('SnowballEngineConfig.json');
-const assetDBpath = resolve('Assets/AssetDB.json');
+        if (!cordovaConfig) return;
 
-const _build = utility.getProcessParameter('-build') || utility.getProcessParameter('--b');
-const _debugbuild = utility.getProcessParameter('-debugbuild') || utility.getProcessParameter('--d');
-const _createADB = utility.getProcessParameter('-createADB') || utility.getProcessParameter('--c');
-const _updateADB = utility.getProcessParameter('-updateADB') || utility.getProcessParameter('--u');
-const _server = utility.getProcessParameter('-server') || utility.getProcessParameter('--s');
+        const { create } = require('xmlbuilder2');
+
+        const widget = create({ version: '1.0', encoding: 'utf-8' })
+            .ele('widget', { id: cordovaConfig.id, version: config.version, xmlns: 'http://www.w3.org/ns/widgets', 'xmlns:cdv': 'http://cordova.apache.org/ns/1.0' })
+            .ele('name').txt(config.title).up()
+            .ele('description').txt(config.description).up()
+            .ele('author', { email: cordovaConfig.author.email, href: cordovaConfig.author.href }).txt(cordovaConfig.author.name).up()
+            .ele('content', { src: 'index.html' }).up();
+
+        for (const platform of Object.keys(cordovaConfig).filter(k => /^platform-/.test(k)).map(k => k.replace('platform-', ''))) {
+            await cordova._addOptionsToWidget(widget, platform);
+        }
+
+        await cordova._addOptionsToWidget(widget);
+
+        return widget.end({ prettyPrint: true });
+    },
+    _addOptionsToWidget: async (widget, platform) => {
+        const config = await prepare.config();
+        const cordovaConfig = platform ? config['cordova-settings']['platform-' + platform] : config['cordova-settings'];
+
+        if (!cordovaConfig) return console.log('failed to create cordova config', platform);
+
+        if (platform) widget = widget.ele('platform', { name: platform });
+
+        let modified = false;
+
+        if (cordovaConfig.access && Object.keys(cordovaConfig.access).length) {
+            modified = true;
+            widget.ele('access', cordovaConfig.access);
+        }
+
+        if (cordovaConfig.preference) {
+            for (const name in cordovaConfig.preference) {
+                modified = true;
+                widget.ele('preference', { name, value: cordovaConfig.preference[name] });
+            }
+        }
+
+        if (cordovaConfig['allow-intent']) {
+            for (const i of cordovaConfig['allow-intent']) {
+                modified = true;
+                widget.ele('allow-intent', { href: i });
+            }
+        }
+
+        if (cordovaConfig.icons) {
+            for (const icon of cordovaConfig.icons) {
+                modified = true;
+                widget.ele('icon', icon);
+            }
+        }
+
+        if (!modified) widget.remove();
+    },
+    prepare: async () => {
+        const config = await cordova.buildConfigXML();
+        if (!config) return;
+
+        await promisify(writeFile)(resolve(cordova._path, 'config.xml'), config);
+
+        const www = resolve(cordova._path, 'www');
+        await utility.deleteFolderRecursive(www);
+
+        await utility.copyFolder(distpath, www);
+    },
+    getInstalledPlatforms: async () => {
+        const x = await promisify(exec)(`npx cordova platform list --sdk_root=../../../tools/androidsdk/`, { cwd: resolve('cordova') });
+
+        const match = x.stdout.toLowerCase().match(/installed platforms:([\s\S]+)available platforms/m);
+
+        if (!match || !match[1]) return [];
+
+        return match[1].split('\n').filter(Boolean).map(p => p.trim().split(' ')[0]);
+    },
+    build: async () => {
+        const config = await prepare.config();
+        const sepm = resolve('../../');
+
+        if (!config.build && !config.build.platforms && !config.build.platforms.length) return console.log('no platforms specified');
+        if (!await promisify(exists)(cordova._path)) return console.log('cordova directory does not exist');
+        if (!await promisify(exists)(resolve(sepm, 'sepm.js'))) return console.log('sepm.js not found');
+
+        await cordova.prepare();
+
+        const installedPlatforms = await cordova.getInstalledPlatforms();
+
+        for (const p of installedPlatforms) { // remove unused platforms
+            if (config.build.platforms.findIndex(p_ => p === p_) === -1) {
+                await promisify(exec)(`node sepm.js -n -p=${config.title} -platformremove=${p}`, { cwd: sepm });
+            }
+        }
 
 
-const port = 3000;
+        for (const platform of config.build.platforms) {
+            console.log(`building for ${platform}`);
+            await promisify(exec)(`node sepm.js -n -p=${config.title} -b${_build ? ' -release' : ''} -platformadd=${platform}`, { cwd: sepm });
+            console.log(`${platform} built`);
+        }
+    }
+};
+
 
 
 
@@ -211,6 +325,8 @@ async function build(config) {
 
     console.log('build time:', (Date.now() - start) / 1000 + 's');
     console.log('file size:', utility.bytesToString((await promisify(stat)(distpath + '/main.js')).size));
+
+    await cordova.build();
 }
 
 async function debugbuild(config) {
@@ -243,6 +359,8 @@ async function debugbuild(config) {
 
     console.log('build time:', (Date.now() - start) / 1000 + 's');
     console.log('file size:', utility.bytesToString((await promisify(stat)(distpath + '/main.js')).size));
+
+    await cordova.build();
 }
 
 async function server() {
