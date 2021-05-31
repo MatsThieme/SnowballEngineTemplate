@@ -43,7 +43,7 @@ export class Physics implements Destroyable {
         this._canvas = new Canvas(innerWidth, innerHeight);
         this._canvas.style.zIndex = '1';
 
-        if (projectConfig.build.isDevelopmentBuild) document.body.appendChild(this._canvas);
+        if (projectConfig.build.debugMode) document.body.appendChild(this._canvas);
     }
 
     public get positionIterations(): number {
@@ -176,7 +176,7 @@ export class Physics implements Destroyable {
         Engine.update(this.engine, GameTime.deltaTime, GameTime.deltaTime / this._lastDelta);
         this._lastDelta = GameTime.deltaTime;
 
-        if (!projectConfig.build.isDevelopmentBuild) return;
+        if (!projectConfig.build.debugMode) return;
 
         if (this.drawDebug) {
             const camera = Scene.currentScene.cameraManager.cameras[0];

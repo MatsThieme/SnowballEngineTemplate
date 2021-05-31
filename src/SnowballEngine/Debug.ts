@@ -17,7 +17,7 @@ export class Debug {
     }
 
     public static log(msg: string | number | boolean | Record<string, unknown>, logstack = false): void {
-        if (!projectConfig.build.isDevelopmentBuild) return;
+        if (!projectConfig.build.debugMode) return;
 
         const o = Debug.formatMessage('log', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
@@ -26,7 +26,7 @@ export class Debug {
     }
 
     public static warn(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
-        if (!projectConfig.build.isDevelopmentBuild) return;
+        if (!projectConfig.build.debugMode) return;
 
         const o = Debug.formatMessage('warning', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
@@ -35,7 +35,7 @@ export class Debug {
     }
 
     public static error(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
-        if (!projectConfig.build.isDevelopmentBuild) return;
+        if (!projectConfig.build.debugMode) return;
 
         if (typeof msg === 'object' && 'name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
 

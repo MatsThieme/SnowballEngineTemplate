@@ -13,7 +13,7 @@ import { Debug } from './Debug';
 
 PIXI.utils.skipHello(); // don't show PIXIs hello in console
 Ticker.system.autoStart = false;
-if (projectConfig.build.isDevelopmentBuild) (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
+if (projectConfig.build.debugMode) (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
 
 (<any>Common).setDecomp(poly_decomp);
 
