@@ -6,6 +6,7 @@ import { Debug } from 'SnowballEngine/Debug';
 import { AudioSourceEventTypes } from 'Utility/Events/EventTypes';
 import { clamp } from 'Utility/Helpers';
 import { Stopwatch } from 'Utility/Stopwatch';
+import { Vector2 } from 'Utility/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioListener } from './AudioListener';
@@ -33,6 +34,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
 
     private _maxDistance: number;
     private _zPosition: number;
+    private _position: IVector2;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioSource);
@@ -44,7 +46,8 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this._sw = new Stopwatch(false);
         this._playing = false;
         this._maxDistance = 50;
-        this._zPosition = 5;
+        this._zPosition = 10;
+        this._position = new Vector2();
 
         this.playGlobally = false;
 
@@ -54,7 +57,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this.node.panningModel = 'HRTF';
         this.node.distanceModel = 'linear';
         this.node.maxDistance = this._maxDistance;
-        this.node.positionZ.value = this._zPosition;
+        this.zPosition = this._zPosition;
 
         this._connected = false;
     }
@@ -207,7 +210,22 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
     }
     public set zPosition(val: number) {
         this._zPosition = val;
-        this.node.positionZ.value = val;
+        if (!this.node.positionZ) this.node.setPosition(this._position.x, this._position.y, this._zPosition);
+        else if (this.node.positionZ.value !== val) this.node.positionZ.value = val;
+    }
+
+    public get position(): IVector2 {
+        return this._position;
+    }
+    public set position(val: IVector2) {
+        if (Vector2.equal(this._position, val)) return;
+
+        this._position = val;
+        if (!this.node.positionX) this.node.setPosition(val.x, val.y, this._zPosition);
+        else {
+            this.node.positionX.value = val.x;
+            this.node.positionY.value = val.y;
+        }
     }
 
 

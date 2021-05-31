@@ -2,6 +2,7 @@ import { Debug } from 'SnowballEngine/Debug';
 import { Scene } from 'SnowballEngine/Scene';
 import { AudioListenerEventTypes } from 'Utility/Events/EventTypes';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
+import { Vector2 } from 'Utility/Vector2';
 import { ComponentType } from '../ComponentType';
 import { GameObject } from '../GameObject';
 import { AudioSource } from './AudioSource';
@@ -74,14 +75,10 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
                 const sourceGlobalTransform = source.gameObject.transform.toGlobal();
 
                 if (source.playGlobally) {
-                    source.node.positionX.value = 0;
-                    source.node.positionY.value = 0;
-                    source.node.positionZ.value = 0;
+                    source.position = { x: 0, y: 0 };
                 } else {
-                    source.node.positionX.value = sourceGlobalTransform.position.x - globalTransform.position.x;
-                    source.node.positionY.value = sourceGlobalTransform.position.y - globalTransform.position.y;
+                    source.position = new Vector2(sourceGlobalTransform.position.x - globalTransform.position.x, sourceGlobalTransform.position.y - globalTransform.position.y);
                 }
-
             }
         }
 

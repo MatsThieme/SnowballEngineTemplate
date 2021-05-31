@@ -1,4 +1,5 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: './src/SnowballEngine/Start.ts',
@@ -7,9 +8,9 @@ module.exports = {
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-                exclude: /node_modules/,
-            },
-        ],
+                exclude: /node_modules/
+            }
+        ]
     },
     resolve: {
         extensions: ['.ts', '.js'],
@@ -27,5 +28,17 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
+    },
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                terserOptions: {
+                    format: {
+                        comments: false
+                    },
+                },
+                extractComments: false
+            })
+        ]
     }
 };

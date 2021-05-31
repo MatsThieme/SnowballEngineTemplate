@@ -2,7 +2,7 @@ import isMobile from 'ismobilejs';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
 import { Timeout } from 'Utility/Timeout/Timeout';
-import { Vector2 } from 'Utility/Vector2';
+import { Vector2 as IVector2, Vector2 } from 'Utility/Vector2';
 import { AudioListener } from './GameObject/Components/AudioListener';
 import { Scene } from './Scene';
 
@@ -15,11 +15,11 @@ export class Client {
      * Returns the resolution of the window.
      * 
      */
-    public static readonly resolution: ImmutableObject<Vector2> = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio).round();
+    public static readonly resolution: ImmutableObject<IVector2> = new Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio).round();
 
     public static monitorRefreshRate = 60;
 
-    public static aspectRatio: Vector2 = (<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude);
+    public static aspectRatio: IVector2 = (<IVector2>Client.resolution).clone.setLength(new IVector2(16, 9).magnitude);
 
     public static readonly hasMediaPlayPermission: boolean;
 
@@ -84,12 +84,12 @@ export class Client {
         Client._resizeListener = () => {
             const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
 
-            (<Vector2>Client.resolution).x = (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
-            (<Vector2>Client.resolution).y = (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
+            (<IVector2>Client.resolution).x = (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
+            (<IVector2>Client.resolution).y = (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
 
             (<Vector2>Client.resolution).round();
 
-            Client.aspectRatio.copy((<Vector2>Client.resolution).clone.setLength(new Vector2(16, 9).magnitude));
+            Client.aspectRatio.copy((<IVector2>Client.resolution).clone.setLength(new IVector2(16, 9).magnitude));
         }
 
         el.addEventListener('resize', Client._resizeListener);

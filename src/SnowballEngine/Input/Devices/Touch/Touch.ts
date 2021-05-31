@@ -1,3 +1,4 @@
+import { Scene } from 'SnowballEngine/Scene';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
@@ -32,7 +33,7 @@ export class Touch extends InputEventTarget implements InputDevice {
 
             for (let i = 0; i < e.touches.length; i++) {
                 const item = e.touches[i];
-                this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio), Math.round(item.clientY * window.devicePixelRatio)]);
+                this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(item.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)]);
             }
 
             this._button.down = !!e.touches.length;

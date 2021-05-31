@@ -46,6 +46,10 @@ export class CameraManager {
         this._PIXI.renderer.backgroundColor = val.rgb;
     }
 
+    public getRenderResolution(): Vector2 {
+        return (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
+    }
+
     /**
      * 
      * @internal 
@@ -105,7 +109,7 @@ export class CameraManager {
     public update(): void {
         if (!this.cameras.filter(c => c.active)) return Debug.warn('No active camera');
 
-        const canvasSize = (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
+        const canvasSize = this.getRenderResolution();
         this._PIXI.resize(canvasSize.x, canvasSize.y);
 
         this._PIXI.renderer.clear();

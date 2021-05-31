@@ -93,7 +93,7 @@ export class Physics implements Destroyable {
             };
 
             for (const behavior of pair.bodyA.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
-                if (event.collider.isTrigger) behavior.dispatchEvent(event.collider.isTrigger ? triggerEventName : collisionEventName, event);
+                if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
                 else behavior.dispatchEvent(collisionEventName, event);
             }
 

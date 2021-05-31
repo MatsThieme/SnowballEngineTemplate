@@ -1,4 +1,5 @@
 import projectConfig from 'Config';
+import { Scene } from 'SnowballEngine/Scene';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
@@ -38,14 +39,14 @@ export class Mouse extends InputEventTarget implements InputDevice {
 
         this._onMouseMove = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
 
             this._fireListener = true;
         }).bind(this);
 
         this._onMouseUp = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
@@ -56,7 +57,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
 
         this._onMouseDown = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio), Math.round(e.clientY * window.devicePixelRatio)];
+            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
