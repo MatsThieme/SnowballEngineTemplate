@@ -186,6 +186,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
      * 
      */
     public async start(): Promise<void> {
+        this.dispatchEvent('start');
+
         this._requestAnimationFrameHandle = -1; // set isStarting true
 
         for (const go of GameObject.gameObjects) {
@@ -204,6 +206,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
      *
      */
     public async stop(): Promise<void> {
+        this.dispatchEvent('stop');
+
         this._requestAnimationFrameHandle = undefined;
 
         await this.removeFromDOM();
@@ -281,6 +285,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
      * 
      */
     public async unload(): Promise<void> {
+        this.dispatchEvent('unload');
+
         await this.stop();
 
         GameObject.prepareDestroy();

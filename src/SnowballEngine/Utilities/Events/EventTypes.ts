@@ -70,7 +70,10 @@ export type GameObjectEventTypes = {
 
 export type SceneEventTypes = {
     audiolisteneradd: [listener: AudioListener],
-    audiolistenerremove: [listener: AudioListener]
+    audiolistenerremove: [listener: AudioListener],
+    start: [],
+    stop: [],
+    unload: []
 };
 
 
