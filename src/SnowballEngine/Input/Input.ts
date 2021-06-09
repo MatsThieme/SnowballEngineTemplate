@@ -1,4 +1,6 @@
 import { Dispose } from 'GameObject/Dispose';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { InputEventTypes } from 'Utility/Events/EventTypes';
 import InputMappingAxes from '../../../Assets/InputMappingAxes.json';
 import InputMappingButtons from '../../../Assets/InputMappingButtons.json';
 import { Gamepad } from './Devices/Gamepad/Gamepad';
@@ -8,7 +10,6 @@ import { Mouse } from './Devices/Mouse/Mouse';
 import { Touch } from './Devices/Touch/Touch';
 import { InputAxis } from './InputAxis';
 import { InputButton } from './InputButton';
-import { InputEvent } from './InputEvent';
 import { InputMapping } from './InputMapping';
 
 /** @category Input */
@@ -160,20 +161,18 @@ export class Input {
      * A GamePad is connected
      * 
      */
-    public static addListener(type: InputAction, cb: (event: InputEvent) => any, id: string = 'inputListenerID' + Math.random() + performance.now(), devices: InputDeviceType = 0b1111): string {
-        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.addListener(type, cb, id);
-        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.addListener(type, cb, id);
-        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.addListener(type, cb, id);
-        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.addListener(type, cb, id);
-
-        return id;
+    public static addListener<U extends keyof InputEventTypes>(eventName: U, handler: EventHandler<InputEventTypes[U]>, devices: InputDeviceType = 0b1111): void {
+        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.addListener(eventName, handler);
+        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.addListener(eventName, handler);
+        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.addListener(eventName, handler);
+        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.addListener(eventName, handler);
     }
 
-    public static removeListener(id: string, devices: InputDeviceType = 0b1111): void {
-        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.removeListener(id);
-        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.removeListener(id);
-        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.removeListener(id);
-        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.removeListener(id);
+    public static removeListener<U extends keyof InputEventTypes>(eventName: U, handler: EventHandler<InputEventTypes[U]>, devices: InputDeviceType = 0b1111): void {
+        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.removeListener(eventName, handler);
+        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.removeListener(eventName, handler);
+        if (devices & InputDeviceType.Keyboard && Input.keyboard) Input.keyboard.removeListener(eventName, handler);
+        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.removeListener(eventName, handler);
     }
 
     public static reset(): void {

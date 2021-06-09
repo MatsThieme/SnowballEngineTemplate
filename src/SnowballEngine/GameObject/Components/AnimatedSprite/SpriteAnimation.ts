@@ -15,11 +15,20 @@ export class SpriteAnimation implements Disposable {
     public swapTime: number;
     public readonly container: Container;
 
+    /**
+     * 
+     * Currently visible Sprite
+     * 
+     */
+    public readonly sprite!: Sprite;
+
     private _assets: readonly Asset[];
     private _sprites: readonly Sprite[];
     private _timer: number;
 
-    public constructor(assets: Asset[] = [], swapTime = 200) {
+    public constructor(assets: readonly Asset[] = [], swapTime = 200) {
+        if (assets.length === 0) throw new Error('no assets specified');
+
         this.swapTime = swapTime;
 
         this.container = new Container();
@@ -35,6 +44,8 @@ export class SpriteAnimation implements Disposable {
         return this._assets;
     }
     public set assets(val: readonly Asset[]) {
+        if (val.length === 0) throw new Error('no assets specified');
+
         for (const a of val) {
             if (a.type !== AssetType.Image) {
                 throw new Error(`Wrong assetType: ${a.type}`);
@@ -55,31 +66,19 @@ export class SpriteAnimation implements Disposable {
         }
     }
 
-    public get visibleIndex(): number {
-        return Math.round(this._timer / (this.swapTime || 1)) % (this._sprites.length || 1);
-    }
-
-    /**
-     * 
-     * Currently visible Sprite
-     * 
-     */
-    public get sprite(): Sprite {
-        return this._sprites[this.visibleIndex];
-    }
-
     /**
      * 
      * Adds the deltaTime to timer property.
      * 
      */
     public update(): void {
-        if (this._sprites.length === 0) return;
+        const visibleIndex = Math.round(this._timer / (this.swapTime || 1)) % (this._sprites.length || 1);
 
         this._timer = (this._timer + GameTime.deltaTime) % (this._sprites.length * this.swapTime);
 
         for (let i = 0; i < this._sprites.length; i++) {
-            this._sprites[i].visible = i === this.visibleIndex;
+            this._sprites[i].visible = i === visibleIndex;
+            if (i === visibleIndex) (<Mutable<SpriteAnimation>>this).sprite = this._sprites[i];
         }
     }
 

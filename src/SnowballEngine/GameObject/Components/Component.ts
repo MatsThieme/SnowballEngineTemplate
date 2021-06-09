@@ -161,7 +161,7 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
 
     /**
     *
-    * Called before any GameObject is updated.
+    * Called before any Component is updated.
     *
     */
     protected earlyUpdate?(): void | Promise<void>;
@@ -175,7 +175,7 @@ export abstract class Component<EventTypes extends ComponentEventTypes> extends 
 
     /**
     *
-    * Called after all GameObjects are updated.
+    * Called after all Components are updated.
     *
     */
     protected lateUpdate?(): void | Promise<void>;

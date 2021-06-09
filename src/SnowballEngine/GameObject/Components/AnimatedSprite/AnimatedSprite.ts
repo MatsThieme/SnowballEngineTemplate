@@ -9,7 +9,7 @@ import { SpriteAnimation } from './SpriteAnimation';
 export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };
 
-    private _spriteAnimations: Map<string, SpriteAnimation> = new Map();
+    private _spriteAnimations: { [key: string]: SpriteAnimation };
     private _activeAnimation: string;
 
     public constructor(gameObject: GameObject) {
@@ -19,24 +19,24 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
 
         this.sprite = new Container();
 
-        this._spriteAnimations = new Map();
+        this._spriteAnimations = {};
 
         this._activeAnimation = '';
 
         this.spriteAnimations = <any>new Proxy(this._spriteAnimations, {
-            get: (target, prop: string) => target.get(prop),
+            get: (target, prop: string) => target[prop],
             set: (target, prop: string, value: SpriteAnimation | undefined) => {
-                const existingAnimation = target.get(prop)?.container;
+                const existingAnimation = target[prop].container;
 
                 if (existingAnimation) this.sprite!.removeChild(existingAnimation);
 
                 if (value) {
-                    target.set(prop, value);
+                    target[prop] = value;
 
                     this.sprite!.addChild(value.container);
 
                     if (this._activeAnimation === '') this._activeAnimation = prop;
-                } else if (existingAnimation) target.delete(prop);
+                } else if (existingAnimation) delete target[prop];
 
                 return true;
             }
@@ -46,17 +46,9 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     protected override update(): void {
         super.update();
 
-        if (!this.sprite) return;
+        if (!this.active || !this.sprite || !this._activeAnimation) return;
 
-        this._spriteAnimations.get(this._activeAnimation)?.update();
-
-        for (const prop in this._spriteAnimations.keys()) {
-            const anim = this._spriteAnimations.get(prop);
-
-            if (anim) {
-                anim.container.visible = prop === this._activeAnimation;
-            }
-        }
+        this._spriteAnimations[this._activeAnimation].update();
     }
 
     /**
@@ -65,9 +57,15 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
      * 
      */
     public set activeAnimation(val: string) {
-        if (this._spriteAnimations.has(val)) {
+        if (val in this._spriteAnimations) {
             this._activeAnimation = val;
-            this._spriteAnimations.get(this._activeAnimation)?.reset();
+            this._spriteAnimations[this._activeAnimation].reset();
+
+            for (const anim in this._spriteAnimations) {
+                this._spriteAnimations[anim].container.visible = false;
+            }
+
+            this._spriteAnimations[this._activeAnimation].container.visible = true;
         }
     }
     public get activeAnimation(): string {

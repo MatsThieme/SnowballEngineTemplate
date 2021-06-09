@@ -1,7 +1,7 @@
 {
     "title": "Template",
     "description": "SnowballEngine Project Template",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "settings": {
         "allowContextMenu": false,
         "transparentBackground": false,
@@ -35,8 +35,6 @@
     "build": {
         "debugMode": true,
         "updateADB": true,
-        "platforms": [
-            "android"
-        ]
+        "platforms": []
     }
 }

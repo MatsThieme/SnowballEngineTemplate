@@ -16,9 +16,6 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
 
     public readonly node: GainNode;
     public volume: number;
-    public cameraDistance: number;
-
-    private _sources: Map<number, AudioSource>;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AudioListener);
@@ -27,10 +24,6 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this.node.connect(AudioListener.node);
 
         this.volume = 1;
-        this.cameraDistance = 5;
-
-        this._sources = new Map();
-
 
         for (const c of Component.components) {
             if (c.type === ComponentType.AudioSource) (<AudioSource>c).connect();
@@ -59,25 +52,19 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
         this.node.disconnect();
     }
 
-    public addSource(audioSource: AudioSource): void {
-        this._sources.set(audioSource.componentID, audioSource);
-    }
-
-    public removeSource(audioSource: AudioSource): void {
-        this._sources.delete(audioSource.componentID);
-    }
-
     protected override update(): void {
         const globalTransform = this.gameObject.transform.toGlobal();
 
-        for (const source of this._sources.values()) {
-            if (source.node) {
+        for (const source of Component.components) {
+            if (source.type === ComponentType.AudioSource && (<AudioSource>source).node) {
+                if (!(<AudioSource>source).playing) continue;
+
                 const sourceGlobalTransform = source.gameObject.transform.toGlobal();
 
-                if (source.playGlobally) {
-                    source.position = { x: 0, y: 0 };
+                if ((<AudioSource>source).playGlobally) {
+                    (<AudioSource>source).position = globalTransform.position;
                 } else {
-                    source.position = new Vector2(sourceGlobalTransform.position.x - globalTransform.position.x, sourceGlobalTransform.position.y - globalTransform.position.y);
+                    (<AudioSource>source).position = new Vector2(sourceGlobalTransform.position.x - globalTransform.position.x, sourceGlobalTransform.position.y - globalTransform.position.y);
                 }
             }
         }
@@ -86,13 +73,13 @@ export class AudioListener extends Component<AudioListenerEventTypes>  {
     }
 
     public override destroy(): void {
-        for (const s of [...this._sources.values()]) {
-            s.disconnect();
+        for (const c of Component.components) {
+            if (c.type === ComponentType.AudioSource) (<AudioSource>c).disconnect();
         }
 
-        this._sources.clear();
+        this.gameObject.scene.audioListener = undefined;
 
-        (<Mutable<Scene>>this.gameObject.scene).audioListener = undefined;
+        this.node.disconnect();
 
         super.destroy();
     }

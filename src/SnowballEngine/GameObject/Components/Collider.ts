@@ -32,7 +32,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
     protected _isConnected: boolean;
 
-    public constructor(gameObject: GameObject, type: ComponentType.CircleCollider | ComponentType.PolygonCollider | ComponentType.TileMap | ComponentType.TerrainCollider | ComponentType.RectangleCollider) {
+    public constructor(gameObject: GameObject, type: ComponentType.CircleCollider | ComponentType.PolygonCollider | ComponentType.TilemapCollider | ComponentType.TerrainCollider | ComponentType.RectangleCollider) {
         super(gameObject, type);
 
         Collider._colliders.push(this);
@@ -179,7 +179,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
     /**
      * 
-     * create a new body with set bodyoptions.
+     * create a new body with bodyoptions.
      * set slop: 0.05 * this.gameObject.scene.physics.worldScale
      * 
      */

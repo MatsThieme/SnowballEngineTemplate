@@ -31,7 +31,7 @@ export const average = (...numbers: number[]): number => numbers.reduce((t, c) =
  * @returns Returns Promise which resolves as result of callback.
  * 
  */
-export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<T>, ...params: U[]): Promise<T> {
+export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<T> = <any>(() => { }), ...params: U[]): Promise<T> {
     return new Promise(resolve => {
         async function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
             if (!e.isTrusted) return;

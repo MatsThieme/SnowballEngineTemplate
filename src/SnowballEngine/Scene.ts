@@ -10,6 +10,8 @@ import { GameObject } from 'GameObject/GameObject';
 import { Input } from 'Input/Input';
 import { UI } from 'UI/UI';
 import { UIFonts } from 'UI/UIFonts';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { SceneEventTypes } from 'Utility/Events/EventTypes';
 import { clearObject } from 'Utility/Helpers';
 import { Interval } from 'Utility/Interval';
 import { Stopwatch } from 'Utility/Stopwatch';
@@ -21,14 +23,15 @@ import { Physics } from './Physics/Physics';
 import { SceneManager } from './SceneManager';
 
 /** @category Scene */
-export class Scene {
+export class Scene extends EventTarget<SceneEventTypes> {
     public readonly cameraManager: CameraManager;
     public readonly ui: UI;
     public readonly framedata: Framedata;
-    public readonly audioListener?: AudioListener;
     public readonly domElement: HTMLCanvasElement;
     public readonly name: string;
     public readonly physics: Physics;
+    public static readonly sceneManager: SceneManager;
+    public static readonly currentScene: Scene;
 
     /**
      * 
@@ -47,10 +50,12 @@ export class Scene {
      */
     private readonly _destroyables: Destroyable[];
 
-    public static readonly sceneManager: SceneManager;
-    public static readonly currentScene: Scene;
+    private _audioListener?: AudioListener;
+
 
     public constructor(sceneManager: SceneManager, name: string) {
+        super();
+
         if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
         (<any>Scene).currentScene = this;
 
@@ -96,6 +101,22 @@ export class Scene {
     public get isRunning(): boolean {
         return !!this._requestAnimationFrameHandle;
     }
+
+    public get audioListener(): AudioListener | undefined {
+        return this._audioListener;
+    }
+    public set audioListener(val: AudioListener | undefined) {
+        if (this.audioListener && val || !this.audioListener && !val) return;
+
+        if (val) {
+            this.dispatchEvent('audiolisteneradd', val);
+        } else {
+            this.dispatchEvent('audiolistenerremove', this._audioListener!);
+        }
+
+        this._audioListener = val;
+    }
+
 
     /**
      * @internal
@@ -171,8 +192,6 @@ export class Scene {
             go.start();
         }
 
-
-
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
         await this.appendToDOM();
@@ -231,10 +250,15 @@ export class Scene {
      * @internal
      * 
      */
-    public addDestroyable(destroyable: Destroyable): void {
+    public addDestroyable(destroyable: Destroyable): boolean {
         const i = this._destroyables.findIndex(d => d.__destroyID__ === destroyable.__destroyID__);
 
-        if (i === -1) this._destroyables.push(destroyable);
+        if (i === -1) {
+            this._destroyables.push(destroyable);
+            return true;
+        }
+
+        return false;
     }
 
     /**

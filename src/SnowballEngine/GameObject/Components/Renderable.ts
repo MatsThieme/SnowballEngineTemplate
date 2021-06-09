@@ -26,11 +26,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     protected _size: Vector2;
     private _visible: boolean;
 
-    /**
-     * 
-     * Deriving class should set the sprite property
-     * 
-     */
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Renderable) {
         super(gameObject, type);
 
@@ -68,7 +63,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
     /**
      * 
-     * Size in world units
+     * Size relative to this.gameObject.transform
      * 
      */
     public get size(): Vector2 {
@@ -83,6 +78,12 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         }
     }
 
+    /**
+     * 
+     * The PIXI.Sprite or PIXI.Container instance that should be rendered.
+     * Deriving class should set this.sprite.
+     * 
+     */
     public get sprite(): Sprite | Container | undefined {
         return this._sprite;
     }

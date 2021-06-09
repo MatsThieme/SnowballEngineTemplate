@@ -6,7 +6,7 @@ import { clearObject } from 'Utility/Helpers';
  * @category Scene
  * 
  */
-export function Dispose(disposable: Disposable): void {
+export function Dispose(disposable: Disposable | Record<string, any>): void {
     if (disposable.dispose) disposable.dispose();
     clearObject(disposable, true);
 }

@@ -2,14 +2,15 @@ import { Input } from 'SnowballEngine/Input/Input';
 import { InputAxis } from 'SnowballEngine/Input/InputAxis';
 import { InputButton } from 'SnowballEngine/Input/InputButton';
 import { InputEvent } from 'SnowballEngine/Input/InputEvent';
-import { InputEventTarget } from 'SnowballEngine/Input/InputEventTarget';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { InputEventTypes } from 'Utility/Events/EventTypes';
 import { InputDevice } from '../InputDevice';
 import { InputDeviceType } from '../InputDeviceType';
 import { KeyboardAxis } from './KeyboardAxis';
 import { KeyboardButton } from './KeyboardButton';
 
 /** @category Input */
-export class Keyboard extends InputEventTarget implements InputDevice {
+export class Keyboard extends EventTarget<InputEventTypes> implements InputDevice {
     private _keys: Map<KeyboardButton, InputButton>;
     private _fireListener: Map<KeyboardButton, boolean>;
     private _axesKeys: Map<KeyboardAxis, KeyboardButton[]>;
@@ -102,7 +103,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
             btn.update();
         }
 
-        for (const { cb, type } of this._listeners.values()) {
+        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
             const btn = <KeyboardButton | undefined>Input.inputMappingButtons.keyboard[type];
             const ax = <KeyboardAxis | undefined>Input.inputMappingAxes.keyboard[type];
 
@@ -126,7 +127,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
 
             if (!e.axis && !e.button) continue;
 
-            cb(e);
+            this.dispatchEvent(type, e);
 
             if (btn) this._fireListener.set(btn, false);
         }
@@ -142,8 +143,7 @@ export class Keyboard extends InputEventTarget implements InputDevice {
         window.removeEventListener('keyup', this._onKeyUp);
     }
 
-    public override dispose(): void {
-        super.dispose();
+    public dispose(): void {
         this.removeListeners();
     }
 }

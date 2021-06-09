@@ -52,8 +52,8 @@ export class ExampleBehaviour extends Behaviour {
      * Called whenever a collider on this.gameObject enters a collision.
      * 
      */
-    onCollisionEnter(e: any) {
-        console.log(e);
+    onCollisionEnter(collision: CollisionEvent) {
+        console.log(collision);
     }
 
     /**
@@ -61,7 +61,7 @@ export class ExampleBehaviour extends Behaviour {
      * Called whenever a collider on this.gameObject exits a collision.
      * 
      */
-    onCollisionExit() {
-        console.log('collision enter');
+    onCollisionExit(collision: CollisionEvent) {
+        console.log('collision exit');
     }
 }

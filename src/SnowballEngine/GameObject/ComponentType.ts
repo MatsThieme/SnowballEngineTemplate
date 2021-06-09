@@ -9,16 +9,18 @@ export enum ComponentType {
     ParallaxBackground,
     ParticleSystem,
     Renderable,
+    TerrainRenderer,
     Text,
     Texture,
+    TilemapRenderer,
     Transform,
     Video,
 
     Collider,
     CircleCollider,
     PolygonCollider,
-    TileMap,
-    TerrainCollider,
     RectangleCollider,
+    TerrainCollider,
+    TilemapCollider,
     Rigidbody
 }

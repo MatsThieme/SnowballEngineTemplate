@@ -6,9 +6,10 @@ import { AudioEffect } from './AudioEffect';
 
 /** @category Audio */
 export class AudioMixer implements Disposable {
-    private static _mixers: Map<string, AudioMixer> = new Map();
+    private static _mixers: Record<string, AudioMixer> = {};
     private static _nextID = 0;
     private readonly _id: number;
+    private readonly _name: string;
 
     private readonly _node: GainNode;
     private _destination?: AudioNode;
@@ -24,8 +25,17 @@ export class AudioMixer implements Disposable {
 
     private _connected: boolean;
 
-    private constructor() {
+    /**
+     * 
+     * Mixers are stored and can be accessed with AudioMixer.get(name);
+     * 
+     */
+    public constructor(name: string) {
+        if (AudioMixer._mixers[name]) throw new Error(`Mixer exists: ${name}`);
+        AudioMixer._mixers[name] = this;
+
         this._id = AudioMixer._nextID++;
+        this._name = name;
         this._node = AudioListener.context.createGain();
 
         this._effects = [];
@@ -38,16 +48,7 @@ export class AudioMixer implements Disposable {
     }
 
     public static get(name: string): AudioMixer | undefined {
-        return AudioMixer._mixers.get(name);
-    }
-
-    public static create(name: string): AudioMixer {
-        if (AudioMixer._mixers.has(name)) return AudioMixer.get(name)!;
-
-        const mixer = new AudioMixer();
-        AudioMixer._mixers.set(name, mixer);
-
-        return mixer;
+        return AudioMixer._mixers[name];
     }
 
     private get node(): AudioNode {
@@ -90,7 +91,7 @@ export class AudioMixer implements Disposable {
     }
 
 
-    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => unknown): AudioEffect {
+    public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => unknown): T {
         const reconnect = this._effects.length === 0;
 
         if (reconnect) this.disconnect();
@@ -110,12 +111,12 @@ export class AudioMixer implements Disposable {
 
     /**
      * 
-     * @param effect AudioEffect instance or instance._id
+     * @param effect AudioEffect instance
      * 
      */
-    public removeEffect(effect: AudioEffect | number): void {
-        const id = typeof effect === 'number' ? effect : this._sources.findIndex(s => s.componentID === effect.id);
-        if (id === -1) return;
+    public removeEffect(effect: AudioEffect): void {
+        const i = this._effects.findIndex(s => s.id === effect.id);
+        if (i === -1) return;
 
         const reconnect = this._effects.length > 0;
 
@@ -123,7 +124,7 @@ export class AudioMixer implements Disposable {
 
         this.disconnectEffects();
 
-        this._sources.splice(id, 1);
+        this._effects.splice(i, 1);
 
         this.connectEffects();
 
@@ -178,16 +179,16 @@ export class AudioMixer implements Disposable {
 
     /**
      * 
-     * @param source AudioSource instance or instance.componentId
+     * @param source AudioSource instance 
      *
      */
-    public removeSource(source: AudioSource | number): void {
-        const id = typeof source === 'number' ? source : this._sources.findIndex(s => s.componentID === source.componentID);
-        if (id === -1) return;
+    public removeSource(source: AudioSource): void {
+        const i = this._sources.findIndex(s => s.componentID === source.componentID);
+        if (i === -1) return;
 
         this.disconnectSources();
 
-        this._sources.splice(id, 1);
+        this._sources.splice(i, 1);
 
         this.connectSources();
     }
@@ -201,13 +202,26 @@ export class AudioMixer implements Disposable {
     }
 
     public dispose(): void {
+        AudioMixer._mixers[this._name];
         this.disconnect();
         this.disconnectEffects();
         this.disconnectSources();
+
+        for (const e of [...this._effects]) {
+            this.removeEffect(e);
+        }
+
+        for (const s of [...this._sources]) {
+            this.removeSource(s);
+        }
+
+        for (const m of [...this._mixers]) {
+            this.removeChild(m);
+        }
     }
 
     public static reset(): void {
-        for (const mixer of this._mixers.values()) {
+        for (const mixer of Object.values(this._mixers)) {
             Dispose(mixer);
         }
     }

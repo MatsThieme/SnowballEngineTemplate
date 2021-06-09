@@ -1,7 +1,6 @@
 {
     "scripts": {
         "build": "node SEB --b",
-        "debugbuild": "node SEB --d",
         "createadb": "node SEB --c",
         "updateadb": "node SEB --u",
         "server": "node SEB --s",
@@ -30,7 +29,7 @@
     "dependencies": {
         "lodash.clonedeep": "^4.5.0",
         "matter-js": "^0.17.1",
-        "pixi.js": "^6.0.1",
+        "pixi.js": "^6.0.4",
         "poly-decomp": "^0.3.0"
     }
 }

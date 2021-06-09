@@ -18,6 +18,8 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     private _prevRotation: Angle;
     private _prevScale: Vector2;
 
+    private _globalTransform?: Transformable;
+
     private readonly engineModified: { position?: Vector2, rotation?: Angle, scale?: Vector2 };
 
     public readonly id: number;
@@ -80,18 +82,24 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     private onChange(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+        this._globalTransform = undefined;
+
         for (const child of this.children) {
             child.dispatchEvent('parentchange', transform, posDiff, rotDiff, scaleDiff)
         }
     }
 
     private onModified(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+        this._globalTransform = undefined;
+
         for (const child of this.children) {
             child.dispatchEvent('parentmodified', transform, posDiff, rotDiff, scaleDiff)
         }
     }
 
     private onModifiedInternal(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+        this._globalTransform = undefined;
+
         for (const child of this.children) {
             child.dispatchEvent('parentmodifiedinternal', transform, posDiff, rotDiff, scaleDiff)
         }
@@ -110,11 +118,14 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
 
     /**
      * 
-     * Returns a new Transformable object
+     * Returns a new Transformable object.
+     * If the Transform was not changed since the last toGlobal() call, a clone of the previous returned global Transform is returned.
      * 
      */
     public toGlobal(): Transformable {
-        return Transform.toGlobal(this);
+        if (!this._globalTransform) this._globalTransform = Transform.toGlobal(this);
+
+        return Transform.clone(this._globalTransform);
     }
 
     protected override earlyUpdate(): void {

@@ -1,16 +1,17 @@
 import { Scene } from 'SnowballEngine/Scene';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { InputEventTypes } from 'Utility/Events/EventTypes';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
 import { InputEvent } from '../../InputEvent';
-import { InputEventTarget } from '../../InputEventTarget';
 import { InputDevice } from '../InputDevice';
 import { InputDeviceType } from '../InputDeviceType';
 import { TouchAxis } from './TouchAxis';
 import { TouchButton } from './TouchButton';
 
 /** @category Input */
-export class Touch extends InputEventTarget implements InputDevice {
+export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
     private _positions: InputAxis[];
     private _button: InputButton;
     private _fireListener: boolean;
@@ -61,7 +62,7 @@ export class Touch extends InputEventTarget implements InputDevice {
 
         if (!this._fireListener) return;
 
-        for (const { cb, type } of this._listeners.values()) {
+        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
             const btn = <TouchButton | undefined>Input.inputMappingButtons.touch[type];
             const ax = <TouchAxis | undefined>Input.inputMappingAxes.touch[type];
 
@@ -77,8 +78,9 @@ export class Touch extends InputEventTarget implements InputDevice {
 
             if (!e.axis && !e.button) continue;
 
-            cb(e);
+            this.dispatchEvent(type, e);
         }
+
 
         this._fireListener = false;
     }
@@ -95,8 +97,7 @@ export class Touch extends InputEventTarget implements InputDevice {
         window.removeEventListener('touchmove', this._onTouchEvent);
     }
 
-    public override dispose(): void {
-        super.dispose();
+    public dispose(): void {
         this.removeListeners();
     }
 }

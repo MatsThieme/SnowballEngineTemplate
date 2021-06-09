@@ -19,8 +19,6 @@ export function ColliderTest(gameObject: GameObject): void {
         texture.asset = Shape.createCircle(Color.blue);
     });
 
-    gameObject.transform.rotation.degree = 10;
-
     // ---------------
 
     child.addComponent(RectangleCollider);

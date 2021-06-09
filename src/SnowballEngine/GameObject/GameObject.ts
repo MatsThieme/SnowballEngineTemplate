@@ -154,12 +154,18 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         if (component.type !== ComponentType.Transform &&
             component.type !== ComponentType.Rigidbody &&
             component.type !== ComponentType.AudioListener &&
-            component.type !== ComponentType.TileMap &&
+            component.type !== ComponentType.TilemapRenderer &&
+            component.type !== ComponentType.TilemapCollider &&
+            component.type !== ComponentType.TerrainRenderer &&
+            component.type !== ComponentType.TerrainCollider &&
             component.type !== ComponentType.ParallaxBackground ||
             component.type === ComponentType.Rigidbody && !GameObject.componentInTree(this, ComponentType.Rigidbody) && !GameObject.componentInParents(this, ComponentType.Collider) ||
             component.type === ComponentType.Transform && this.getComponents(ComponentType.Transform).length === 0 ||
             component.type === ComponentType.AudioListener && !this.scene.audioListener ||
-            component.type === ComponentType.TileMap && this.getComponents(ComponentType.TileMap).length === 0 ||
+            component.type === ComponentType.TilemapRenderer && this.getComponents(ComponentType.TilemapRenderer).length === 0 ||
+            component.type === ComponentType.TilemapCollider && this.getComponents(ComponentType.TilemapCollider).length === 0 ||
+            component.type === ComponentType.TerrainRenderer && this.getComponents(ComponentType.TerrainRenderer).length === 0 ||
+            component.type === ComponentType.TerrainCollider && this.getComponents(ComponentType.TerrainCollider).length === 0 ||
             component.type === ComponentType.ParallaxBackground && this.getComponents(ComponentType.ParallaxBackground).length === 0) {
 
             const components = this._components.get(component.type) || [];
@@ -229,8 +235,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         if (typeof type === 'number') {
             if (this._components.has(type)) return <T[]>this._components.get(type);
             if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat();
-            if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.Video)];
-            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TileMap), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
+            if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TilemapRenderer), ...this.getComponents(ComponentType.Video)];
+            if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TilemapCollider), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
 
             return [];
         }
@@ -253,8 +259,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
                     if (components[0]) return <T>components[0];
                 }
             }
-            if (type === ComponentType.Renderable) return this.getComponent(ComponentType.AnimatedSprite) || this.getComponent(ComponentType.ParallaxBackground) || this.getComponent(ComponentType.ParticleSystem) || this.getComponent(ComponentType.Texture) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.Video);
-            if (type === ComponentType.Collider) return this.getComponent(ComponentType.CircleCollider) || this.getComponent(ComponentType.PolygonCollider) || this.getComponent(ComponentType.TileMap) || this.getComponent(ComponentType.TerrainCollider) || this.getComponent(ComponentType.RectangleCollider);
+            if (type === ComponentType.Renderable) return this.getComponent(ComponentType.AnimatedSprite) || this.getComponent(ComponentType.ParallaxBackground) || this.getComponent(ComponentType.ParticleSystem) || this.getComponent(ComponentType.Texture) || this.getComponent(ComponentType.TilemapRenderer) || this.getComponent(ComponentType.Video);
+            if (type === ComponentType.Collider) return this.getComponent(ComponentType.CircleCollider) || this.getComponent(ComponentType.PolygonCollider) || this.getComponent(ComponentType.TilemapCollider) || this.getComponent(ComponentType.TerrainCollider) || this.getComponent(ComponentType.RectangleCollider);
 
             return undefined;
         }

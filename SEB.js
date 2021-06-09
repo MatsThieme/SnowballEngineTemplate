@@ -18,7 +18,6 @@ const assetDBpath = resolve('Assets/AssetDB.json');
 const port = 3000;
 
 
-
 const utility = {
     getProcessParameter: (name) => {
         return process.argv.slice(2).includes(name);
@@ -156,7 +155,6 @@ const utility = {
 };
 
 const _build = utility.getProcessParameter('-build') || utility.getProcessParameter('--b');
-const _debugbuild = utility.getProcessParameter('-debugbuild') || utility.getProcessParameter('--d');
 const _createADB = utility.getProcessParameter('-createADB') || utility.getProcessParameter('--c');
 const _updateADB = utility.getProcessParameter('-updateADB') || utility.getProcessParameter('--u');
 const _server = utility.getProcessParameter('-server') || utility.getProcessParameter('--s');
@@ -260,7 +258,8 @@ const cordova = {
         const config = await prepare.config();
         const sepm = resolve('../../');
 
-        if (!config.build && !config.build.platforms && !config.build.platforms.length) return console.log('no platforms specified');
+        if (!config.build || config.build && config.build.platforms === undefined) return;
+        if (config.build && !config.build.platforms.length) return console.log('no platforms specified');
         if (!await promisify(exists)(cordova._path)) return console.log('cordova directory does not exist');
         if (!await promisify(exists)(resolve(sepm, 'sepm.js'))) return console.log('sepm.js not found');
 
@@ -277,7 +276,7 @@ const cordova = {
 
         for (const platform of config.build.platforms) {
             console.log(`building for ${platform}`);
-            await promisify(exec)(`node sepm.js -n -p=${config.title} -b${_build ? ' -release' : ''} -platformadd=${platform}`, { cwd: sepm });
+            await promisify(exec)(`node sepm.js -n -p=${config.title} -b${config.build.debugMode ? '' : ' -release'} -platformadd=${platform}`, { cwd: sepm });
             console.log(`${platform} built`);
         }
     }
@@ -292,9 +291,8 @@ async function start() {
     const config = await prepare.config();
 
     if (_createADB) await createADB();
-    if (_updateADB || (_build || _debugbuild) && config.build.updateADB) await updateADB();
+    if (_updateADB || _build && config.build && config.build.updateADB) await updateADB();
     if (_build) await build(config);
-    if (_debugbuild) await debugbuild(config);
     if (_server) await server();
 }
 
@@ -313,45 +311,11 @@ async function build(config) {
 
     const webpackConfig = require('./webpack.config.js');
 
-    webpackConfig.mode = 'production';
-    webpackConfig.devtool = undefined;
+    webpackConfig.mode = config.build.debugMode ? 'development' : 'production';
+    webpackConfig.devtool = config.build.debugMode ? 'inline-source-map' : undefined;
     webpackConfig.plugins = [new HtmlWebpackPlugin({
         title: config.title,
         meta: { description: config.description },
-        template: './src/index.html',
-        inject: 'body'
-    })];
-
-    await new Promise(resolve => webpack(webpackConfig, (err, stats) => err || stats.hasErrors() ? console.log(err || stats.toString()) : resolve()));
-
-    console.log('build time:', (Date.now() - start) / 1000 + 's');
-    console.log('file size:', utility.bytesToString((await promisify(stat)(distpath + '/main.js')).size));
-
-    await cordova.build();
-}
-
-async function debugbuild(config) {
-    console.log('start build');
-    const start = Date.now();
-
-    await prepare.cleanup();
-
-    await utility.copyFolder(assetpath, distassetpath);
-
-    await promisify(unlink)(resolve(distassetpath, 'AssetDB.json'));
-    await promisify(unlink)(resolve(distassetpath, 'InputMappingButtons.json'));
-    await promisify(unlink)(resolve(distassetpath, 'InputMappingAxes.json'));
-
-
-    const webpackConfig = require('./webpack.config.js');
-
-    webpackConfig.mode = 'development';
-    webpackConfig.devtool = 'inline-source-map';
-    webpackConfig.plugins = [new HtmlWebpackPlugin({
-        title: config.title,
-        meta: {
-            description: config.description,
-        },
         template: './src/index.html',
         inject: 'body'
     })];

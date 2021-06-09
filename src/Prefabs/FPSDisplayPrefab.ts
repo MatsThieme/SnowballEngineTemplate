@@ -9,6 +9,6 @@ export function FPSDisplayPrefab(menu: UIMenu): void {
         text.alignH = AlignH.Right;
         text.position.x = 100;
         text.font = 'Default-Small';
-        text.background = Shape.createSprite('Rect', Color.green);
+        text.background = Shape.createSprite('Rect', Color.lime);
     });
 }

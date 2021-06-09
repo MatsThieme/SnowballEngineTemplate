@@ -1,17 +1,18 @@
 import projectConfig from 'Config';
 import { Scene } from 'SnowballEngine/Scene';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { InputEventTypes } from 'Utility/Events/EventTypes';
 import { Input } from '../../Input';
 import { InputAxis } from '../../InputAxis';
 import { InputButton } from '../../InputButton';
 import { InputEvent } from '../../InputEvent';
-import { InputEventTarget } from '../../InputEventTarget';
 import { InputDevice } from '../InputDevice';
 import { InputDeviceType } from '../InputDeviceType';
 import { MouseAxis } from './MouseAxis';
 import { MouseButton } from './MouseButton';
 
 /** @category Input */
-export class Mouse extends InputEventTarget implements InputDevice {
+export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
     /**
      * 
      * Pointer position on canvas.
@@ -93,7 +94,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
 
         if (!this._fireListener) return;
 
-        for (const { cb, type } of this._listeners.values()) {
+        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
             const btn = <MouseButton | undefined>Input.inputMappingButtons.mouse[type];
             const ax = <MouseAxis | undefined>Input.inputMappingAxes.mouse[type];
 
@@ -110,7 +111,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
 
             if (!e.axis && !e.button) continue;
 
-            cb(e);
+            this.dispatchEvent(type, e);
         }
 
         this._fireListener = false;
@@ -130,8 +131,7 @@ export class Mouse extends InputEventTarget implements InputDevice {
         window.removeEventListener('contextmenu', this._onContextMenu);
     }
 
-    public override dispose(): void {
-        super.dispose();
+    public dispose(): void {
         this.removeListeners();
     }
 }

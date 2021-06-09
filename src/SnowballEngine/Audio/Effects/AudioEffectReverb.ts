@@ -20,12 +20,18 @@ export class AudioEffectReverb extends AudioEffect {
         super(mixer);
 
         this._seconds = 3;
-        this._decay = 2;
+        this._decay = 50;
         this._reverse = false;
 
         this.rebuild();
     }
 
+    /**
+     * 
+     * Length of reverb in seconds from 1 to 50
+     * @default 3
+     * 
+     */
     public get seconds(): number {
         return this._seconds;
     }
@@ -34,6 +40,12 @@ export class AudioEffectReverb extends AudioEffect {
         this.rebuild();
     }
 
+    /**
+     * 
+     * Decay value from 0 to 100
+     * @default 50
+     * 
+     */
     public get decay(): number {
         return this._decay;
     }

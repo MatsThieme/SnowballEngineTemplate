@@ -1,7 +1,9 @@
+import { AudioListener } from 'GameObject/Components/AudioListener';
 import { Camera } from 'GameObject/Components/Camera';
 import { Component } from 'GameObject/Components/Component';
 import { Transform } from 'GameObject/Components/Transform/Transform';
 import { GameObject } from 'GameObject/GameObject';
+import { InputEvent } from 'Input/InputEvent';
 
 export type ComponentEventTypes = {
     awake: [],
@@ -12,7 +14,7 @@ export type ComponentEventTypes = {
     prerender: [camera: Camera],
     postrender: [camera: Camera],
     earlyupdate: [],
-    update: unknown[],
+    update: [],
     lateupdate: []
 };
 
@@ -29,7 +31,7 @@ export type BehaviourEventTypes = {
 
 export type AnimatedSpriteEventTypes = {} & RenderableEventTypes;
 export type AudioListenerEventTypes = {} & ComponentEventTypes;
-export type AudioSourceEventTypes = {} & ComponentEventTypes;
+export type AudioSourceEventTypes = { play: [], end: [], pause: [] } & ComponentEventTypes;
 export type CameraEventTypes = {} & ComponentEventTypes;
 export type ColliderEventTypes = {} & ComponentEventTypes;
 export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
@@ -37,7 +39,8 @@ export type ParticleSystemEventTypes = {} & RenderableEventTypes;
 export type RigidbodyEventTypes = {} & ComponentEventTypes;
 export type TextEventTypes = {} & ComponentEventTypes;
 export type TextureEventTypes = {} & RenderableEventTypes;
-export type TileMapEventTypes = {} & RenderableEventTypes;
+export type TerrainRendererEventTypes = {} & RenderableEventTypes;
+export type TilemapRendererEventTypes = {} & RenderableEventTypes;
 export type TransformEventTypes = {
     /** Triggered when position, rotation or scale were modified by the engine */
     modifiedinternal: [transform: Transform, positionDifference?: Readonly<IVector2>, rotationDifference?: Readonly<IAngle>, scaleDifference?: Readonly<IVector2>],
@@ -64,3 +67,22 @@ export type GameObjectEventTypes = {
     parentchanged: [newParent: GameObject | undefined]
 };
 
+
+export type SceneEventTypes = {
+    audiolisteneradd: [listener: AudioListener],
+    audiolistenerremove: [listener: AudioListener]
+};
+
+
+export type DisposableEventTypes = {
+    dispose: []
+};
+
+export type DestroyableEventTypes = {
+    destroy: [],
+    prepareDestroy: []
+} & DisposableEventTypes;
+
+export type InputEventTypes = {
+    [key in InputAction]: [event: InputEvent]
+};

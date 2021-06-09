@@ -3,14 +3,16 @@ import { Input } from 'SnowballEngine/Input/Input';
 import { InputAxis } from 'SnowballEngine/Input/InputAxis';
 import { InputButton } from 'SnowballEngine/Input/InputButton';
 import { InputEvent } from 'SnowballEngine/Input/InputEvent';
-import { InputEventTarget } from 'SnowballEngine/Input/InputEventTarget';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { EventTarget } from 'Utility/Events/EventTarget';
+import { InputEventTypes } from 'Utility/Events/EventTypes';
 import { InputDevice } from '../InputDevice';
 import { InputDeviceType } from '../InputDeviceType';
 import { GamepadAxis } from './GamepadAxis';
 import { GamepadButton } from './GamepadButton';
 
 /** @category Input */
-export class Gamepad extends InputEventTarget implements InputDevice {
+export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice {
     private static _gamepads: (Gamepad | undefined)[] = [];
 
     public readonly gamepad: globalThis.Gamepad;
@@ -88,7 +90,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
             this._buttons[i].update();
         }
 
-        for (const { cb, type } of this._listeners.values()) {
+        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
             const btn = <GamepadButton | undefined>Input.inputMappingButtons.gamepad[type];
             const ax = <GamepadAxis | undefined>Input.inputMappingAxes.gamepad[type];
 
@@ -104,7 +106,7 @@ export class Gamepad extends InputEventTarget implements InputDevice {
 
             if (!e.axis && !e.button) continue;
 
-            cb(e);
+            this.dispatchEvent(type, e);
         }
     }
 
@@ -174,20 +176,18 @@ export class Gamepad extends InputEventTarget implements InputDevice {
 
 
 
-    public static addListener(type: InputAction, cb: (e: InputEvent) => any, id: string): string {
+    public static addListener<U extends keyof InputEventTypes>(eventName: U, handler: EventHandler<InputEventTypes[U]>): void {
         for (const g of Gamepad._gamepads) {
             if (g) {
-                g.addListener(type, cb, id);
+                g.addListener(eventName, handler);
             }
         }
-
-        return id;
     }
 
-    public static removeListener(id: string): void {
+    public static removeListener<U extends keyof InputEventTypes>(eventName: U, handler: EventHandler<InputEventTypes[U]>): void {
         for (const g of Gamepad._gamepads) {
             if (g) {
-                g.removeListener(id);
+                g.removeListener(eventName, handler);
             }
         }
     }

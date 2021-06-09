@@ -45,7 +45,7 @@ export class Shape {
      * Fill only
      *  
      */
-    public static createCheckmark(color: Color = Color.orange, size: Vector2 = new Vector2(100, 100), lineWidth = 2, fill: false): Asset {
+    public static createCheckmark(color: Color = Color.orange, size: Vector2 = new Vector2(100, 100), lineWidth = 2, fill = false): Asset {
         return Shape.createSprite(context => {
 
             context.beginPath();
