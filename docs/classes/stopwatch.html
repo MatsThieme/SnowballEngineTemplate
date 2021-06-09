@@ -73,6 +73,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/destroyable.html" class="tsd-signature-type" data-tsd-kind="Interface">Destroyable</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -83,18 +89,19 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="stopwatch.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="stopwatch.html#_start" class="tsd-kind-icon">_start</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="stopwatch.html#_stop" class="tsd-kind-icon">_stop</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="stopwatch.html#_id" class="tsd-kind-icon">_id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="stopwatch.html#_running" class="tsd-kind-icon">_running</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="stopwatch.html#milliseconds" class="tsd-kind-icon">milliseconds</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="stopwatch.html#_nextid" class="tsd-kind-icon">_nextID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="stopwatch.html#stopwatches" class="tsd-kind-icon">stopwatches</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-private"><a href="stopwatch.html#_now" class="tsd-kind-icon">_now</a></li>
-								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="stopwatch.html#milliseconds" class="tsd-kind-icon">milliseconds</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="stopwatch.html#running" class="tsd-kind-icon">running</a></li>
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="stopwatch.html#seconds" class="tsd-kind-icon">seconds</a></li>
 							</ul>
@@ -102,9 +109,13 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="stopwatch.html#destroy" class="tsd-kind-icon">destroy</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="stopwatch.html#reset" class="tsd-kind-icon">reset</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="stopwatch.html#start" class="tsd-kind-icon">start</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="stopwatch.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="stopwatch.html#update" class="tsd-kind-icon">update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="stopwatch.html#reset-1" class="tsd-kind-icon">reset</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="stopwatch.html#update-1" class="tsd-kind-icon">update</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,9 +133,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L6">src/SnowballEngine/Utilities/Stopwatch.ts:6</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L11">src/SnowballEngine/Utilities/Stopwatch.ts:11</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>A Stopwatch utility using GameTime.deltaTime</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -136,80 +152,61 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_start" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> _start</h3>
-					<div class="tsd-signature tsd-kind-icon">_start<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="_id" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _id</h3>
+					<div class="tsd-signature tsd-kind-icon">_id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L5">src/SnowballEngine/Utilities/Stopwatch.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L11">src/SnowballEngine/Utilities/Stopwatch.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_stop" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> _stop</h3>
-					<div class="tsd-signature tsd-kind-icon">_stop<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="_running" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _running</h3>
+					<div class="tsd-signature tsd-kind-icon">_running<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L6">src/SnowballEngine/Utilities/Stopwatch.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L10">src/SnowballEngine/Utilities/Stopwatch.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="milliseconds" class="tsd-anchor"></a>
+					<h3>milliseconds</h3>
+					<div class="tsd-signature tsd-kind-icon">milliseconds<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L9">src/SnowballEngine/Utilities/Stopwatch.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+					<a name="_nextid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> _nextID</h3>
+					<div class="tsd-signature tsd-kind-icon">_nextID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L7">src/SnowballEngine/Utilities/Stopwatch.ts:7</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="stopwatches" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> stopwatches</h3>
+					<div class="tsd-signature tsd-kind-icon">stopwatches<span class="tsd-signature-symbol">:</span> <a href="stopwatch.html" class="tsd-signature-type" data-tsd-kind="Class">Stopwatch</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L6">src/SnowballEngine/Utilities/Stopwatch.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Accessors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-private">
-					<a name="_now" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _now</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> _now<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L12">src/SnowballEngine/Utilities/Stopwatch.ts:12</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
-					<a name="milliseconds" class="tsd-anchor"></a>
-					<h3>milliseconds</h3>
-					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> milliseconds<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> milliseconds<span class="tsd-signature-symbol">(</span>val<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L18">src/SnowballEngine/Utilities/Stopwatch.ts:18</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L25">src/SnowballEngine/Utilities/Stopwatch.ts:25</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>val: <span class="tsd-signature-type">number</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
 					<a name="running" class="tsd-anchor"></a>
 					<h3>running</h3>
@@ -220,7 +217,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L39">src/SnowballEngine/Utilities/Stopwatch.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L35">src/SnowballEngine/Utilities/Stopwatch.ts:35</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -238,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L32">src/SnowballEngine/Utilities/Stopwatch.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L28">src/SnowballEngine/Utilities/Stopwatch.ts:28</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -246,7 +243,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L35">src/SnowballEngine/Utilities/Stopwatch.ts:35</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L31">src/SnowballEngine/Utilities/Stopwatch.ts:31</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -263,6 +260,24 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="destroy" class="tsd-anchor"></a>
+					<h3>destroy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of Destroyable.destroy</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L61">src/SnowballEngine/Utilities/Stopwatch.ts:61</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="reset" class="tsd-anchor"></a>
 					<h3>reset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -272,7 +287,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L54">src/SnowballEngine/Utilities/Stopwatch.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L47">src/SnowballEngine/Utilities/Stopwatch.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -289,7 +304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L43">src/SnowballEngine/Utilities/Stopwatch.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L39">src/SnowballEngine/Utilities/Stopwatch.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -306,7 +321,58 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Stopwatch.ts#L50">src/SnowballEngine/Utilities/Stopwatch.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L43">src/SnowballEngine/Utilities/Stopwatch.ts:43</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L51">src/SnowballEngine/Utilities/Stopwatch.ts:51</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="reset-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> reset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L65">src/SnowballEngine/Utilities/Stopwatch.ts:65</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="update-1" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Stopwatch.ts#L55">src/SnowballEngine/Utilities/Stopwatch.ts:55</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -334,22 +400,28 @@
 								<a href="stopwatch.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="stopwatch.html#_start" class="tsd-kind-icon">_start</a>
+								<a href="stopwatch.html#_id" class="tsd-kind-icon">_id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="stopwatch.html#_stop" class="tsd-kind-icon">_stop</a>
+								<a href="stopwatch.html#_running" class="tsd-kind-icon">_running</a>
 							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-private">
-								<a href="stopwatch.html#_now" class="tsd-kind-icon">_now</a>
-							</li>
-							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="stopwatch.html#milliseconds" class="tsd-kind-icon">milliseconds</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+								<a href="stopwatch.html#_nextid" class="tsd-kind-icon">_nextID</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="stopwatch.html#stopwatches" class="tsd-kind-icon">stopwatches</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="stopwatch.html#running" class="tsd-kind-icon">running</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="stopwatch.html#seconds" class="tsd-kind-icon">seconds</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="stopwatch.html#destroy" class="tsd-kind-icon">destroy</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="stopwatch.html#reset" class="tsd-kind-icon">reset</a>
@@ -359,6 +431,15 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="stopwatch.html#stop" class="tsd-kind-icon">stop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="stopwatch.html#update" class="tsd-kind-icon">update</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="stopwatch.html#reset-1" class="tsd-kind-icon">reset</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="stopwatch.html#update-1" class="tsd-kind-icon">update</a>
 							</li>
 						</ul>
 					</li>

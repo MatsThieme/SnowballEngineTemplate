@@ -87,6 +87,13 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="uifonts.html#_fonts" class="tsd-kind-icon">_fonts</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="uifonts.html#lastinnerheight" class="tsd-kind-icon">last<wbr>Inner<wbr>Height</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="uifonts.html#bytesused" class="tsd-kind-icon">bytes<wbr>Used</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -126,12 +133,42 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 					<a name="_fonts" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _fonts</h3>
-					<div class="tsd-signature tsd-kind-icon">_fonts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">UIFont</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapFont</span><span class="tsd-signature-symbol">; </span>style<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapTextStyle</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">_fonts<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">UIFont</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span>bytes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>font<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapFont</span><span class="tsd-signature-symbol">; </span>style<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapTextStyle</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L8">src/SnowballEngine/UI/UIFonts.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L8">src/SnowballEngine/UI/UIFonts.ts:8</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+					<a name="lastinnerheight" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> last<wbr>Inner<wbr>Height</h3>
+					<div class="tsd-signature tsd-kind-icon">last<wbr>Inner<wbr>Height<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L9">src/SnowballEngine/UI/UIFonts.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+					<a name="bytesused" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> bytes<wbr>Used</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> bytesUsed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L37">src/SnowballEngine/UI/UIFonts.ts:37</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -140,13 +177,13 @@
 					<a name="add" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> add</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">UIFont</span>, style<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapTextStyle</span>, chars<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">UIFont</span>, style<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">BitmapTextStyle</span>, chars<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L34">src/SnowballEngine/UI/UIFonts.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L47">src/SnowballEngine/UI/UIFonts.ts:47</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -158,7 +195,7 @@
 									<h5>style: <span class="tsd-signature-type">BitmapTextStyle</span></h5>
 								</li>
 								<li>
-									<h5>chars: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>chars: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &#x27;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:-/\\&amp;%$&quot;!.,() &#x27;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -175,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L66">src/SnowballEngine/UI/UIFonts.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L96">src/SnowballEngine/UI/UIFonts.ts:96</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -198,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L70">src/SnowballEngine/UI/UIFonts.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L100">src/SnowballEngine/UI/UIFonts.ts:100</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -221,7 +258,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L10">src/SnowballEngine/UI/UIFonts.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L11">src/SnowballEngine/UI/UIFonts.ts:11</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -238,7 +275,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L52">src/SnowballEngine/UI/UIFonts.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L82">src/SnowballEngine/UI/UIFonts.ts:82</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -264,7 +301,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L44">src/SnowballEngine/UI/UIFonts.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L74">src/SnowballEngine/UI/UIFonts.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -287,7 +324,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/UI/UIFonts.ts#L60">src/SnowballEngine/UI/UIFonts.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/UI/UIFonts.ts#L90">src/SnowballEngine/UI/UIFonts.ts:90</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -316,6 +353,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
 								<a href="uifonts.html#_fonts" class="tsd-kind-icon">_fonts</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
+								<a href="uifonts.html#lastinnerheight" class="tsd-kind-icon">last<wbr>Inner<wbr>Height</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
+								<a href="uifonts.html#bytesused" class="tsd-kind-icon">bytes<wbr>Used</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="uifonts.html#add" class="tsd-kind-icon">add</a>

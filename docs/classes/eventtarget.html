@@ -82,6 +82,24 @@
 							<li>
 								<a href="component.html" class="tsd-signature-type" data-tsd-kind="Class">Component</a>
 							</li>
+							<li>
+								<a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a>
+							</li>
+							<li>
+								<a href="gamepad.html" class="tsd-signature-type" data-tsd-kind="Class">Gamepad</a>
+							</li>
+							<li>
+								<a href="keyboard.html" class="tsd-signature-type" data-tsd-kind="Class">Keyboard</a>
+							</li>
+							<li>
+								<a href="mouse.html" class="tsd-signature-type" data-tsd-kind="Class">Mouse</a>
+							</li>
+							<li>
+								<a href="touch.html" class="tsd-signature-type" data-tsd-kind="Class">Touch</a>
+							</li>
+							<li>
+								<a href="scene.html" class="tsd-signature-type" data-tsd-kind="Class">Scene</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -107,6 +125,8 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="eventtarget.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="eventtarget.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="eventtarget.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="eventtarget.html#getevents" class="tsd-kind-icon">get<wbr>Events</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="eventtarget.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 							</ul>
 						</section>
@@ -125,7 +145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Events/EventTarget.ts#L5">src/SnowballEngine/Utilities/Events/EventTarget.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L6">src/SnowballEngine/Utilities/Events/EventTarget.ts:6</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -144,10 +164,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_events" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _events</h3>
-					<div class="tsd-signature tsd-kind-icon">_events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> }</span></div>
+					<div class="tsd-signature tsd-kind-icon">_events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Events/EventTarget.ts#L5">src/SnowballEngine/Utilities/Events/EventTarget.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L6">src/SnowballEngine/Utilities/Events/EventTarget.ts:6</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -164,7 +184,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Events/EventTarget.ts#L11">src/SnowballEngine/Utilities/Events/EventTarget.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L12">src/SnowballEngine/Utilities/Events/EventTarget.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -190,13 +210,13 @@
 					<a name="dispatchevent" class="tsd-anchor"></a>
 					<h3>dispatch<wbr>Event</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Event&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Event&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Events/EventTarget.ts#L20">src/SnowballEngine/Utilities/Events/EventTarget.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L24">src/SnowballEngine/Utilities/Events/EventTarget.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -214,7 +234,59 @@
 									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="geteventpromise" class="tsd-anchor"></a>
+					<h3>get<wbr>Event<wbr>Promise</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Event<wbr>Promise&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L34">src/SnowballEngine/Utilities/Events/EventTarget.ts:34</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a promise wrapper for an eventhandler.
+									Returns a promise which will resolve when the event is dispatched.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getevents" class="tsd-anchor"></a>
+					<h3>get<wbr>Events</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Events<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L45">src/SnowballEngine/Utilities/Events/EventTarget.ts:45</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> }</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -228,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Utilities/Events/EventTarget.ts#L16">src/SnowballEngine/Utilities/Events/EventTarget.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L17">src/SnowballEngine/Utilities/Events/EventTarget.ts:17</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -278,6 +350,12 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="eventtarget.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="eventtarget.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="eventtarget.html#getevents" class="tsd-kind-icon">get<wbr>Events</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="eventtarget.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>

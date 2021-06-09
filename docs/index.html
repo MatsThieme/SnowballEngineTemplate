@@ -58,16 +58,17 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#status" id="status" style="color: inherit; text-decoration: none;">
-					<h2>Status:</h2>
-				</a>
-				<p>Matter.js not yet integrated</p>
-				<p><a href="https://matsthieme.github.io/SnowballEngineTemplate">Documentation</a></p>
 				<a href="#snowballengine" id="snowballengine" style="color: inherit; text-decoration: none;">
 					<h1>SnowballEngine</h1>
 				</a>
-				<p><strong>SnowballEngine is a 2D TypeScript game engine.</strong>
-				SnowballEngine manages scenes, game assets, simulates physics, renders assets and provides an easy to understand structure similar to Unity. It integrates <a href="https://github.com/pixijs/pixi.js">pixi.js</a> for fast rendering and <a href="https://github.com/liabru/matter-js">matter-js</a> for accurate and performant physics simulation, including collision detection and resolution.</p>
+				<p>SnowballEngine is a resolution independent 2D TypeScript game engine.
+				SnowballEngine manages scenes, game assets, simulates physics, renders assets and provides an easy to understand structure similar to Unity. It integrates <a href="https://github.com/pixijs/pixi.js">pixi.js</a> for fast rendering and <a href="https://github.com/liabru/matter-js">matter-js</a> for accurate and performant physics simulation.</p>
+				<p><a href="https://matsthieme.github.io/SnowballEngineTemplate">Documentation</a></p>
+				<a href="#example-games" id="example-games" style="color: inherit; text-decoration: none;">
+					<h3>Example games:</h3>
+				</a>
+				<p><a href="https://github.com/MatsThieme/Tetrong">Tetrong</a></p>
+				<br>
 				<a href="#setup" id="setup" style="color: inherit; text-decoration: none;">
 					<h3>setup</h3>
 				</a>
@@ -76,32 +77,18 @@
 					<h3>build</h3>
 				</a>
 				<pre>npm run build</pre>
-				<pre>node SEB --b</pre>
-				<pre>node SEB -build</pre>
-				<a href="#debug-build" id="debug-build" style="color: inherit; text-decoration: none;">
-					<h3>debug build</h3>
-				</a>
-				<pre>npm run debugbuild</pre>
-				<pre>node SEB --d</pre>
-				<pre>node SEB -debugbuild</pre>
 				<a href="#generate-assetdbjson" id="generate-assetdbjson" style="color: inherit; text-decoration: none;">
 					<h3>generate AssetDB.json</h3>
 				</a>
 				<pre>npm run createadb</pre>
-				<pre>node SEB --c</pre>
-				<pre>node SEB -createADB</pre>
 				<a href="#update-assetdbjson" id="update-assetdbjson" style="color: inherit; text-decoration: none;">
 					<h3>update AssetDB.json</h3>
 				</a>
 				<pre>npm run updateadb</pre>
-				<pre>node SEB --u</pre>
-				<pre>node SEB -updateADB</pre>
 				<a href="#start-debug-server" id="start-debug-server" style="color: inherit; text-decoration: none;">
 					<h3>start debug server</h3>
 				</a>
 				<pre>npm run server</pre>
-				<pre>npm SEB --s</pre>
-				<pre>npm SEB -server</pre>
 				<a href="#generate-documentation" id="generate-documentation" style="color: inherit; text-decoration: none;">
 					<h3>generate documentation</h3>
 				</a>
@@ -131,24 +118,23 @@ dist/
 				<a href="#configurables" id="configurables" style="color: inherit; text-decoration: none;">
 					<h4>Configurables</h4>
 				</a>
-				<p>Configurables contains typedefinition files (.d.ts) the user will edit during the development process.<br>e.g. InputAction.d.ts for input mapping</p>
+				<p>Contains typedefinition files (.d.ts) the user may edit during the development process, e.g. InputAction.d.ts for input mapping</p>
 				<a href="#prefabs" id="prefabs" style="color: inherit; text-decoration: none;">
 					<h4>Prefabs</h4>
 				</a>
-				<p>Prefabs contains files that export a function to initialize a GameObject.</p>
+				<p>Contains files that export a function to initialize a GameObject.</p>
 				<a href="#scenes" id="scenes" style="color: inherit; text-decoration: none;">
 					<h4>Scenes</h4>
 				</a>
-				<p>Scenes contains files that export a function to initialize a Scene.</p>
+				<p>Contains files that export a function to initialize a Scene.</p>
 				<a href="#snowballengine-1" id="snowballengine-1" style="color: inherit; text-decoration: none;">
 					<h4>SnowballEngine</h4>
 				</a>
-				<p>SnowballEngine contains all the GameEngine files.</p>
+				<p>Contains all the GameEngine files.</p>
 				<a href="#gamets" id="gamets" style="color: inherit; text-decoration: none;">
 					<h4>Game.ts</h4>
 				</a>
-				<p>Your entry point.
-				It may look like this:</p>
+				<p>Game.ts is the entry point, it may look like this:</p>
 				<pre><code class="language-typescript"><span style="color: #D73A49">import</span><span style="color: #24292E"> { LoadingScreenScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/LoadingScreenScene&#039;</span><span style="color: #24292E">;</span>
 <span style="color: #D73A49">import</span><span style="color: #24292E"> { MainScene } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;Scenes/MainScene&#039;</span><span style="color: #24292E">;</span>
 <span style="color: #D73A49">import</span><span style="color: #24292E"> { Assets, SceneManager } </span><span style="color: #D73A49">from</span><span style="color: #24292E"> </span><span style="color: #032F62">&#039;SE&#039;</span><span style="color: #24292E">;</span>
@@ -177,7 +163,7 @@ dist/
 				<a href="#scene" id="scene" style="color: inherit; text-decoration: none;">
 					<h3>Scene</h3>
 				</a>
-				<p>A Scene manages GameObjects and the user interface. It contains the gameloop.</p>
+				<p>A Scene manages GameObjects and the graphical user interface. It contains the gameloop.</p>
 				<a href="#gameobject" id="gameobject" style="color: inherit; text-decoration: none;">
 					<h3>GameObject</h3>
 				</a>
@@ -201,8 +187,8 @@ SceneManager
 				<a href="#components" id="components" style="color: inherit; text-decoration: none;">
 					<h2>Components</h2>
 				</a>
-				<a href="#animatedsprite-extends-renderable" id="animatedsprite-extends-renderable" style="color: inherit; text-decoration: none;">
-					<h3>AnimatedSprite extends Renderable</h3>
+				<a href="#animatedsprite" id="animatedsprite" style="color: inherit; text-decoration: none;">
+					<h3>AnimatedSprite</h3>
 				</a>
 				<p>Manages SpriteAnimation objects to render and switch sprite animations.
 					</br>
@@ -211,7 +197,7 @@ SceneManager
 					<h3>AudioListener</h3>
 				</a>
 				<p>Can exist once per scene, it&#39;s the &quot;ears&quot; of the player.
-					It&#39;s the audio counterpart of Camera.
+					It&#39;s the audio equivalent of Camera.
 					</br>
 				</br></p>
 				<a href="#audiosource" id="audiosource" style="color: inherit; text-decoration: none;">
@@ -278,9 +264,8 @@ SceneManager
 				<a href="#transform" id="transform" style="color: inherit; text-decoration: none;">
 					<h3>Transform</h3>
 				</a>
-				<p>The Transform Component is by default added to every GameObject on creation, only one Transform is allowed per GameObject.
-					A Transform Component stores position, rotation and scale of their GameObject.
-					A child-GameObjects Transform is relative to their parents.
+				<p>The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject.
+					A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children.
 					</br>
 				</br></p>
 				<a href="#video" id="video" style="color: inherit; text-decoration: none;">
@@ -324,6 +309,13 @@ SceneManager
 <span style="color: #24292E">    </span><span style="color: #E36209">touch</span><span style="color: #D73A49">:</span><span style="color: #24292E"> { [</span><span style="color: #6F42C1">key</span><span style="color: #24292E"> </span><span style="color: #D73A49">in</span><span style="color: #24292E"> </span><span style="color: #6F42C1">InputAction</span><span style="color: #24292E">]</span><span style="color: #D73A49">?:</span><span style="color: #24292E"> </span><span style="color: #6F42C1">TouchButton</span><span style="color: #24292E"> </span><span style="color: #D73A49">|</span><span style="color: #24292E"> </span><span style="color: #6F42C1">TouchAxis</span><span style="color: #24292E"> }</span>
 <span style="color: #24292E">}</span>
 </code></pre>
+				<a href="#units" id="units" style="color: inherit; text-decoration: none;">
+					<h3>Units</h3>
+				</a>
+				<a href="#angles" id="angles" style="color: inherit; text-decoration: none;">
+					<h4>Angles</h4>
+				</a>
+				<p>All angles are clockwise. To allow and simplify the mixed use of radian and degree, <a href="src/SnowballEngine/Utilities/Angle.ts">Angle</a> objects are used.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -433,7 +425,13 @@ SceneManager
 						<a href="classes/canvas.html" class="tsd-kind-icon">Canvas</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/circlecollider.html" class="tsd-kind-icon">Circle<wbr>Collider</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/client.html" class="tsd-kind-icon">Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/collider.html" class="tsd-kind-icon">Collider</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/color.html" class="tsd-kind-icon">Color</a>
@@ -472,12 +470,6 @@ SceneManager
 						<a href="classes/inputbutton.html" class="tsd-kind-icon">Input<wbr>Button</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/inputeventtarget.html" class="tsd-kind-icon">Input<wbr>Event<wbr>Target</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/inputmapping.html" class="tsd-kind-icon">Input<wbr>Mapping</a>
-					</li>
-					<li class=" tsd-kind-class">
 						<a href="classes/interval.html" class="tsd-kind-icon">Interval</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -498,8 +490,20 @@ SceneManager
 					<li class=" tsd-kind-class">
 						<a href="classes/particlesystem.html" class="tsd-kind-icon">Particle<wbr>System</a>
 					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/physics.html" class="tsd-kind-icon">Physics</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/polygoncollider.html" class="tsd-kind-icon">Polygon<wbr>Collider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rectanglecollider.html" class="tsd-kind-icon">Rectangle<wbr>Collider</a>
+					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/renderable.html" class="tsd-kind-icon">Renderable</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rigidbody.html" class="tsd-kind-icon">Rigidbody</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/scene.html" class="tsd-kind-icon">Scene</a>
@@ -517,13 +521,22 @@ SceneManager
 						<a href="classes/stopwatch.html" class="tsd-kind-icon">Stopwatch</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/terraincollider.html" class="tsd-kind-icon">Terrain<wbr>Collider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/terrainrenderer.html" class="tsd-kind-icon">Terrain<wbr>Renderer</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/text.html" class="tsd-kind-icon">Text</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/texture.html" class="tsd-kind-icon">Texture</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/tilemap.html" class="tsd-kind-icon">Tile<wbr>Map</a>
+						<a href="classes/tilemapcollider.html" class="tsd-kind-icon">Tilemap<wbr>Collider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/tilemaprenderer.html" class="tsd-kind-icon">Tilemap<wbr>Renderer</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="classes/timeout.html" class="tsd-kind-icon">Timeout</a>
@@ -590,6 +603,9 @@ SceneManager
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/inputevent.html" class="tsd-kind-icon">Input<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/inputmapping.html" class="tsd-kind-icon">Input<wbr>Mapping</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#eventtype" class="tsd-kind-icon">Event<wbr>Type</a>

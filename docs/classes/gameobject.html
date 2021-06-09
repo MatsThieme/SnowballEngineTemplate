@@ -76,7 +76,15 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">GameObject</span>
+						<a href="eventtarget.html" class="tsd-signature-type" data-tsd-kind="Class">EventTarget</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">&gt;</span>
+					</li>
+					<li>
+						<a href="../interfaces/destroyable.html" class="tsd-signature-type" data-tsd-kind="Interface">Destroyable</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">GameObject</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -93,7 +101,7 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="gameobject.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="gameobject.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -101,6 +109,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#_active" class="tsd-kind-icon">_active</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#_components" class="tsd-kind-icon">_components</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#_initialized" class="tsd-kind-icon">_initialized</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#_parent" class="tsd-kind-icon">_parent</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gameobject.html#children" class="tsd-kind-icon">children</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="gameobject.html#container" class="tsd-kind-icon">container</a></li>
@@ -126,23 +135,26 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameobject.html#addchild" class="tsd-kind-icon">add<wbr>Child</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#addcomponent" class="tsd-kind-icon">add<wbr>Component</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="gameobject.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#connectcamera" class="tsd-kind-icon">connect<wbr>Camera</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#disconnectcamera" class="tsd-kind-icon">disconnect<wbr>Camera</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="gameobject.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#getcomponent" class="tsd-kind-icon">get<wbr>Component</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#getcomponentinchildren" class="tsd-kind-icon">get<wbr>Component<wbr>InChildren</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#getcomponents" class="tsd-kind-icon">get<wbr>Components</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#getcomponentsinchildren" class="tsd-kind-icon">get<wbr>Components<wbr>InChildren</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameobject.html#preparedestroy" class="tsd-kind-icon">prepare<wbr>Destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="gameobject.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="gameobject.html#getevents" class="tsd-kind-icon">get<wbr>Events</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#getmaxdestroyinframes" class="tsd-kind-icon">get<wbr>Max<wbr>Destroy<wbr>InFrames</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameobject.html#removechild" class="tsd-kind-icon">remove<wbr>Child</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="gameobject.html#removecomponent" class="tsd-kind-icon">remove<wbr>Component</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="gameobject.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="gameobject.html#setparent" class="tsd-kind-icon">set<wbr>Parent</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameobject.html#update" class="tsd-kind-icon">update</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#destroy" class="tsd-kind-icon">destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="gameobject.html#start" class="tsd-kind-icon">start</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#find" class="tsd-kind-icon">find</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#init" class="tsd-kind-icon">init</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#preparedestroy-1" class="tsd-kind-icon">prepare<wbr>Destroy</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#update-1" class="tsd-kind-icon">update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#preparedestroy" class="tsd-kind-icon">prepare<wbr>Destroy</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="gameobject.html#reset" class="tsd-kind-icon">reset</a></li>
 							</ul>
 						</section>
 					</div>
@@ -150,23 +162,27 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Game<wbr>Object<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a></li>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Game<wbr>Object<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, initialized<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<p>Overrides <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L40">src/SnowballEngine/GameObject/GameObject.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L44">src/SnowballEngine/GameObject/GameObject.ts:44</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>initialized: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a></h4>
@@ -182,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">_active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L34">src/SnowballEngine/GameObject/GameObject.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L36">src/SnowballEngine/GameObject/GameObject.ts:36</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +208,17 @@
 					<div class="tsd-signature tsd-kind-icon">_components<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/componenttype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ComponentType</a><span class="tsd-signature-symbol">, </span><a href="component.html" class="tsd-signature-type" data-tsd-kind="Class">Component</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ComponentEventTypes</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L33">src/SnowballEngine/GameObject/GameObject.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L35">src/SnowballEngine/GameObject/GameObject.ts:35</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_initialized" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _initialized</h3>
+					<div class="tsd-signature tsd-kind-icon">_initialized<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L44">src/SnowballEngine/GameObject/GameObject.ts:44</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -202,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">_parent<span class="tsd-signature-symbol">:</span> <a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L35">src/SnowballEngine/GameObject/GameObject.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L37">src/SnowballEngine/GameObject/GameObject.ts:37</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -212,7 +238,7 @@
 					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L26">src/SnowballEngine/GameObject/GameObject.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L28">src/SnowballEngine/GameObject/GameObject.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -222,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L37">src/SnowballEngine/GameObject/GameObject.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L39">src/SnowballEngine/GameObject/GameObject.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -232,7 +258,7 @@
 					<div class="tsd-signature tsd-kind-icon">draw<wbr>Priority<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L30">src/SnowballEngine/GameObject/GameObject.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L32">src/SnowballEngine/GameObject/GameObject.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -242,7 +268,7 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L23">src/SnowballEngine/GameObject/GameObject.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L25">src/SnowballEngine/GameObject/GameObject.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -252,7 +278,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L24">src/SnowballEngine/GameObject/GameObject.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L26">src/SnowballEngine/GameObject/GameObject.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -262,7 +288,7 @@
 					<div class="tsd-signature tsd-kind-icon">scene<span class="tsd-signature-symbol">:</span> <a href="scene.html" class="tsd-signature-type" data-tsd-kind="Class">Scene</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L28">src/SnowballEngine/GameObject/GameObject.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L30">src/SnowballEngine/GameObject/GameObject.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -272,7 +298,7 @@
 					<div class="tsd-signature tsd-kind-icon">transform<span class="tsd-signature-symbol">:</span> <a href="transform.html" class="tsd-signature-type" data-tsd-kind="Class">Transform</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L40">src/SnowballEngine/GameObject/GameObject.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L41">src/SnowballEngine/GameObject/GameObject.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -282,7 +308,7 @@
 					<div class="tsd-signature tsd-kind-icon">_nextID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L19">src/SnowballEngine/GameObject/GameObject.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L21">src/SnowballEngine/GameObject/GameObject.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -292,7 +318,7 @@
 					<div class="tsd-signature tsd-kind-icon">game<wbr>Objects<span class="tsd-signature-symbol">:</span> <a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L21">src/SnowballEngine/GameObject/GameObject.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L23">src/SnowballEngine/GameObject/GameObject.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -310,7 +336,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L72">src/SnowballEngine/GameObject/GameObject.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L95">src/SnowballEngine/GameObject/GameObject.ts:95</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -318,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L76">src/SnowballEngine/GameObject/GameObject.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L99">src/SnowballEngine/GameObject/GameObject.ts:99</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -341,7 +367,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L90">src/SnowballEngine/GameObject/GameObject.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L113">src/SnowballEngine/GameObject/GameObject.ts:113</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a></h4>
@@ -359,7 +385,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L82">src/SnowballEngine/GameObject/GameObject.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L105">src/SnowballEngine/GameObject/GameObject.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -367,7 +393,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L85">src/SnowballEngine/GameObject/GameObject.ts:85</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L108">src/SnowballEngine/GameObject/GameObject.ts:108</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -393,7 +419,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L254">src/SnowballEngine/GameObject/GameObject.ts:254</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L304">src/SnowballEngine/GameObject/GameObject.ts:304</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L113">src/SnowballEngine/GameObject/GameObject.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L151">src/SnowballEngine/GameObject/GameObject.ts:151</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -447,6 +473,39 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="addlistener" class="tsd-anchor"></a>
+					<h3>add<wbr>Listener</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#addlistener">addListener</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L12">src/SnowballEngine/Utilities/Events/EventTarget.ts:12</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">GameObjectEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="connectcamera" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> connect<wbr>Camera</h3>
@@ -457,7 +516,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L95">src/SnowballEngine/GameObject/GameObject.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L117">src/SnowballEngine/GameObject/GameObject.ts:117</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -474,10 +533,43 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L102">src/SnowballEngine/GameObject/GameObject.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L124">src/SnowballEngine/GameObject/GameObject.ts:124</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="dispatchevent" class="tsd-anchor"></a>
+					<h3>dispatch<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Event&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#dispatchevent">dispatchEvent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L24">src/SnowballEngine/Utilities/Events/EventTarget.ts:24</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">GameObjectEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -491,7 +583,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L208">src/SnowballEngine/GameObject/GameObject.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L254">src/SnowballEngine/GameObject/GameObject.ts:254</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -525,7 +617,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L240">src/SnowballEngine/GameObject/GameObject.ts:240</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L290">src/SnowballEngine/GameObject/GameObject.ts:290</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -559,7 +651,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L188">src/SnowballEngine/GameObject/GameObject.ts:188</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L234">src/SnowballEngine/GameObject/GameObject.ts:234</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -593,7 +685,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L231">src/SnowballEngine/GameObject/GameObject.ts:231</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L281">src/SnowballEngine/GameObject/GameObject.ts:281</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -617,21 +709,125 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="preparedestroy" class="tsd-anchor"></a>
-					<h3>prepare<wbr>Destroy</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">prepare<wbr>Destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="geteventpromise" class="tsd-anchor"></a>
+					<h3>get<wbr>Event<wbr>Promise</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Event<wbr>Promise&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of Destroyable.prepareDestroy</p>
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#geteventpromise">getEventPromise</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L322">src/SnowballEngine/GameObject/GameObject.ts:322</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L34">src/SnowballEngine/Utilities/Events/EventTarget.ts:34</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a promise wrapper for an eventhandler.
+									Returns a promise which will resolve when the event is dispatched.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">GameObjectEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="getevents" class="tsd-anchor"></a>
+					<h3>get<wbr>Events</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Events<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>childadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>childremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>componentadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>componentremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>parentchanged<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#getevents">getEvents</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L45">src/SnowballEngine/Utilities/Events/EventTarget.ts:45</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>childadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>childremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>componentadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>componentremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">; </span>parentchanged<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> }</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> childadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> childremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> componentadd<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> componentremove<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+									</ul>
+								</li>
+								<li class="tsd-parameter">
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> parentchanged<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{}</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-index-signature">
+											<h5><span class="tsd-signature-symbol">[</span>id: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getmaxdestroyinframes" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> get<wbr>Max<wbr>Destroy<wbr>InFrames</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Max<wbr>Destroy<wbr>InFrames<span class="tsd-signature-symbol">(</span>gameObject<span class="tsd-signature-symbol">?: </span><a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a>, max<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L403">src/SnowballEngine/GameObject/GameObject.ts:403</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>gameObject: <a href="gameobject.html" class="tsd-signature-type" data-tsd-kind="Class">GameObject</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> max: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -645,7 +841,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L260">src/SnowballEngine/GameObject/GameObject.ts:260</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L312">src/SnowballEngine/GameObject/GameObject.ts:312</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -662,13 +858,13 @@
 					<a name="removecomponent" class="tsd-anchor"></a>
 					<h3>remove<wbr>Component</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Component&lt;T&gt;<span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span>, destroy<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Component&lt;T&gt;<span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L164">src/SnowballEngine/GameObject/GameObject.ts:164</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L206">src/SnowballEngine/GameObject/GameObject.ts:206</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -688,8 +884,38 @@
 								<li>
 									<h5>component: <span class="tsd-signature-type">T</span></h5>
 								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="removelistener" class="tsd-anchor"></a>
+					<h3>remove<wbr>Listener</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#removelistener">removeListener</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L17">src/SnowballEngine/Utilities/Events/EventTarget.ts:17</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
 								<li>
-									<h5>destroy: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = true</span></h5>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">GameObjectEventTypes</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GameObjectEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -706,7 +932,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L277">src/SnowballEngine/GameObject/GameObject.ts:277</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L331">src/SnowballEngine/GameObject/GameObject.ts:331</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -725,41 +951,19 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="update" class="tsd-anchor"></a>
-					<h3>update</h3>
+					<a name="start" class="tsd-anchor"></a>
+					<h3>start</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L292">src/SnowballEngine/GameObject/GameObject.ts:292</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L129">src/SnowballEngine/GameObject/GameObject.ts:129</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Update children, behaviours, ParticleSystem, AnimatedSprite and AudioListener.</p>
-								</div>
-							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="destroy" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> destroy</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L421">src/SnowballEngine/GameObject/GameObject.ts:421</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -773,7 +977,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L351">src/SnowballEngine/GameObject/GameObject.ts:351</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L437">src/SnowballEngine/GameObject/GameObject.ts:437</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -809,12 +1013,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L411">src/SnowballEngine/GameObject/GameObject.ts:411</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L498">src/SnowballEngine/GameObject/GameObject.ts:498</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Returns GameObject with name if exists.</p>
+									<p>Returns GameObject with id if exists.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -828,24 +1032,7 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="init" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> init</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L423">src/SnowballEngine/GameObject/GameObject.ts:423</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="preparedestroy-1" class="tsd-anchor"></a>
+					<a name="preparedestroy" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> prepare<wbr>Destroy</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
 						<li class="tsd-signature tsd-kind-icon">prepare<wbr>Destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
@@ -854,7 +1041,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L415">src/SnowballEngine/GameObject/GameObject.ts:415</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L503">src/SnowballEngine/GameObject/GameObject.ts:503</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -862,19 +1049,19 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
-					<a name="update-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> update</h3>
+					<a name="reset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> reset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/GameObject.ts#L340">src/SnowballEngine/GameObject/GameObject.ts:340</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/GameObject.ts#L509">src/SnowballEngine/GameObject/GameObject.ts:509</a></li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -895,7 +1082,7 @@
 					<li class="current tsd-kind-class">
 						<a href="gameobject.html" class="tsd-kind-icon">Game<wbr>Object</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="gameobject.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
@@ -903,6 +1090,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="gameobject.html#_components" class="tsd-kind-icon">_components</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="gameobject.html#_initialized" class="tsd-kind-icon">_initialized</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="gameobject.html#_parent" class="tsd-kind-icon">_parent</a>
@@ -949,11 +1139,17 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="gameobject.html#addcomponent" class="tsd-kind-icon">add<wbr>Component</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="gameobject.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="gameobject.html#connectcamera" class="tsd-kind-icon">connect<wbr>Camera</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="gameobject.html#disconnectcamera" class="tsd-kind-icon">disconnect<wbr>Camera</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="gameobject.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="gameobject.html#getcomponent" class="tsd-kind-icon">get<wbr>Component</a>
@@ -967,8 +1163,14 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="gameobject.html#getcomponentsinchildren" class="tsd-kind-icon">get<wbr>Components<wbr>InChildren</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="gameobject.html#preparedestroy" class="tsd-kind-icon">prepare<wbr>Destroy</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="gameobject.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="gameobject.html#getevents" class="tsd-kind-icon">get<wbr>Events</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="gameobject.html#getmaxdestroyinframes" class="tsd-kind-icon">get<wbr>Max<wbr>Destroy<wbr>InFrames</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="gameobject.html#removechild" class="tsd-kind-icon">remove<wbr>Child</a>
@@ -976,14 +1178,14 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="gameobject.html#removecomponent" class="tsd-kind-icon">remove<wbr>Component</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="gameobject.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="gameobject.html#setparent" class="tsd-kind-icon">set<wbr>Parent</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="gameobject.html#update" class="tsd-kind-icon">update</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="gameobject.html#destroy" class="tsd-kind-icon">destroy</a>
+								<a href="gameobject.html#start" class="tsd-kind-icon">start</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="gameobject.html#find" class="tsd-kind-icon">find</a>
@@ -992,13 +1194,10 @@
 								<a href="gameobject.html#get" class="tsd-kind-icon">get</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="gameobject.html#init" class="tsd-kind-icon">init</a>
+								<a href="gameobject.html#preparedestroy" class="tsd-kind-icon">prepare<wbr>Destroy</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="gameobject.html#preparedestroy-1" class="tsd-kind-icon">prepare<wbr>Destroy</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
-								<a href="gameobject.html#update-1" class="tsd-kind-icon">update</a>
+								<a href="gameobject.html#reset" class="tsd-kind-icon">reset</a>
 							</li>
 						</ul>
 					</li>

@@ -69,7 +69,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="inputeventtarget.html" class="tsd-signature-type" data-tsd-kind="Class">InputEventTarget</a>
+						<a href="eventtarget.html" class="tsd-signature-type" data-tsd-kind="Class">EventTarget</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">Mouse</span>
@@ -94,12 +94,11 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="mouse.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private-protected">
+						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="mouse.html#_buttons" class="tsd-kind-icon">_buttons</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="mouse.html#_firelistener" class="tsd-kind-icon">_fire<wbr>Listener</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="mouse.html#_listeners" class="tsd-kind-icon">_listeners</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="mouse.html#_oncontextmenu" class="tsd-kind-icon">_on<wbr>Context<wbr>Menu</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="mouse.html#_onmousedown" class="tsd-kind-icon">_on<wbr>Mouse<wbr>Down</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="mouse.html#_onmousemove" class="tsd-kind-icon">_on<wbr>Mouse<wbr>Move</a></li>
@@ -111,12 +110,15 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="mouse.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="mouse.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="mouse.html#addlisteners" class="tsd-kind-icon">add<wbr>Listeners</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="mouse.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="mouse.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mouse.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mouse.html#getaxis" class="tsd-kind-icon">get<wbr>Axis</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mouse.html#getbutton" class="tsd-kind-icon">get<wbr>Button</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="mouse.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="mouse.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="mouse.html#getevents" class="tsd-kind-icon">get<wbr>Events</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="mouse.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="mouse.html#removelisteners" class="tsd-kind-icon">remove<wbr>Listeners</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="mouse.html#update" class="tsd-kind-icon">update</a></li>
 							</ul>
@@ -135,9 +137,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#constructor">constructor</a></p>
+								<p>Overrides <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L27">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L29">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:29</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="mouse.html" class="tsd-signature-type" data-tsd-kind="Class">Mouse</a></h4>
@@ -145,7 +147,7 @@
 					</ul>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
+			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_buttons" class="tsd-anchor"></a>
@@ -153,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">_buttons<span class="tsd-signature-symbol">:</span> <a href="inputbutton.html" class="tsd-signature-type" data-tsd-kind="Class">InputButton</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L21">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L23">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -163,18 +165,7 @@
 					<div class="tsd-signature tsd-kind-icon">_fire<wbr>Listener<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L22">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:22</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-					<a name="_listeners" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _listeners</h3>
-					<div class="tsd-signature tsd-kind-icon">_listeners<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">{ </span>cb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/inputevent.html" class="tsd-signature-type" data-tsd-kind="Interface">InputEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#_listeners">_listeners</a></p>
-						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/InputEventTarget.ts#L6">src/SnowballEngine/Input/InputEventTarget.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L24">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -184,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">_on<wbr>Context<wbr>Menu<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L27">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L29">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:29</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -215,7 +206,7 @@
 					<div class="tsd-signature tsd-kind-icon">_on<wbr>Mouse<wbr>Down<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L24">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L26">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -246,7 +237,7 @@
 					<div class="tsd-signature tsd-kind-icon">_on<wbr>Mouse<wbr>Move<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L26">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L28">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -277,7 +268,7 @@
 					<div class="tsd-signature tsd-kind-icon">_on<wbr>Mouse<wbr>Up<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">MouseEvent</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L25">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L27">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -308,7 +299,7 @@
 					<div class="tsd-signature tsd-kind-icon">_position<span class="tsd-signature-symbol">:</span> <a href="inputaxis.html" class="tsd-signature-type" data-tsd-kind="Class">InputAxis</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L19">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L21">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -323,63 +314,43 @@
 					<div class="tsd-signature tsd-kind-icon">_prev<wbr>Position<span class="tsd-signature-symbol">:</span> <a href="inputaxis.html" class="tsd-signature-type" data-tsd-kind="Class">InputAxis</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L20">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L22">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 					<a name="addlistener" class="tsd-anchor"></a>
 					<h3>add<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span>, cb<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/inputevent.html" class="tsd-signature-type" data-tsd-kind="Interface">InputEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#addlistener">addListener</a></p>
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#addlistener">addListener</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/InputEventTarget.ts#L17">src/SnowballEngine/Input/InputEventTarget.ts:17</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L12">src/SnowballEngine/Utilities/Events/EventTarget.ts:12</a></li>
 								</ul>
 							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Returns the listener id.</p>
-								</div>
-							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span></h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>type: <span class="tsd-signature-type">InputAction</span></h5>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
 								</li>
 								<li>
-									<h5>cb: <span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/inputevent.html" class="tsd-signature-type" data-tsd-kind="Interface">InputEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span></h5>
-									<ul class="tsd-parameters">
-										<li class="tsd-parameter-signature">
-											<ul class="tsd-signatures tsd-kind-type-literal">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>e<span class="tsd-signature-symbol">: </span><a href="../interfaces/inputevent.html" class="tsd-signature-type" data-tsd-kind="Interface">InputEvent</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-											</ul>
-											<ul class="tsd-descriptions">
-												<li class="tsd-description">
-													<h4 class="tsd-parameters-title">Parameters</h4>
-													<ul class="tsd-parameters">
-														<li>
-															<h5>e: <a href="../interfaces/inputevent.html" class="tsd-signature-type" data-tsd-kind="Interface">InputEvent</a></h5>
-														</li>
-													</ul>
-													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-												</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-								<li>
-									<h5>id: <span class="tsd-signature-type">string</span></h5>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -393,25 +364,57 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L115">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:115</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L120">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:120</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="dispatchevent" class="tsd-anchor"></a>
+					<h3>dispatch<wbr>Event</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">dispatch<wbr>Event&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#dispatchevent">dispatchEvent</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L24">src/SnowballEngine/Utilities/Events/EventTarget.ts:24</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="dispose" class="tsd-anchor"></a>
 					<h3>dispose</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Overrides <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L129">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:129</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L134">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:134</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -429,7 +432,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/inputdevice.html">InputDevice</a>.<a href="../interfaces/inputdevice.html#getaxis">getAxis</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L81">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L83">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:83</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -453,7 +456,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/inputdevice.html">InputDevice</a>.<a href="../interfaces/inputdevice.html#getbutton">getButton</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L77">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L79">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:79</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -466,24 +469,89 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="removelistener" class="tsd-anchor"></a>
-					<h3>remove<wbr>Listener</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener<span class="tsd-signature-symbol">(</span>id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="geteventpromise" class="tsd-anchor"></a>
+					<h3>get<wbr>Event<wbr>Promise</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Event<wbr>Promise&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="inputeventtarget.html">InputEventTarget</a>.<a href="inputeventtarget.html#removelistener">removeListener</a></p>
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#geteventpromise">getEventPromise</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/InputEventTarget.ts#L22">src/SnowballEngine/Input/InputEventTarget.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L34">src/SnowballEngine/Utilities/Events/EventTarget.ts:34</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a promise wrapper for an eventhandler.
+									Returns a promise which will resolve when the event is dispatched.</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span></h4>
+								</li>
+							</ul>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>id: <span class="tsd-signature-type">string</span></h5>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="getevents" class="tsd-anchor"></a>
+					<h3>get<wbr>Events</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Events<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>Jump<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>MoveHorizontal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>MoveVertical<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>PointerPosition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>Trigger<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#getevents">getEvents</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L45">src/SnowballEngine/Utilities/Events/EventTarget.ts:45</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>Jump<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>MoveHorizontal<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>MoveVertical<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>PointerPosition<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">; </span>Trigger<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> }</span></h4>
+							<ul class="tsd-parameters">
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+					<a name="removelistener" class="tsd-anchor"></a>
+					<h3>remove<wbr>Listener</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Listener&lt;U&gt;<span class="tsd-signature-symbol">(</span>eventName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">U</span>, handler<span class="tsd-signature-symbol">: </span><a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="eventtarget.html">EventTarget</a>.<a href="eventtarget.html#removelistener">removeListener</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Utilities/Events/EventTarget.ts#L17">src/SnowballEngine/Utilities/Events/EventTarget.ts:17</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>U<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">InputAction</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventName: <span class="tsd-signature-type">U</span></h5>
+								</li>
+								<li>
+									<h5>handler: <a href="eventhandler.html" class="tsd-signature-type" data-tsd-kind="Class">EventHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InputEventTypes</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">U</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -500,7 +568,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L122">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:122</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L127">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:127</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -517,7 +585,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L90">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/Input/Devices/Mouse/Mouse.ts#L92">src/SnowballEngine/Input/Devices/Mouse/Mouse.ts:92</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -550,9 +618,6 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="mouse.html#_firelistener" class="tsd-kind-icon">_fire<wbr>Listener</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
-								<a href="mouse.html#_listeners" class="tsd-kind-icon">_listeners</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="mouse.html#_oncontextmenu" class="tsd-kind-icon">_on<wbr>Context<wbr>Menu</a>
 							</li>
@@ -571,13 +636,16 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="mouse.html#_prevposition" class="tsd-kind-icon">_prev<wbr>Position</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="mouse.html#addlistener" class="tsd-kind-icon">add<wbr>Listener</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="mouse.html#addlisteners" class="tsd-kind-icon">add<wbr>Listeners</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="mouse.html#dispatchevent" class="tsd-kind-icon">dispatch<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="mouse.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -586,7 +654,13 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="mouse.html#getbutton" class="tsd-kind-icon">get<wbr>Button</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
+								<a href="mouse.html#geteventpromise" class="tsd-kind-icon">get<wbr>Event<wbr>Promise</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="mouse.html#getevents" class="tsd-kind-icon">get<wbr>Events</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="mouse.html#removelistener" class="tsd-kind-icon">remove<wbr>Listener</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">

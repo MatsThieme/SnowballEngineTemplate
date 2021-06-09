@@ -96,6 +96,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="spriteanimation.html#_sprites" class="tsd-kind-icon">_sprites</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="spriteanimation.html#_timer" class="tsd-kind-icon">_timer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="spriteanimation.html#container" class="tsd-kind-icon">container</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="spriteanimation.html#sprite" class="tsd-kind-icon">sprite</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="spriteanimation.html#swaptime" class="tsd-kind-icon">swap<wbr>Time</a></li>
 							</ul>
 						</section>
@@ -103,8 +104,6 @@
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="spriteanimation.html#assets" class="tsd-kind-icon">assets</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="spriteanimation.html#sprite" class="tsd-kind-icon">sprite</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="spriteanimation.html#visibleindex" class="tsd-kind-icon">visible<wbr>Index</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -124,19 +123,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Sprite<wbr>Animation<span class="tsd-signature-symbol">(</span>assets<span class="tsd-signature-symbol">?: </span><a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span>, swapTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="spriteanimation.html" class="tsd-signature-type" data-tsd-kind="Class">SpriteAnimation</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Sprite<wbr>Animation<span class="tsd-signature-symbol">(</span>assets<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">readonly </span><a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span>, swapTime<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="spriteanimation.html" class="tsd-signature-type" data-tsd-kind="Class">SpriteAnimation</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L20">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L27">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>assets: <a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></h5>
+									<h5>assets: <span class="tsd-signature-symbol">readonly </span><a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></h5>
 								</li>
 								<li>
 									<h5>swapTime: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 200</span></h5>
@@ -155,7 +154,7 @@
 					<div class="tsd-signature tsd-kind-icon">_assets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L18">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L25">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -165,7 +164,7 @@
 					<div class="tsd-signature tsd-kind-icon">_sprites<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-type">Sprite</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L19">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L26">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -175,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">_timer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L20">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L27">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -185,9 +184,24 @@
 					<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Container</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L16">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L16">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:16</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="sprite" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> sprite</h3>
+					<div class="tsd-signature tsd-kind-icon">sprite<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Sprite</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L23">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:23</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Currently visible Sprite</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="swaptime" class="tsd-anchor"></a>
@@ -195,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">swap<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L15">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L15">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -218,7 +232,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L34">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L43">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:43</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">readonly </span><a href="asset.html" class="tsd-signature-type" data-tsd-kind="Class">Asset</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -226,7 +240,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L37">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L46">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:46</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -236,45 +250,6 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="sprite" class="tsd-anchor"></a>
-					<h3>sprite</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> sprite<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Sprite</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L67">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:67</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Currently visible Sprite</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Sprite</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
-					<a name="visibleindex" class="tsd-anchor"></a>
-					<h3>visible<wbr>Index</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> visibleIndex<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L58">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:58</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -292,7 +267,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of Disposable.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L95">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:95</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L94">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:94</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -309,7 +284,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L91">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L90">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -331,7 +306,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/efe479a/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L76">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:76</a></li>
+									<li>Defined in <a href="https://github.com/MatsThieme/SnowballEngineTemplate/blob/56686ee/src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts#L74">src/SnowballEngine/GameObject/Components/AnimatedSprite/SpriteAnimation.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -376,16 +351,13 @@
 								<a href="spriteanimation.html#container" class="tsd-kind-icon">container</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="spriteanimation.html#sprite" class="tsd-kind-icon">sprite</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="spriteanimation.html#swaptime" class="tsd-kind-icon">swap<wbr>Time</a>
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="spriteanimation.html#assets" class="tsd-kind-icon">assets</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="spriteanimation.html#sprite" class="tsd-kind-icon">sprite</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
-								<a href="spriteanimation.html#visibleindex" class="tsd-kind-icon">visible<wbr>Index</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="spriteanimation.html#dispose" class="tsd-kind-icon">dispose</a>
