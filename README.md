@@ -16,23 +16,15 @@ SnowballEngine manages scenes, game assets, simulates physics, renders assets an
 
 ### build
 <pre>npm run build</pre>
-<pre>node SEB --b</pre>
-<pre>node SEB -build</pre>
 
 ### generate AssetDB.json
 <pre>npm run createadb</pre>
-<pre>node SEB --c</pre>
-<pre>node SEB -createADB</pre>
 
 ### update AssetDB.json
 <pre>npm run updateadb</pre>
-<pre>node SEB --u</pre>
-<pre>node SEB -updateADB</pre>
 
 ### start debug server
 <pre>npm run server</pre>
-<pre>npm SEB --s</pre>
-<pre>npm SEB -server</pre>
 
 ### generate documentation
 <pre>npm run doc</pre>
