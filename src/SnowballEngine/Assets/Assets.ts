@@ -13,10 +13,10 @@ declare global {
 
 /** @category Asset Management */
 export class Assets {
-    private static readonly _assets: Map<string, Asset> = new Map();
+    private static readonly _assets: Partial<Record<string, Asset>> = {};
 
     public static get(id: AssetID): Asset | undefined {
-        return Assets._assets.get(id);
+        return Assets._assets[id];
     }
 
     /**
@@ -26,16 +26,16 @@ export class Assets {
      * 
      */
     public static delete(id: AssetID): void {
-        Assets._assets.delete(id);
+        delete Assets._assets[id];
     }
 
     public static set(asset: Asset, name: AssetID): Asset {
-        Assets._assets.set(name, asset);
+        Assets._assets[name] = asset;
         return asset;
     }
 
     public static async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
-        if (name && Assets._assets.get(name) || !name && Assets.get(<AssetID>path)) {
+        if (name && Assets._assets[name] || !name && Assets.get(<AssetID>path)) {
             throw new Error('Asset not loaded: Asset with name/path exists');
         }
 
@@ -47,8 +47,8 @@ export class Assets {
             throw new Error(`Could not load Asset: ${path}; ${JSON.stringify(error)}`);
         }
 
-        Assets._assets.set(path, asset);
-        if (name) Assets._assets.set(name, asset);
+        Assets._assets[path] = asset;
+        if (name) Assets._assets[name] = asset;
 
         return asset;
     }

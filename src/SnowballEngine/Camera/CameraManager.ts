@@ -13,7 +13,7 @@ export class CameraManager {
     public readonly cameras: Camera[];
     public renderScale: number;
 
-    private readonly _gameObjects: Map<number, GameObject>;
+    private readonly _gameObjects: Partial<Record<number, GameObject>>;
     private readonly _PIXI: PIXI;
 
     public constructor() {
@@ -23,7 +23,7 @@ export class CameraManager {
 
         this._PIXI = new PIXI(Client.resolution.x, Client.resolution.y);
 
-        this._gameObjects = new Map();
+        this._gameObjects = {};
 
         this._PIXI.uiContainer = Scene.currentScene.ui.container;
 
@@ -80,11 +80,11 @@ export class CameraManager {
      * 
      */
     public addGameObject(gameObject: GameObject): void {
-        if (this.hasGameObject(gameObject)) return Debug.warn('GameObject.container is already staged');
+        if (this._gameObjects[gameObject.id] !== undefined) return Debug.warn('GameObject.container is already staged');
 
         this._PIXI.container.addChild(gameObject.container);
 
-        this._gameObjects.set(gameObject.id, gameObject);
+        this._gameObjects[gameObject.id] = gameObject;
     }
 
     /**
@@ -94,15 +94,11 @@ export class CameraManager {
      * 
      */
     public removeGameObject(gameObject: GameObject): void {
-        if (!this.hasGameObject(gameObject)) return Debug.warn('GameObject not found');
+        if (this._gameObjects[gameObject.id] === undefined) return Debug.warn('GameObject not found');
 
         this._PIXI.container.removeChild(gameObject.container);
 
-        this._gameObjects.delete(gameObject.id);
-    }
-
-    public hasGameObject(gameObject: GameObject): boolean {
-        return this._gameObjects.has(gameObject.id);
+        delete this._gameObjects[gameObject.id];
     }
 
 

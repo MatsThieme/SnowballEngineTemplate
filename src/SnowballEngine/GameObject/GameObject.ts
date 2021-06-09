@@ -32,7 +32,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     public drawPriority: number;
 
 
-    private readonly _components: Map<ComponentType, Component<ComponentEventTypes>[]>;
+    private readonly _components: Partial<Record<ComponentType, Component<ComponentEventTypes>[]>>;
     private _active: boolean;
     private _parent?: GameObject;
 
@@ -65,7 +65,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         this.drawPriority = 0;
 
-        this._components = new Map();
+        this._components = {};
         this._active = true;
 
         this._initialized = initialized;
@@ -127,8 +127,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     public async start(): Promise<void> {
-        for (const component of [...this._components.values()].flat()) {
-            await component.dispatchEvent('start');
+        for (const components of Object.values(this._components)) {
+            for (const component of components) {
+                await component.dispatchEvent('start');
+            }
         }
 
         this.container.position.copyFrom(Vector2.from(this.transform.position).scale(new Vector2(1, -1)));
@@ -168,9 +170,9 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
             component.type === ComponentType.TerrainCollider && this.getComponents(ComponentType.TerrainCollider).length === 0 ||
             component.type === ComponentType.ParallaxBackground && this.getComponents(ComponentType.ParallaxBackground).length === 0) {
 
-            const components = this._components.get(component.type) || [];
+            const components = this._components[component.type] || [];
             components.push(component);
-            this._components.set(component.type, components);
+            this._components[component.type] = components;
 
         } else {
             const type = component.type;
@@ -206,7 +208,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     public removeComponent<T extends Component<ComponentEventTypes>>(component: T): void {
         if (!component) return Debug.warn('Component undefined');
 
-        const components = this._components.get(component.type);
+        const components = this._components[component.type];
 
         if (!components) return Debug.warn('Component not found on gameObject');
 
@@ -233,15 +235,15 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      */
     public getComponents<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         if (typeof type === 'number') {
-            if (this._components.has(type)) return <T[]>this._components.get(type);
-            if (type === ComponentType.Component) return <T[]>[...this._components.values()].flat();
+            if (this._components[type] !== undefined) return <T[]>[...this._components[type]!];
+            if (type === ComponentType.Component) return <T[]>[...Object.values(this._components)].flat();
             if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TilemapRenderer), ...this.getComponents(ComponentType.Video)];
             if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TilemapCollider), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
 
             return [];
         }
 
-        return <T[]>[...this._components.values()].flat(1).filter((c: Component<ComponentEventTypes>) => {
+        return <T[]>[...Object.values(this._components)].flat(1).filter((c: Component<ComponentEventTypes>) => {
             return c.constructor.name === type.name || c instanceof type;
         });
     }
@@ -253,9 +255,9 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      */
     public getComponent<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T | undefined {
         if (typeof type === 'number') {
-            if (this._components.has(type)) return <T>this._components.get(type)![0];
+            if (this._components[type] !== undefined) return <T>this._components[type]![0];
             if (type === ComponentType.Component) {
-                for (const components of this._components.values()) {
+                for (const components of Object.values(this._components)) {
                     if (components[0]) return <T>components[0];
                 }
             }
@@ -266,7 +268,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         }
 
 
-        for (const c of [...this._components.values()].flat(1)) {
+        for (const c of [...Object.values(this._components)].flat(1)) {
             if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
@@ -390,7 +392,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public prepareDestroy(): void {
-        const destroyables: Destroyable[] = [...[...this._components.values()].flat(), ...this.children];
+        const destroyables: Destroyable[] = [...[...Object.values(this._components)].flat(), ...this.children];
 
         const destroyInFrames = this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
 
@@ -401,7 +403,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     private getMaxDestroyInFrames(gameObject: GameObject = this, max?: number): number | undefined {
-        const components = [...gameObject._components.values()].flat();
+        const components = [...Object.values(gameObject._components)].flat();
 
         max = Math.max(max || 0, components.reduce((p, c) => {
             if (c.__destroyInFrames__ !== undefined && p < c.__destroyInFrames__) return c.__destroyInFrames__;

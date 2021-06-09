@@ -10,18 +10,18 @@ export class SceneManager {
     */
     public readonly scene?: Scene;
 
-    private _scenes: Map<SceneName, (scene: Scene) => Promise<void> | void>;
+    private _scenes: Partial<Record<SceneName, (scene: Scene) => Promise<void> | void>>;
 
     public constructor() {
-        this._scenes = new Map();
+        this._scenes = {};
     }
 
     public add(name: SceneName, sceneInitializer: (scene: Scene) => Promise<void> | void): void {
-        this._scenes.set(name, sceneInitializer);
+        this._scenes[name] = sceneInitializer;
     }
 
     public async load(name: SceneName): Promise<Scene> {
-        const initializer = this._scenes.get(name);
+        const initializer = this._scenes[name];
 
         if (initializer) {
             Interval.clearAll();
