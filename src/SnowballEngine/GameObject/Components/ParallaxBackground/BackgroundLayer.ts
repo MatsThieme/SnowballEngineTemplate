@@ -41,7 +41,7 @@ export class BackgroundLayer implements Disposable {
         const sprite = asset.sprite = new TilingSprite(asset.asset.getPIXITexture()!, asset.size.x * 2, asset.size.y - pxScale);
         sprite.anchor.set(0.5);
         sprite.zIndex = 1 / this.speed;
-        sprite.name = asset.asset.path;
+        sprite.name = asset.asset.name;
 
 
         sprite.tilePosition.y = -pxScale;

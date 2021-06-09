@@ -80,7 +80,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
     }
 
     public addBackground(speed: number, asset: BackgroundLayerAsset): void {
-        if (asset.asset?.type !== AssetType.Image) throw new Error(`Could not add background: Asset is not of type Image (${asset.asset?.path})`);
+        if (asset.asset?.type !== AssetType.Image) throw new Error(`Could not add background: Asset is not of type Image (${asset.asset?.name})`);
 
         this._backgroundLayers.push(new BackgroundLayer(speed, asset, this.sprite!, this));
 

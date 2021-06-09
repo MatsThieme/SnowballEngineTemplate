@@ -8,12 +8,7 @@ import { AssetType } from './AssetType';
 
 /** @category Asset Management */
 export class Asset implements Destroyable {
-    /**
-     * 
-     * relative url to the asset, starting with ./Assets/
-     * 
-     */
-    public readonly path: string;
+    public readonly name: string;
     public readonly type: AssetType;
     public readonly data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, unknown>;
 
@@ -42,8 +37,8 @@ export class Asset implements Destroyable {
         height?: number
     };
 
-    public constructor(path: string, type: AssetType, data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, unknown>) {
-        this.path = path;
+    public constructor(name: string, type: AssetType, data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, unknown>) {
+        this.name = name;
         this.type = type;
         this.data = data;
 
@@ -113,7 +108,7 @@ export class Asset implements Destroyable {
 
         const sprite = new Sprite(this.getPIXITexture(x, y, width, height)!);
 
-        sprite.name = this.path;
+        sprite.name = this.name;
 
         return sprite;
     }
@@ -130,7 +125,7 @@ export class Asset implements Destroyable {
     }
 
     public clone(): Asset {
-        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.path, this.type, this.data);
+        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.name, this.type, this.data);
 
         if (this.type === AssetType.Audio) {
             const ab = new AudioBuffer(<AudioBuffer>this.data);
@@ -141,26 +136,26 @@ export class Asset implements Destroyable {
                 ab.copyToChannel(arr, i);
             }
 
-            return new Asset(this.path, this.type, (<AudioBuffer>this.data));
+            return new Asset(this.name, this.type, (<AudioBuffer>this.data));
         }
 
-        if (this.type === AssetType.Blob) return new Asset(this.path, this.type, (<Blob>this.data).slice());
+        if (this.type === AssetType.Blob) return new Asset(this.name, this.type, (<Blob>this.data).slice());
 
-        if (this.type === AssetType.JSON) return new Asset(this.path, this.type, JSON.parse(JSON.stringify(this.data)));
+        if (this.type === AssetType.JSON) return new Asset(this.name, this.type, JSON.parse(JSON.stringify(this.data)));
 
         if (this.type === AssetType.Image) {
             const img = new Image();
-            img.src = this.path;
-            return new Asset(this.path, this.type, img);
+            img.src = this.name;
+            return new Asset(this.name, this.type, img);
         }
 
         if (this.type === AssetType.Video) {
             const video = document.createElement('video');
-            video.src = this.path;
-            return new Asset(this.path, this.type, video);
+            video.src = this.name;
+            return new Asset(this.name, this.type, video);
         }
 
-        return new Asset(this.path, this.type, this.data);
+        return new Asset(this.name, this.type, this.data);
     }
 
     public getCSSFontName(): string {

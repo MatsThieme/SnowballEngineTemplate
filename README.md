@@ -12,6 +12,8 @@ SnowballEngine manages scenes, game assets, simulates physics, renders assets an
 <br>
 
 ### setup
+Requires [nodejs](https://nodejs.org) and npm.
+
 <pre>npm i</pre>
 
 ### build
@@ -46,6 +48,14 @@ src/
 dist/
 </pre>
 
+### Assets/
+Contains all [Assets](#assets-1), [inputmappings](#inputmapping) and [AssetDB.json](#assetdb).
+
+### dist/
+Contains build files(index.html, main.js, Asset directory).
+
+### src/
+
 #### Behaviours
 Contains files with classes derived from Behaviour.
 
@@ -62,7 +72,7 @@ Contains files that export a function to initialize a Scene.
 Contains all the GameEngine files.
 
 #### Game.ts
-Game.ts is the entry point, it may look like this:
+src/Game.ts is the entry point, it may look like this:
 ```typescript
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
@@ -87,6 +97,15 @@ export class Game {
 
 </br>
 
+## Engine code structure
+<pre>
+SceneManager
+  Scene
+    GameObject
+      Component
+    UI
+</pre>
+
 ### SceneManager
 A SceneManager instance loads Scenes and stores their Initializer-function.
 
@@ -97,101 +116,43 @@ A Scene manages GameObjects and the graphical user interface. It contains the ga
 A GameObject is a container for components.
 It has a Transform component by default.
 
-### Component
+### Components
 A Component controls the behavior of the corresponding GameObject.
 
-### Engine code structure
-<pre>
-SceneManager
-  Scene
-    GameObject
-      Component
-    UI
-</pre>
 
 
-<br>
+| **Component** | description |
+| --- | --- |
+| **AnimatedSprite** | Manages SpriteAnimation instances to render and switch sprite animations. |
+| **AudioListener** | Can exist once per scene, it's the "ears" of the player. It's the audio equivalent of Camera. |
+| **AudioSource** | Emits positional Audio. Can hold an AudioMixer object to filter/modify output, requires an AudioListener in the Scene. |
+| **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. |
+| **Camera** | The size and position of a camera component specify which area of the scene is rendered to the screen. |
+| **CircleCollider** |  |
+| **Collider** |  |
+| **Component** | The Base class for all components. |
+| **ParallaxBackground** | A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling) |
+| **ParticleSystem** |  |
+| **PolygonCollider** |  |
+| **RectangleCollider** |  |
+| **Renderable** | The Base class for all renderable components. Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#parallaxbackground) and [Text](#text). |
+| **Rigidbody** |  |
+| **TerrainCollider** |  |
+| **TerrainRenderer** |  |
+| **Text** | Render a string. |
+| **Texture** | Render an image. |
+| **TilemapCollider** |  |
+| **TilemapRenderer** |  |
+| **Transform** | The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject. A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children. |
+| **Video** | Render a Video/Movie, playback is controlled through an HTMLVideoElement. |
 
-## Components
-### AnimatedSprite
-Manages SpriteAnimation objects to render and switch sprite animations.
-</br>
-</br>
 
-### AudioListener
-Can exist once per scene, it's the "ears" of the player.
-It's the audio equivalent of Camera.
-</br>
-</br>
-
-### AudioSource
-Emits positional Audio.
-Can hold an AudioMixer object to filter/modify output.
-</br>
-</br>
-
-### Behaviour
-A Behaviour is a Component with user-defined functionality.\
-The Base class for all Behaviours.
-</br>
-</br>
-
-### Camera
-The size and position of a camera component specify which area of the scene is rendered to the screen.
-</br>
-</br>
-
-### Component
-The Base class for all components.
-</br>
-</br>
-
-### Renderable
-The Base class for all renderable components.
-Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#parallaxbackground) and [Text](#text).
-</br>
-</br>
-
-### ParallaxBackground
-A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling)
-</br>
-</br>
-
-### ParticleSystem
-</br>
-</br>
-
-### Text
-Render a string.
-</br>
-</br>
-
-### Texture
-Render an image.
-</br>
-</br>
-
-### TileMap
-Render a tilemap and collide with other objects.
-</br>
-</br>
-
-### Transform
-The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject.
-A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children.
-</br>
-</br>
-
-### Video
-Render a Video/Movie, playback is controlled through an HTMLVideoElement.
-</br>
-</br>
 
 
 ## Assets
 Assets are all non-script files utilized by the game.
 
-**All asset types**
+#### All asset types
 ```typescript
 enum AssetType {
     Image = 0,
@@ -204,13 +165,46 @@ enum AssetType {
 }
 ```
 
-### AssetDB
+#### Using Assets
+```typescript
+// create the Asset
+const name = 'name';
+const data = 'text';
+const asset = new Asset(name, AssetType.Text, data);
+
+// register the Asset
+Assets.set(name, asset);
+
+// access the Asset
+Assets.get(name);
+```
+
+### Loading Assets
+Load Assets with
+```typescript
+Assets.load(path: string, type: AssetType, name?: AssetID);
+```
+or with AssetDB.
+
+#### AssetDB
 Assets/AssetDB.json contains all asset information required for loading.\
-It can be generated with <code>[npm run createadb](#generate-assetdbjson)</code>.
+It can be generated from the Assets directory with <code>[npm run createadb](#generate-assetdbjson)</code>.
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
-type AssetDB = { [path: string]: { type: AssetType, "optional asset name"?: 0 } };
+type AssetDB = { [path: string]: { type: AssetType, "optional asset name"?: 0 } }; // path is relative to the Assets directory
+```
+
+### Creating Assets
+```typescript
+const name = 'name';
+const data = 'text';
+const asset = new Asset(name, AssetType.Text, data);
+```
+
+Create Assets of type AssetType.Image with
+```typescript
+Shape.createSprite
 ```
 
 <br>
@@ -221,14 +215,9 @@ InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, co
 The signature of an input mapping file looks like this:
 ```typescript
 interface InputMapping {
-    keyboard: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
-    mouse: { [key in InputAction]?: MouseButton | MouseAxis },
-    gamepad:  { [key in InputAction]?: GamepadButton | GamepadAxis },
-    touch: { [key in InputAction]?: TouchButton | TouchAxis }
+    keyboard?: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
+    mouse?: { [key in InputAction]?: MouseButton | MouseAxis },
+    gamepad?:  { [key in InputAction]?: GamepadButton | GamepadAxis },
+    touch?: { [key in InputAction]?: TouchButton | TouchAxis }
 }
 ```
-
-
-### Units
-#### Angles
-All angles are clockwise. To allow and simplify the mixed use of radian and degree, [Angle](src/SnowballEngine/Utilities/Angle.ts) objects are used.

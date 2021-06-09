@@ -25,7 +25,7 @@ export class Game {
          * 
          * or create and register an asset manually:
          */
-        Assets.set(Shape.createSprite('Rect', Color.orange), 'some image');
+        Assets.set('some image', Shape.createSprite('Rect', Color.orange));
 
 
         // timeout to show example loadingscreen

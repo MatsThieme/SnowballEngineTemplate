@@ -29,7 +29,7 @@ export class Assets {
         delete Assets._assets[id];
     }
 
-    public static set(asset: Asset, name: AssetID): Asset {
+    public static set(name: AssetID, asset: Asset): Asset {
         Assets._assets[name] = asset;
         return asset;
     }
