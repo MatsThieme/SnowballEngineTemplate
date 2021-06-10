@@ -5,6 +5,7 @@ import { AssetType } from 'Assets/AssetType';
 import { Disposable } from 'GameObject/Dispose';
 import { Debug } from 'SnowballEngine/Debug';
 import { GameTime } from 'SnowballEngine/GameTime';
+import { Vector2 } from 'Utility/Vector2';
 
 export class SpriteAnimation implements Disposable {
     /**
@@ -26,7 +27,7 @@ export class SpriteAnimation implements Disposable {
     private _sprites: readonly Sprite[];
     private _timer: number;
 
-    public constructor(assets: readonly Asset[] = [], swapTime = 200) {
+    public constructor(assets: readonly Asset[] = [], swapTime = 500) {
         if (assets.length === 0) throw new Error('no assets specified');
 
         this.swapTime = swapTime;
@@ -54,7 +55,15 @@ export class SpriteAnimation implements Disposable {
 
         this._assets = val;
 
-        this._sprites = val.map(a => a.getPIXISprite()!).filter(Boolean);
+        this._sprites = val.map(a => a.getPIXISprite()!).filter(Boolean).map(s => {
+            const size = new Vector2(s.width, s.height).setLength(new Vector2(1, 1).magnitude);
+            s.width = size.x;
+            s.height = size.y;
+
+            s.anchor.set(0);
+
+            return s;
+        });
 
         if (this._sprites.length !== this._assets.length) Debug.warn('could not create pixi sprite for ' + (this._assets.length - this._sprites.length) + ' assets');
 

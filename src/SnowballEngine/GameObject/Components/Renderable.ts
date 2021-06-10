@@ -9,18 +9,10 @@ import { Component } from './Component';
 
 /** @category Component */
 export abstract class Renderable<EventTypes extends RenderableEventTypes> extends Component<EventTypes> {
-    public alignH: AlignH;
-    public alignV: AlignV;
+    private _alignH: AlignH;
+    private _alignV: AlignV;
 
     public position: Vector2;
-
-    /**
-     * 
-     * Only if renderable.sprite is a container!
-     * Resize container when a child is added. Set before sprite.
-     * 
-     */
-    public autoResizeContainer: boolean;
 
     protected _sprite?: Sprite | Container;
     protected _size: Vector2;
@@ -32,10 +24,11 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._visible = true;
         this._size = new Vector2(0, 0);
 
-        this.alignH = AlignH.Center;
-        this.alignV = AlignV.Center;
+        this._alignH = AlignH.Center;
+        this._alignV = AlignV.Center;
+        this.updateAnchor();
+
         this.position = new Vector2();
-        this.autoResizeContainer = false;
     }
 
     protected override onEnable(): void {
@@ -78,6 +71,22 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         }
     }
 
+    public get alignH(): AlignH {
+        return this._alignH;
+    }
+    public set alignH(val: AlignH) {
+        this._alignH = val;
+        this.updateAnchor();
+    }
+
+    public get alignV(): AlignV {
+        return this._alignV;
+    }
+    public set alignV(val: AlignV) {
+        this._alignV = val;
+        this.updateAnchor();
+    }
+
     /**
      * 
      * The PIXI.Sprite or PIXI.Container instance that should be rendered.
@@ -97,10 +106,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
             val.name = this.constructor.name + ' (' + this.componentID + ')';
 
             if (val.width + val.height !== 0 && this._size.x + this._size.y === 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
-            else if (this.autoResizeContainer) {
-                val.addListener('childAdded', (c: Sprite | Container) => { if (c.parent.name === val.name) this.resizeContainer(val); });
-                val.addListener('removed', () => val.removeAllListeners());
-            }
 
             if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
 
@@ -108,6 +113,8 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
             this.connectCamera();
 
             this._sprite!.parent.sortChildren();
+
+            this.updateAnchor();
         }
     }
 
@@ -119,33 +126,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
             this._sprite.zIndex = val;
             this._sprite.parent.sortChildren();
         }
-    }
-
-    private resizeContainer(container: Container) {
-        const a = this.getContainerAverageSpriteSize();
-        const s = a.clone.scale(Vector2.divide(this.size, a));
-
-        container.width = s.x;
-        container.height = s.y;
-    }
-
-    private getContainerAverageSpriteSize(container?: Container): Vector2 {
-        if ((!this.sprite || !('children' in this.sprite)) && !container) return this.size;
-
-        if (!container) container = this.sprite!;
-
-        const vec = new Vector2();
-
-        for (const c of <(Sprite | Container)[]>container.children) {
-            if (c.constructor.name === 'Container') {
-                vec.add(this.getContainerAverageSpriteSize(c));
-            } else {
-                vec.x += c.width / container.scale.x;
-                vec.y += c.height / container.scale.y;
-            }
-        }
-
-        return Vector2.divide(vec, container.children.length);
     }
 
     private connectCamera(): void {
@@ -160,18 +140,18 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.gameObject.container.removeChild(this._sprite);
     }
 
-    protected override update(): void {
-        if (this._sprite && this.active) {
-            const anchor = new Vector2(this.alignH, this.alignV);
+    private updateAnchor(): void {
+        if (!this._sprite) return;
 
-            if ('anchor' in this._sprite) {
-                this._sprite.anchor.copyFrom(anchor);
-                this._sprite.position.copyFrom(this.position.clone.scale(new Vector2(1, -1)));
-            } else {
-                const bounds = this._sprite.getLocalBounds();
+        const anchor = new Vector2(this.alignH, this.alignV);
 
-                this._sprite.position.copyFrom(new Vector2().copy(this.position).sub(new Vector2(bounds.width, bounds.height).scale(anchor)));
-            }
+        if ('anchor' in this._sprite) {
+            this._sprite.anchor.copyFrom(anchor);
+            this._sprite.position.copyFrom(this.position.clone.scale(new Vector2(1, -1)));
+        } else {
+            const bounds = this._sprite.getLocalBounds();
+
+            this._sprite.position.copyFrom(Vector2.from(this.position).add(new Vector2(bounds.width, bounds.height).scale(anchor.sub({ x: 1, y: 1 }))));
         }
     }
 
@@ -179,7 +159,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this.disconnectCamera();
 
         if (this._sprite) {
-            this._sprite.destroy({ children: true, texture: true, baseTexture: false });
+            this._sprite.destroy({ children: false, texture: true, baseTexture: false });
             this._sprite = undefined;
         }
 

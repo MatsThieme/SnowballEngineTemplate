@@ -7,66 +7,49 @@ import { SpriteAnimation } from './SpriteAnimation';
 
 /** @category Component */
 export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
-    public readonly spriteAnimations: { [key: string]: SpriteAnimation | undefined };
+    public readonly spriteAnimations: { [key: string]: SpriteAnimation };
 
-    private _spriteAnimations: { [key: string]: SpriteAnimation };
     private _activeAnimation: string;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AnimatedSprite);
 
-        this.autoResizeContainer = true;
-
         this.sprite = new Container();
 
-        this._spriteAnimations = {};
+        this.spriteAnimations = {};
 
         this._activeAnimation = '';
-
-        this.spriteAnimations = <any>new Proxy(this._spriteAnimations, {
-            get: (target, prop: string) => target[prop],
-            set: (target, prop: string, value: SpriteAnimation | undefined) => {
-                const existingAnimation = target[prop].container;
-
-                if (existingAnimation) this.sprite!.removeChild(existingAnimation);
-
-                if (value) {
-                    target[prop] = value;
-
-                    this.sprite!.addChild(value.container);
-
-                    if (this._activeAnimation === '') this._activeAnimation = prop;
-                } else if (existingAnimation) delete target[prop];
-
-                return true;
-            }
-        });
     }
 
     protected override update(): void {
-        super.update();
+        if (!this.active || !this.sprite) return;
+        if (!this._activeAnimation) this.activeAnimation = Object.keys(this.spriteAnimations)[0];
 
-        if (!this.active || !this.sprite || !this._activeAnimation) return;
-
-        this._spriteAnimations[this._activeAnimation].update();
+        this.spriteAnimations[this._activeAnimation].update();
     }
 
     /**
      * 
-     * Set the active animation by index.
+     * Set the active animation by name.
      * 
      */
     public set activeAnimation(val: string) {
-        if (val in this._spriteAnimations) {
-            this._activeAnimation = val;
-            this._spriteAnimations[this._activeAnimation].reset();
+        if (this._activeAnimation in this.spriteAnimations) {
+            this.sprite!.removeChild(this.spriteAnimations[this._activeAnimation].container);
+        }
 
-            for (const anim in this._spriteAnimations) {
-                this._spriteAnimations[anim].container.visible = false;
+        if (val in this.spriteAnimations) {
+            this._activeAnimation = val;
+            this.spriteAnimations[this._activeAnimation].reset();
+
+            this.sprite!.addChild(this.spriteAnimations[this._activeAnimation].container);
+
+            for (const anim in this.spriteAnimations) {
+                this.spriteAnimations[anim].container.visible = false;
             }
 
-            this._spriteAnimations[this._activeAnimation].container.visible = true;
-        }
+            this.spriteAnimations[this._activeAnimation].container.visible = true;
+        } else this._activeAnimation = '';
     }
     public get activeAnimation(): string {
         return this._activeAnimation;

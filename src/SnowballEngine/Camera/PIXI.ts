@@ -25,6 +25,8 @@ export class PIXI {
             view: new Canvas(innerWidth, innerHeight)
         });
 
+        this.renderer.textureGC.maxIdle = 60;
+
         // this.renderer.plugins.interaction.destroy();
 
         this.renderer.textureGC.mode = GC_MODES.AUTO;

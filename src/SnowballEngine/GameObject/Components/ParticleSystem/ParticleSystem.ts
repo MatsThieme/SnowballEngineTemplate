@@ -60,8 +60,6 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
      * 
      */
     protected override update(): void {
-        super.update();
-
         if (!this.active || !this._asset) return;
 
         this._timer += GameTime.deltaTimeSeconds;

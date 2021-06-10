@@ -97,7 +97,7 @@ export class Game {
 
 </br>
 
-## Engine code structure
+## Code structure
 <pre>
 SceneManager
   Scene
@@ -125,17 +125,17 @@ A Component controls the behavior of the corresponding GameObject.
 | --- | --- |
 | **AnimatedSprite** | Manages SpriteAnimation instances to render and switch sprite animations. |
 | **AudioListener** | Can exist once per scene, it's the "ears" of the player. It's the audio equivalent of Camera. |
-| **AudioSource** | Emits positional Audio. Can hold an AudioMixer object to filter/modify output, requires an AudioListener in the Scene. |
-| **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. |
+| **AudioSource** | Emits positional Audio. Can hold an AudioMixer object to filter/modify output. Requires an AudioListener in the Scene. |
+| **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. Use by creating |
 | **Camera** | The size and position of a camera component specify which area of the scene is rendered to the screen. |
 | **CircleCollider** |  |
-| **Collider** |  |
+| **Collider** | The Base class for all collider components. |
 | **Component** | The Base class for all components. |
 | **ParallaxBackground** | A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling) |
 | **ParticleSystem** |  |
 | **PolygonCollider** |  |
 | **RectangleCollider** |  |
-| **Renderable** | The Base class for all renderable components. Examlpes are [Texture](#texture), [Video](#video), [ParallaxBackground](#parallaxbackground) and [Text](#text). |
+| **Renderable** | The Base class for all renderable components. Examlpes are Texture, Video and ParallaxBackground. |
 | **Rigidbody** |  |
 | **TerrainCollider** |  |
 | **TerrainRenderer** |  |
@@ -215,9 +215,9 @@ InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, co
 The signature of an input mapping file looks like this:
 ```typescript
 interface InputMapping {
-    keyboard?: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
-    mouse?: { [key in InputAction]?: MouseButton | MouseAxis },
-    gamepad?:  { [key in InputAction]?: GamepadButton | GamepadAxis },
-    touch?: { [key in InputAction]?: TouchButton | TouchAxis }
+    keyboard: { [key in InputAction]?: KeyboardButton | KeyboardAxis },
+    mouse: { [key in InputAction]?: MouseButton | MouseAxis },
+    gamepad:  { [key in InputAction]?: GamepadButton | GamepadAxis },
+    touch: { [key in InputAction]?: TouchButton | TouchAxis }
 }
 ```
