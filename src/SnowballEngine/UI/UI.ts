@@ -83,7 +83,7 @@ export class UI implements Destroyable {
      *
      */
     public async update(): Promise<void> {
-        await Promise.all([...this.menus.values()].map(m => m.update()));
+        await Promise.all(Array.from(this.menus.values()).map(m => m.update()));
     }
 
     public onEnableMenu(name: UIMenuName): void {
@@ -95,7 +95,7 @@ export class UI implements Destroyable {
     }
 
     public prepareDestroy(): void {
-        for (const menu of this.menus.values()) {
+        for (const menu of Array.from(this.menus.values())) {
             Destroy(menu);
         }
     }

@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "Node",
-        "target": "ES6",
+        "target": "ES5",
         "lib": [
             "ESNext",
             "DOM"
@@ -14,7 +14,6 @@
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "noImplicitOverride": false,
-        "downlevelIteration": true, // support es5 compilation
         "baseUrl": "src",
         "paths": {
             "SE": [

@@ -139,7 +139,7 @@ export class UICheckbox extends UIElement {
         const style = UIFonts.getStyle(<UIFont>this._bitmapText.fontName)!;
         const fontSize = <number>style.fontSize;
 
-        const lines = [...this._bitmapText.text.matchAll(/\n/g)].length + 1;
+        const lines = Array.from(this._bitmapText.text.matchAll(/\n/g)).length + 1;
 
 
         const ratio = this._bitmapText.width / this._bitmapText.height;

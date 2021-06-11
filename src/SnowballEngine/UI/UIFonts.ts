@@ -37,7 +37,7 @@ export class UIFonts {
     public static get bytesUsed(): number {
         let bytes = 0;
 
-        for (const f of this._fonts.values()) {
+        for (const f of Array.from(this._fonts.values())) {
             bytes += f.bytes;
         }
 
@@ -88,7 +88,7 @@ export class UIFonts {
     }
 
     private static update(): void {
-        for (const [name, font] of [...UIFonts._fonts.entries()]) {
+        for (const [name, font] of Array.from(UIFonts._fonts.entries())) {
             UIFonts.modify(name, font.style);
         }
     }

@@ -99,7 +99,7 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
     }
 
     public update(): void {
-        for (const btn of this._keys.values()) {
+        for (const btn of Array.from(this._keys.values())) {
             btn.update();
         }
 

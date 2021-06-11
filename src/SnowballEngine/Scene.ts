@@ -145,7 +145,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Input.update();
 
-        const scenePaused = this.pause || [...this.ui.menus.values()].some(m => m.active && m.pauseScene);
+        const scenePaused = this.pause || Array.from(this.ui.menus.values()).some(m => m.active && m.pauseScene);
 
         if (!scenePaused) {
             await Behaviour.earlyupdate();

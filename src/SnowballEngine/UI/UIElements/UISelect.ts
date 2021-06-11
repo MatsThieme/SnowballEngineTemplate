@@ -39,7 +39,7 @@ export class UISelect extends UIElement {
 
         this._resizeListener = (() => {
             this._bitmapText.updateText();
-            for (const text of this._labels.values()) text.updateText();
+            for (const text of Array.from(this._labels.values())) text.updateText();
 
             if (this._extended) this.prepareElements();
         }).bind(this);
@@ -54,7 +54,7 @@ export class UISelect extends UIElement {
         this._bitmapText.fontName = this._font = val;
         this._bitmapText.updateText();
 
-        for (const [label, text] of this._labels) {
+        for (const [label, text] of Array.from(this._labels)) {
             text.fontName = val;
             text.updateText();
         }
@@ -70,7 +70,7 @@ export class UISelect extends UIElement {
     public set tint(val: Color) {
         this._bitmapText.tint = val.rgb;
 
-        for (const [label, text] of this._labels) {
+        for (const [label, text] of Array.from(this._labels)) {
             text.tint = val.rgb;
         }
     }
@@ -113,7 +113,7 @@ export class UISelect extends UIElement {
         const style = UIFonts.getStyle(<UIFont>this._bitmapText.fontName)!;
         const fontSize = <number>style.fontSize;
 
-        const lines = [...this._bitmapText.text.matchAll(/\n/g)].length + 1;
+        const lines = Array.from(this._bitmapText.text.matchAll(/\n/g)).length + 1;
 
 
         const ratio = this._bitmapText.width / this._bitmapText.height;
@@ -124,7 +124,7 @@ export class UISelect extends UIElement {
         if (this.click || (this._extended && !this.down && Input.getButton('Trigger').down)) {
             if (this._extended) {
                 if (this.click) {
-                    for (const [label, text] of this._labels) {
+                    for (const [label, text] of Array.from(this._labels)) {
                         const aabb = new AABB(new Vector2(this.container.position.x + text.x + this._width / 2, this.container.position.y + text.y + text.height / 2), new Vector2(this._width / 2 + this.padding.x, text.height / 2));
 
                         if (aabb.intersectsPoint(this.downPosition!)) {
@@ -136,7 +136,7 @@ export class UISelect extends UIElement {
 
                 this._extended = false;
 
-                for (const [label, text] of this._labels) {
+                for (const [label, text] of Array.from(this._labels)) {
                     text.visible = false;
                 }
             } else {
@@ -158,7 +158,7 @@ export class UISelect extends UIElement {
         this._width = 0;
         let i = 0;
 
-        for (const [label, text] of this._labels) {
+        for (const [label, text] of Array.from(this._labels)) {
             text.visible = visible;
 
             text.scale.set(Client.resolution.y / Client.resolution.x, 1);
@@ -168,7 +168,7 @@ export class UISelect extends UIElement {
             const style = UIFonts.getStyle(<UIFont>text.fontName)!;
             const fontSize = <number>style.fontSize;
 
-            const lines = [...label.matchAll(/\n/g)].length + 1;
+            const lines = Array.from(label.matchAll(/\n/g)).length + 1;
 
 
             const ratio = text.width / text.height;
