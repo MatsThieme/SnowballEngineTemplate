@@ -6,7 +6,8 @@ import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { AABB } from 'Utility/AABB';
 import { Angle } from 'Utility/Angle';
-import { ParallaxBackgroundEventTypes } from 'Utility/Events/EventTypes';
+import { EventHandler } from 'Utility/Events/EventHandler';
+import { ParallaxBackgroundEventTypes, TransformEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Camera } from '../Camera';
 import { Renderable } from '../Renderable';
@@ -22,6 +23,8 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
     private readonly _backgroundLayers: BackgroundLayer[];
 
     private _aabb: AABB;
+
+    private _transformListener: EventHandler<TransformEventTypes['change']>;
 
     /**
      * 
@@ -41,6 +44,14 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
 
         this.sprite!.mask = new Graphics();
         this.sprite!.addChild(this.sprite!.mask);
+
+
+        this._transformListener = new EventHandler((t, p, r, s) => {
+            this.recalculateAABB();
+        }, this);
+
+        this.gameObject.transform.addListener('change', this._transformListener);
+        this.gameObject.transform.addListener('parentchange', this._transformListener);
     }
 
 
@@ -102,6 +113,9 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
     }
 
     public override destroy(): void {
+        this.gameObject.transform.removeListener('change', this._transformListener);
+        this.gameObject.transform.removeListener('parentchange', this._transformListener);
+
         this._backgroundLayers.forEach(l => Dispose(l));
 
         super.destroy();
