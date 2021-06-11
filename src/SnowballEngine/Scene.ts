@@ -13,7 +13,7 @@ import { UIFonts } from 'UI/UIFonts';
 import { EventTarget } from 'Utility/Events/EventTarget';
 import { SceneEventTypes } from 'Utility/Events/EventTypes';
 import { clearObject } from 'Utility/Helpers';
-import { Interval } from 'Utility/Interval';
+import { Interval } from 'Utility/Interval/Interval';
 import { Stopwatch } from 'Utility/Stopwatch';
 import { CameraManager } from './Camera/CameraManager';
 import { Client } from './Client';
@@ -145,7 +145,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Input.update();
 
-        const scenePaused = this.pause || Array.from(this.ui.menus.values()).some(m => m.active && m.pauseScene);
+        const scenePaused = this.pause || Object.values(this.ui.menus).some(m => m.active && m.pauseScene);
 
         if (!scenePaused) {
             await Behaviour.earlyupdate();
@@ -196,7 +196,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
 
-        await this.appendToDOM();
+        document.body.appendChild(this.domElement);
     }
 
     /**
@@ -210,37 +210,11 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this._requestAnimationFrameHandle = undefined;
 
-        await this.removeFromDOM();
-
-        await new Promise<void>(resolve => {
-            new Interval(i => {
-                if (this._updateComplete) {
-                    i.clear();
-                    resolve();
-                }
-            }, 10);
-        });
-    }
-
-    private async appendToDOM(): Promise<void> {
-        document.body.appendChild(this.domElement);
-
-        await new Promise<void>(resolve => {
-            new Interval(i => {
-                if (document.getElementById(this.name)) {
-                    i.clear();
-                    resolve();
-                }
-            }, 10);
-        });
-    }
-
-    private async removeFromDOM(): Promise<void> {
         this.domElement.remove();
 
         await new Promise<void>(resolve => {
             new Interval(i => {
-                if (!document.getElementById(this.name)) {
+                if (this._updateComplete) {
                     i.clear();
                     resolve();
                 }

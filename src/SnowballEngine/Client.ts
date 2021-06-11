@@ -1,6 +1,6 @@
 import isMobile from 'ismobilejs';
 import { triggerOnUserInputEvent } from 'Utility/Helpers';
-import { Interval } from 'Utility/Interval';
+import { Interval } from 'Utility/Interval/Interval';
 import { Timeout } from 'Utility/Timeout/Timeout';
 import { Vector2 as IVector2, Vector2 } from 'Utility/Vector2';
 import { AudioListener } from './GameObject/Components/AudioListener';

@@ -16,7 +16,7 @@ PIXI.utils.skipHello(); // don't show PIXIs hello in console
 Ticker.system.autoStart = false;
 if (projectConfig.build.debugMode) (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
 
-(<any>Common).setDecomp(poly_decomp);
+Common.setDecomp(poly_decomp);
 
 
 Debug.init(); // add global error handlers

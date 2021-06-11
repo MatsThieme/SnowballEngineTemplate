@@ -5,13 +5,13 @@ export function Timeout(milliseconds) {
     const promise = new Promise((resolve, reject) => {
         _reject = reject;
 
-        _handle = setTimeout(resolve, milliseconds);
+        _handle = window.setTimeout(resolve, milliseconds);
     });
 
     promise.cancel = function () {
-        clearTimeout(_handle);
+        window.clearTimeout(_handle);
         _reject();
-    }
+    };
 
     return promise;
 }

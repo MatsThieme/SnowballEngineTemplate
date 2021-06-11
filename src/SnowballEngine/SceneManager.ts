@@ -1,4 +1,4 @@
-import { Interval } from 'Utility/Interval';
+import { Interval } from 'Utility/Interval/Interval';
 import { Scene } from './Scene';
 
 /** @category Scene */

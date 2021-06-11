@@ -1,4 +1,4 @@
-const path = require('path');
+const { resolve } = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
@@ -16,18 +16,18 @@ module.exports = {
         extensions: ['.ts', '.js'],
         modules: ['node_modules', 'src'],
         alias: {
-            SE: path.resolve(__dirname, 'src/SnowballEngine/SnowballEngine.ts'),
-            Config: path.resolve(__dirname, 'SnowballEngineConfig.json'),
-            UI: path.resolve(__dirname, 'src/SnowballEngine/UI/'),
-            Utility: path.resolve(__dirname, 'src/SnowballEngine/Utilities/'),
-            Input: path.resolve(__dirname, 'src/SnowballEngine/Input/'),
-            Assets: path.resolve(__dirname, 'src/SnowballEngine/Assets/'),
-            Audio: path.resolve(__dirname, 'src/SnowballEngine/Audio/'),
-            GameObject: path.resolve(__dirname, 'src/SnowballEngine/GameObject/')
+            SE: resolve(__dirname, 'src/SnowballEngine/SnowballEngine.ts'),
+            Config: resolve(__dirname, 'SnowballEngineConfig.json'),
+            UI: resolve(__dirname, 'src/SnowballEngine/UI/'),
+            Utility: resolve(__dirname, 'src/SnowballEngine/Utilities/'),
+            Input: resolve(__dirname, 'src/SnowballEngine/Input/'),
+            Assets: resolve(__dirname, 'src/SnowballEngine/Assets/'),
+            Audio: resolve(__dirname, 'src/SnowballEngine/Audio/'),
+            GameObject: resolve(__dirname, 'src/SnowballEngine/GameObject/')
         }
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: resolve('dist')
     },
     optimization: {
         minimizer: [
@@ -35,7 +35,7 @@ module.exports = {
                 terserOptions: {
                     format: {
                         comments: false
-                    },
+                    }
                 },
                 extractComments: false
             })

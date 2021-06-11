@@ -6,7 +6,7 @@ import { UIMenuNavigation } from 'UI/UIMenuNavigation';
 
 /** @category UI */
 export class UI implements Destroyable {
-    public readonly menus: Map<UIMenuName, UIMenu>;
+    public readonly menus: Partial<Record<UIMenuName, UIMenu>>;
     public readonly container: Container;
     public readonly navigationHistory: UIMenuNavigation;
 
@@ -18,7 +18,7 @@ export class UI implements Destroyable {
     public font: UIFont;
 
     public constructor() {
-        this.menus = new Map();
+        this.menus = {};
         this.container = new Container();
         this.navigationHistory = new UIMenuNavigation();
 
@@ -31,7 +31,7 @@ export class UI implements Destroyable {
      * 
      */
     public async addMenu(name: UIMenuName, ...initializer: ((menu: UIMenu) => void | Promise<void>)[]): Promise<UIMenu> {
-        if (this.menus.has(name)) {
+        if (this.menus[name]) {
             throw new Error(`Menu with name ${name} already exists`);
         }
 
@@ -40,7 +40,7 @@ export class UI implements Destroyable {
         this.container.addChild(menu.container);
         this.container.name = 'UI';
 
-        this.menus.set(name, menu);
+        this.menus[name] = menu;
 
         if (initializer) {
             for (const i of initializer) {
@@ -62,7 +62,7 @@ export class UI implements Destroyable {
         if (menu) {
             this.container.removeChild(menu.container);
             Destroy(menu);
-            this.menus.delete(name);
+            delete this.menus[name];
         } else {
             Debug.warn(`No Menu identified by ${name}`);
         }
@@ -74,7 +74,7 @@ export class UI implements Destroyable {
      * 
      */
     public menu(name: UIMenuName): UIMenu | undefined {
-        return this.menus.get(name);
+        return this.menus[name];
     }
 
     /**
@@ -83,7 +83,7 @@ export class UI implements Destroyable {
      *
      */
     public async update(): Promise<void> {
-        await Promise.all(Array.from(this.menus.values()).map(m => m.update()));
+        await Promise.all(Object.values(this.menus).map(m => m.update()));
     }
 
     public onEnableMenu(name: UIMenuName): void {
@@ -91,11 +91,11 @@ export class UI implements Destroyable {
     }
 
     public onDisableMenu(name: UIMenuName): void {
-
+        this.navigationHistory.currentIndex -= 1;
     }
 
     public prepareDestroy(): void {
-        for (const menu of Array.from(this.menus.values())) {
+        for (const menu of Object.values(this.menus)) {
             Destroy(menu);
         }
     }

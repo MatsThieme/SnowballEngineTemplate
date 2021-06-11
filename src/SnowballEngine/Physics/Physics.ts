@@ -30,7 +30,7 @@ export class Physics implements Destroyable {
         this.gravity = new Vector2(0, -0.01 * this._worldScale);
 
         this.engine = Engine.create();
-        this.engine.world.gravity.y = 0;
+        this.engine.gravity.y = 0;
         this.engine.enableSleeping = false;
 
 

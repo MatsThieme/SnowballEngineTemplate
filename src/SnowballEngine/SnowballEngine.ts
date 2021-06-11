@@ -88,7 +88,7 @@ export * from './Utilities/Events/EventHandler';
 export * from './Utilities/Events/EventTarget';
 export * from './Utilities/Events/EventType';
 export * from './Utilities/Helpers';
-export * from './Utilities/Interval';
+export * from './Utilities/Interval/Interval';
 export * from './Utilities/Noise';
 export * from './Utilities/Shape/Shape';
 export * from './Utilities/Stopwatch';

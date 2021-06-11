@@ -1,4 +1,4 @@
-import { Interval } from './Interval';
+import { Interval } from './Interval/Interval';
 
 /** @category Utility */
 export class AsyncWorker {

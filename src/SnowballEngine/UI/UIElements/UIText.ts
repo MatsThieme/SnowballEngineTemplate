@@ -13,11 +13,14 @@ export class UIText extends UIElement {
     protected readonly _bitmapText: BitmapText;
 
     private readonly _resizeListener: () => void;
+    private _lines: number;
 
     public constructor(menu: UIMenu, name: string, type: UIElementType = UIElementType.Text) {
         super(menu, name, type);
 
         this._bitmapText = new BitmapText('', { fontName: menu.font || Scene.currentScene.ui.font });
+
+        this._lines = 0;
 
         this.container.addChild(this._bitmapText);
 
@@ -39,6 +42,8 @@ export class UIText extends UIElement {
     }
     public set text(val: string) {
         this._bitmapText.text = val;
+
+        this._lines = Array.from(val.matchAll(/\n/g)).length + 1;
     }
 
     public get tint(): Color {
@@ -74,13 +79,10 @@ export class UIText extends UIElement {
         const style = UIFonts.getStyle(<UIFont>this._bitmapText.fontName)!;
         const fontSize = <number>style.fontSize;
 
-        const lines = Array.from(this._bitmapText.text.matchAll(/\n/g)).length + 1;
-
-
         const ratio = this._bitmapText.width / this._bitmapText.height;
 
-        this._bitmapText.height = fontSize * lines + fontSize * 0.11;
-        this._bitmapText.width = ratio * fontSize * lines * (1 + 0.2 / lines);
+        this._bitmapText.height = fontSize * this._lines + fontSize * 0.11;
+        this._bitmapText.width = ratio * fontSize * this._lines * (1 + 0.2 / this._lines);
 
         return super.update();
     }

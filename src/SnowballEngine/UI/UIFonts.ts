@@ -5,7 +5,7 @@ import { Debug } from 'SnowballEngine/Debug';
 
 /** @category UI */
 export class UIFonts {
-    private static readonly _fonts: Map<UIFont, { style: BitmapTextStyle, font: BitmapFont, bytes: number }>;
+    private static readonly _fonts: Partial<Record<UIFont, { style: BitmapTextStyle, font: BitmapFont, bytes: number }>>;
     private static lastInnerHeight: number = 0;
 
     public static init(): void {
@@ -37,7 +37,7 @@ export class UIFonts {
     public static get bytesUsed(): number {
         let bytes = 0;
 
-        for (const f of Array.from(this._fonts.values())) {
+        for (const f of Object.values(this._fonts)) {
             bytes += f.bytes;
         }
 
@@ -45,7 +45,7 @@ export class UIFonts {
     }
 
     public static add(name: UIFont, style: BitmapTextStyle, chars: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:-/\\&%$"!.,() '): void {
-        if (UIFonts._fonts.has(name)) throw new Error(`Font with name ${name} exists`);
+        if (UIFonts._fonts[name]) throw new Error(`Font with name ${name} exists`);
 
         if (typeof style.fontSize !== 'number') throw new Error('FontStyle.fontSize must be of type number');
 
@@ -68,19 +68,19 @@ export class UIFonts {
 
         size *= 4;
 
-        UIFonts._fonts.set(name, { style, font, bytes: size });
+        UIFonts._fonts[name] = { style, font, bytes: size };
     }
 
     public static remove(name: UIFont): void {
-        if (!UIFonts._fonts.has(name)) return Debug.warn(`Font with name ${name} does not exist`);
+        if (!UIFonts._fonts[name]) return Debug.warn(`Font with name ${name} does not exist`);
 
-        UIFonts._fonts.get(name)!.font.destroy();
+        UIFonts._fonts[name]!.font.destroy();
 
-        UIFonts._fonts.delete(name);
+        delete UIFonts._fonts[name];
     }
 
     public static modify(name: UIFont, newstyle: BitmapTextStyle): void {
-        if (!UIFonts._fonts.has(name)) throw new Error(`Font with name ${name} does not exist`);
+        if (!UIFonts._fonts[name]) throw new Error(`Font with name ${name} does not exist`);
 
         UIFonts.remove(name);
 
@@ -88,16 +88,16 @@ export class UIFonts {
     }
 
     private static update(): void {
-        for (const [name, font] of Array.from(UIFonts._fonts.entries())) {
-            UIFonts.modify(name, font.style);
+        for (const [name, font] of Object.entries(this._fonts)) {
+            UIFonts.modify(<UIFont>name, font.style);
         }
     }
 
     public static get(name: UIFont): BitmapFont | undefined {
-        return UIFonts._fonts.get(name)?.font;
+        return UIFonts._fonts[name]?.font;
     }
 
     public static getStyle(name: UIFont): BitmapTextStyle | undefined {
-        return UIFonts._fonts.get(name)?.style;
+        return UIFonts._fonts[name]?.style;
     }
 }
