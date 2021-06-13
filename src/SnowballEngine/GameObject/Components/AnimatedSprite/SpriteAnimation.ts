@@ -3,8 +3,9 @@ import { Sprite } from '@pixi/sprite';
 import { Asset } from 'Assets/Asset';
 import { AssetType } from 'Assets/AssetType';
 import { Disposable } from 'GameObject/Dispose';
-import { Debug } from 'SnowballEngine/Debug';
+import { BlendModes as BlendMode } from 'SnowballEngine/Camera/BlendModes';
 import { GameTime } from 'SnowballEngine/GameTime';
+import { Color } from 'Utility/Color';
 import { Vector2 } from 'Utility/Vector2';
 
 export class SpriteAnimation implements Disposable {
@@ -53,6 +54,8 @@ export class SpriteAnimation implements Disposable {
             }
         }
 
+        this.container.removeChildren();
+
         this._assets = val;
 
         this._sprites = val.map(a => a.getPIXISprite()!).filter(Boolean).map(s => {
@@ -60,18 +63,49 @@ export class SpriteAnimation implements Disposable {
             s.width = size.x;
             s.height = size.y;
 
-            s.anchor.set(0);
+            s.anchor.set(0.5);
+
+            this.container.addChild(s);
 
             return s;
         });
+    }
 
-        if (this._sprites.length !== this._assets.length) Debug.warn('could not create pixi sprite for ' + (this._assets.length - this._sprites.length) + ' assets');
-
-        this.container.removeChildren();
-
+    /**
+     * 
+     * Get the first sprites size.
+     * Set the magnitude of sprites size.
+     * 
+     */
+    public get size(): Vector2 {
+        return new Vector2(this._sprites[0].width, this._sprites[0].height);
+    }
+    public set size(val: Vector2) {
         for (const s of this._sprites) {
-            this.container.addChild(s);
-            s.anchor.set(0.5, 0.5);
+            const size = new Vector2(s.width, s.height).setLength(val.magnitude);
+            s.width = size.x;
+            s.height = size.y;
+        }
+    }
+
+    public get tint(): Color {
+        const c = new Color();
+        c.rgb = this._sprites[0]!.tint;
+
+        return c;
+    }
+    public set tint(val: Color) {
+        for (const s of this._sprites) {
+            s.tint = val.rgb;
+        }
+    }
+
+    public get blendMode(): BlendMode {
+        return <any>this._sprites[0].blendMode;
+    }
+    public set blendMode(val: BlendMode) {
+        for (const s of this._sprites) {
+            s.blendMode = <any>val;
         }
     }
 

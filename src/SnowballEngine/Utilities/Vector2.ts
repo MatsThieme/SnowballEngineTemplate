@@ -1,6 +1,7 @@
 import { Debug } from 'SnowballEngine/Debug';
 import { Angle } from './Angle';
 import { random } from './Helpers';
+import { Range } from './Range';
 
 /** @category Utility */
 export class Vector2 implements IVector2 {
@@ -485,9 +486,8 @@ export class Vector2 implements IVector2 {
         return new Vector2(vec.x, vec.y);
     }
 
-    public static get random(): Vector2 {
-        const range = Math.random() * 2 ** 10;
-        return new Vector2(random(-range, range), random(-range, range));
+    public static randomRange(range: Range<IVector2>): Vector2 {
+        return new Vector2(random(range.min.x, range.max.x), random(range.min.y, range.max.y));
     }
 
     public static removeDuplicates(vs: Vector2[]): Vector2[] {

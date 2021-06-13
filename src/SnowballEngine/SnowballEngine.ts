@@ -7,6 +7,7 @@ export * from './Audio/Effects/AudioEffectDelay';
 export * from './Audio/Effects/AudioEffectDistortion';
 export * from './Audio/Effects/AudioEffectReverb';
 export * from './Audio/Effects/AudioEffectVolume';
+export * from './Camera/BlendModes';
 export * from './Camera/CameraManager';
 export * from './Client';
 export * from './Debug';
@@ -90,8 +91,8 @@ export * from './Utilities/Events/EventType';
 export * from './Utilities/Helpers';
 export * from './Utilities/Interval/Interval';
 export * from './Utilities/Noise';
+export * from './Utilities/Range';
 export * from './Utilities/Shape/Shape';
 export * from './Utilities/Stopwatch';
 export * from './Utilities/Timeout/Timeout';
 export * from './Utilities/Vector2';
-

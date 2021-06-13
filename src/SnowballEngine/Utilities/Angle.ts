@@ -1,3 +1,4 @@
+import { Range } from './Range';
 import { Vector2 } from './Vector2';
 
 /** @category Utility */
@@ -76,8 +77,16 @@ export class Angle {
         return new Vector2(Math.cos(this.radian), Math.sin(this.radian));
     }
 
-    public static random(range: IAngle = Angle.max): Angle {
-        return new Angle(Math.random() * range.radian);
+    public static get random(): Angle {
+        return new Angle(undefined, Math.random() * 360);
+    }
+
+    public static randomRange(range: Range<IAngle> = new Range(Angle.min, Angle.max)): Angle {
+        return new Angle(Math.random() * (range.max.radian - range.min.radian) + range.min.radian);
+    }
+
+    public static get min(): Angle {
+        return new Angle();
     }
 
     public static get max(): Angle {

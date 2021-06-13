@@ -1,4 +1,5 @@
 import { clamp, random } from './Helpers';
+import { Range } from './Range';
 
 /** @category Utility */
 export class Color {
@@ -147,6 +148,15 @@ export class Color {
         }
 
         return new Color(r / colors.length, g / colors.length, b / colors.length, a / colors.length);
+    }
+
+
+    public static get random(): Color {
+        return new Color(random(0, 255), random(0, 255), random(0, 255));
+    }
+
+    public static randomRange(range: Range<Color>): Color {
+        return new Color(random(range.min.r, range.max.r), random(range.min.g, range.max.g), random(range.min.b, range.max.b), random(range.min.a, range.max.a));
     }
 
     // https://www.w3schools.com/colors/colors_groups.asp
@@ -744,11 +754,5 @@ export class Color {
 
     public static get black(): Color {
         return new Color(0, 0, 0);
-    }
-
-
-
-    public static get random(): Color {
-        return new Color(random(0, 255), random(0, 255), random(0, 255));
     }
 }

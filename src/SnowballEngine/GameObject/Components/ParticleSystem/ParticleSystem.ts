@@ -4,7 +4,9 @@ import { Dispose } from 'GameObject/Dispose';
 import { GameObject } from 'GameObject/GameObject';
 import { GameTime } from 'SnowballEngine/GameTime';
 import { Angle } from 'Utility/Angle';
+import { Color } from 'Utility/Color';
 import { ParticleSystemEventTypes } from 'Utility/Events/EventTypes';
+import { Range } from 'Utility/Range';
 import { Vector2 } from 'Utility/Vector2';
 import { Renderable } from '../Renderable';
 import { Particle } from './Particle';
@@ -13,6 +15,7 @@ import { Particle } from './Particle';
 export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
     public readonly particleSettings: ParticleSettings;
     public readonly emissionSettings: EmissionSettings;
+    public timeScale: number;
 
     private _asset?: ParticleAsset;
     private _timer: number;
@@ -25,11 +28,14 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
 
         this.particleSettings = {
             startSize: new Vector2(0.1, 0.1),
-            rotation: new Angle(0.5),
-            velocity: 1,
-            lifeTime: 500,
+            rotation: new Angle(Math.PI),
+            lifeTime: new Range(400, 600),
             fadeIn: 100,
-            fadeOut: 100
+            fadeOut: 100,
+            startSpeed: 1,
+            endSpeed: 1,
+            tint: Color.white,
+            rotationDirection: 'random'
         };
 
         this.emissionSettings = {
@@ -38,6 +44,8 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
             angle: Angle.max,
             maxParticles: 10
         };
+
+        this.timeScale = 1;
 
         this._timer = 0;
         this._particles = [];
@@ -64,26 +72,23 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
 
         this._timer += GameTime.deltaTimeSeconds;
 
-        while (this._timer >= 1 / this.emissionSettings.emission && this._particles.length < this.emissionSettings.maxParticles) {
-            const particle = new Particle(this, Vector2.up.rotateAroundBy(new Vector2(), Angle.random(this.emissionSettings.angle)).setLength(this.particleSettings.velocity));
 
-            this.sprite!.addChild(particle.container);
+        for (let i = this._particles.length - 1; i >= 0; i--) {
+            if (this._particles[i].endTime <= GameTime.gameTimeSinceStart) {
+                Dispose(this._particles.splice(i, 1)[0]);
+            } else {
+                this._particles[i].update();
+            }
+        }
+
+        const emission = 1 / (this.emissionSettings.emission * this.timeScale);
+
+        while (this._timer >= emission && this._particles.length < this.emissionSettings.maxParticles) {
+            const particle = new Particle(this);
 
             this._particles.push(particle);
 
-            this._timer -= 1 / this.emissionSettings.emission;
-        }
-
-
-        for (let i = this._particles.length - 1; i >= 0; i--) {
-            if (this._particles[i].endTime < GameTime.gameTimeSinceStart) {
-                const particle = this._particles.splice(i, 1)[0];
-
-                this.sprite?.removeChild(particle.container);
-
-                Dispose(particle);
-            }
-            else this._particles[i].update();
+            this._timer -= emission;
         }
     }
 
