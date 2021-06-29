@@ -178,7 +178,7 @@ It can be generated from the Assets directory with <code>[npm run createadb](#ge
 
 Typescript signature of 'AssetDB.json's content:
 ```typescript
-type AssetDB = { [path: string]: { type: AssetType, "optional asset name"?: 0 } }; // path is relative to the Assets directory
+type AssetDB = { [path: string]: { "optional asset name": AssetType } }; // path is relative to the Assets directory
 ```
 
 #### Creating Assets

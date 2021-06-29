@@ -130,7 +130,7 @@ const utility = {
 
             const type = utility.getAssetType(p);
 
-            assetDB[p] = { type };
+            assetDB[p] = { '': type };
         }
 
         return assetDB;
@@ -364,7 +364,12 @@ async function updateADB() {
     const adb = await utility.readJSONFile(assetDBpath);
 
     for (const key of Object.keys(adb)) {
-        if (Object.keys(adb[key]).length > 1) assets[key] = adb[key]; // 1 key == type, 2 keys == type and asset name
+        const name = Object.keys(adb[key])[0];
+
+        if (name !== '') {
+            assets[key][name] = adb[key][name];
+            delete assets[key][''];
+        }
     }
 
     await utility.writeJSONFile(assetDBpath, assets);

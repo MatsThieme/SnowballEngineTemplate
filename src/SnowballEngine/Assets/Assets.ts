@@ -8,7 +8,7 @@ import { AssetType } from './AssetType';
 type ADB = typeof AssetDB;
 
 declare global {
-    type AssetID = keyof ADB | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], 'type' | ''> | AssetName;
+    type AssetID = keyof ADB | AssetName | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], ''>;
 }
 
 /** @category Asset Management */
@@ -102,38 +102,52 @@ export class Assets {
     }
 
     private static loadFont(url: string, name: string): Promise<void> {
-        return new Promise(resolve => {
-            const e = document.head.querySelector('style') || document.head.appendChild(document.createElement('style'));
-            e.innerHTML += `@font-face { font-family: ${name}; src: url('${url}'); }`;
+        if (Assets.canCheckFont()) return Assets.fontLoadPromise(name);
 
-            const p = document.createElement('span');
-            p.textContent = 'IWML'.repeat(100);
-            p.style.fontFamily = 'serif';
-            p.style.visibility = 'hidden';
-            p.style.fontSize = '10000px';
-            document.body.appendChild(p);
+        const e = document.head.querySelector('style') || document.head.appendChild(document.createElement('style'));
+        e.innerHTML += `@font-face { font-family: ${name}; src: url('${url}'); }`;
 
-            const initialSize = p.offsetWidth * p.offsetHeight;
+        const p = document.createElement('span');
+        p.textContent = 'IWML'.repeat(100);
+        p.style.fontFamily = 'serif';
+        p.style.visibility = 'hidden';
+        p.style.fontSize = '10000px';
+        document.body.appendChild(p);
 
-            p.style.fontFamily = name;
+        const initialSize = p.offsetWidth * p.offsetHeight;
 
-            new Interval(i => {
-                if (p.offsetWidth * p.offsetHeight !== initialSize) {
-                    i.clear();
-                    resolve();
-                    p.remove();
-                }
-            }, 1);
-        });
+        p.style.fontFamily = name;
+
+        return new Interval(i => {
+            if (p.offsetWidth * p.offsetHeight !== initialSize) {
+                i.clear();
+                p.remove();
+            }
+        }, 10);
+    }
+
+    private static checkFont(name: string): boolean {
+        return (<any>document).fonts.check(`10px ${name}`);
+    }
+
+    private static canCheckFont(): boolean {
+        return !!(<any>document).fonts?.check;
+    }
+
+    private static fontLoadPromise(name: string): Promise<void> {
+        return new Interval(i => {
+            if (Assets.checkFont(name)) {
+                i.clear();
+            }
+        }, 10);
     }
 
     public static async loadFromAssetDB(): Promise<void> {
-        const db = <{ [path: string]: { type: AssetType } }>AssetDB;
-
         const p: Promise<Asset>[] = [];
 
-        for (const path in db) {
-            p.push(Assets.load(path, db[path].type, <AssetID>Object.keys(db[path]).find(k => k !== 'type')));
+        for (const path in AssetDB) {
+            const name = Object.keys(<AssetID>(<any>AssetDB)[path])[0];
+            p.push(Assets.load(path, (<any>AssetDB)[path][name], name ? <AssetID>name : undefined));
         }
 
         for (const ap of p) {
