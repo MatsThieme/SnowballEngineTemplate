@@ -39,18 +39,15 @@ export class Assets {
             throw new Error('Asset not loaded: Asset with name/path exists');
         }
 
-        let asset: Asset;
-
         try {
-            asset = await Assets.urlToAsset(`./Assets/${path}`, type, name);
+            const asset = await Assets.urlToAsset(`./Assets/${path}`, type, name);
+            Assets._assets[path] = asset;
+            if (name) Assets._assets[name] = asset;
+
+            return asset;
         } catch (error) {
             throw new Error(`Could not load Asset: ${path}; ${JSON.stringify(error)}`);
         }
-
-        Assets._assets[path] = asset;
-        if (name) Assets._assets[name] = asset;
-
-        return asset;
     }
 
     private static urlToAsset(url: string, type: AssetType, name?: string): Promise<Asset> {
