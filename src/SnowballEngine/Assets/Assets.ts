@@ -147,7 +147,7 @@ export class Assets {
 
         for (const path in AssetDB) {
             const name = Object.keys(<AssetID>(<any>AssetDB)[path])[0];
-            p.push(Assets.load(path, (<any>AssetDB)[path][name], name ? <AssetID>name : undefined));
+            p.push(Assets.load(path, (<any>AssetDB)[path][name], <AssetID>name || undefined));
         }
 
         for (const ap of p) {
