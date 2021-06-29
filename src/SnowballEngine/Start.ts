@@ -9,6 +9,7 @@ import { UIFonts } from 'UI/UIFonts';
 import { Game } from '../Game';
 import { Client } from './Client';
 import { Debug } from './Debug';
+import { SceneManager } from './SceneManager';
 
 window.AudioContext = window.AudioContext || (<any>window).webkitAudioContext; // support safari
 
@@ -30,5 +31,11 @@ UIFonts.init(); // create default fonts
 AudioListener.start(); // create audio context
 
 
-if (window.cordova) document.addEventListener('deviceready', () => new Game());
-else new Game();
+
+if (window.cordova) document.addEventListener('deviceready', () => startGame());
+else startGame();
+
+
+function startGame() {
+    new Game().initialize(new SceneManager());
+}

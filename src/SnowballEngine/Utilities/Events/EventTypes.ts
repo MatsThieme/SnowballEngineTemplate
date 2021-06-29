@@ -31,7 +31,7 @@ export type BehaviourEventTypes = {
 
 export type AnimatedSpriteEventTypes = {} & RenderableEventTypes;
 export type AudioListenerEventTypes = {} & ComponentEventTypes;
-export type AudioSourceEventTypes = { play: [], end: [], pause: [] } & ComponentEventTypes;
+export type AudioSourceEventTypes = { play: [], pause: [], end: [] } & ComponentEventTypes;
 export type CameraEventTypes = {} & ComponentEventTypes;
 export type ColliderEventTypes = {} & ComponentEventTypes;
 export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
@@ -55,7 +55,7 @@ export type TransformEventTypes = {
     /** Triggered when position, rotation or scale of the parent transform were modified */
     parentchange: [transform: Transform, positionDifference?: Readonly<IVector2>, rotationDifference?: Readonly<IAngle>, scaleDifference?: Readonly<IVector2>]
 } & ComponentEventTypes;
-export type VideoEventTypes = { end: [] } & RenderableEventTypes;
+export type VideoEventTypes = { play: [], pause: [], end: [] } & RenderableEventTypes;
 
 
 

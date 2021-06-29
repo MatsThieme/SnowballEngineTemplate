@@ -3,10 +3,7 @@ import { MainScene } from 'Scenes/MainScene';
 import { Assets, Color, SceneManager, Shape, Timeout } from 'SE';
 
 export class Game {
-    public constructor(private readonly sceneManager = new SceneManager()) {
-        this.initialize(this.sceneManager);
-    }
-    private async initialize(sceneManager: SceneManager): Promise<void> {
+    async initialize(sceneManager: SceneManager): Promise<void> {
         // register scenes
         sceneManager.add('Loading Screen Scene', LoadingScreenScene);
         sceneManager.add('Main Scene', MainScene);

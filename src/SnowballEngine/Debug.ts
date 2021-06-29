@@ -1,6 +1,5 @@
 import projectConfig from 'Config';
 import { default as cloneDeep } from 'lodash.clonedeep';
-import { Client } from './Client';
 
 export class Debug {
     public static init(): void {
@@ -22,8 +21,7 @@ export class Debug {
 
         const o = Debug.formatMessage('log', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (Client.isMobile) alert(o.join(' '));
-        else console.log(...o);
+        console.log(...o);
     }
 
     public static warn(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
@@ -31,8 +29,7 @@ export class Debug {
 
         const o = Debug.formatMessage('warning', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (Client.isMobile) alert(o.join(' '));
-        else console.warn(...o);
+        console.warn(...o);
     }
 
     public static error(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
@@ -42,8 +39,7 @@ export class Debug {
 
         const o = Debug.formatMessage('error', msg, logstack ? Debug.formatStack(Error().stack) : '');
 
-        if (Client.isMobile) alert(o.join(' '));
-        else console.warn(...o);
+        console.warn(...o);
     }
 
     private static formatStack(stack = ''): string {

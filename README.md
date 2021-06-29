@@ -6,29 +6,29 @@ SnowballEngine manages scenes, game assets, simulates physics, renders assets an
 [Documentation](https://matsthieme.github.io/SnowballEngineTemplate)
 
 
-### Example games:
+### Example games
 [Tetrong](https://github.com/MatsThieme/Tetrong)
 
 <br>
 
 ### setup
-Requires [nodejs](https://nodejs.org) and npm.
+Requires [nodejs](https://nodejs.org) and [npm](https://www.npmjs.com/package/npm).
 
 <pre>npm i</pre>
 
-### build
+#### build
 <pre>npm run build</pre>
 
-### generate AssetDB.json
+#### generate AssetDB.json
 <pre>npm run createadb</pre>
 
-### update AssetDB.json
+#### update AssetDB.json
 <pre>npm run updateadb</pre>
 
-### start debug server
+#### start debug server
 <pre>npm run server</pre>
 
-### generate documentation
+#### generate documentation
 <pre>npm run doc</pre>
 
 <br>
@@ -48,56 +48,42 @@ src/
 dist/
 </pre>
 
-### Assets/
-Contains all [Assets](#assets-1), [inputmappings](#inputmapping) and [AssetDB.json](#assetdb).
+* **Assets** contains all [Assets](#assets), [inputmappings](#inputmapping) and [AssetDB.json](#assetdb).
+* **dist** contains build files(index.html, main.js, Asset directory).
+* **src** 
+    * **Behaviours** contains files with classes derived from Behaviour.
+    * **Configurables** contains typedefinition files (.d.ts) the user may edit during the development process, e.g. InputAction.d.ts for input mapping.
+    * **Prefabs** contains files that export a function to initialize a GameObject.
+    * **Scenes** contains files that export a function to initialize a Scene.
+    * **SnowballEngine** contains all the GameEngine files.
+    * **Game.ts** Game.ts is the entry point.
 
-### dist/
-Contains build files(index.html, main.js, Asset directory).
-
-### src/
-
-#### Behaviours
-Contains files with classes derived from Behaviour.
-
-#### Configurables
-Contains typedefinition files (.d.ts) the user may edit during the development process, e.g. InputAction.d.ts for input mapping
-
-#### Prefabs
-Contains files that export a function to initialize a GameObject.
-
-#### Scenes
-Contains files that export a function to initialize a Scene.
-
-#### SnowballEngine
-Contains all the GameEngine files.
 
 #### Game.ts
-src/Game.ts is the entry point, it may look like this:
+src/Game.ts, the entry point, may look like this:
 ```typescript
 import { LoadingScreenScene } from 'Scenes/LoadingScreenScene';
 import { MainScene } from 'Scenes/MainScene';
 import { Assets, SceneManager } from 'SE';
 
 export class Game {
-    public constructor() {
-        this.initialize(new SceneManager());
-    }
-    private async initialize(sceneManager: SceneManager): Promise<void> {
-        sceneManager.add('Loading Screen Scene', LoadingScreenScene);
-        sceneManager.add('Main Scene', MainScene);
+    async initialize(sceneManager: SceneManager): Promise<void> {
+        sceneManager.add('Loading Screen Scene', LoadingScreenScene); // register the loading screen scene
+        sceneManager.add('Main Scene', MainScene); // register the main scene
 
-        await sceneManager.load('Loading Screen Scene');
+        await sceneManager.load('Loading Screen Scene'); // the loading screen scene is initialized
 
-        await Assets.loadFromAssetDB();
+        await Assets.loadFromAssetDB(); // assets are loaded
 
-        await sceneManager.load('Main Scene');
+        await sceneManager.load('Main Scene'); // the main scene is initialized after assets are loaded
     }
 }
 ```
+In the Example Scenes(functions) are added to a SceneManager instance, a Scene is initialized and Assets are loaded from the [AssetDB](#assetdb), a second Scene is initialized afterwards.
 
 </br>
 
-## Code structure
+### Code structure
 <pre>
 SceneManager
   Scene
@@ -106,17 +92,17 @@ SceneManager
     UI
 </pre>
 
-### SceneManager
+#### SceneManager
 A SceneManager instance loads Scenes and stores their Initializer-function.
 
-### Scene
+#### Scene
 A Scene manages GameObjects and the graphical user interface. It contains the gameloop.
 
-### GameObject
+#### GameObject
 A GameObject is a container for components.
 It has a Transform component by default.
 
-### Components
+#### Components
 A Component controls the behavior of the corresponding GameObject.
 
 
@@ -126,7 +112,7 @@ A Component controls the behavior of the corresponding GameObject.
 | **AnimatedSprite** | Manages SpriteAnimation instances to render and switch sprite animations. |
 | **AudioListener** | Can exist once per scene, it's the "ears" of the player. It's the audio equivalent of Camera. |
 | **AudioSource** | Emits positional Audio. Can hold an AudioMixer object to filter/modify output. Requires an AudioListener in the Scene. |
-| **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. Use by creating |
+| **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. Use as derived class. |
 | **Camera** | The size and position of a camera component specify which area of the scene is rendered to the screen. |
 | **CircleCollider** |  |
 | **Collider** | The Base class for all collider components. |
@@ -149,10 +135,10 @@ A Component controls the behavior of the corresponding GameObject.
 
 
 
-## Assets
+### Assets
 Assets are all non-script files utilized by the game.
 
-#### All asset types
+##### All asset types
 ```typescript
 enum AssetType {
     Image = 0,
@@ -165,7 +151,7 @@ enum AssetType {
 }
 ```
 
-#### Using Assets
+##### Using Assets
 ```typescript
 // create the Asset
 const name = 'name';
@@ -179,14 +165,14 @@ Assets.set(name, asset);
 Assets.get(name);
 ```
 
-### Loading Assets
+#### Loading Assets
 Load Assets with
 ```typescript
 Assets.load(path: string, type: AssetType, name?: AssetID);
 ```
 or with AssetDB.
 
-#### AssetDB
+##### AssetDB
 Assets/AssetDB.json contains all asset information required for loading.\
 It can be generated from the Assets directory with <code>[npm run createadb](#generate-assetdbjson)</code>.
 
@@ -195,7 +181,7 @@ Typescript signature of 'AssetDB.json's content:
 type AssetDB = { [path: string]: { type: AssetType, "optional asset name"?: 0 } }; // path is relative to the Assets directory
 ```
 
-### Creating Assets
+#### Creating Assets
 ```typescript
 const name = 'name';
 const data = 'text';
@@ -209,7 +195,7 @@ Shape.createSprite
 
 <br>
 
-### InputMapping
+#### InputMapping
 InputMappingAxes.json and InputMappingButtons.json, placed in the Asset root, contain input mapping information.
 
 The signature of an input mapping file looks like this:
