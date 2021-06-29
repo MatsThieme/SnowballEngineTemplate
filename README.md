@@ -49,14 +49,14 @@ dist/
 </pre>
 
 * **Assets** contains all [Assets](#assets), [inputmappings](#inputmapping) and [AssetDB.json](#assetdb).
-* **dist** contains build files(index.html, main.js, Asset directory).
 * **src** 
     * **Behaviours** contains files with classes derived from Behaviour.
     * **Configurables** contains typedefinition files (.d.ts) the user may edit during the development process, e.g. InputAction.d.ts for input mapping.
     * **Prefabs** contains files that export a function to initialize a GameObject.
     * **Scenes** contains files that export a function to initialize a Scene.
     * **SnowballEngine** contains all the GameEngine files.
-    * **Game.ts** Game.ts is the entry point.
+    * **Game.ts** is the entry point.
+* **dist** contains build files(index.html, main.js, Asset directory).
 
 
 #### Game.ts
