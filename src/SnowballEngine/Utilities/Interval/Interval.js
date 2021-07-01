@@ -10,18 +10,19 @@ export function Interval(cb, milliseconds, clearOnUnload = true) {
             await cb(promise);
             _counter++;
         }, milliseconds);
-
-
-        if (clearOnUnload) Interval.intervals.push(this);
     });
 
-    promise.clear = function () {
+    promise.clear = function (i) {
         window.clearInterval(_handle);
 
-        Interval.intervals.splice(Interval.intervals.findIndex(v => v.handle === this.handle), 1);
+        i = i !== undefined ? i : Interval.intervals.findIndex(v => v.handle === this.handle);
+
+        if (i !== -1) Interval.intervals.splice(i, 1);
 
         _resolve();
     };
+
+    if (clearOnUnload) Interval.intervals.push(promise);
 
     return promise;
 }
@@ -30,6 +31,6 @@ Interval.intervals = [];
 
 Interval.clearAll = () => {
     for (let i = Interval.intervals.length - 1; i > 0; i--) {
-        Interval.intervals[i].clear();
+        Interval.intervals[i].clear(i);
     }
 };

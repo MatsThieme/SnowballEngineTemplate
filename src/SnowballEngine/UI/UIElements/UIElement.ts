@@ -160,13 +160,12 @@ export class UIElement implements Destroyable {
      * Update down and click properties, position the content and scale background.
      * 
      */
-    public update(): boolean {
-        if (!this.active) return false;
+    public update(updateBounds = true): void {
+        if (!this.active) return;
 
-        this.updateBounds();
+        if (updateBounds) this.updateBounds();
 
-
-        if (this.type === UIElementType.Text) return true;
+        if (this.type === UIElementType.Text) return;
 
         const trigger = Input.getButton('Trigger');
 
@@ -187,7 +186,7 @@ export class UIElement implements Destroyable {
             (<Mutable<UIElement>>this).down = intersects && trigger.down;
         }
 
-        return true;
+        return;
     }
 
     /**

@@ -13,6 +13,12 @@ import { UIElement } from './UIElement';
 /** @category UI */
 export class UISelect extends UIElement {
     public readonly value: string;
+    /**
+     * 
+     * extend options upwards instead of default downwards
+     * 
+     */
+    public extendUp: boolean;
 
     private readonly _resizeListener: () => void;
 
@@ -27,6 +33,8 @@ export class UISelect extends UIElement {
         super(menu, name, UIElementType.Select);
 
         this.value = '';
+        this.extendUp = false;
+
         this._extended = false;
 
         this._bitmapText = new BitmapText('', { fontName: this.font });
@@ -41,7 +49,8 @@ export class UISelect extends UIElement {
             this._bitmapText.updateText();
             for (const text of Object.values(this._labels)) text!.updateText();
 
-            if (this._extended) this.prepareElements();
+            this.prepareElements(this._extended);
+            this.updateBounds();
         }).bind(this);
 
         window.addEventListener('resize', this._resizeListener);
@@ -76,19 +85,25 @@ export class UISelect extends UIElement {
     }
 
     public setValue(value: string): void {
-        if (this.value === value) return;
+        if (this.value === value || !(value in this._labels)) return;
 
         (<Mutable<UISelect>>this).value = this._bitmapText.text = value;
+
+        if (this.onInput) {
+            this.onInput(this);
+        }
+
+        this.prepareElements(false);
     }
 
     protected override updateBounds(): void {
         if (this._backgroundSprite) this._backgroundSprite.visible = false; // ignore background in getLocalBounds()
 
         const bounds = this.container.getLocalBounds();
-        this._scaledPadding.copy(this.padding.clone.scale(new Vector2(Client.resolution.y / Client.resolution.x, 1)));
+        this._scaledPadding.copy(new Vector2(Client.resolution.y / Client.resolution.x, 1).scale(this.padding));
         this.aabb.setHalfExtents(new Vector2((this._width || bounds.width) / 2, bounds.height / 2).add(this._scaledPadding));
 
-        const topLeft = this.position.clone.sub(new Vector2(this.alignH * (bounds.width + this._scaledPadding.x * 2), this.alignV * (bounds.height + this._scaledPadding.y * 2)));
+        const topLeft = this.position.clone.sub(new Vector2(this.alignH * (bounds.width + this._scaledPadding.x * 2), (this.alignV * (bounds.height + this._scaledPadding.y * 2) - (this.extendUp ? 0 : bounds.height))));
 
         this.container.position.copyFrom(topLeft);
 
@@ -102,24 +117,11 @@ export class UISelect extends UIElement {
         }
     }
 
-    public override update(): boolean {
-        if (!super.update()) return false;
+    public override update(): void {
+        if (!this.active) return;
 
+        super.update(false);
 
-        this._bitmapText.scale.set(Client.resolution.y / Client.resolution.x, 1);
-
-        this._bitmapText.position.copyFrom(this._scaledPadding);
-
-        const style = UIFonts.getStyle(<UIFont>this._bitmapText.fontName)!;
-        const fontSize = <number>style.fontSize;
-
-        const lines = Array.from(this._bitmapText.text.matchAll(/\n/g)).length + 1;
-
-
-        const ratio = this._bitmapText.width / this._bitmapText.height;
-
-        this._bitmapText.height = fontSize * lines + fontSize * 0.11;
-        this._bitmapText.width = ratio * fontSize * lines * (1 + 0.2 / lines);
 
         if (this.click || (this._extended && !this.down && Input.getButton('Trigger').down)) {
             if (this._extended) {
@@ -136,17 +138,15 @@ export class UISelect extends UIElement {
 
                 this._extended = false;
 
-                for (const text of Object.values(this._labels)) {
-                    text!.visible = false;
-                }
+                this.prepareElements(false);
             } else {
                 this._extended = true;
 
                 this.prepareElements();
             }
-        }
 
-        return true;
+            this.updateBounds();
+        }
     }
 
     /**
@@ -158,12 +158,17 @@ export class UISelect extends UIElement {
         this._width = 0;
         let i = 0;
 
-        for (const [label, text] of Object.entries(this._labels)) {
+        const b = <[string, BitmapText]>['d', this._bitmapText];
+
+        const e = Object.entries(this._labels);
+
+        if (this.extendUp) e.push(b);
+        else e.unshift(b);
+
+        for (const [label, text] of e) {
             text!.visible = visible;
 
             text!.scale.set(Client.resolution.y / Client.resolution.x, 1);
-
-            text!.position.copyFrom(this._scaledPadding);
 
             const style = UIFonts.getStyle(<UIFont>text!.fontName)!;
             const fontSize = <number>style.fontSize;
@@ -178,11 +183,15 @@ export class UISelect extends UIElement {
 
             this._width = Math.max(this._width, text!.width);
 
-            text!.position.y = this._bitmapText.position.y + (i + 1) * text!.height;
+            text!.position.y = this._scaledPadding.y + i * text!.height;
             text!.position.x = this._scaledPadding.x;
 
             i++;
         }
+
+        if (!this._extended) this._bitmapText.position.copyFrom(this._scaledPadding);
+
+        this._bitmapText.visible = true;
     }
 
     public addLabel(value: string): void {
@@ -198,6 +207,7 @@ export class UISelect extends UIElement {
         if (!this.value) this.setValue(value);
 
         this.prepareElements(false);
+        this.updateBounds();
     }
 
     public removeLabel(value: string): void {

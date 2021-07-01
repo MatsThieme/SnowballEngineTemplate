@@ -123,8 +123,10 @@ export class UICheckbox extends UIElement {
      * Update checked property.
      * 
      */
-    public override update(): boolean {
-        if (!super.update()) return false;
+    public override update(): void {
+        if (!this.active) return;
+
+        super.update();
 
         if (this.click) {
             this.checked = !this._checked;
@@ -155,8 +157,5 @@ export class UICheckbox extends UIElement {
         this._checkboxSprite.position.copyFrom(this._scaledPadding);
 
         this._bitmapText.position.copyFrom(this._scaledPadding.clone.add(new Vector2(this._checkboxSprite.width, 0)));
-
-
-        return true;
     }
 }

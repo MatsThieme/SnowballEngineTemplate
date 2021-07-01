@@ -11,10 +11,24 @@ export class GameTime {
 
     /**
      *
-     * Returns duration of the last frame in seconds.
+     * Returns duration of the previous deltaTime in milliseconds.
      * 
      */
+    public static readonly lastDeltaTime: number = 5;
+
+    /**
+    *
+    * Returns duration of the last frame in seconds.
+    * 
+    */
     public static readonly deltaTimeSeconds: number = 0.005;
+
+    /**
+     *
+     * Returns duration of the previous deltaTime in seconds.
+     * 
+     */
+    public static readonly lastDeltaTimeSeconds: number = 0.005;
 
     /**
      * 
@@ -69,6 +83,9 @@ export class GameTime {
     public static update(time: number): void {
         // calculate delta time
         const delta = time - GameTime.frameStart;
+
+        (<Mutable<typeof GameTime>>GameTime).lastDeltaTime = GameTime.deltaTime;
+        (<Mutable<typeof GameTime>>GameTime).lastDeltaTimeSeconds = GameTime.deltaTimeSeconds;
 
         (<Mutable<typeof GameTime>>GameTime).deltaTime = GameTime.clampDeltatime ? Math.min(delta, GameTime._clampDeltatime) : delta;
         (<Mutable<typeof GameTime>>GameTime).deltaTimeSeconds = GameTime.deltaTime / 1000;

@@ -19,9 +19,10 @@ export class Physics implements Destroyable {
     public drawDebug: boolean;
     public readonly gravity: Vector2;
     private readonly _canvas: Canvas;
-    private _lastDelta: number = 1000 / 60;
 
     private _worldScale: number;
+
+    public timeScale = 1;
 
     public constructor() {
         this.drawDebug = false;
@@ -32,7 +33,7 @@ export class Physics implements Destroyable {
         this.engine = Engine.create();
         this.engine.gravity.y = 0;
         this.engine.enableSleeping = false;
-
+        this.engine.timing.lastDelta = 1;
 
         Events.on(this.engine, 'collisionStart', this.collisionEventHandler);
         Events.on(this.engine, 'collisionActive', this.collisionEventHandler);
@@ -83,13 +84,6 @@ export class Physics implements Destroyable {
     }
     public set constraintIterations(val: number) {
         this.engine.constraintIterations = val;
-    }
-
-    public get timeScale(): number {
-        return this.engine.timing.timeScale;
-    }
-    public set timeScale(val: number) {
-        this.engine.timing.timeScale = val;
     }
 
     private collisionEventHandler(event: IEventCollision<Engine>) {
@@ -191,8 +185,7 @@ export class Physics implements Destroyable {
 
 
     public update(): void {
-        Engine.update(this.engine, GameTime.deltaTime, GameTime.deltaTime / this._lastDelta);
-        this._lastDelta = GameTime.deltaTime;
+        Engine.update(this.engine, GameTime.deltaTime * this.timeScale, GameTime.deltaTime * this.timeScale / this.engine.timing.lastDelta);
 
         if (!projectConfig.build.debugMode) return;
 

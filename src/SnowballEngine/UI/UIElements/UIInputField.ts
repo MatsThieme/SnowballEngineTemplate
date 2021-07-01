@@ -52,8 +52,10 @@ export abstract class UIInputField<T extends number | string> extends UIText {
         this.focused = true;
     }
 
-    public override update(): boolean {
-        if (!super.update()) return false;
+    public override update(): void {
+        if (!this.active) return;
+
+        super.update();
 
         if (this.domElement.value != this._bitmapText.text) {
             this._bitmapText.text = this.domElement.value;
@@ -63,8 +65,6 @@ export abstract class UIInputField<T extends number | string> extends UIText {
 
 
         if (this.click) this.focus();
-
-        return true;
     }
 
     public override destroy(): void {

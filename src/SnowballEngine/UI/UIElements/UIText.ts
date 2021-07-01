@@ -69,8 +69,8 @@ export class UIText extends UIElement {
         this._bitmapText.align = val;
     }
 
-    public override update(): boolean {
-        if (!this.active) return false;
+    public override update(): void {
+        if (!this.active) return;
 
         this._bitmapText.scale.set(Client.resolution.y / Client.resolution.x, 1);
 
@@ -84,7 +84,7 @@ export class UIText extends UIElement {
         this._bitmapText.height = fontSize * this._lines + fontSize * 0.11;
         this._bitmapText.width = ratio * fontSize * this._lines * (1 + 0.2 / this._lines);
 
-        return super.update();
+        super.update();
     }
 
     public override destroy(): void {

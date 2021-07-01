@@ -130,7 +130,7 @@ A Component controls the behavior of the corresponding GameObject.
 | **TilemapCollider** |  |
 | **TilemapRenderer** |  |
 | **Transform** | The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject. A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children. |
-| **Video** | Render a Video/Movie, playback is controlled through an HTMLVideoElement. |
+| **Video** | Render a Video/Movie. |
 
 
 

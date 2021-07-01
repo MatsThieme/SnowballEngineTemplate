@@ -375,16 +375,6 @@ export abstract class Collider extends Component<ColliderEventTypes> {
         return !!this._rigidBody;
     }
 
-    public override prepareDestroy(): void {
-        this.__destroyInFrames__ = 1;
-
-        this.removeListeners();
-
-        this.disconnect();
-
-        super.prepareDestroy();
-    }
-
     public static updateBody(): void {
         const cs: Collider[] = [];
 
@@ -462,5 +452,15 @@ export abstract class Collider extends Component<ColliderEventTypes> {
             this.addPropertiesToBody(part);
             part.collisionFilter = { ...this._bodyOptions.collisionFilter };
         }
+    }
+
+    public override prepareDestroy(): void {
+        this.__destroyInFrames__ = 2;
+
+        this.removeListeners();
+
+        this.disconnect();
+
+        super.prepareDestroy();
     }
 }
