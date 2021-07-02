@@ -114,21 +114,21 @@ A Component controls the behavior of the corresponding GameObject.
 | **AudioSource** | Emits positional Audio. Can hold an AudioMixer object to filter/modify output. Requires an AudioListener in the Scene. |
 | **Behaviour** | A Behaviour is a Component with user-defined functionality. The Base class for all Behaviours. Use as derived class. |
 | **Camera** | The size and position of a camera component specify which area of the scene is rendered to the screen. |
-| **CircleCollider** |  |
-| **Collider** | The Base class for all collider components. |
+| **CircleCollider** | A Collider with circular shape. |
+| **Collider** | Colliders are used to simulate the interaction of physics objects. The Base class for all collider components. A Collider can be part of a compound body when a Rigidbody Component is used on the same or any parent GameObject. The shape of a collider is defined with verticies(x, y values). |
 | **Component** | The Base class for all components. |
 | **ParallaxBackground** | A graphical component for rendering parallax scrolling images. [Wikipedia: Parallax scrolling](https://en.wikipedia.org/wiki/Parallax_scrolling) |
 | **ParticleSystem** |  |
-| **PolygonCollider** |  |
-| **RectangleCollider** |  |
+| **PolygonCollider** | A Collider with a customizable shape. |
+| **RectangleCollider** | A Collider with rectangular shape. |
 | **Renderable** | The Base class for all renderable components. Examlpes are Texture, Video and ParallaxBackground. |
-| **Rigidbody** |  |
-| **TerrainCollider** |  |
-| **TerrainRenderer** |  |
+| **Rigidbody** | A Rigidbody allows Colliders on the same GameObject or their children to simulate collisions as a compound body with other Colliders. A Rigidbody is needed to apply gravity / forces. |
+| **TerrainCollider** | not implemented |
+| **TerrainRenderer** | not implemented |
 | **Text** | Render a string. |
 | **Texture** | Render an image. |
-| **TilemapCollider** |  |
-| **TilemapRenderer** |  |
+| **TilemapCollider** | not implemented |
+| **TilemapRenderer** | not implemented |
 | **Transform** | The Transform Component is by default added to every new GameObject on creation, only one Transform is allowed per GameObject. A Transform Component stores position, rotation and scale of their GameObject, which will affect the GameObjects other components and children. |
 | **Video** | Render a Video/Movie. |
 
