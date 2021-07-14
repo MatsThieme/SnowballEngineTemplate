@@ -1,8 +1,5 @@
 import { MoveBehaviour } from 'Behaviours/MoveBehaviour';
-import { CircleCollider } from 'GameObject/Components/CircleCollider';
-import { RectangleCollider } from 'GameObject/Components/RectangleCollider';
-import { Rigidbody } from 'GameObject/Components/Rigidbody';
-import { Color, GameObject, Shape, Texture } from 'SE';
+import { CircleCollider, Color, GameObject, RectangleCollider, Rigidbody, Shape, Texture } from 'SE';
 
 export function ColliderTest(gameObject: GameObject): void {
     const child = new GameObject('child');

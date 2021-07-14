@@ -77,19 +77,24 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         this.connectCamera();
 
 
-        this.transform.addListener('change', new EventHandler((transform, posDiff, rotDiff, scaleDiff) => {
+        const transformListener = new EventHandler((transform, posDiff, rotDiff, scaleDiff) => {
+            const globalTransform = this.transform.toGlobal();
+
             if (posDiff) {
-                this.container.position.copyFrom(Vector2.from(this.transform.position).scale(new Vector2(1, -1)));
+                this.container.position.copyFrom(globalTransform.position.scale(new Vector2(1, -1)));
             }
 
             if (rotDiff) {
-                this.container.rotation = this.transform.rotation.radian;
+                this.container.rotation = globalTransform.rotation.radian;
             }
 
             if (scaleDiff) {
-                this.container.scale.copyFrom(this.transform.scale);
+                this.container.scale.copyFrom(globalTransform.scale);
             }
-        }));
+        });
+
+        this.transform.addListener('change', transformListener);
+        this.transform.addListener('parentchange', transformListener);
     }
 
     public get active(): boolean {
@@ -116,14 +121,15 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
     private connectCamera(): void {
         if (this.container.parent) this.disconnectCamera();
-
-        if (!this._parent) this.scene.cameraManager.addGameObject(this);
-        else this._parent.container.addChild(this.container);
+        this.scene.cameraManager.addGameObject(this);
+        // if (!this._parent) this.scene.cameraManager.addGameObject(this);
+        // else this._parent.container.addChild(this.container);
     }
 
     private disconnectCamera(): void {
-        if (!this._parent) this.scene.cameraManager.removeGameObject(this);
-        else this._parent.container.removeChild(this.container);
+        this.scene.cameraManager.removeGameObject(this);
+        // if (!this._parent) this.scene.cameraManager.removeGameObject(this);
+        // else this._parent.container.removeChild(this.container);
     }
 
     public async start(): Promise<void> {
@@ -146,7 +152,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
     /** 
      *  
-     * @param initializer Callbacks are executed after component creation.
+     * @param initializer Callbacks are executed after component initialisation.
      * Returns a Promise resolving the created component or null if the component cant be created
      * 
      */
@@ -235,15 +241,15 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      */
     public getComponents<T extends Component<ComponentEventTypes>>(type: Constructor<T> | AbstractConstructor<T> | ComponentType): T[] {
         if (typeof type === 'number') {
-            if (this._components[type] !== undefined) return <T[]>[...this._components[type]!];
-            if (type === ComponentType.Component) return <T[]>[...Object.values(this._components)].flat();
+            if (this._components[type] !== undefined) return <T[]>this._components[type]!.slice();
+            if (type === ComponentType.Component) return <T[]>Object.values(this._components).flat();
             if (type === ComponentType.Renderable) return <T[]>[...this.getComponents(ComponentType.AnimatedSprite), ...this.getComponents(ComponentType.ParallaxBackground), ...this.getComponents(ComponentType.ParticleSystem), ...this.getComponents(ComponentType.Texture), ...this.getComponents(ComponentType.TilemapRenderer), ...this.getComponents(ComponentType.Video)];
             if (type === ComponentType.Collider) return <T[]>[...this.getComponents(ComponentType.CircleCollider), ...this.getComponents(ComponentType.PolygonCollider), ...this.getComponents(ComponentType.TilemapCollider), ...this.getComponents(ComponentType.TerrainCollider), ...this.getComponents(ComponentType.RectangleCollider)];
 
             return [];
         }
 
-        return <T[]>[...Object.values(this._components)].flat(1).filter((c: Component<ComponentEventTypes>) => {
+        return <T[]>Object.values(this._components).flat(1).filter((c: Component<ComponentEventTypes>) => {
             return c.constructor.name === type.name || c instanceof type;
         });
     }
@@ -268,7 +274,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         }
 
 
-        for (const c of [...Object.values(this._components)].flat(1)) {
+        for (const c of Object.values(this._components).flat(1)) {
             if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
@@ -349,7 +355,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * 
      */
     public static componentInTree<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
-        return gameObject.getComponent<T>(type) || GameObject.componentInParents<T>(gameObject, type) || GameObject.componentInChild<T>(gameObject, type);
+        return gameObject.getComponent<T>(type) || GameObject.componentInParents<T>(gameObject, type) || GameObject.componentInChildren<T>(gameObject, type);
     }
 
     /**
@@ -374,12 +380,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * @internal
      * 
      */
-    public static componentInChild<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
+    public static componentInChildren<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T | undefined {
         const c = gameObject.getComponentInChildren<T>(type);
         if (c) return c;
 
         for (const child of gameObject.children) {
-            const c = GameObject.componentInChild<T>(child, type)
+            const c = GameObject.componentInChildren<T>(child, type)
             if (c) return c;
         }
 
@@ -391,8 +397,49 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * @internal
      * 
      */
+    public static componentsInTree<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T[] {
+        return gameObject.getComponents<T>(type) || GameObject.componentsInParents<T>(gameObject, type) || GameObject.componentsInChildren<T>(gameObject, type);
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
+    public static componentsInParents<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T[] {
+        const c = [];
+
+        while (gameObject.parent) {
+            c.push(...gameObject.parent.getComponents<T>(type));
+
+            gameObject = gameObject.parent;
+        }
+
+        return c;
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
+    public static componentsInChildren<T extends Component<ComponentEventTypes>>(gameObject: GameObject, type: ComponentType): T[] {
+        const c = gameObject.getComponentsInChildren<T>(type);
+
+        for (const child of gameObject.children) {
+            c.push(...GameObject.componentsInChildren<T>(child, type));
+        }
+
+        return c;
+    }
+
+    /**
+     * 
+     * @internal
+     * 
+     */
     public prepareDestroy(): void {
-        const destroyables: Destroyable[] = [...[...Object.values(this._components)].flat(), ...this.children];
+        const destroyables: Destroyable[] = [...Object.values(this._components).flat(), ...this.children];
 
         const destroyInFrames = this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
 
@@ -403,7 +450,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     private getMaxDestroyInFrames(gameObject: GameObject = this, max?: number): number | undefined {
-        const components = [...Object.values(gameObject._components)].flat();
+        const components = Object.values(gameObject._components).flat();
 
         max = Math.max(max || 0, components.reduce((p, c) => {
             if (c.__destroyInFrames__ !== undefined && p < c.__destroyInFrames__) return c.__destroyInFrames__;

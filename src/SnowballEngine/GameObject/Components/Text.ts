@@ -18,12 +18,12 @@ export class Text extends Renderable<TextEventTypes>{
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Text);
 
-        this.sprite = new Container();
+        this._bitmapText = new BitmapText('', { fontName: 'Default-Normal' });
 
-        this._bitmapText = new BitmapText('text', { fontName: 'Default-Normal' });
+        this.sprite = new Container();
         this.sprite.addChild(this._bitmapText);
 
-        this.size = new Vector2(0, 1);
+        this._size.set(0, 1);
 
         this._resizeListener = (() => this._bitmapText.updateText()).bind(this);
         window.addEventListener('resize', this._resizeListener);
@@ -72,35 +72,34 @@ export class Text extends Renderable<TextEventTypes>{
     /** 
      * 
      * Text size in world units.
-     * If x or y are 0, the width or height will be calculated to match the original aspect ratio.
+     * If x or y are 0, the missing component will be calculated to match the original aspect ratio.
      * 
      */
     public override get size(): Vector2 {
         return this._size;
     }
     public override set size(val: Vector2) {
-        this._size = val;
-
         if (val.x === 0 && val.y === 0) Debug.warn('size === (0, 0)');
-
-        if (!this._bitmapText) return;
 
         this._bitmapText.scale.set(1, 1);
 
-        if (val.x && val.y) {
+        if (val.x > 0 && val.y > 0) {
             this._bitmapText.width = val.x;
             this._bitmapText.height = val.y;
-        } else if (val.y) {
+        } else if (val.y > 0) {
             const ratio = this._bitmapText.width / this._bitmapText.height;
 
             this._bitmapText.height = val.y;
             this._bitmapText.width = ratio * val.y;
-        } else if (val.x) {
+        } else if (val.x > 0) {
             const ratio = this._bitmapText.height / this._bitmapText.width;
 
             this._bitmapText.height = ratio * val.x;
             this._bitmapText.width = val.x;
         }
+
+        this._size.x = this._bitmapText.width;
+        this._size.y = this._bitmapText.height;
     }
 
     public override destroy(): void {

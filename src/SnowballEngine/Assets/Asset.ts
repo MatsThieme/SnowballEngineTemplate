@@ -165,6 +165,12 @@ export class Asset implements Destroyable {
     }
 
     public destroy(): void {
-        this.image?.baseTexture.destroy();
+        if (this.image) {
+            this.image.baseTexture.destroy();
+        }
+
+        if (this.video) {
+            this.video.baseTexture.destroy();
+        }
     }
 }

@@ -90,16 +90,12 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     private onModified(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
-        this._globalTransform = undefined;
-
         for (const child of this.children) {
             child.dispatchEvent('parentmodified', transform, posDiff, rotDiff, scaleDiff)
         }
     }
 
     private onModifiedInternal(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
-        this._globalTransform = undefined;
-
         for (const child of this.children) {
             child.dispatchEvent('parentmodifiedinternal', transform, posDiff, rotDiff, scaleDiff)
         }
@@ -119,7 +115,7 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     /**
      * 
      * Returns a new Transformable object.
-     * If the Transform was not changed since the last toGlobal() call, a clone of the previous returned global Transform is returned.
+     * The result is cached until position, rotation or scale are modified.
      * 
      */
     public toGlobal(): Transformable {
@@ -346,7 +342,7 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
      *
      * @param sibling
      * @param targetSibling
-     * @param parent optionally pass the parent of the siblings, necessary if !sibling.parent || !targetSibling.parent
+     * @param parent optionally pass the parent of the siblings, necessary if siblings are not global(have parent) and !sibling.parent && !targetSibling.parent
      */
     public static toSibling(sibling: ITransformable, targetSibling: ITransformable, parent: ITransformable | undefined = sibling.parent || targetSibling.parent): Transformable {
         return {

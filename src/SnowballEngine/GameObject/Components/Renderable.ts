@@ -15,14 +15,16 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     public position: Vector2;
 
     protected _sprite?: Sprite | Container;
-    protected _size: Vector2;
+    protected readonly _size: Vector2;
+    protected readonly _skew: Vector2;
     private _visible: boolean;
 
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Renderable) {
         super(gameObject, type);
 
         this._visible = true;
-        this._size = new Vector2(0, 0);
+        this._size = new Vector2();
+        this._skew = new Vector2();
 
         this._alignH = AlignH.Center;
         this._alignV = AlignV.Center;
@@ -63,7 +65,19 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         return this._size;
     }
     public set size(val: Vector2) {
-        this._size = val;
+        this._size.copy(val);
+
+        if (this._sprite) {
+            this._sprite.width = val.x;
+            this._sprite.height = val.y;
+        }
+    }
+
+    public get skew(): Readonly<Vector2> {
+        return this._skew;
+    }
+    public set skew(val: Vector2) {
+        this._skew.copy(val);
 
         if (this._sprite) {
             this._sprite.width = val.x;
@@ -109,6 +123,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
             if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
 
+            this.skew = this._skew;
 
             this.connectCamera();
 

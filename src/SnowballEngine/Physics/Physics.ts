@@ -43,7 +43,10 @@ export class Physics implements Destroyable {
         this._canvas = new Canvas(innerWidth, innerHeight);
         this._canvas.style.zIndex = '1';
 
-        if (projectConfig.build.debugMode) document.body.appendChild(this._canvas);
+        if (projectConfig.build.debugMode) {
+            document.body.appendChild(this._canvas);
+            (<any>window).physics = this;
+        }
     }
 
     /**
@@ -91,6 +94,11 @@ export class Physics implements Destroyable {
         const triggerEventName = event.name === 'collisionStart' ? 'triggerenter' : event.name === 'collisionActive' ? 'triggeractive' : 'triggerexit';
 
         for (const pair of event.pairs) {
+            const behaviorsA = pair.bodyA.gameObject.getComponents<Behaviour>(ComponentType.Behaviour);
+            const behaviorsB = pair.bodyB.gameObject.getComponents<Behaviour>(ComponentType.Behaviour);
+
+            if (!behaviorsA && !behaviorsB) continue;
+
             let event: CollisionEvent = {
                 collider: pair.bodyA.collider,
                 otherCollider: pair.bodyB.collider,
@@ -104,11 +112,12 @@ export class Physics implements Destroyable {
                 slop: pair.slop
             };
 
-            for (const behavior of pair.bodyA.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
+            for (const behavior of behaviorsA) {
                 if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
                 else behavior.dispatchEvent(collisionEventName, event);
             }
 
+            if (!behaviorsB) continue;
 
             event = {
                 collider: pair.bodyB.collider,
@@ -123,7 +132,7 @@ export class Physics implements Destroyable {
                 slop: pair.slop
             };
 
-            for (const behavior of pair.bodyB.gameObject.getComponents<Behaviour>(ComponentType.Behaviour)) {
+            for (const behavior of behaviorsB) {
                 if (event.collider.isTrigger) behavior.dispatchEvent(triggerEventName, event);
                 else behavior.dispatchEvent(collisionEventName, event);
             }

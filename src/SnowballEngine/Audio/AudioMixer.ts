@@ -207,15 +207,15 @@ export class AudioMixer implements Disposable {
         this.disconnectEffects();
         this.disconnectSources();
 
-        for (const e of [...this._effects]) {
+        for (const e of this._effects) {
             this.removeEffect(e);
         }
 
-        for (const s of [...this._sources]) {
+        for (const s of this._sources) {
             this.removeSource(s);
         }
 
-        for (const m of [...this._mixers]) {
+        for (const m of this._mixers) {
             this.removeChild(m);
         }
     }

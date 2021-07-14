@@ -17,6 +17,8 @@ export class SceneManager {
     }
 
     public add(name: SceneName, sceneInitializer: (scene: Scene) => Promise<void> | void): void {
+        if (this._scenes[name]) throw new Error('Scene exists');
+
         this._scenes[name] = sceneInitializer;
     }
 
@@ -26,7 +28,7 @@ export class SceneManager {
         if (initializer) {
             Interval.clearAll();
 
-            if (this.scene) await this.unload();
+            if (this.scene) await this.scene.unload();
 
             const scene = new Scene(this, name);
             (<Mutable<SceneManager>>this).scene = scene;
@@ -38,15 +40,6 @@ export class SceneManager {
             return scene;
         }
 
-        throw `No Scene named ${name} found`;
-    }
-
-    /**
-     * 
-     * Unload the current scene.
-     * 
-     */
-    public async unload(): Promise<void> {
-        await this.scene?.unload();
+        throw new Error(`No Scene named ${name} found`);
     }
 }

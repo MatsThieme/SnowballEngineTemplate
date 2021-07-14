@@ -77,6 +77,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.domElement = this.cameraManager.canvas;
         this.domElement.id = this.name;
+        document.body.appendChild(this.domElement);
+
 
         this.pause = false;
 
@@ -195,8 +197,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         }
 
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
-
-        document.body.appendChild(this.domElement);
     }
 
     /**
@@ -209,8 +209,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.dispatchEvent('stop');
 
         this._requestAnimationFrameHandle = undefined;
-
-        this.domElement.remove();
 
         await new Promise<void>(resolve => {
             new Interval(i => {
@@ -277,6 +275,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.destroyDestroyables();
 
+        this.domElement.remove();
 
         clearObject(this, true);
     }

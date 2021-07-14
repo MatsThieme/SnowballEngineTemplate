@@ -7,8 +7,4 @@ export class MoveBehaviour extends Behaviour {
 
         this.gameObject.transform.position.add(new Vector2(horizontal * GameTime.deltaTimeSeconds * 5, vertical * GameTime.deltaTimeSeconds * 5));
     }
-
-    onCollisionEnter(collision: CollisionEvent) {
-        console.log(collision);
-    }
 }
