@@ -3,6 +3,7 @@ import { Sprite } from '@pixi/sprite';
 import { AlignH, AlignV } from 'GameObject/Align';
 import { ComponentType } from 'GameObject/ComponentType';
 import { GameObject } from 'GameObject/GameObject';
+import { Color } from 'Utility/Color';
 import { RenderableEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
 import { Component } from './Component';
@@ -17,10 +18,13 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     protected _sprite?: Sprite | Container;
     protected readonly _size: Vector2;
     protected readonly _skew: Vector2;
+    protected _tint?: Color;
     private _visible: boolean;
 
     public constructor(gameObject: GameObject, type: ComponentType = ComponentType.Renderable) {
         super(gameObject, type);
+
+        this.position = new Vector2();
 
         this._visible = true;
         this._size = new Vector2();
@@ -29,8 +33,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._alignH = AlignH.Center;
         this._alignV = AlignV.Center;
         this.updateAnchor();
-
-        this.position = new Vector2();
     }
 
     protected override onEnable(): void {
@@ -80,9 +82,16 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._skew.copy(val);
 
         if (this._sprite) {
-            this._sprite.width = val.x;
-            this._sprite.height = val.y;
+            this._sprite.skew.copyFrom(val);
         }
+    }
+
+    public get tint(): Color | undefined {
+        return this._tint;
+    }
+    public set tint(val: Color | undefined) {
+        this._tint = val;
+        if (this._sprite) (<Sprite>this._sprite).tint = val?.rgb || 0xFFFFFF;
     }
 
     public get alignH(): AlignH {
@@ -124,6 +133,8 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
             if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
 
             this.skew = this._skew;
+            if (this._tint) (<Sprite>this._sprite)!.tint = this._tint.rgb;
+
 
             this.connectCamera();
 
@@ -166,7 +177,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         } else {
             const bounds = this._sprite.getLocalBounds();
 
-            this._sprite.position.copyFrom(Vector2.from(this.position).add(new Vector2(bounds.width, bounds.height).scale(anchor.sub({ x: 1, y: 1 }))));
+            this._sprite.position.copyFrom(this.position.clone.add(new Vector2(bounds.width, bounds.height).scale(anchor.sub({ x: 1, y: 1 }))));
         }
     }
 

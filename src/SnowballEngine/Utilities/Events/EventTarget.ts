@@ -9,6 +9,11 @@ export class EventTarget<T extends EventType> {
         this._events = {};
     }
 
+    /**
+     * 
+     * @param eventName A case-sensitive string representing the event type to listen for.
+     * 
+     */
     public addListener<U extends keyof T>(eventName: U, handler: EventHandler<T[U]>): void {
         if (!this._events[eventName]) this._events[eventName] = {};
         this._events[eventName]![handler.id] = handler;
@@ -21,8 +26,8 @@ export class EventTarget<T extends EventType> {
         }
     }
 
-    public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void | Promise<void[]> {
-        if (this._events[eventName]) return Promise.all(Object.keys(this._events[eventName]!).map(id => this._events[eventName]![<any>id].handler(...args)));
+    public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void | Promise<void> {
+        if (this._events[eventName]) return <any>Promise.all(Object.keys(this._events[eventName]!).map(id => this._events[eventName]![<any>id].handler(...args)));
     }
 
     /**

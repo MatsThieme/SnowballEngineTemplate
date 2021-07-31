@@ -18,7 +18,7 @@ export async function Instantiate(name: string, initializer: (gameObject: GameOb
     }
 
     if (gameObject.scene.isRunning) {
-        gameObject.start();
+        await gameObject.start();
     }
 
     return gameObject;

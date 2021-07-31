@@ -1,1 +1,1 @@
-type SceneName = 'Main Scene' | 'Loading Screen Scene';
+type SceneName = 'Main Scene' | 'Loading Screen Scene' | 'Test Scene';

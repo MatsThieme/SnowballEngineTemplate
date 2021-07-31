@@ -35,7 +35,7 @@ Requires [nodejs](https://nodejs.org) and [npm](https://www.npmjs.com/package/np
 
 ## Getting Started
 
-### Recommended directory structure
+### Directory structure
 <pre>
 Assets/
 src/
@@ -141,13 +141,13 @@ Assets are all non-script files utilized by the game.
 ##### All asset types
 ```typescript
 enum AssetType {
-    Image = 0,
-    Audio = 1,
-    Video = 2,
-    Text = 3,
-    Blob = 4,
-    JSON = 5,
-    Font = 6
+    Image = 0, // .jpg, .jpeg, .png, .apng, .bmp, .gif; loaded with and stored as <image>
+    Audio = 1, // .mp3, .wav, .ogg; loaded with XMLHttpRequest, stored as AudioBuffer
+    Video = 2, // .mp4, .ogg, .webm; loaded with and stored as <video>
+    Text = 3, // .txt, .text; loaded with XMLHttpRequest, stored as string
+    Blob = 4, // anything; loaded with XMLHttpRequest, stored as Blob
+    JSON = 5, // .json; loaded with XMLHttpRequest, stored as object
+    Font = 6 // .otf, .woff, .woff2, .ttf; loaded with CSS, stored as string(font name)
 }
 ```
 

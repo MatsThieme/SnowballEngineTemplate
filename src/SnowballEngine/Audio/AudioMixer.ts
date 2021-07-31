@@ -202,7 +202,8 @@ export class AudioMixer implements Disposable {
     }
 
     public dispose(): void {
-        AudioMixer._mixers[this._name];
+        delete AudioMixer._mixers[this._name];
+
         this.disconnect();
         this.disconnectEffects();
         this.disconnectSources();

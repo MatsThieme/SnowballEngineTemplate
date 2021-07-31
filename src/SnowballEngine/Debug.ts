@@ -43,7 +43,7 @@ export class Debug {
     }
 
     private static formatStack(stack = ''): string {
-        return Debug.formatStackFirefox(stack) || Debug.formatStackChromium(stack) || Debug.formatStackCordova(stack) || stack.replace(/error[:]?/i, '');
+        return Debug.formatStackFirefox(stack) || Debug.formatStackChromium(stack) || Debug.formatStackCordovaAndroid(stack) || stack.replace(/error[:]?/i, '');
     }
 
     private static formatStackFirefox(stack: string): string {
@@ -62,7 +62,7 @@ export class Debug {
         }).filter(Boolean).join('\n');
     }
 
-    private static formatStackCordova(stack: string): string {
+    private static formatStackCordovaAndroid(stack: string): string {
         return stack.split('\n').slice(2).map(line => {
             const match = line.trim().match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
 

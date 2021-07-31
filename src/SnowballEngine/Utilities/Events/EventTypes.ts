@@ -73,7 +73,8 @@ export type SceneEventTypes = {
     audiolistenerremove: [listener: AudioListener],
     start: [],
     stop: [],
-    unload: []
+    unload: [],
+    unloaded: []
 };
 
 

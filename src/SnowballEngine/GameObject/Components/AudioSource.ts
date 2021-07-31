@@ -168,7 +168,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
 
     /**
      * 
-     * Returns the current playback time in seconds.
+     * The current playback time in seconds.
      * if not playing return -1
      * 
      */

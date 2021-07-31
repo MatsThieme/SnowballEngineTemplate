@@ -136,7 +136,7 @@ export class Asset implements Destroyable {
                 ab.copyToChannel(arr, i);
             }
 
-            return new Asset(this.name, this.type, (<AudioBuffer>this.data));
+            return new Asset(this.name, this.type, <AudioBuffer>this.data);
         }
 
         if (this.type === AssetType.Blob) return new Asset(this.name, this.type, (<Blob>this.data).slice());

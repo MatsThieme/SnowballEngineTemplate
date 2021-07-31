@@ -39,8 +39,7 @@ export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<
             try {
                 const result = await cb(...params);
                 resolve(result);
-            }
-            catch (error) {
+            } catch (error) {
                 Debug.warn(error);
             }
 
@@ -74,6 +73,30 @@ export function clearObject(object: Record<string, any>, setnull = false): void 
     }
 }
 
+/**
+ * 
+ * @returns Returns a number greater than or equal to min but less than max.
+ * 
+ */
 export function random(min: number, max: number): number {
     return Math.random() * (max - min) + min;
+}
+
+/**
+ * 
+ * @returns Returns an integer greater than or equal to min but less than max.
+ * 
+ */
+export function randomInt(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+export function randomString(length = 10, characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'): string {
+    let str = '';
+
+    for (let i = 0; i < length; i++) {
+        str += characters[randomInt(0, characters.length)];
+    }
+
+    return str;
 }

@@ -5,7 +5,6 @@ import { EventHandler } from 'Utility/Events/EventHandler';
 import { EventTarget } from 'Utility/Events/EventTarget';
 import { ComponentEventTypes, GameObjectEventTypes } from 'Utility/Events/EventTypes';
 import { Vector2 } from 'Utility/Vector2';
-import { Behaviour } from './Components/Behaviour';
 import { Component } from './Components/Component';
 import { Transform } from './Components/Transform/Transform';
 import { ComponentType } from './ComponentType';
@@ -41,14 +40,14 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     public readonly transform!: Transform;
 
 
-    private _initialized: boolean
+    private _initialized: boolean;
 
-    public constructor(name: string, initialized = true) {
+    public constructor(name: string, initialize = true) {
         super();
 
-        if (name.includes('/')) throw new Error('Name must not include /');
+        if (name.includes('/')) throw new Error('GameObject name must not include /');
 
-        if (!Scene.currentScene) throw new Error('No Scene loaded!');
+        if (!Scene.currentScene) throw new Error('No Scene loaded! Load a Scene before creating a gameObject');
         this.scene = Scene.currentScene;
 
         this.id = GameObject._nextID++;
@@ -67,8 +66,6 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         this._components = {};
         this._active = true;
-
-        this._initialized = initialized;
 
         this.addComponent(Transform);
 
@@ -95,6 +92,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         this.transform.addListener('change', transformListener);
         this.transform.addListener('parentchange', transformListener);
+
+
+        this._initialized = false;
+        if (initialize) this.start();
     }
 
     public get active(): boolean {
@@ -122,32 +123,31 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     private connectCamera(): void {
         if (this.container.parent) this.disconnectCamera();
         this.scene.cameraManager.addGameObject(this);
-        // if (!this._parent) this.scene.cameraManager.addGameObject(this);
-        // else this._parent.container.addChild(this.container);
     }
 
     private disconnectCamera(): void {
         this.scene.cameraManager.removeGameObject(this);
-        // if (!this._parent) this.scene.cameraManager.removeGameObject(this);
-        // else this._parent.container.removeChild(this.container);
     }
 
+    /**
+     * 
+     * Initialize components and children
+     * 
+     */
     public async start(): Promise<void> {
-        for (const components of Object.values(this._components)) {
-            for (const component of components) {
-                await component.dispatchEvent('start');
-            }
-        }
+        if (this._initialized) return;
+        this._initialized = true;
 
-        this.container.position.copyFrom(Vector2.from(this.transform.position).scale(new Vector2(1, -1)));
-        this.container.rotation = this.transform.rotation.radian;
-        this.container.scale.copyFrom(this.transform.scale);
+        await Promise.all(Object.values(this._components).flat().map(c => c.dispatchEvent('start')));
+
+        const globalTransform = this.transform.toGlobal();
+        this.container.position.copyFrom(globalTransform.position.scale(new Vector2(1, -1)));
+        this.container.rotation = globalTransform.rotation.radian;
+        this.container.scale.copyFrom(globalTransform.scale);
 
         for (const c of this.children) {
-            c.start();
+            await c.start();
         }
-
-        this._initialized = true;
     }
 
     /** 
@@ -196,8 +196,8 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         }
 
 
-        await (<Behaviour><unknown>component).dispatchEvent('awake');
-        if (this._initialized) await (<Behaviour><unknown>component).dispatchEvent('start');
+        await component.dispatchEvent('awake');
+        if (this._initialized) await component.dispatchEvent('start');
 
 
         this.dispatchEvent('componentadd', component);

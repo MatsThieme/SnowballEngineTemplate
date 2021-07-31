@@ -83,6 +83,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.pause = false;
 
         this.physics = new Physics();
+
+        this.update = this.update.bind(this);
     }
 
 
@@ -176,7 +178,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.destroyDestroyables();
 
 
-        if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+        if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
 
         this._updateComplete = true;
     }
@@ -188,15 +190,15 @@ export class Scene extends EventTarget<SceneEventTypes> {
      * 
      */
     public async start(): Promise<void> {
-        this.dispatchEvent('start');
+        if (this._requestAnimationFrameHandle !== undefined) return;
+
+        await this.dispatchEvent('start');
 
         this._requestAnimationFrameHandle = -1; // set isStarting true
 
-        for (const go of GameObject.gameObjects) {
-            go.start();
-        }
+        await Promise.all(GameObject.gameObjects.map(g => g.start()));
 
-        this._requestAnimationFrameHandle = requestAnimationFrame(this.update.bind(this));
+        this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
     }
 
     /**
@@ -206,7 +208,9 @@ export class Scene extends EventTarget<SceneEventTypes> {
      *
      */
     public async stop(): Promise<void> {
-        this.dispatchEvent('stop');
+        if (!this._requestAnimationFrameHandle) return;
+
+        await this.dispatchEvent('stop');
 
         this._requestAnimationFrameHandle = undefined;
 
@@ -257,7 +261,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
      * 
      */
     public async unload(): Promise<void> {
-        this.dispatchEvent('unload');
+        await this.dispatchEvent('unload');
 
         await this.stop();
 
@@ -276,6 +280,9 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.destroyDestroyables();
 
         this.domElement.remove();
+
+
+        await this.dispatchEvent('unloaded');
 
         clearObject(this, true);
     }
