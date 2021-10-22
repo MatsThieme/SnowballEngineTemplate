@@ -12,24 +12,24 @@ SnowballEngine manages scenes, game assets, simulates physics, renders assets an
 <br>
 
 ### setup
-Requires [nodejs](https://nodejs.org) and [npm](https://www.npmjs.com/package/npm).
+Requires [nodejs](https://nodejs.org), [npm](https://www.npmjs.com/package/npm) and yarn(npm i -g -D yarn).
 
-<pre>npm i</pre>
+<pre>yarn install</pre>
 
 #### build
-<pre>npm run build</pre>
+<pre>yarn run build</pre>
 
 #### generate AssetDB.json
-<pre>npm run createadb</pre>
+<pre>yarn run createadb</pre>
 
 #### update AssetDB.json
-<pre>npm run updateadb</pre>
+<pre>yarn run updateadb</pre>
 
 #### start debug server
-<pre>npm run server</pre>
+<pre>yarn run server</pre>
 
 #### generate documentation
-<pre>npm run doc</pre>
+<pre>yarn run doc</pre>
 
 <br>
 
@@ -71,11 +71,11 @@ export class Game {
         sceneManager.add('Loading Screen Scene', LoadingScreenScene); // register the loading screen scene
         sceneManager.add('Main Scene', MainScene); // register the main scene
 
-        await sceneManager.load('Loading Screen Scene'); // the loading screen scene is initialized
+        await sceneManager.load('Loading Screen Scene'); // initialize the loading screen scene
 
-        await Assets.loadFromAssetDB(); // assets are loaded
+        await Assets.loadFromAssetDB(); // load assets from asset db
 
-        await sceneManager.load('Main Scene'); // the main scene is initialized after assets are loaded
+        await sceneManager.load('Main Scene'); // initialize the main scene after assets are loaded
     }
 }
 ```

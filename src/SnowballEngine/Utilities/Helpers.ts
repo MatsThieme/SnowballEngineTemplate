@@ -40,7 +40,7 @@ export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<
                 const result = await cb(...params);
                 resolve(result);
             } catch (error) {
-                Debug.warn(error);
+                Debug.warn(error + "");
             }
 
             window.removeEventListener('mousedown', end);
