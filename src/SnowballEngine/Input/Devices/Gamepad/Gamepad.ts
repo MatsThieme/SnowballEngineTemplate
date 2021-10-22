@@ -59,28 +59,6 @@ export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice
         return;
     }
 
-    /**
-     * Gamepad vibration
-     * 
-     * @param value intensity 0-1
-     * @param duration duration in milliseconds
-     * 
-     * TODO: 
-     * Fit the specification when final(https://w3c.github.io/gamepad/extensions.html#dom-gamepadhapticactuator)
-     * change id: number to type: 'vibration' | 'etc'
-     */
-    public async pulse(id: number, value: number, duration: number): Promise<boolean> {
-        if ('vibrationActuator' in this.gamepad) {
-            return await (<any>this.gamepad).vibrationActuator.playEffect('dual-rumble', {
-                duration,
-                strongMagnitude: value,
-                weakMagnitude: value
-            });
-        }
-
-        return await this.gamepad.hapticActuators[id]?.pulse(value, duration);
-    }
-
     public update(): void {
         for (let i = 0; i < this.gamepad.buttons.length; i++) {
             if (!this._buttons[i]) this._buttons[i] = new InputButton();
