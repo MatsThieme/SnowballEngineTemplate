@@ -36,15 +36,34 @@ export class EventTarget<T extends EventType> {
      * Returns a promise which will resolve when the event is dispatched.
      *  
      */
-    public getEventPromise<U extends keyof T>(eventName: U): Promise<void> {
+    public getEventPromise<U extends keyof T>(eventName: U): Promise<T[U]> {
         return new Promise(resolve => {
-            const handler = new EventHandler(() => {
+            const handler = new EventHandler<T[U]>((...args) => {
                 this.removeListener(eventName, handler);
-                resolve();
+                resolve(args);
             });
 
             this.addListener(eventName, handler);
         });
+    }
+
+    public async *getAsyncGenerator<U extends keyof T>(eventName: U): AsyncGenerator<T[U], void, unknown> {
+        let resolve: (args: T[U]) => void;
+
+        const handler = new EventHandler<T[U]>((...args) => {
+            this.removeListener(eventName, handler);
+            resolve(args);
+        });
+
+        this.addListener(eventName, handler);
+
+        try {
+            while (true) {
+                yield await new Promise(r => resolve = r);
+            }
+        } finally {
+            this.removeListener(eventName, handler);
+        }
     }
 
     public getEvents(): { readonly [U in keyof T]?: { readonly [id: number]: Readonly<EventHandler<T[U]>> } } {
