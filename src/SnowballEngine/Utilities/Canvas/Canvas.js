@@ -14,15 +14,5 @@ export function Canvas(width, height) {
         return ctx;
     };
 
-    function findId() {
-        let id = '' + Math.random + performance.now();
-
-        while (document.getElementById(id)) {
-            id = '' + Math.random + performance.now();
-        }
-
-        return id;
-    }
-
     return c;
 }
