@@ -1,43 +1,61 @@
-import { BaseTexture, Texture } from '@pixi/core';
-import { Rectangle } from '@pixi/math';
-import { Sprite } from '@pixi/sprite';
-import { Destroyable } from 'GameObject/Destroy';
-import { Canvas } from 'Utility/Canvas/Canvas';
-import { Vector2 } from 'Utility/Vector2';
-import { AssetType } from './AssetType';
+import { BaseTexture, Texture } from "@pixi/core";
+import { Rectangle } from "@pixi/math";
+import { Sprite } from "@pixi/sprite";
+import { Destroyable } from "GameObject/Destroy";
+import { Canvas } from "Utility/Canvas/Canvas";
+import { Vector2 } from "Utility/Vector2";
+import { AssetType } from "./AssetType";
 
 /** @category Asset Management */
 export class Asset implements Destroyable {
     public readonly name: string;
     public readonly type: AssetType;
-    public readonly data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, unknown>;
+    public readonly data:
+        | HTMLCanvasElement
+        | HTMLImageElement
+        | HTMLVideoElement
+        | AudioBuffer
+        | string
+        | Blob
+        | Record<string, unknown>;
 
     public readonly image?: {
-        readonly size: ImmutableObject<Vector2>,
-        readonly baseTexture: BaseTexture,
-        mirrorX: boolean,
-        mirrorY: boolean,
-        x?: number,
-        y?: number,
-        width?: number,
-        height?: number
+        readonly size: Immutable<Vector2>;
+        readonly baseTexture: BaseTexture;
+        mirrorX: boolean;
+        mirrorY: boolean;
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
     };
 
     private readonly _image?: {
-        mirroredX: boolean,
-        mirroredY: boolean
-    }
-
-    public readonly video?: {
-        readonly size: ImmutableObject<Vector2>,
-        readonly baseTexture: BaseTexture
-        x?: number,
-        y?: number,
-        width?: number,
-        height?: number
+        mirroredX: boolean;
+        mirroredY: boolean;
     };
 
-    public constructor(name: string, type: AssetType, data: HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | AudioBuffer | string | Blob | Record<string, unknown>) {
+    public readonly video?: {
+        readonly size: Immutable<Vector2>;
+        readonly baseTexture: BaseTexture;
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+    };
+
+    public constructor(
+        name: string,
+        type: AssetType,
+        data:
+            | HTMLCanvasElement
+            | HTMLImageElement
+            | HTMLVideoElement
+            | AudioBuffer
+            | string
+            | Blob
+            | Record<string, unknown>
+    ) {
         this.name = name;
         this.type = type;
         this.data = data;
@@ -47,29 +65,34 @@ export class Asset implements Destroyable {
                 size: new Vector2((<HTMLImageElement>this.data).width, (<HTMLImageElement>this.data).height),
                 baseTexture: new BaseTexture(<HTMLImageElement>this.data),
                 mirrorX: false,
-                mirrorY: false
+                mirrorY: false,
             };
 
             this._image = {
                 mirroredX: false,
-                mirroredY: false
+                mirroredY: false,
             };
         } else if (this.type === AssetType.Video) {
             this.video = {
-                size: new Vector2((<HTMLVideoElement>this.data).videoWidth, (<HTMLVideoElement>this.data).videoHeight),
-                baseTexture: new BaseTexture(<HTMLVideoElement>this.data, { resourceOptions: { autoPlay: false } })
+                size: new Vector2(
+                    (<HTMLVideoElement>this.data).videoWidth,
+                    (<HTMLVideoElement>this.data).videoHeight
+                ),
+                baseTexture: new BaseTexture(<HTMLVideoElement>this.data, {
+                    resourceOptions: { autoPlay: false },
+                }),
             };
         }
     }
 
     /**
-     * 
+     *
      * Draw image data mirrored to a canvas and override the original image data. Returns this.
-     * 
+     *
      */
     public mirrorImage(x?: boolean, y?: boolean): Asset {
         if (this.type !== AssetType.Image) {
-            throw new Error('type !== AssetType.Image');
+            throw new Error("type !== AssetType.Image");
         }
 
         if (!x && !y) return this;
@@ -79,7 +102,7 @@ export class Asset implements Destroyable {
         ctx.translate(0, c.height);
         ctx.scale(x ? -1 : 1, y ? -1 : 1);
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage((<HTMLImageElement>this.data), 0, 0);
+        ctx.drawImage(<HTMLImageElement>this.data, 0, 0);
         (<Mutable<Asset>>this).data = c;
 
         if (x) this._image!.mirroredX = !this._image!.mirroredX;
@@ -93,18 +116,22 @@ export class Asset implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Create PIXI.Sprite from the asset and optionally slice it.
      * If asset is an image, a PIXI.Sprite object will be returned, otherwise undefined.
-     * 
+     *
      */
     public getPIXISprite(x?: number, y?: number, width?: number, height?: number): Sprite | undefined {
         if (this.type !== AssetType.Image && this.type !== AssetType.Video) {
-            throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
+            throw new Error("type !== AssetType.Image && this.type !== AssetType.Video");
         }
 
-        if (this.type === AssetType.Image) this.mirrorImage(this.image!.mirrorX !== this._image!.mirroredX, this.image!.mirrorY !== this._image!.mirroredY);
-
+        if (this.type === AssetType.Image) {
+            this.mirrorImage(
+                this.image!.mirrorX !== this._image!.mirroredX,
+                this.image!.mirrorY !== this._image!.mirroredY
+            );
+        }
 
         const sprite = new Sprite(this.getPIXITexture(x, y, width, height)!);
 
@@ -115,17 +142,30 @@ export class Asset implements Destroyable {
 
     public getPIXITexture(x?: number, y?: number, width?: number, height?: number): Texture | undefined {
         if (this.type !== AssetType.Image && this.type !== AssetType.Video) {
-            throw new Error('type !== AssetType.Image && this.type !== AssetType.Video');
+            throw new Error("type !== AssetType.Image && this.type !== AssetType.Video");
         }
 
         const thing = this.image! || this.video!;
 
-        if (!x && !y && !width && !height && !thing.x && !thing.y && !thing.width && !thing.height) return new Texture(<BaseTexture>thing.baseTexture);
-        else return new Texture(<BaseTexture>thing.baseTexture, new Rectangle(x || thing.x, y || thing.y, width === undefined ? thing.width || thing.size.x : width, height === undefined ? this.image!.height || thing.size.y : height));
+        if (!x && !y && !width && !height && !thing.x && !thing.y && !thing.width && !thing.height) {
+            return new Texture(<BaseTexture>thing.baseTexture);
+        } else {
+            return new Texture(
+                <BaseTexture>thing.baseTexture,
+                new Rectangle(
+                    x || thing.x,
+                    y || thing.y,
+                    width === undefined ? thing.width || thing.size.x : width,
+                    height === undefined ? this.image!.height || thing.size.y : height
+                )
+            );
+        }
     }
 
     public clone(): Asset {
-        if (this.type === AssetType.Text || this.type === AssetType.Font) return new Asset(this.name, this.type, this.data);
+        if (this.type === AssetType.Text || this.type === AssetType.Font) {
+            return new Asset(this.name, this.type, this.data);
+        }
 
         if (this.type === AssetType.Audio) {
             const ab = new AudioBuffer(<AudioBuffer>this.data);
@@ -141,7 +181,9 @@ export class Asset implements Destroyable {
 
         if (this.type === AssetType.Blob) return new Asset(this.name, this.type, (<Blob>this.data).slice());
 
-        if (this.type === AssetType.JSON) return new Asset(this.name, this.type, JSON.parse(JSON.stringify(this.data)));
+        if (this.type === AssetType.JSON) {
+            return new Asset(this.name, this.type, JSON.parse(JSON.stringify(this.data)));
+        }
 
         if (this.type === AssetType.Image) {
             const img = new Image();
@@ -150,7 +192,7 @@ export class Asset implements Destroyable {
         }
 
         if (this.type === AssetType.Video) {
-            const video = document.createElement('video');
+            const video = document.createElement("video");
             video.src = this.name;
             return new Asset(this.name, this.type, video);
         }
@@ -159,7 +201,9 @@ export class Asset implements Destroyable {
     }
 
     public getCSSFontName(): string {
-        if (this.type !== AssetType.Font) throw new Error('this.type !== AssetType.Font');
+        if (this.type !== AssetType.Font) {
+            throw new Error("this.type !== AssetType.Font");
+        }
 
         return <string>this.data;
     }

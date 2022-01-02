@@ -1,1 +1,1 @@
-type UIFont = 'Default-Small' | 'Default-Normal' | 'Default-Large';
+declare type UIFont = "Default-Small" | "Default-Normal" | "Default-Large";

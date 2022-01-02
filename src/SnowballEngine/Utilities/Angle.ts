@@ -1,17 +1,17 @@
-import { Range } from './Range';
-import { Vector2 } from './Vector2';
+import { Range } from "./Range";
+import { Vector2 } from "./Vector2";
 
 /** @category Utility */
 export class Angle {
-    private static _2pi: number = Math.PI * 2;
+    private static readonly _2pi: number = Math.PI * 2;
 
     private _radian?: number;
     private _degree?: number;
 
     /**
-     * 
+     *
      * Helper class to simplify the mixed use of radian and degree.
-     * 
+     *
      */
     public constructor(radian?: number, degree?: number) {
         this._radian = 0;
@@ -21,10 +21,13 @@ export class Angle {
     }
 
     public get radian(): number {
-        if (typeof this._radian === 'number') return this._radian;
-        else if (typeof this._degree === 'number') return this._radian = this._degree * Math.PI / 180 % Angle._2pi;
+        if (typeof this._radian === "number") {
+            return this._radian;
+        } else if (typeof this._degree === "number") {
+            return (this._radian = ((this._degree * Math.PI) / 180) % Angle._2pi);
+        }
 
-        return this._radian = this._degree = 0;
+        return (this._radian = this._degree = 0);
     }
     public set radian(val: number) {
         this._radian = Angle.normalizeRadian(val);
@@ -32,10 +35,13 @@ export class Angle {
     }
 
     public get degree(): number {
-        if (typeof this._degree === 'number') return this._degree;
-        else if (typeof this._radian === 'number') return this._degree = this._radian * 180 / Math.PI % 360;
+        if (typeof this._degree === "number") {
+            return this._degree;
+        } else if (typeof this._radian === "number") {
+            return (this._degree = ((this._radian * 180) / Math.PI) % 360);
+        }
 
-        return this._degree = this._radian = 0;
+        return (this._degree = this._radian = 0);
     }
     public set degree(val: number) {
         this._degree = Angle.normalizeDegree(val);
@@ -58,14 +64,14 @@ export class Angle {
         return deg;
     }
 
-    public equal(other: IAngle, tolerance: number = 0.0000001): boolean {
+    public equal(other: IAngle, tolerance = 0.0000001): boolean {
         return Math.abs(this.radian - other.radian) < tolerance;
     }
 
     /**
-     * 
-     * Returns this 
-     * 
+     *
+     * Returns this
+     *
      */
     public copy(angle: IAngle): Angle {
         this.radian = angle.radian;

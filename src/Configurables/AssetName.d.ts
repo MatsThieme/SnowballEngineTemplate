@@ -1,1 +1,1 @@
-type AssetName = 'some image';
+declare type AssetName = "some image";
