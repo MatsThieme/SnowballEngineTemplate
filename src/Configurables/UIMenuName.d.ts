@@ -1,1 +1,1 @@
-declare type UIMenuName = 'Loadingscreen' | 'FPS Display';
+declare type UIMenuName = "Loadingscreen" | "FPS Display";

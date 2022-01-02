@@ -1,13 +1,13 @@
-import { Input } from 'SnowballEngine/Input/Input';
-import { InputAxis } from 'SnowballEngine/Input/InputAxis';
-import { InputButton } from 'SnowballEngine/Input/InputButton';
-import { InputEvent } from 'SnowballEngine/Input/InputEvent';
-import { EventTarget } from 'Utility/Events/EventTarget';
-import { InputEventTypes } from 'Utility/Events/EventTypes';
-import { InputDevice } from '../InputDevice';
-import { InputDeviceType } from '../InputDeviceType';
-import { KeyboardAxis } from './KeyboardAxis';
-import { KeyboardButton } from './KeyboardButton';
+import { Input } from "SnowballEngine/Input/Input";
+import { InputAxis } from "SnowballEngine/Input/InputAxis";
+import { InputButton } from "SnowballEngine/Input/InputButton";
+import { InputEvent } from "SnowballEngine/Input/InputEvent";
+import { EventTarget } from "Utility/Events/EventTarget";
+import { InputEventTypes } from "Utility/Events/EventTypes";
+import { InputDevice } from "../InputDevice";
+import { InputDeviceType } from "../InputDeviceType";
+import { KeyboardAxis } from "./KeyboardAxis";
+import { KeyboardButton } from "./KeyboardButton";
 
 /** @category Input */
 export class Keyboard extends EventTarget<InputEventTypes> implements InputDevice {
@@ -24,8 +24,6 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
         this._keys = new Map();
         this._fireListener = new Map();
         this._axesKeys = new Map();
-
-
 
         this._onKeyDown = ((e: KeyboardEvent) => {
             let btn = this._keys.get(<KeyboardButton>e.code);
@@ -52,8 +50,6 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
 
             this._fireListener.set(<KeyboardButton>e.code, true);
         }).bind(this);
-
-
 
         this.addListeners();
     }
@@ -89,9 +85,11 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
     private axisToKeys(axis: KeyboardAxis): KeyboardButton[] | undefined {
         if (this._axesKeys.has(axis)) return this._axesKeys.get(axis)!;
 
-        const keys: KeyboardButton[] | undefined = <KeyboardButton[]>axis.match(/^Axis\((\w+), (\w+)\)$/)?.slice(1);
+        const keys: KeyboardButton[] | undefined = <KeyboardButton[]>(
+            axis.match(/^Axis\((\w+), (\w+)\)$/)?.slice(1)
+        );
 
-        if (!keys || keys.length < 2 || !KeyboardButton[keys[0]] || !KeyboardButton[keys[1]]) return
+        if (!keys || keys.length < 2 || !KeyboardButton[keys[0]] || !KeyboardButton[keys[1]]) return;
 
         this._axesKeys.set(axis, keys);
 
@@ -107,23 +105,29 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
             const btn = <KeyboardButton | undefined>Input.inputMappingButtons.keyboard[type];
             const ax = <KeyboardAxis | undefined>Input.inputMappingAxes.keyboard[type];
 
-            if (btn === undefined && ax === undefined || btn && !this._fireListener.get(btn) && !ax) continue;
-
+            if ((btn === undefined && ax === undefined) || (btn && !this._fireListener.get(btn) && !ax))
+                continue;
 
             if (ax) {
                 const keys = this.axisToKeys(ax);
 
-                if (keys && keys[0] && !this._fireListener.get(keys[0]) && keys[1] && !this._fireListener.get(keys[1])) continue;
+                if (
+                    keys &&
+                    keys[0] &&
+                    !this._fireListener.get(keys[0]) &&
+                    keys[1] &&
+                    !this._fireListener.get(keys[1])
+                )
+                    continue;
             }
-
 
             const e: InputEvent = {
                 type,
                 deviceType: InputDeviceType.Keyboard,
                 axis: ax !== undefined ? this.getAxis(ax) : undefined,
                 button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this
-            }
+                device: this,
+            };
 
             if (!e.axis && !e.button) continue;
 
@@ -134,13 +138,13 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
     }
 
     private addListeners(): void {
-        window.addEventListener('keydown', this._onKeyDown);
-        window.addEventListener('keyup', this._onKeyUp);
+        window.addEventListener("keydown", this._onKeyDown);
+        window.addEventListener("keyup", this._onKeyUp);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('keydown', this._onKeyDown);
-        window.removeEventListener('keyup', this._onKeyUp);
+        window.removeEventListener("keydown", this._onKeyDown);
+        window.removeEventListener("keyup", this._onKeyUp);
     }
 
     public dispose(): void {

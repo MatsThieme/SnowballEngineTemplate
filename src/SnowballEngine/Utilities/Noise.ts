@@ -1,13 +1,13 @@
-import { lerp } from './Helpers';
+import { lerp } from "./Helpers";
 
 /** @category Utility */
 export class Noise {
     private _vs: number[];
 
     /**
-     * 
+     *
      * Linear interpolation between random values.
-     * 
+     *
      */
     public constructor(vCount: number) {
         this._vs = [];
@@ -18,9 +18,9 @@ export class Noise {
     }
 
     /**
-     * 
+     *
      * Returns an interpolated value at position x.
-     * 
+     *
      */
     public get(x: number): number {
         const a = ~~x % this._vs.length;

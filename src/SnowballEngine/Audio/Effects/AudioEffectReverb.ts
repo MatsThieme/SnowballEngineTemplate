@@ -1,7 +1,7 @@
-import { AudioEffect } from 'Audio/AudioEffect';
-import { AudioMixer } from 'Audio/AudioMixer';
-import { AudioListener } from 'GameObject/Components/AudioListener';
-import { clamp } from 'Utility/Helpers';
+import { AudioEffect } from "Audio/AudioEffect";
+import { AudioMixer } from "Audio/AudioMixer";
+import { AudioListener } from "GameObject/Components/AudioListener";
+import { clamp } from "Utility/Helpers";
 
 /** @category Audio */
 export class AudioEffectReverb extends AudioEffect {
@@ -12,9 +12,9 @@ export class AudioEffectReverb extends AudioEffect {
     private _reverse: boolean;
 
     /**
-     * 
+     *
      * https://github.com/pixijs/pixi-sound/blob/main/src/filters/ReverbFilter.ts
-     * 
+     *
      */
     public constructor(mixer: AudioMixer) {
         super(mixer);
@@ -27,10 +27,10 @@ export class AudioEffectReverb extends AudioEffect {
     }
 
     /**
-     * 
+     *
      * Length of reverb in seconds from 1 to 50
      * @default 3
-     * 
+     *
      */
     public get seconds(): number {
         return this._seconds;
@@ -41,10 +41,10 @@ export class AudioEffectReverb extends AudioEffect {
     }
 
     /**
-     * 
+     *
      * Decay value from 0 to 100
      * @default 50
-     * 
+     *
      */
     public get decay(): number {
         return this._decay;

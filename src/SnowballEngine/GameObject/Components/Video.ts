@@ -1,15 +1,15 @@
-import { Asset } from 'Assets/Asset';
-import { AssetType } from 'Assets/AssetType';
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { VideoEventTypes } from 'Utility/Events/EventTypes';
-import { Renderable } from './Renderable';
+import { Asset } from "Assets/Asset";
+import { AssetType } from "Assets/AssetType";
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { VideoEventTypes } from "Utility/Events/EventTypes";
+import { Renderable } from "./Renderable";
 
 /**
- * 
+ *
  * Playback is controlled by asset.datas HTMLVideoElement.
  * @category Component
- * 
+ *
  */
 export class Video extends Renderable<VideoEventTypes> {
     private _asset?: Asset;
@@ -28,7 +28,7 @@ export class Video extends Renderable<VideoEventTypes> {
         this._currentTime = 0;
         this._rate = 0;
         this._muted = false;
-        this._endListener = (() => this.dispatchEvent('end')).bind(this);
+        this._endListener = (() => this.dispatchEvent("end")).bind(this);
     }
 
     public get asset(): Asset | undefined {
@@ -40,15 +40,15 @@ export class Video extends Renderable<VideoEventTypes> {
             this.sprite = val.getPIXISprite();
 
             this._el = <HTMLVideoElement>val.data;
-            this._el.addEventListener('end', this._endListener);
+            this._el.addEventListener("end", this._endListener);
 
             this._el.loop = this._loop;
             this._el.currentTime = this._currentTime;
         } else if (!val) {
-            if (this._el) this._el.removeEventListener('end', this._endListener);
+            if (this._el) this._el.removeEventListener("end", this._endListener);
             this.sprite = this._asset = this._el = undefined;
         } else {
-            throw new Error('asset.type !== AssetType.Video');
+            throw new Error("asset.type !== AssetType.Video");
         }
     }
 
@@ -102,12 +102,12 @@ export class Video extends Renderable<VideoEventTypes> {
 
     public pause(): void {
         this._el?.pause();
-        this.dispatchEvent('pause');
+        this.dispatchEvent("pause");
     }
 
     public play(): void {
         this._el?.play();
-        this.dispatchEvent('play');
+        this.dispatchEvent("play");
     }
 
     public reset(): void {

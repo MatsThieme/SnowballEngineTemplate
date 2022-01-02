@@ -62,15 +62,13 @@ export class UIMenu implements Destroyable {
         return this._background;
     }
     public set background(val: Asset | undefined) {
-        if (val?.type !== AssetType.Image)
-            throw new Error("Asset.type !== AssetType.Image");
+        if (val?.type !== AssetType.Image) throw new Error("Asset.type !== AssetType.Image");
 
         const s = val.getPIXISprite();
 
         if (!s) throw new Error(`Can't create PIXI.Sprite from Asset`);
 
-        if (this._backgroundSprite)
-            this.container.removeChild(this._backgroundSprite);
+        if (this._backgroundSprite) this.container.removeChild(this._backgroundSprite);
 
         this.container.addChild(s);
 

@@ -1,12 +1,12 @@
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { AlignH, AlignV } from 'GameObject/Align';
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { Color } from 'Utility/Color';
-import { RenderableEventTypes } from 'Utility/Events/EventTypes';
-import { Vector2 } from 'Utility/Vector2';
-import { Component } from './Component';
+import { Container } from "@pixi/display";
+import { Sprite } from "@pixi/sprite";
+import { AlignH, AlignV } from "GameObject/Align";
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { Color } from "Utility/Color";
+import { RenderableEventTypes } from "Utility/Events/EventTypes";
+import { Vector2 } from "Utility/Vector2";
+import { Component } from "./Component";
 
 /** @category Component */
 export abstract class Renderable<EventTypes extends RenderableEventTypes> extends Component<EventTypes> {
@@ -59,9 +59,9 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     }
 
     /**
-     * 
+     *
      * Size relative to this.gameObject.transform
-     * 
+     *
      */
     public get size(): Vector2 {
         return this._size;
@@ -91,7 +91,7 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     }
     public set tint(val: Color | undefined) {
         this._tint = val;
-        if (this._sprite) (<Sprite>this._sprite).tint = val?.rgb || 0xFFFFFF;
+        if (this._sprite) (<Sprite>this._sprite).tint = val?.rgb || 0xffffff;
     }
 
     public get alignH(): AlignH {
@@ -111,10 +111,10 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
     }
 
     /**
-     * 
+     *
      * The PIXI.Sprite or PIXI.Container instance that should be rendered.
      * Deriving class should set this.sprite.
-     * 
+     *
      */
     public get sprite(): Sprite | Container | undefined {
         return this._sprite;
@@ -126,15 +126,15 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
         if (val) {
             val.interactive = true;
-            val.name = this.constructor.name + ' (' + this.componentID + ')';
+            val.name = this.constructor.name + " (" + this.componentID + ")";
 
-            if (val.width + val.height !== 0 && this._size.x + this._size.y === 0) this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
+            if (val.width + val.height !== 0 && this._size.x + this._size.y === 0)
+                this.size = new Vector2(val.width, val.height).setLength(new Vector2(1, 1).magnitude);
 
             if (this._size.x + this._size.y === 0) this.size = new Vector2(1, 1);
 
             this.skew = this._skew;
             if (this._tint) (<Sprite>this._sprite)!.tint = this._tint.rgb;
-
 
             this.connectCamera();
 
@@ -171,13 +171,17 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
 
         const anchor = new Vector2(this.alignH, this.alignV);
 
-        if ('anchor' in this._sprite) {
+        if ("anchor" in this._sprite) {
             this._sprite.anchor.copyFrom(anchor);
             this._sprite.position.copyFrom(this.position.clone.scale(new Vector2(1, -1)));
         } else {
             const bounds = this._sprite.getLocalBounds();
 
-            this._sprite.position.copyFrom(this.position.clone.add(new Vector2(bounds.width, bounds.height).scale(anchor.sub({ x: 1, y: 1 }))));
+            this._sprite.position.copyFrom(
+                this.position.clone.add(
+                    new Vector2(bounds.width, bounds.height).scale(anchor.sub({ x: 1, y: 1 }))
+                )
+            );
         }
     }
 

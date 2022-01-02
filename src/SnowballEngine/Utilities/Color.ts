@@ -1,5 +1,5 @@
-import { clamp, random } from './Helpers';
-import { Range } from './Range';
+import { clamp, random } from "./Helpers";
+import { Range } from "./Range";
 
 /** @category Utility */
 export class Color {
@@ -14,7 +14,7 @@ export class Color {
     private _recalculateColor: boolean;
 
     /**
-     * 
+     *
      * @param r 0-255
      * @param g 0-255
      * @param b 0-255
@@ -29,9 +29,9 @@ export class Color {
     }
 
     /**
-     * 
+     *
      * Returns a css color string
-     * 
+     *
      */
     public get rgbaString(): string {
         if (!this._recalculateColor && this._rgbaString) return this._rgbaString;
@@ -42,9 +42,9 @@ export class Color {
     }
 
     /**
-     * 
+     *
      * Returns a css color string
-     * 
+     *
      */
     public get rgbString(): string {
         if (!this._recalculateColor && this._rgbString) return this._rgbString;
@@ -58,8 +58,8 @@ export class Color {
         if (this._recalculateColor) {
             this.calculateColor();
 
-            this._rgbaString = '';
-            this._rgbString = '';
+            this._rgbaString = "";
+            this._rgbString = "";
             this._recalculateColor = false;
         }
 
@@ -78,8 +78,8 @@ export class Color {
         if (this._recalculateColor) {
             this.calculateColor();
 
-            this._rgbaString = '';
-            this._rgbString = '';
+            this._rgbaString = "";
+            this._rgbString = "";
             this._recalculateColor = false;
         }
 
@@ -130,7 +130,7 @@ export class Color {
     }
 
     private calculateColor(): void {
-        this._rgb = this._r << 16 | this._g << 8 | this._b;
+        this._rgb = (this._r << 16) | (this._g << 8) | this._b;
         this._rgba = this._r * 256 ** 3 + (this._g << 16) + (this._b << 8) + this._a;
     }
 
@@ -150,13 +150,17 @@ export class Color {
         return new Color(r / colors.length, g / colors.length, b / colors.length, a / colors.length);
     }
 
-
     public static get random(): Color {
         return new Color(random(0, 255), random(0, 255), random(0, 255));
     }
 
     public static randomRange(range: Range<Color>): Color {
-        return new Color(random(range.min.r, range.max.r), random(range.min.g, range.max.g), random(range.min.b, range.max.b), random(range.min.a, range.max.a));
+        return new Color(
+            random(range.min.r, range.max.r),
+            random(range.min.g, range.max.g),
+            random(range.min.b, range.max.b),
+            random(range.min.a, range.max.a)
+        );
     }
 
     // https://www.w3schools.com/colors/colors_groups.asp
@@ -185,7 +189,6 @@ export class Color {
     public static get mediumVioletRed(): Color {
         return new Color(199, 21, 133);
     }
-
 
     // Purple Colors
 
@@ -265,7 +268,6 @@ export class Color {
         return new Color(75, 0, 130);
     }
 
-
     // Red Colors
 
     public static get lightsalmon(): Color {
@@ -304,7 +306,6 @@ export class Color {
         return new Color(139, 0, 0);
     }
 
-
     // Orange Colors
 
     public static get orange(): Color {
@@ -326,7 +327,6 @@ export class Color {
     public static get orangered(): Color {
         return new Color(255, 69, 0);
     }
-
 
     // Yellow Colors
 
@@ -373,7 +373,6 @@ export class Color {
     public static get darkkhaki(): Color {
         return new Color(189, 183, 107);
     }
-
 
     // Green Colors
 
@@ -465,7 +464,6 @@ export class Color {
         return new Color(0, 128, 128);
     }
 
-
     // Cyan Colors
 
     public static get aqua(): Color {
@@ -499,7 +497,6 @@ export class Color {
     public static get darkturquoise(): Color {
         return new Color(0, 206, 209);
     }
-
 
     // Blue Colors
 
@@ -566,7 +563,6 @@ export class Color {
     public static get midnightblue(): Color {
         return new Color(25, 25, 112);
     }
-
 
     // Brown Colors
 
@@ -642,7 +638,6 @@ export class Color {
         return new Color(128, 0, 0);
     }
 
-
     // White Colors
 
     public static get white(): Color {
@@ -712,7 +707,6 @@ export class Color {
     public static get mistyrose(): Color {
         return new Color(255, 228, 225);
     }
-
 
     // Grey Colors
 

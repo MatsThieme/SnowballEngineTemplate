@@ -9,5 +9,5 @@ export const enum TouchAxis {
     TouchPoint6,
     TouchPoint7,
     TouchPoint8,
-    TouchPoint9
+    TouchPoint9,
 }

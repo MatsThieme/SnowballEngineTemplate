@@ -1,13 +1,13 @@
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { Body, Composite, Events, IBodyDefinition } from 'matter-js';
-import { Angle } from 'Utility/Angle';
-import { EventHandler } from 'Utility/Events/EventHandler';
-import { RigidbodyEventTypes } from 'Utility/Events/EventTypes';
-import { Vector2 } from 'Utility/Vector2';
-import { Collider } from './Collider';
-import { Component } from './Component';
-import { Transform } from './Transform/Transform';
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { Body, Composite, Events, IBodyDefinition } from "matter-js";
+import { Angle } from "Utility/Angle";
+import { EventHandler } from "Utility/Events/EventHandler";
+import { RigidbodyEventTypes } from "Utility/Events/EventTypes";
+import { Vector2 } from "Utility/Vector2";
+import { Collider } from "./Collider";
+import { Component } from "./Component";
+import { Transform } from "./Transform/Transform";
 
 export class Rigidbody extends Component<RigidbodyEventTypes> {
     public body: Body;
@@ -30,12 +30,18 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
 
         this._bodyNeedUpdate = true;
 
+        const listener = new EventHandler((t, p, r, s) => {
+            if (r || p) this._bodyNeedUpdate = true;
+        }, this);
 
-        const listener = new EventHandler(((t, p, r, s) => { if (r || p) this._bodyNeedUpdate = true; }), this);
-
-        this.gameObject.transform.addListener('modified', listener);
-        this.gameObject.transform.addListener('parentmodified', listener);
-        this.gameObject.addListener('parentchanged', new EventHandler((() => { this._bodyNeedUpdate = true; }), this));
+        this.gameObject.transform.addListener("modified", listener);
+        this.gameObject.transform.addListener("parentmodified", listener);
+        this.gameObject.addListener(
+            "parentchanged",
+            new EventHandler(() => {
+                this._bodyNeedUpdate = true;
+            }, this)
+        );
 
         this.ignoreGravity = false;
 
@@ -123,7 +129,6 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         this._bodyOptions.frictionAir = val;
     }
 
-
     public get collisionFilterCategory(): number {
         return this.body?.collisionFilter.category || 0;
     }
@@ -140,7 +145,6 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         this._bodyOptions.collisionFilter = { ...this._bodyOptions.collisionFilter, mask: val };
     }
 
-
     protected override onEnable(): void {
         this.body.isSleeping = false;
     }
@@ -150,10 +154,10 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
     }
 
     /**
-     * 
+     *
      * @param centre Position in world coordinates.
      * @param relative specifies if centre is relative to the body or not
-     * 
+     *
      */
     public setCentreOfMass(centre: Vector2, relative?: boolean) {
         Body.setCentre(this.body, centre, relative);
@@ -172,20 +176,18 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
 
         this.disconnect();
 
-
         const parts = this.body.parts.slice(1);
 
         parts.push(...collider.parts);
 
-
-        this.transformBody(() => this.body = Body.create({ parts, ...this._bodyOptions }));
+        this.transformBody(() => (this.body = Body.create({ parts, ...this._bodyOptions })));
         this.body.slop *= this.gameObject.scene.physics.worldScale;
 
         this.connect();
     }
 
     public hasCollider(collider: Collider): boolean {
-        return <any>collider.body && this.body.parts.findIndex(p => p.id === collider.body!.id) !== -1;
+        return <any>collider.body && this.body.parts.findIndex((p) => p.id === collider.body!.id) !== -1;
     }
 
     public removeCollider(collider: Collider): void {
@@ -196,20 +198,17 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         let i = -1;
 
         for (const part of collider.parts) {
-            i = parts.findIndex(p => p.id === part.id);
+            i = parts.findIndex((p) => p.id === part.id);
 
             if (i === -1) return;
         }
 
         this.disconnect();
 
-
         parts.splice(i - collider.parts.length + 1, collider.parts.length);
 
-
-        this.transformBody(() => this.body = Body.create({ parts, ...this._bodyOptions }));
+        this.transformBody(() => (this.body = Body.create({ parts, ...this._bodyOptions })));
         this.body.slop *= this.gameObject.scene.physics.worldScale;
-
 
         if (this.body.parts.length > 1) this.connect();
     }
@@ -224,25 +223,28 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
     }
 
     /**
-     * 
+     *
      * @param force Force vector in world coordinates.
      * @param position Position in world coordinates.
-     * 
+     *
      */
     public applyForce(force: IVector2, position: IVector2 = this.body.position): void {
         Body.applyForce(this.body, position, force);
     }
 
     private applyGravity(): void {
-        this.applyForce({ x: this.body.mass * this.gameObject.scene.physics.gravity.x, y: this.body.mass * this.gameObject.scene.physics.gravity.y });
+        this.applyForce({
+            x: this.body.mass * this.gameObject.scene.physics.gravity.x,
+            y: this.body.mass * this.gameObject.scene.physics.gravity.y,
+        });
     }
 
     private addListeners(): void {
-        Events.on(this.gameObject.scene.physics.engine, 'beforeUpdate', this._gravityUpdateListener);
+        Events.on(this.gameObject.scene.physics.engine, "beforeUpdate", this._gravityUpdateListener);
     }
 
     private removeListeners(): void {
-        Events.off(this.gameObject.scene.physics.engine, 'beforeUpdate', this._gravityUpdateListener);
+        Events.off(this.gameObject.scene.physics.engine, "beforeUpdate", this._gravityUpdateListener);
     }
 
     public override prepareDestroy(): void {
@@ -253,14 +255,21 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
     }
 
     public override destroy(): void {
-        Rigidbody._rigidBodies.splice(Rigidbody._rigidBodies.findIndex(rb => rb.componentID === this.componentID), 1);
+        Rigidbody._rigidBodies.splice(
+            Rigidbody._rigidBodies.findIndex((rb) => rb.componentID === this.componentID),
+            1
+        );
 
         super.destroy();
     }
 
     private updateTransform(): void {
         if (this.gameObject.parent) {
-            const transform: Transformable = Transform.createTransformable(Vector2.from(this.body.position), new Vector2(1, 1), new Angle(-this.body.angle));
+            const transform: Transformable = Transform.createTransformable(
+                Vector2.from(this.body.position),
+                new Vector2(1, 1),
+                new Angle(-this.body.angle)
+            );
 
             const localTransform = Transform.toLocal(transform, this.gameObject.parent.transform);
 
@@ -273,10 +282,11 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
     public updateBody(): void {
         const globalTransform = Transform.toGlobal(this.gameObject.transform);
 
-        if (!new Angle(this.body.angle).equal(new Angle(-globalTransform.rotation.radian))) Body.setAngle(this.body, -globalTransform.rotation.radian);
+        if (!new Angle(this.body.angle).equal(new Angle(-globalTransform.rotation.radian)))
+            Body.setAngle(this.body, -globalTransform.rotation.radian);
 
-        if (!globalTransform.position.equal(this.body.position)) Body.setPosition(this.body, globalTransform.position);
-
+        if (!globalTransform.position.equal(this.body.position))
+            Body.setPosition(this.body, globalTransform.position);
 
         this._bodyNeedUpdate = false;
     }

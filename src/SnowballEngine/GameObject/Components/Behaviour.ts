@@ -1,9 +1,9 @@
-import {Scene} from 'SnowballEngine/Scene';
-import {EventHandler} from 'Utility/Events/EventHandler';
-import {BehaviourEventTypes} from 'Utility/Events/EventTypes';
-import {ComponentType} from '../ComponentType';
-import {GameObject} from '../GameObject';
-import {Component} from './Component';
+import { Scene } from "SnowballEngine/Scene";
+import { EventHandler } from "Utility/Events/EventHandler";
+import { BehaviourEventTypes } from "Utility/Events/EventTypes";
+import { ComponentType } from "../ComponentType";
+import { GameObject } from "../GameObject";
+import { Component } from "./Component";
 
 /** @category Component */
 export class Behaviour extends Component<BehaviourEventTypes> {
@@ -15,21 +15,29 @@ export class Behaviour extends Component<BehaviourEventTypes> {
         super(gameObject, ComponentType.Behaviour);
         this.scene = this.gameObject.scene;
 
-        if (this.onCollisionEnter) this.addListener('collisionenter', new EventHandler(this.onCollisionEnter, this));
-        if (this.onCollisionActive) this.addListener('collisionactive', new EventHandler(this.onCollisionActive, this));
-        if (this.onCollisionExit) this.addListener('collisionexit', new EventHandler(this.onCollisionExit, this));
-        if (this.onTriggerEnter) this.addListener('triggerenter', new EventHandler(this.onTriggerEnter, this));
-        if (this.onTriggerActive) this.addListener('triggeractive', new EventHandler(this.onTriggerActive, this));
-        if (this.onTriggerExit) this.addListener('triggerexit', new EventHandler(this.onTriggerExit, this));
-
+        if (this.onCollisionEnter)
+            this.addListener("collisionenter", new EventHandler(this.onCollisionEnter, this));
+        if (this.onCollisionActive)
+            this.addListener("collisionactive", new EventHandler(this.onCollisionActive, this));
+        if (this.onCollisionExit)
+            this.addListener("collisionexit", new EventHandler(this.onCollisionExit, this));
+        if (this.onTriggerEnter)
+            this.addListener("triggerenter", new EventHandler(this.onTriggerEnter, this));
+        if (this.onTriggerActive)
+            this.addListener("triggeractive", new EventHandler(this.onTriggerActive, this));
+        if (this.onTriggerExit) this.addListener("triggerexit", new EventHandler(this.onTriggerExit, this));
 
         Behaviour._behaviours.push(this);
 
-        this.addListener('destroy', new EventHandler(() => {
-            const i = Behaviour._behaviours.findIndex(b => b.componentID === this.componentID);
-            if (i === -1) throw new Error('destroyed behaviour not found, componentId: ' + this.componentID);
-            Behaviour._behaviours.splice(i, 1);
-        }));
+        this.addListener(
+            "destroy",
+            new EventHandler(() => {
+                const i = Behaviour._behaviours.findIndex((b) => b.componentID === this.componentID);
+                if (i === -1)
+                    throw new Error("destroyed behaviour not found, componentId: " + this.componentID);
+                Behaviour._behaviours.splice(i, 1);
+            })
+        );
     }
 
     /**
@@ -83,19 +91,22 @@ export class Behaviour extends Component<BehaviourEventTypes> {
 
     public static earlyupdate(): void {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) behavior.dispatchEvent('earlyupdate');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined)
+                behavior.dispatchEvent("earlyupdate");
         }
     }
 
     public static update(): void {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) behavior.dispatchEvent('update');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined)
+                behavior.dispatchEvent("update");
         }
     }
 
     public static lateupdate(): void {
         for (const behavior of Behaviour._behaviours) {
-            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined) behavior.dispatchEvent('lateupdate');
+            if (behavior.gameObject.active && behavior.active && behavior.__destroyInFrames__ === undefined)
+                behavior.dispatchEvent("lateupdate");
         }
     }
 }

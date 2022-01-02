@@ -5,5 +5,5 @@ export const enum UIElementType {
     Checkbox,
     Select,
     TextInputField,
-    NumberInputField
+    NumberInputField,
 }

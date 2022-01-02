@@ -1,22 +1,22 @@
-import { BitmapText } from '@pixi/text-bitmap';
-import { Client } from 'SnowballEngine/Client';
-import { Input } from 'SnowballEngine/Input/Input';
-import { Scene } from 'SnowballEngine/Scene';
-import { UIElementType } from 'UI/UIElementType';
-import { UIFonts } from 'UI/UIFonts';
-import { UIMenu } from 'UI/UIMenu';
-import { AABB } from 'Utility/AABB';
-import { Color } from 'Utility/Color';
-import { Vector2 } from 'Utility/Vector2';
-import { UIElement } from './UIElement';
+import { BitmapText } from "@pixi/text-bitmap";
+import { Client } from "SnowballEngine/Client";
+import { Input } from "SnowballEngine/Input/Input";
+import { Scene } from "SnowballEngine/Scene";
+import { UIElementType } from "UI/UIElementType";
+import { UIFonts } from "UI/UIFonts";
+import { UIMenu } from "UI/UIMenu";
+import { AABB } from "Utility/AABB";
+import { Color } from "Utility/Color";
+import { Vector2 } from "Utility/Vector2";
+import { UIElement } from "./UIElement";
 
 /** @category UI */
 export class UISelect extends UIElement {
     public readonly value: string;
     /**
-     * 
+     *
      * extend options upwards instead of default downwards
-     * 
+     *
      */
     public extendUp: boolean;
 
@@ -32,12 +32,12 @@ export class UISelect extends UIElement {
     public constructor(menu: UIMenu, name: string) {
         super(menu, name, UIElementType.Select);
 
-        this.value = '';
+        this.value = "";
         this.extendUp = false;
 
         this._extended = false;
 
-        this._bitmapText = new BitmapText('', { fontName: this.font });
+        this._bitmapText = new BitmapText("", { fontName: this.font });
 
         this.container.addChild(this._bitmapText);
 
@@ -53,7 +53,7 @@ export class UISelect extends UIElement {
             this.updateBounds();
         }).bind(this);
 
-        window.addEventListener('resize', this._resizeListener);
+        window.addEventListener("resize", this._resizeListener);
     }
 
     public get font(): UIFont {
@@ -100,15 +100,24 @@ export class UISelect extends UIElement {
         if (this._backgroundSprite) this._backgroundSprite.visible = false; // ignore background in getLocalBounds()
 
         const bounds = this.container.getLocalBounds();
-        this._scaledPadding.copy(new Vector2(Client.resolution.y / Client.resolution.x, 1).scale(this.padding));
-        this.aabb.setHalfExtents(new Vector2((this._width || bounds.width) / 2, bounds.height / 2).add(this._scaledPadding));
+        this._scaledPadding.copy(
+            new Vector2(Client.resolution.y / Client.resolution.x, 1).scale(this.padding)
+        );
+        this.aabb.setHalfExtents(
+            new Vector2((this._width || bounds.width) / 2, bounds.height / 2).add(this._scaledPadding)
+        );
 
-        const topLeft = this.position.clone.sub(new Vector2(this.alignH * (bounds.width + this._scaledPadding.x * 2), (this.alignV * (bounds.height + this._scaledPadding.y * 2) - (this.extendUp ? 0 : bounds.height))));
+        const topLeft = this.position.clone.sub(
+            new Vector2(
+                this.alignH * (bounds.width + this._scaledPadding.x * 2),
+                this.alignV * (bounds.height + this._scaledPadding.y * 2) -
+                    (this.extendUp ? 0 : bounds.height)
+            )
+        );
 
         this.container.position.copyFrom(topLeft);
 
         this.aabb.setPosition(topLeft.add(this.aabb.halfExtents));
-
 
         if (this._backgroundSprite) {
             this._backgroundSprite.visible = true;
@@ -122,12 +131,17 @@ export class UISelect extends UIElement {
 
         super.update(false);
 
-
-        if (this.click || (this._extended && !this.down && Input.getButton('Trigger').down)) {
+        if (this.click || (this._extended && !this.down && Input.getButton("Trigger").down)) {
             if (this._extended) {
                 if (this.click) {
                     for (const [label, text] of Object.entries(this._labels)) {
-                        const aabb = new AABB(new Vector2(this.container.position.x + text!.x + this._width / 2, this.container.position.y + text!.y + text!.height / 2), new Vector2(this._width / 2 + this.padding.x, text!.height / 2));
+                        const aabb = new AABB(
+                            new Vector2(
+                                this.container.position.x + text!.x + this._width / 2,
+                                this.container.position.y + text!.y + text!.height / 2
+                            ),
+                            new Vector2(this._width / 2 + this.padding.x, text!.height / 2)
+                        );
 
                         if (aabb.intersectsPoint(this.downPosition!)) {
                             this.setValue(label);
@@ -150,15 +164,15 @@ export class UISelect extends UIElement {
     }
 
     /**
-     * 
+     *
      * Position and size the labels, also calculates this._width
-     * 
+     *
      */
     private prepareElements(visible = true): void {
         this._width = 0;
         let i = 0;
 
-        const b = <[string, BitmapText]>['d', this._bitmapText];
+        const b = <[string, BitmapText]>["d", this._bitmapText];
 
         const e = Object.entries(this._labels);
 
@@ -174,7 +188,6 @@ export class UISelect extends UIElement {
             const fontSize = <number>style.fontSize;
 
             const lines = Array.from(label.matchAll(/\n/g)).length + 1;
-
 
             const ratio = text!.width / text!.height;
 
@@ -221,7 +234,7 @@ export class UISelect extends UIElement {
     }
 
     public override destroy(): void {
-        window.removeEventListener('resize', this._resizeListener);
+        window.removeEventListener("resize", this._resizeListener);
 
         super.destroy();
     }

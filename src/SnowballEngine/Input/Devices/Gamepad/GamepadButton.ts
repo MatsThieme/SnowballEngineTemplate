@@ -15,5 +15,5 @@ export const enum GamepadButton {
     DPadUp,
     DPadDown,
     DPadLeft,
-    DPadRight
+    DPadRight,
 }

@@ -30,10 +30,7 @@ export class UI implements Destroyable {
      * Add a new menu to the ui.
      *
      */
-    public addMenu(
-        name: UIMenuName,
-        ...initializer: ((menu: UIMenu) => void)[]
-    ): UIMenu {
+    public addMenu(name: UIMenuName, ...initializer: ((menu: UIMenu) => void)[]): UIMenu {
         if (this.menus[name]) {
             throw new Error(`Menu with name ${name} already exists`);
         }

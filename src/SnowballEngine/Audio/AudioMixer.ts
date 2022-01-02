@@ -1,8 +1,8 @@
-import { AudioListener } from 'GameObject/Components/AudioListener';
-import { AudioSource } from 'GameObject/Components/AudioSource';
-import { Disposable, Dispose } from 'GameObject/Dispose';
-import { clamp } from 'Utility/Helpers';
-import { AudioEffect } from './AudioEffect';
+import { AudioListener } from "GameObject/Components/AudioListener";
+import { AudioSource } from "GameObject/Components/AudioSource";
+import { Disposable, Dispose } from "GameObject/Dispose";
+import { clamp } from "Utility/Helpers";
+import { AudioEffect } from "./AudioEffect";
 
 /** @category Audio */
 export class AudioMixer implements Disposable {
@@ -15,9 +15,9 @@ export class AudioMixer implements Disposable {
     private _destination?: AudioNode;
 
     /**
-     * 
+     *
      * Effects are applied in ascending index order.
-     * 
+     *
      */
     private readonly _effects: AudioEffect[];
     private readonly _sources: AudioSource[];
@@ -26,9 +26,9 @@ export class AudioMixer implements Disposable {
     private _connected: boolean;
 
     /**
-     * 
+     *
      * Mixers are stored and can be accessed with AudioMixer.get(name);
-     * 
+     *
      */
     public constructor(name: string) {
         if (AudioMixer._mixers[name]) throw new Error(`Mixer exists: ${name}`);
@@ -56,7 +56,7 @@ export class AudioMixer implements Disposable {
     }
 
     public get volume(): number {
-        return this._node.gain.value
+        return this._node.gain.value;
     }
     public set volume(val: number) {
         this._node.gain.value = clamp(0, 1, val);
@@ -66,21 +66,21 @@ export class AudioMixer implements Disposable {
         return this._effects;
     }
 
-
     public setChild(mixer: AudioMixer): void {
-        if (this._mixers.find(m => m._id === mixer._id) || this._id === mixer._id) return;
+        if (this._mixers.find((m) => m._id === mixer._id) || this._id === mixer._id) return;
 
         this._mixers.push(mixer);
         mixer.connect(this._node);
     }
 
     /**
-     * 
+     *
      * @param mixer AudioMixer instance or instance._id
-     * 
+     *
      */
     public removeChild(mixer: AudioMixer | number): AudioMixer | undefined {
-        const id = typeof mixer === 'number' ? mixer : this._sources.findIndex(s => s.componentID === mixer._id);
+        const id =
+            typeof mixer === "number" ? mixer : this._sources.findIndex((s) => s.componentID === mixer._id);
 
         if (id === -1) return;
 
@@ -89,7 +89,6 @@ export class AudioMixer implements Disposable {
 
         return m;
     }
-
 
     public addEffect<T extends AudioEffect>(effect: Constructor<T>, initializer?: (effect: T) => unknown): T {
         const reconnect = this._effects.length === 0;
@@ -110,12 +109,12 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     * 
+     *
      * @param effect AudioEffect instance
-     * 
+     *
      */
     public removeEffect(effect: AudioEffect): void {
-        const i = this._effects.findIndex(s => s.id === effect.id);
+        const i = this._effects.findIndex((s) => s.id === effect.id);
         if (i === -1) return;
 
         const reconnect = this._effects.length > 0;
@@ -145,10 +144,9 @@ export class AudioMixer implements Disposable {
     }
 
     private disconnectEffects(): void {
-        this._effects.forEach(e => e.node.disconnect());
+        this._effects.forEach((e) => e.node.disconnect());
         if (this._connected) this.connect(this._destination);
     }
-
 
     public connect(node?: AudioNode): void {
         this.disconnect();
@@ -168,9 +166,9 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     * 
-     * @internal 
-     * 
+     *
+     * @internal
+     *
      */
     public addSource(source: AudioSource): void {
         this._sources.push(source);
@@ -178,12 +176,12 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     * 
-     * @param source AudioSource instance 
+     *
+     * @param source AudioSource instance
      *
      */
     public removeSource(source: AudioSource): void {
-        const i = this._sources.findIndex(s => s.componentID === source.componentID);
+        const i = this._sources.findIndex((s) => s.componentID === source.componentID);
         if (i === -1) return;
 
         this.disconnectSources();
@@ -194,11 +192,11 @@ export class AudioMixer implements Disposable {
     }
 
     private connectSources(): void {
-        this._sources.forEach(s => s.node.connect(this._node));
+        this._sources.forEach((s) => s.node.connect(this._node));
     }
 
     private disconnectSources(): void {
-        this._sources.forEach(s => s.node.disconnect());
+        this._sources.forEach((s) => s.node.disconnect());
     }
 
     public dispose(): void {

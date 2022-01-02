@@ -1,12 +1,12 @@
-import { DisplayObject } from '@pixi/display';
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { Angle } from 'Utility/Angle';
-import { EventHandler } from 'Utility/Events/EventHandler';
-import { TransformEventTypes } from 'Utility/Events/EventTypes';
-import { Vector2 } from 'Utility/Vector2';
-import { Component } from '../Component';
-import { TransformRelation } from './TransformRelation';
+import { DisplayObject } from "@pixi/display";
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { Angle } from "Utility/Angle";
+import { EventHandler } from "Utility/Events/EventHandler";
+import { TransformEventTypes } from "Utility/Events/EventTypes";
+import { Vector2 } from "Utility/Vector2";
+import { Component } from "../Component";
+import { TransformRelation } from "./TransformRelation";
 
 /** @category Component */
 export class Transform extends Component<TransformEventTypes> implements Transformable {
@@ -20,7 +20,7 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
 
     private _globalTransform?: Transformable;
 
-    private readonly engineModified: { position?: Vector2, rotation?: Angle, scale?: Vector2 };
+    private readonly engineModified: { position?: Vector2; rotation?: Angle; scale?: Vector2 };
 
     public readonly id: number;
 
@@ -41,12 +41,12 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
 
         this.id = Transform._nextID++;
 
-        this.addListener('change', new EventHandler(this.onChange, this));
-        this.addListener('parentchange', new EventHandler(this.onChange, this));
-        this.addListener('modified', new EventHandler(this.onModified, this));
-        this.addListener('parentmodified', new EventHandler(this.onModified, this));
-        this.addListener('modifiedinternal', new EventHandler(this.onModifiedInternal, this));
-        this.addListener('parentmodifiedinternal', new EventHandler(this.onModifiedInternal, this));
+        this.addListener("change", new EventHandler(this.onChange, this));
+        this.addListener("parentchange", new EventHandler(this.onChange, this));
+        this.addListener("modified", new EventHandler(this.onModified, this));
+        this.addListener("parentmodified", new EventHandler(this.onModified, this));
+        this.addListener("modifiedinternal", new EventHandler(this.onModifiedInternal, this));
+        this.addListener("parentmodifiedinternal", new EventHandler(this.onModifiedInternal, this));
     }
 
     public get children(): Transform[] {
@@ -58,11 +58,11 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     /**
-     * 
+     *
      * Set position, rotation and scale without triggering the modified event.
      * Used by Rigidbody to set position, rotation and scale. Needed to track if a body needs to be updated.
      * @internal
-     * 
+     *
      */
     public internalSet(position?: IVector2, rotation?: IAngle, scale?: IVector2): void {
         if (position && !this.position.equal(position)) {
@@ -81,42 +81,57 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
         }
     }
 
-    private onChange(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+    private onChange(
+        transform: Transform,
+        posDiff?: Readonly<IVector2>,
+        rotDiff?: Readonly<IAngle>,
+        scaleDiff?: Readonly<IVector2>
+    ) {
         this._globalTransform = undefined;
 
         for (const child of this.children) {
-            child.dispatchEvent('parentchange', transform, posDiff, rotDiff, scaleDiff)
+            child.dispatchEvent("parentchange", transform, posDiff, rotDiff, scaleDiff);
         }
     }
 
-    private onModified(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+    private onModified(
+        transform: Transform,
+        posDiff?: Readonly<IVector2>,
+        rotDiff?: Readonly<IAngle>,
+        scaleDiff?: Readonly<IVector2>
+    ) {
         for (const child of this.children) {
-            child.dispatchEvent('parentmodified', transform, posDiff, rotDiff, scaleDiff)
+            child.dispatchEvent("parentmodified", transform, posDiff, rotDiff, scaleDiff);
         }
     }
 
-    private onModifiedInternal(transform: Transform, posDiff?: Readonly<IVector2>, rotDiff?: Readonly<IAngle>, scaleDiff?: Readonly<IVector2>) {
+    private onModifiedInternal(
+        transform: Transform,
+        posDiff?: Readonly<IVector2>,
+        rotDiff?: Readonly<IAngle>,
+        scaleDiff?: Readonly<IVector2>
+    ) {
         for (const child of this.children) {
-            child.dispatchEvent('parentmodifiedinternal', transform, posDiff, rotDiff, scaleDiff)
+            child.dispatchEvent("parentmodifiedinternal", transform, posDiff, rotDiff, scaleDiff);
         }
     }
 
     /**
-     * 
+     *
      * Transform into this local space
-     * 
-     * @param tranform 
-     * @returns 
+     *
+     * @param tranform
+     * @returns
      */
     public toLocal(tranform: Transformable): Transformable {
         return Transform.toLocal(tranform, this);
     }
 
     /**
-     * 
+     *
      * Returns a new Transformable object.
      * The result is cached until position, rotation or scale are modified.
-     * 
+     *
      */
     public toGlobal(): Transformable {
         if (!this._globalTransform) this._globalTransform = Transform.toGlobal(this);
@@ -142,37 +157,63 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
             this._prevScale = this.scale.clone;
         }
 
-
-        const positionSetByEngine = this.engineModified.position && this.engineModified.position.equal(this.position);
-        const rotationSetByEngine = this.engineModified.rotation && this.engineModified.rotation.equal(this.rotation);
+        const positionSetByEngine =
+            this.engineModified.position && this.engineModified.position.equal(this.position);
+        const rotationSetByEngine =
+            this.engineModified.rotation && this.engineModified.rotation.equal(this.rotation);
         const scaleSetByEngine = this.engineModified.scale && this.engineModified.scale.equal(this.scale);
 
         if (posDiff || rotDiff || scaleDiff) {
-            this.dispatchEvent('change', this, posDiff, rotDiff, scaleDiff);
+            this.dispatchEvent("change", this, posDiff, rotDiff, scaleDiff);
 
-            if (posDiff && !positionSetByEngine || rotDiff && !rotationSetByEngine || scaleDiff && !scaleSetByEngine) {
-                this.dispatchEvent('modified', this, !positionSetByEngine ? posDiff : undefined, !rotationSetByEngine ? rotDiff : undefined, !scaleSetByEngine ? scaleDiff : undefined);
+            if (
+                (posDiff && !positionSetByEngine) ||
+                (rotDiff && !rotationSetByEngine) ||
+                (scaleDiff && !scaleSetByEngine)
+            ) {
+                this.dispatchEvent(
+                    "modified",
+                    this,
+                    !positionSetByEngine ? posDiff : undefined,
+                    !rotationSetByEngine ? rotDiff : undefined,
+                    !scaleSetByEngine ? scaleDiff : undefined
+                );
             }
 
-            if (posDiff && positionSetByEngine || rotDiff && rotationSetByEngine || scaleDiff && scaleSetByEngine) {
-                this.dispatchEvent('modifiedinternal', this, positionSetByEngine ? posDiff : undefined, rotationSetByEngine ? rotDiff : undefined, scaleSetByEngine ? scaleDiff : undefined);
+            if (
+                (posDiff && positionSetByEngine) ||
+                (rotDiff && rotationSetByEngine) ||
+                (scaleDiff && scaleSetByEngine)
+            ) {
+                this.dispatchEvent(
+                    "modifiedinternal",
+                    this,
+                    positionSetByEngine ? posDiff : undefined,
+                    rotationSetByEngine ? rotDiff : undefined,
+                    scaleSetByEngine ? scaleDiff : undefined
+                );
             }
         }
 
-
-        this.gameObject.transform.engineModified.position = this.gameObject.transform.engineModified.scale = this.gameObject.transform.engineModified.rotation = undefined;
+        this.gameObject.transform.engineModified.position =
+            this.gameObject.transform.engineModified.scale =
+            this.gameObject.transform.engineModified.rotation =
+                undefined;
     }
 
     /**
-     * 
+     *
      * Find the relation between two transformables
      * Returns undefined if no relation was found
-     * 
+     *
      * @param transform1
      * @param transform2
-     * 
+     *
      */
-    public static findRelation(transform1: ITransformable, transform2: ITransformable): TransformRelation | undefined {
+    public static findRelation(
+        transform1: ITransformable,
+        transform2: ITransformable
+    ): TransformRelation | undefined {
         if (transform1.id === transform2.id) return;
 
         let thParent = 1;
@@ -183,8 +224,8 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
                 return {
                     transform1,
                     transform2,
-                    thParentOf2: thParent
-                }
+                    thParentOf2: thParent,
+                };
             }
 
             lastTransform = lastTransform.parent;
@@ -199,8 +240,8 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
                 return {
                     transform1,
                     transform2,
-                    thParentOf1: thParent
-                }
+                    thParentOf1: thParent,
+                };
             }
 
             lastTransform = lastTransform.parent;
@@ -211,17 +252,27 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     /**
-     * 
+     *
      * Transform position, scale and rotation to another transforms space
      * Looks for a relation between the two transforms, it uses Transform.toChild, Transform.toParent and Transform.toSibling to transform 'transform' into the space of 'localTransform'
-     * 
+     *
      * @param transform The Transform that should be transformed to the local space of localTransform
      * @param localTransform The target Transform space
      * @param relation transform = transform1, localTransform = transform2; will be computed if not provided
-     * 
+     *
      */
-    public static toLocal(transform: ITransformable, localTransform: ITransformable, relation?: TransformRelation): Transformable {
-        if (!relation || relation.thParentOf1 !== undefined && relation.thParentOf2 !== undefined || relation.transform1.id !== transform.id || relation.transform2.id !== localTransform.id) relation = Transform.findRelation(transform, localTransform);
+    public static toLocal(
+        transform: ITransformable,
+        localTransform: ITransformable,
+        relation?: TransformRelation
+    ): Transformable {
+        if (
+            !relation ||
+            (relation.thParentOf1 !== undefined && relation.thParentOf2 !== undefined) ||
+            relation.transform1.id !== transform.id ||
+            relation.transform2.id !== localTransform.id
+        )
+            relation = Transform.findRelation(transform, localTransform);
 
         if (!relation) {
             let parentCounter = 0;
@@ -232,18 +283,19 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
                 lastParent = lastParent.parent;
             }
 
-
             const globalTransform = Transform.toGlobal(transform);
 
-            return Transform.toLocal(globalTransform, localTransform, { transform1: globalTransform, transform2: localTransform, thParentOf2: parentCounter });
+            return Transform.toLocal(globalTransform, localTransform, {
+                transform1: globalTransform,
+                transform2: localTransform,
+                thParentOf2: parentCounter,
+            });
         }
-
 
         const transformIsChild = relation.thParentOf2 === undefined;
 
         const childTransform = Transform.clone(transformIsChild ? relation.transform1 : relation.transform2);
         const parentTransform = Transform.clone(transformIsChild ? relation.transform2 : relation.transform1);
-
 
         // create a linked list containing the transforms in transform to localTransform order
         const transforms: ITransformable[] = [childTransform];
@@ -253,21 +305,21 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
         }
 
         /** true == transform and localTransform are not in a parent-child relation */
-        const siblings = transforms[transforms.length - 1].parent && transforms[transforms.length - 1].parent!.id !== parentTransform.id || !transform.parent || !localTransform.parent; // TEST
+        const siblings =
+            (transforms[transforms.length - 1].parent &&
+                transforms[transforms.length - 1].parent!.id !== parentTransform.id) ||
+            !transform.parent ||
+            !localTransform.parent; // TEST
 
-
-        if (siblings) transforms.push(transforms[transforms.length - 1].parent || Transform.createTransformable());
+        if (siblings)
+            transforms.push(transforms[transforms.length - 1].parent || Transform.createTransformable());
         else transforms.push(parentTransform);
-
 
         for (let i = 0; i < transforms.length - 1; i++) {
             transforms[i].parent = transforms[i + 1];
         }
 
-
         if (!transformIsChild) transforms.reverse();
-
-
 
         // transform transforms using toParent or toChild to transform into local space
         let currentTransform!: ITransformable;
@@ -278,7 +330,6 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
             for (const t of transforms) {
                 currentTransform = Transform.toSibling(currentTransform, t);
             }
-
         } else {
             for (const t of transforms) {
                 if (!currentTransform) {
@@ -298,42 +349,49 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
     }
 
     /**
-     * 
+     *
      * Transforms child into parent space
      * Does not check child.parent == parent
-     * 
+     *
      * @param child
      * @param parent
-     * 
+     *
      */
     public static toParent(child: ITransformable, parent: ITransformable): Transformable {
         return {
-            position: Vector2.from(parent.position).add(Vector2.from(child.position).scale(parent.scale).rotateAroundBy(new Vector2(), new Angle(parent.rotation.radian))),
+            position: Vector2.from(parent.position).add(
+                Vector2.from(child.position)
+                    .scale(parent.scale)
+                    .rotateAroundBy(new Vector2(), new Angle(parent.rotation.radian))
+            ),
             rotation: new Angle(parent.rotation.radian + child.rotation.radian),
             scale: Vector2.from(child.scale).scale(parent.scale),
             parent: parent.parent,
-            id: Transform._nextID++
+            id: Transform._nextID++,
         };
     }
 
     /**
-     * 
+     *
      * Transforms parent into child space
      * Does not check child.parent == parent
-     * 
+     *
      * @param child
      * @param parent
-     * 
+     *
      */
     public static toChild(parent: ITransformable, child: ITransformable): Transformable {
         const scale = Vector2.divide(parent.scale, child.scale);
 
         return {
-            position: Vector2.from(child.position).flip().scale(scale).rotateAroundBy(new Vector2(), new Angle(-child.rotation.radian)),
+            position: Vector2.from(child.position)
+                .flip()
+                .scale(scale)
+                .rotateAroundBy(new Vector2(), new Angle(-child.rotation.radian)),
             rotation: new Angle(-child.rotation.radian),
             scale: scale,
             parent,
-            id: Transform._nextID++
+            id: Transform._nextID++,
         };
     }
 
@@ -344,14 +402,20 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
      * @param targetSibling
      * @param parent optionally pass the parent of the siblings, necessary if siblings are not global(have parent) and !sibling.parent && !targetSibling.parent
      */
-    public static toSibling(sibling: ITransformable, targetSibling: ITransformable, parent: ITransformable | undefined = sibling.parent || targetSibling.parent): Transformable {
+    public static toSibling(
+        sibling: ITransformable,
+        targetSibling: ITransformable,
+        parent: ITransformable | undefined = sibling.parent || targetSibling.parent
+    ): Transformable {
         return {
-            position: parent ? Vector2.divide(Vector2.sub(sibling.position, targetSibling.position), parent.scale) : Vector2.sub(sibling.position, targetSibling.position),
+            position: parent
+                ? Vector2.divide(Vector2.sub(sibling.position, targetSibling.position), parent.scale)
+                : Vector2.sub(sibling.position, targetSibling.position),
             rotation: new Angle(sibling.rotation.radian - targetSibling.rotation.radian),
             scale: Vector2.divide(targetSibling.scale, sibling.scale),
             parent: targetSibling,
-            id: Transform._nextID++
-        }
+            id: Transform._nextID++,
+        };
     }
 
     public static toGlobal(transform: ITransformable): Transformable {
@@ -370,7 +434,9 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
             rotation: new Angle(pixiObject.rotation),
             scale: Vector2.from(pixiObject.scale),
             parent,
-            id: (<any>pixiObject).__transformID__ || ((<any>pixiObject).__transformID__ = Transform._nextID++)
+            id:
+                (<any>pixiObject).__transformID__ ||
+                ((<any>pixiObject).__transformID__ = Transform._nextID++),
         };
     }
 
@@ -379,16 +445,29 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
             position: Vector2.from(transformable.position),
             rotation: new Angle(transformable.rotation.radian),
             scale: Vector2.from(transformable.scale),
-            parent: cloneParents && transformable.parent ? Transform.clone(transformable.parent, true) : transformable.parent,
-            id: transformable.id
-        }
+            parent:
+                cloneParents && transformable.parent
+                    ? Transform.clone(transformable.parent, true)
+                    : transformable.parent,
+            id: transformable.id,
+        };
     }
 
     public static equalValues(t1: ITransformable, t2: ITransformable): boolean {
-        return Vector2.from(t1.position).equal(t2.position) && Vector2.from(t1.scale).equal(t2.scale) && new Angle(t1.rotation.radian).equal(t2.rotation);
+        return (
+            Vector2.from(t1.position).equal(t2.position) &&
+            Vector2.from(t1.scale).equal(t2.scale) &&
+            new Angle(t1.rotation.radian).equal(t2.rotation)
+        );
     }
 
-    public static createTransformable(position = new Vector2(), scale = new Vector2(1, 1), rotation = new Angle(), parent?: ITransformable, id = Transform._nextID++): Transformable {
+    public static createTransformable(
+        position = new Vector2(),
+        scale = new Vector2(1, 1),
+        rotation = new Angle(),
+        parent?: ITransformable,
+        id = Transform._nextID++
+    ): Transformable {
         return { position: position, scale: scale, rotation: rotation, id, parent };
     }
 }

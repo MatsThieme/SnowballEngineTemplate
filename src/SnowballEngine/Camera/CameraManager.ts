@@ -1,12 +1,12 @@
-import { Camera } from 'GameObject/Components/Camera';
-import { Component } from 'GameObject/Components/Component';
-import { GameObject } from 'GameObject/GameObject';
-import { Client } from 'SnowballEngine/Client';
-import { Debug } from 'SnowballEngine/Debug';
-import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'Utility/Color';
-import { Vector2 } from 'Utility/Vector2';
-import { PIXI } from './PIXI';
+import { Camera } from "GameObject/Components/Camera";
+import { Component } from "GameObject/Components/Component";
+import { GameObject } from "GameObject/GameObject";
+import { Client } from "SnowballEngine/Client";
+import { Debug } from "SnowballEngine/Debug";
+import { Scene } from "SnowballEngine/Scene";
+import { Color } from "Utility/Color";
+import { Vector2 } from "Utility/Vector2";
+import { PIXI } from "./PIXI";
 
 /** @category Camera */
 export class CameraManager {
@@ -26,7 +26,6 @@ export class CameraManager {
         this._gameObjects = {};
 
         this._PIXI.uiContainer = Scene.currentScene.ui.container;
-
 
         this.backgroundColor = Color.deepskyblue;
     }
@@ -51,36 +50,36 @@ export class CameraManager {
     }
 
     /**
-     * 
-     * @internal 
-     * 
+     *
+     * @internal
+     *
      */
     public addCamera(camera: Camera): void {
         this.cameras.push(camera);
     }
 
     /**
-     * 
-     * @internal 
-     * 
+     *
+     * @internal
+     *
      */
     public removeCamera(camera: Camera): void {
-        const i = this.cameras.findIndex(c => c.componentID == camera.componentID);
+        const i = this.cameras.findIndex((c) => c.componentID == camera.componentID);
 
         if (i === -1) return;
 
         this.cameras.splice(i, 1);
     }
 
-
     /**
-     * 
+     *
      * Stage a GameObject
      * @internal
-     * 
+     *
      */
     public addGameObject(gameObject: GameObject): void {
-        if (this._gameObjects[gameObject.id] !== undefined) return Debug.warn('GameObject.container is already staged');
+        if (this._gameObjects[gameObject.id] !== undefined)
+            return Debug.warn("GameObject.container is already staged");
 
         this._PIXI.container.addChild(gameObject.container);
 
@@ -88,41 +87,37 @@ export class CameraManager {
     }
 
     /**
-     * 
+     *
      * Unstage a GameObject
      * @internal
-     * 
+     *
      */
     public removeGameObject(gameObject: GameObject): void {
-        if (this._gameObjects[gameObject.id] === undefined) return Debug.warn('GameObject not found');
+        if (this._gameObjects[gameObject.id] === undefined) return Debug.warn("GameObject not found");
 
         this._PIXI.container.removeChild(gameObject.container);
 
         delete this._gameObjects[gameObject.id];
     }
 
-
     public update(): void {
-        if (!this.cameras.filter(c => c.active)) return Debug.warn('No active camera');
+        if (!this.cameras.filter((c) => c.active)) return Debug.warn("No active camera");
 
         const canvasSize = this.getRenderResolution();
         this._PIXI.resize(canvasSize.x, canvasSize.y);
 
         this._PIXI.renderer.clear();
 
-
         for (const camera of this.cameras.sort((a, b) => a.zIndex - b.zIndex)) {
             if (camera.active) {
                 for (const component of Component.components) {
-                    component.dispatchEvent('prerender', camera);
+                    component.dispatchEvent("prerender", camera);
                 }
-
 
                 camera.render(this._PIXI);
 
-
                 for (const component of Component.components) {
-                    component.dispatchEvent('postrender', camera);
+                    component.dispatchEvent("postrender", camera);
                 }
             }
         }

@@ -1,8 +1,8 @@
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { Bodies, Body, IChamferableBodyDefinition } from 'matter-js';
-import { Vector2 } from 'Utility/Vector2';
-import { Collider } from './Collider';
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { Bodies, Body, IChamferableBodyDefinition } from "matter-js";
+import { Vector2 } from "Utility/Vector2";
+import { Collider } from "./Collider";
 
 export class PolygonCollider extends Collider {
     private _verticies: IVector2[];
@@ -23,15 +23,26 @@ export class PolygonCollider extends Collider {
     }
 
     protected buildBody(options: IChamferableBodyDefinition): Body {
-        return this.addPropertiesToBody(Bodies.fromVertices(0, 0, [this._verticies], { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale }, false, 0.000001, 0.01, 0.000001));
+        return this.addPropertiesToBody(
+            Bodies.fromVertices(
+                0,
+                0,
+                [this._verticies],
+                { ...options, slop: 0.05 * this.gameObject.scene.physics.worldScale },
+                false,
+                0.000001,
+                0.01,
+                0.000001
+            )
+        );
     }
 
     public static sidesToVerticies(sides: [Vector2, Vector2][]): Vector2[] {
-        return this.orderSides(sides).map(s => s[1]);
+        return this.orderSides(sides).map((s) => s[1]);
     }
 
     public static orderSides(sides: [Vector2, Vector2][]): [Vector2, Vector2][] {
-        if (sides.length < 3) throw new Error('sides.length < 3');
+        if (sides.length < 3) throw new Error("sides.length < 3");
 
         sides = sides.slice();
         const maxi = sides.length;
@@ -39,9 +50,11 @@ export class PolygonCollider extends Collider {
         const orderedSides: [Vector2, Vector2][] = [sides.splice(0, 1)[0]];
 
         for (let i = 1; i < maxi; i++) {
-            const sideIndex = sides.findIndex(s => orderedSides[i - 1][1].equal(s[0]) || orderedSides[i - 1][1].equal(s[1]));
+            const sideIndex = sides.findIndex(
+                (s) => orderedSides[i - 1][1].equal(s[0]) || orderedSides[i - 1][1].equal(s[1])
+            );
 
-            if (sideIndex === -1) throw new Error('related side not found');
+            if (sideIndex === -1) throw new Error("related side not found");
 
             const side = sides.splice(sideIndex, 1)[0];
 

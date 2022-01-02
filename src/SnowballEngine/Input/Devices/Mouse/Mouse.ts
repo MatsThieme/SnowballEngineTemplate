@@ -1,22 +1,22 @@
-import projectConfig from 'Config';
-import { Scene } from 'SnowballEngine/Scene';
-import { EventTarget } from 'Utility/Events/EventTarget';
-import { InputEventTypes } from 'Utility/Events/EventTypes';
-import { Input } from '../../Input';
-import { InputAxis } from '../../InputAxis';
-import { InputButton } from '../../InputButton';
-import { InputEvent } from '../../InputEvent';
-import { InputDevice } from '../InputDevice';
-import { InputDeviceType } from '../InputDeviceType';
-import { MouseAxis } from './MouseAxis';
-import { MouseButton } from './MouseButton';
+import projectConfig from "Config";
+import { Scene } from "SnowballEngine/Scene";
+import { EventTarget } from "Utility/Events/EventTarget";
+import { InputEventTypes } from "Utility/Events/EventTypes";
+import { Input } from "../../Input";
+import { InputAxis } from "../../InputAxis";
+import { InputButton } from "../../InputButton";
+import { InputEvent } from "../../InputEvent";
+import { InputDevice } from "../InputDevice";
+import { InputDeviceType } from "../InputDeviceType";
+import { MouseAxis } from "./MouseAxis";
+import { MouseButton } from "./MouseButton";
 
 /** @category Input */
 export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
     /**
-     * 
+     *
      * Pointer position on canvas.
-     * 
+     *
      */
     private _position: InputAxis;
     private _prevPosition: InputAxis;
@@ -36,18 +36,30 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
         this._prevPosition = new InputAxis();
         this._fireListener = false;
 
-
-
         this._onMouseMove = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
+            this._position.values = [
+                Math.round(
+                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+                Math.round(
+                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+            ];
 
             this._fireListener = true;
         }).bind(this);
 
         this._onMouseUp = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
+            this._position.values = [
+                Math.round(
+                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+                Math.round(
+                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+            ];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
@@ -58,7 +70,14 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
 
         this._onMouseDown = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
-            this._position.values = [Math.round(e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)];
+            this._position.values = [
+                Math.round(
+                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+                Math.round(
+                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                ),
+            ];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
 
@@ -70,8 +89,6 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
         this._onContextMenu = ((e: MouseEvent) => {
             e.preventDefault();
         }).bind(this);
-
-
 
         this.addListeners();
     }
@@ -90,7 +107,7 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
     }
 
     public update(): void {
-        this._buttons.forEach(b => b.update());
+        this._buttons.forEach((b) => b.update());
 
         if (!this._fireListener) return;
 
@@ -105,9 +122,8 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
                 deviceType: InputDeviceType.Mouse,
                 axis: ax !== undefined ? this.getAxis(ax) : undefined,
                 button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this
-            }
-
+                device: this,
+            };
 
             if (!e.axis && !e.button) continue;
 
@@ -118,17 +134,18 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
     }
 
     private addListeners(): void {
-        window.addEventListener('mousedown', this._onMouseDown);
-        window.addEventListener('mouseup', this._onMouseUp);
-        window.addEventListener('mousemove', this._onMouseMove);
-        if (!projectConfig.settings.allowContextMenu) window.addEventListener('contextmenu', this._onContextMenu);
+        window.addEventListener("mousedown", this._onMouseDown);
+        window.addEventListener("mouseup", this._onMouseUp);
+        window.addEventListener("mousemove", this._onMouseMove);
+        if (!projectConfig.settings.allowContextMenu)
+            window.addEventListener("contextmenu", this._onContextMenu);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('mousedown', this._onMouseDown);
-        window.removeEventListener('mouseup', this._onMouseUp);
-        window.removeEventListener('mousemove', this._onMouseMove);
-        window.removeEventListener('contextmenu', this._onContextMenu);
+        window.removeEventListener("mousedown", this._onMouseDown);
+        window.removeEventListener("mouseup", this._onMouseUp);
+        window.removeEventListener("mousemove", this._onMouseMove);
+        window.removeEventListener("contextmenu", this._onContextMenu);
     }
 
     public dispose(): void {

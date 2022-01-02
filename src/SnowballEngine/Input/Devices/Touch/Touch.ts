@@ -1,14 +1,14 @@
-import { Scene } from 'SnowballEngine/Scene';
-import { EventTarget } from 'Utility/Events/EventTarget';
-import { InputEventTypes } from 'Utility/Events/EventTypes';
-import { Input } from '../../Input';
-import { InputAxis } from '../../InputAxis';
-import { InputButton } from '../../InputButton';
-import { InputEvent } from '../../InputEvent';
-import { InputDevice } from '../InputDevice';
-import { InputDeviceType } from '../InputDeviceType';
-import { TouchAxis } from './TouchAxis';
-import { TouchButton } from './TouchButton';
+import { Scene } from "SnowballEngine/Scene";
+import { EventTarget } from "Utility/Events/EventTarget";
+import { InputEventTypes } from "Utility/Events/EventTypes";
+import { Input } from "../../Input";
+import { InputAxis } from "../../InputAxis";
+import { InputButton } from "../../InputButton";
+import { InputEvent } from "../../InputEvent";
+import { InputDevice } from "../InputDevice";
+import { InputDeviceType } from "../InputDeviceType";
+import { TouchAxis } from "./TouchAxis";
+import { TouchButton } from "./TouchButton";
 
 /** @category Input */
 export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
@@ -25,8 +25,6 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
         this._positions = [];
         this._fireListener = false;
 
-
-
         this._onTouchEvent = ((e: TouchEvent) => {
             e.preventDefault();
 
@@ -34,15 +32,20 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
 
             for (let i = 0; i < e.touches.length; i++) {
                 const item = e.touches[i];
-                this._positions[i] = new InputAxis([Math.round(item.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale), Math.round(item.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale)]);
+                this._positions[i] = new InputAxis([
+                    Math.round(
+                        item.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                    ),
+                    Math.round(
+                        item.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
+                    ),
+                ]);
             }
 
             this._button.down = !!e.touches.length;
 
             this._fireListener = true;
         }).bind(this);
-
-
 
         this.addListeners();
     }
@@ -73,28 +76,27 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
                 deviceType: InputDeviceType.Touch,
                 axis: ax !== undefined ? this.getAxis(ax) : undefined,
                 button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this
-            }
+                device: this,
+            };
 
             if (!e.axis && !e.button) continue;
 
             this.dispatchEvent(type, e);
         }
 
-
         this._fireListener = false;
     }
 
     private addListeners(): void {
-        window.addEventListener('touchstart', this._onTouchEvent);
-        window.addEventListener('touchend', this._onTouchEvent);
-        window.addEventListener('touchmove', this._onTouchEvent);
+        window.addEventListener("touchstart", this._onTouchEvent);
+        window.addEventListener("touchend", this._onTouchEvent);
+        window.addEventListener("touchmove", this._onTouchEvent);
     }
 
     private removeListeners(): void {
-        window.removeEventListener('touchstart', this._onTouchEvent);
-        window.removeEventListener('touchend', this._onTouchEvent);
-        window.removeEventListener('touchmove', this._onTouchEvent);
+        window.removeEventListener("touchstart", this._onTouchEvent);
+        window.removeEventListener("touchend", this._onTouchEvent);
+        window.removeEventListener("touchmove", this._onTouchEvent);
     }
 
     public dispose(): void {

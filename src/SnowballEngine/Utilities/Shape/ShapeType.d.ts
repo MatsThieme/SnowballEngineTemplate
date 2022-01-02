@@ -1,1 +1,1 @@
-type ShapeType = 'Rect' | 'Checkmark' | 'Circle';
+type ShapeType = "Rect" | "Checkmark" | "Circle";

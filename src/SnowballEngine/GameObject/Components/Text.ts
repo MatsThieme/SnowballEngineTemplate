@@ -1,16 +1,16 @@
-import { Container } from '@pixi/display';
-import { TextStyleAlign } from '@pixi/text';
-import { BitmapText } from '@pixi/text-bitmap';
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { Debug } from 'SnowballEngine/Debug';
-import { Color } from 'Utility/Color';
-import { TextEventTypes } from 'Utility/Events/EventTypes';
-import { Vector2 } from 'Utility/Vector2';
-import { Renderable } from './Renderable';
+import { Container } from "@pixi/display";
+import { TextStyleAlign } from "@pixi/text";
+import { BitmapText } from "@pixi/text-bitmap";
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { Debug } from "SnowballEngine/Debug";
+import { Color } from "Utility/Color";
+import { TextEventTypes } from "Utility/Events/EventTypes";
+import { Vector2 } from "Utility/Vector2";
+import { Renderable } from "./Renderable";
 
 /** @category Component */
-export class Text extends Renderable<TextEventTypes>{
+export class Text extends Renderable<TextEventTypes> {
     private _bitmapText: BitmapText;
 
     private readonly _resizeListener: () => void;
@@ -18,7 +18,7 @@ export class Text extends Renderable<TextEventTypes>{
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Text);
 
-        this._bitmapText = new BitmapText('', { fontName: 'Default-Normal' });
+        this._bitmapText = new BitmapText("", { fontName: "Default-Normal" });
 
         this.sprite = new Container();
         this.sprite.addChild(this._bitmapText);
@@ -26,7 +26,7 @@ export class Text extends Renderable<TextEventTypes>{
         this._size.set(0, 1);
 
         this._resizeListener = (() => this._bitmapText.updateText()).bind(this);
-        window.addEventListener('resize', this._resizeListener);
+        window.addEventListener("resize", this._resizeListener);
     }
 
     public get font(): UIFont {
@@ -58,9 +58,9 @@ export class Text extends Renderable<TextEventTypes>{
     }
 
     /**
-     * 
+     *
      * Multiline text align.
-     * 
+     *
      */
     public get textAlign(): TextStyleAlign {
         return <TextStyleAlign>this._bitmapText.align;
@@ -69,17 +69,17 @@ export class Text extends Renderable<TextEventTypes>{
         this._bitmapText.align = val;
     }
 
-    /** 
-     * 
+    /**
+     *
      * Text size in world units.
      * If x or y are 0, the missing component will be calculated to match the original aspect ratio.
-     * 
+     *
      */
     public override get size(): Vector2 {
         return this._size;
     }
     public override set size(val: Vector2) {
-        if (val.x === 0 && val.y === 0) Debug.warn('size === (0, 0)');
+        if (val.x === 0 && val.y === 0) Debug.warn("size === (0, 0)");
 
         this._bitmapText.scale.set(1, 1);
 
@@ -103,7 +103,7 @@ export class Text extends Renderable<TextEventTypes>{
     }
 
     public override destroy(): void {
-        window.removeEventListener('resize', this._resizeListener);
+        window.removeEventListener("resize", this._resizeListener);
 
         super.destroy();
     }

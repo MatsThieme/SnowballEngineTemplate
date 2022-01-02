@@ -1,14 +1,14 @@
-import { AudioListener } from 'GameObject/Components/AudioListener';
-import { Interval } from 'Utility/Interval/Interval';
-import { Timeout } from 'Utility/Timeout/Timeout';
-import AssetDB from '../../../Assets/AssetDB.json';
-import { Asset } from './Asset';
-import { AssetType } from './AssetType';
+import { AudioListener } from "GameObject/Components/AudioListener";
+import { Interval } from "Utility/Interval/Interval";
+import { Timeout } from "Utility/Timeout/Timeout";
+import AssetDB from "../../../Assets/AssetDB.json";
+import { Asset } from "./Asset";
+import { AssetType } from "./AssetType";
 
 type ADB = typeof AssetDB;
 
 declare global {
-    type AssetID = keyof ADB | AssetName | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], ''>;
+    type AssetID = keyof ADB | AssetName | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], "">;
 }
 
 /** @category Asset Management */
@@ -20,10 +20,10 @@ export class Assets {
     }
 
     /**
-     * 
+     *
      * Removes the Asset from the DB.
-     * Does not destroy the Asset. 
-     * 
+     * Does not destroy the Asset.
+     *
      */
     public static delete(id: AssetID): void {
         delete Assets._assets[id];
@@ -35,8 +35,8 @@ export class Assets {
     }
 
     public static async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
-        if (name && Assets._assets[name] || !name && Assets.get(<AssetID>path)) {
-            throw new Error('Asset not loaded: Asset with name/path exists');
+        if ((name && Assets._assets[name]) || (!name && Assets.get(<AssetID>path))) {
+            throw new Error("Asset not loaded: Asset with name/path exists");
         }
 
         try {
@@ -54,20 +54,26 @@ export class Assets {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
                 const img = new Image();
-                img.addEventListener('load', () => resolve(new Asset(url, type, img)));
-                img.addEventListener('error', reject);
+                img.addEventListener("load", () => resolve(new Asset(url, type, img)));
+                img.addEventListener("error", reject);
                 img.src = url;
             } else if (type === AssetType.Audio) {
                 const response = <ArrayBuffer>await Assets.req(url, type);
 
-                AudioListener.context.decodeAudioData(response, buffer => resolve(new Asset(url, type, buffer)), e => { throw new Error(`Error with decoding audio data: ${e.message}`); });
+                AudioListener.context.decodeAudioData(
+                    response,
+                    (buffer) => resolve(new Asset(url, type, buffer)),
+                    (e) => {
+                        throw new Error(`Error with decoding audio data: ${e.message}`);
+                    }
+                );
             } else if (type === AssetType.Video) {
-                const video = document.createElement('video');
-                video.addEventListener('canplaythrough', () => resolve(new Asset(url, type, video)));
-                video.addEventListener('error', reject);
+                const video = document.createElement("video");
+                video.addEventListener("canplaythrough", () => resolve(new Asset(url, type, video)));
+                video.addEventListener("error", reject);
                 video.src = url;
             } else if (type === AssetType.Font) {
-                const fontfamilyname = name || 'f' + Date.now() + ~~(Math.random() * 1000000);
+                const fontfamilyname = name || "f" + Date.now() + ~~(Math.random() * 1000000);
                 await Assets.loadFont(url, fontfamilyname);
                 resolve(new Asset(url, type, fontfamilyname));
             } else if (type === AssetType.Text || type === AssetType.Blob || type === AssetType.JSON) {
@@ -77,23 +83,26 @@ export class Assets {
         });
     }
 
-    private static req(url: string, type: AssetType.Text | AssetType.Blob | AssetType.JSON | AssetType.Audio): Promise<string | Blob | Record<string, unknown> | ArrayBuffer> {
+    private static req(
+        url: string,
+        type: AssetType.Text | AssetType.Blob | AssetType.JSON | AssetType.Audio
+    ): Promise<string | Blob | Record<string, unknown> | ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const req = new XMLHttpRequest();
-            req.addEventListener('load', () => resolve(req.response));
-            req.addEventListener('error', () => reject('Assets.req, failed to load asset'));
+            req.addEventListener("load", () => resolve(req.response));
+            req.addEventListener("error", () => reject("Assets.req, failed to load asset"));
 
             if (type === AssetType.Text) {
-                req.responseType = 'text';
+                req.responseType = "text";
             } else if (type === AssetType.Blob) {
-                req.responseType = 'blob';
+                req.responseType = "blob";
             } else if (type === AssetType.JSON) {
-                req.responseType = 'json';
+                req.responseType = "json";
             } else if (type === AssetType.Audio) {
-                req.responseType = 'arraybuffer';
+                req.responseType = "arraybuffer";
             }
 
-            req.open('GET', url);
+            req.open("GET", url);
             req.send();
         });
     }
@@ -101,21 +110,23 @@ export class Assets {
     private static loadFont(url: string, name: string): Promise<void> {
         if (Assets.canCheckFont()) return Assets.fontLoadPromise(name);
 
-        const e = document.head.querySelector('style') || document.head.appendChild(document.createElement('style'));
+        const e =
+            document.head.querySelector("style") ||
+            document.head.appendChild(document.createElement("style"));
         e.innerHTML += `@font-face { font-family: ${name}; src: url('${url}'); }`;
 
-        const p = document.createElement('span');
-        p.textContent = 'IWML'.repeat(100);
-        p.style.fontFamily = 'serif';
-        p.style.visibility = 'hidden';
-        p.style.fontSize = '10000px';
+        const p = document.createElement("span");
+        p.textContent = "IWML".repeat(100);
+        p.style.fontFamily = "serif";
+        p.style.visibility = "hidden";
+        p.style.fontSize = "10000px";
         document.body.appendChild(p);
 
         const initialSize = p.offsetWidth * p.offsetHeight;
 
         p.style.fontFamily = name;
 
-        return new Interval(i => {
+        return new Interval((i) => {
             if (p.offsetWidth * p.offsetHeight !== initialSize) {
                 i.clear();
                 p.remove();
@@ -132,7 +143,7 @@ export class Assets {
     }
 
     private static fontLoadPromise(name: string): Promise<void> {
-        return new Interval(i => {
+        return new Interval((i) => {
             if (Assets.checkFont(name)) {
                 i.clear();
             }

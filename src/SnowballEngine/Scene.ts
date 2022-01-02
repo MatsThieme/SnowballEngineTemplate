@@ -55,8 +55,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public constructor(sceneManager: SceneManager, name: string) {
         super();
 
-        if (!(<any>Scene).sceneManager)
-            (<any>Scene).sceneManager = sceneManager;
+        if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
         (<any>Scene).currentScene = this;
 
         this.name = name;
@@ -109,8 +108,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     public set audioListener(val: AudioListener | undefined) {
-        if ((this.audioListener && val) || (!this.audioListener && !val))
-            return;
+        if ((this.audioListener && val) || (!this.audioListener && !val)) return;
 
         if (val) {
             this.dispatchEvent("audiolisteneradd", val);
@@ -148,9 +146,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Input.update();
 
-        const scenePaused =
-            this.pause ||
-            Object.values(this.ui.menus).some((m) => m.active && m.pauseScene);
+        const scenePaused = this.pause || Object.values(this.ui.menus).some((m) => m.active && m.pauseScene);
 
         if (!scenePaused) {
             Behaviour.earlyupdate();
@@ -175,9 +171,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.destroyDestroyables();
 
         if (this._requestAnimationFrameHandle)
-            this._requestAnimationFrameHandle = requestAnimationFrame(
-                this.update
-            );
+            this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
 
         this._updateComplete = true;
     }
@@ -230,9 +224,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
      *
      */
     public addDestroyable(destroyable: Destroyable): boolean {
-        const i = this._destroyables.findIndex(
-            (d) => d && d.__destroyID__ === destroyable.__destroyID__
-        );
+        const i = this._destroyables.findIndex((d) => d && d.__destroyID__ === destroyable.__destroyID__);
 
         if (i === -1) {
             this._destroyables.push(destroyable);
@@ -250,17 +242,14 @@ export class Scene extends EventTarget<SceneEventTypes> {
     private destroyDestroyables(force?: boolean): void {
         for (let i = this._destroyables.length - 1; i >= 0; i--) {
             if (
-                (this._destroyables[i] &&
-                    !(this._destroyables[i] as Destroyable)
-                        .__destroyInFrames__) ||
+                (this._destroyables[i] && !(this._destroyables[i] as Destroyable).__destroyInFrames__) ||
                 force
             ) {
                 (this._destroyables[i] as Destroyable).destroy();
                 Dispose(this._destroyables[i] as Destroyable);
                 this._destroyables[i] = undefined;
             } else if (this._destroyables[i])
-                ((this._destroyables[i] as Destroyable)
-                    .__destroyInFrames__ as number)--;
+                ((this._destroyables[i] as Destroyable).__destroyInFrames__ as number)--;
         }
     }
 

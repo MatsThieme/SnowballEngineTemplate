@@ -1,5 +1,5 @@
-import { Destroyable } from 'GameObject/Destroy';
-import { GameTime } from 'SnowballEngine/GameTime';
+import { Destroyable } from "GameObject/Destroy";
+import { GameTime } from "SnowballEngine/GameTime";
 
 /** @category Utility */
 export class Stopwatch implements Destroyable {
@@ -11,9 +11,9 @@ export class Stopwatch implements Destroyable {
     private _id: number;
 
     /**
-     * 
+     *
      * A Stopwatch utility using GameTime.deltaTime
-     * 
+     *
      */
     public constructor(start = true) {
         this.milliseconds = 0;
@@ -59,7 +59,10 @@ export class Stopwatch implements Destroyable {
     }
 
     public destroy(): void {
-        Stopwatch.stopwatches.splice(Stopwatch.stopwatches.findIndex(sw => sw._id === this._id), 1);
+        Stopwatch.stopwatches.splice(
+            Stopwatch.stopwatches.findIndex((sw) => sw._id === this._id),
+            1
+        );
     }
 
     public static reset(): void {

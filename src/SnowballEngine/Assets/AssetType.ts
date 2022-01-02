@@ -6,5 +6,5 @@ export const enum AssetType {
     Text,
     Blob,
     JSON,
-    Font
+    Font,
 }

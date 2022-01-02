@@ -4,15 +4,7 @@ import { ColliderTest } from "Prefabs/ColliderTest";
 import { ExampleGameObjectPrefab } from "Prefabs/ExampleGameObjectPrefab";
 import { FloorColliderTest as FloorCollider } from "Prefabs/FloorCollider";
 import { FPSDisplayPrefab } from "Prefabs/FPSDisplayPrefab";
-import {
-    ComponentType,
-    EventHandler,
-    GameObject,
-    Input,
-    Instantiate,
-    Scene,
-    Vector2,
-} from "SE";
+import { ComponentType, EventHandler, GameObject, Input, Instantiate, Scene, Vector2 } from "SE";
 
 export function MainScene(scene: Scene): void {
     // add gameobjects to scene
@@ -44,9 +36,7 @@ export function MainScene(scene: Scene): void {
 
                 if (!rect) return;
 
-                const rb = rect.getComponent<Rigidbody>(
-                    ComponentType.Rigidbody
-                );
+                const rb = rect.getComponent<Rigidbody>(ComponentType.Rigidbody);
 
                 if (!rb) return;
 

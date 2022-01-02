@@ -1,4 +1,4 @@
-import { Timeout } from 'Utility/Timeout/Timeout';
+import { Timeout } from "Utility/Timeout/Timeout";
 
 /** @category Scene */
 export class Framedata {
@@ -19,9 +19,9 @@ export class Framedata {
     }
 
     /**
-     * 
+     *
      * Calculates fps.
-     * 
+     *
      */
     public update(time = performance.now()): void {
         this._frames++;
@@ -40,23 +40,23 @@ export class Framedata {
 
     /**
      *
-     * Returns the average frames per second 
-     * 
+     * Returns the average frames per second
+     *
      */
     public get fps(): number {
         return this._avgFramesPerSecond;
     }
 
     /**
-     * 
+     *
      * measure fps for milliseconds
-     * 
+     *
      */
     public async measureFps(milliseconds: number): Promise<number> {
         const frames = this._totalFrames;
 
         await new Timeout(milliseconds);
 
-        return (this._totalFrames - frames) / milliseconds * 1000;
+        return ((this._totalFrames - frames) / milliseconds) * 1000;
     }
 }

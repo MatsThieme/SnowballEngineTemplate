@@ -1,4 +1,1 @@
-declare type InputAction = 'Trigger' | 'PointerPosition' |
-    'MoveHorizontal' |
-    'MoveVertical' |
-    'Jump';
+declare type InputAction = "Trigger" | "PointerPosition" | "MoveHorizontal" | "MoveVertical" | "Jump";

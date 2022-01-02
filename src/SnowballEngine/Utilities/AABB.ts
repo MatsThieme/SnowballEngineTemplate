@@ -1,4 +1,4 @@
-import { Vector2 } from './Vector2';
+import { Vector2 } from "./Vector2";
 
 /** @category Utility */
 export class AABB {
@@ -58,9 +58,13 @@ export class AABB {
         this.calculateSides();
     }
 
-
     public intersects(other: AABB): boolean {
-        return this._left < other._right && this._right > other._left && this._bottom < other._top && this._top > other._bottom;
+        return (
+            this._left < other._right &&
+            this._right > other._left &&
+            this._bottom < other._top &&
+            this._top > other._bottom
+        );
     }
 
     public intersectsPoint(point: Vector2): boolean {
@@ -78,9 +82,9 @@ export class AABB {
     }
 
     /**
-     * 
-     * Returns this 
-     * 
+     *
+     * Returns this
+     *
      */
     public copy(aabb: AABB): AABB {
         this.setPosition(aabb.position);
@@ -90,6 +94,8 @@ export class AABB {
     }
 
     public toString(precision?: number): string {
-        return `halfExtents: ${this.halfExtents.toString(precision)}, position: ${this.halfExtents.toString(precision)}`;
+        return `halfExtents: ${this.halfExtents.toString(precision)}, position: ${this.halfExtents.toString(
+            precision
+        )}`;
     }
 }

@@ -1,12 +1,12 @@
-import { TextStyleAlign } from '@pixi/text';
-import { BitmapText } from '@pixi/text-bitmap';
-import { Client } from 'SnowballEngine/Client';
-import { Scene } from 'SnowballEngine/Scene';
-import { Color } from 'Utility/Color';
-import { UIElementType } from '../UIElementType';
-import { UIFonts } from '../UIFonts';
-import { UIMenu } from '../UIMenu';
-import { UIElement } from './UIElement';
+import { TextStyleAlign } from "@pixi/text";
+import { BitmapText } from "@pixi/text-bitmap";
+import { Client } from "SnowballEngine/Client";
+import { Scene } from "SnowballEngine/Scene";
+import { Color } from "Utility/Color";
+import { UIElementType } from "../UIElementType";
+import { UIFonts } from "../UIFonts";
+import { UIMenu } from "../UIMenu";
+import { UIElement } from "./UIElement";
 
 /** @category UI */
 export class UIText extends UIElement {
@@ -18,7 +18,7 @@ export class UIText extends UIElement {
     public constructor(menu: UIMenu, name: string, type: UIElementType = UIElementType.Text) {
         super(menu, name, type);
 
-        this._bitmapText = new BitmapText('', { fontName: menu.font || Scene.currentScene.ui.font });
+        this._bitmapText = new BitmapText("", { fontName: menu.font || Scene.currentScene.ui.font });
 
         this._lines = 0;
 
@@ -26,7 +26,7 @@ export class UIText extends UIElement {
 
         this._resizeListener = (() => this._bitmapText.updateText()).bind(this);
 
-        window.addEventListener('resize', this._resizeListener);
+        window.addEventListener("resize", this._resizeListener);
     }
 
     public get font(): UIFont {
@@ -58,9 +58,9 @@ export class UIText extends UIElement {
     }
 
     /**
-     * 
+     *
      * Multiline text align.
-     * 
+     *
      */
     public get textAlign(): TextStyleAlign {
         return <TextStyleAlign>this._bitmapText.align;
@@ -88,7 +88,7 @@ export class UIText extends UIElement {
     }
 
     public override destroy(): void {
-        window.removeEventListener('resize', this._resizeListener);
+        window.removeEventListener("resize", this._resizeListener);
 
         super.destroy();
     }

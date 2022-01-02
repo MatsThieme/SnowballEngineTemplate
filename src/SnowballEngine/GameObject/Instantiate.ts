@@ -13,8 +13,7 @@ export function Instantiate(
 ): GameObject {
     name = name.trim();
 
-    if (!/[\w()]+/.test(name))
-        throw new Error("Name may contain a-z, A-Z, 0-9, _ and () only");
+    if (!/[\w()]+/.test(name)) throw new Error("Name may contain a-z, A-Z, 0-9, _ and () only");
 
     const gameObject = new GameObject(name, false);
 

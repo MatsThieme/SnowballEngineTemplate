@@ -1,16 +1,17 @@
-import { Assets, AudioListener, AudioSource, Destroy, Interval, Timeout } from 'SE';
-import { TestBehaviour } from 'test/TestBehaviour';
+import { Assets, AudioListener, AudioSource, Destroy, Interval, Timeout } from "SE";
+import { TestBehaviour } from "test/TestBehaviour";
 
 export class AudioSourceRateCurrenttime extends TestBehaviour {
-    name = 'AudioSource: playback rate + currenttime';
-    description = 'AudioSource: playback rate + currenttime';
+    name = "AudioSource: playback rate + currenttime";
+    description = "AudioSource: playback rate + currenttime";
     duration = 10;
 
     async test() {
         if (!this.scene.audioListener) await this.gameObject.addComponent(AudioListener);
 
-        const source = await this.gameObject.addComponent(AudioSource, s => { s.asset = Assets.get('audio'); })!;
-
+        const source = await this.gameObject.addComponent(AudioSource, (s) => {
+            s.asset = Assets.get("audio");
+        })!;
 
         source.play();
 
@@ -25,7 +26,6 @@ export class AudioSourceRateCurrenttime extends TestBehaviour {
         await new Timeout(5000);
 
         i.clear();
-
 
         Destroy(source);
     }

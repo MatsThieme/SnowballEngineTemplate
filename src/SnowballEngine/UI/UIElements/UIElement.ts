@@ -1,15 +1,15 @@
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { Asset } from 'Assets/Asset';
-import { AssetType } from 'Assets/AssetType';
-import { AlignH, AlignV } from 'GameObject/Align';
-import { Destroyable } from 'GameObject/Destroy';
-import { Client } from 'SnowballEngine/Client';
-import { Input } from 'SnowballEngine/Input/Input';
-import { UIElementType } from 'UI/UIElementType';
-import { UIMenu } from 'UI/UIMenu';
-import { AABB } from 'Utility/AABB';
-import { Vector2 } from 'Utility/Vector2';
+import { Container } from "@pixi/display";
+import { Sprite } from "@pixi/sprite";
+import { Asset } from "Assets/Asset";
+import { AssetType } from "Assets/AssetType";
+import { AlignH, AlignV } from "GameObject/Align";
+import { Destroyable } from "GameObject/Destroy";
+import { Client } from "SnowballEngine/Client";
+import { Input } from "SnowballEngine/Input/Input";
+import { UIElementType } from "UI/UIElementType";
+import { UIMenu } from "UI/UIMenu";
+import { AABB } from "Utility/AABB";
+import { Vector2 } from "Utility/Vector2";
 
 /** @category UI */
 export class UIElement implements Destroyable {
@@ -24,9 +24,9 @@ export class UIElement implements Destroyable {
     public readonly down: boolean;
 
     /**
-     * 
+     *
      * Position of the pointer in the menu space (0-100,0-100)
-     * 
+     *
      */
     public readonly downPosition?: Vector2;
 
@@ -38,7 +38,6 @@ export class UIElement implements Destroyable {
 
     public onInput?: (uiElement: this) => void;
     public onHover?: (uiElement: this) => void;
-
 
     protected _menu: UIMenu;
     protected _background?: Asset;
@@ -73,9 +72,9 @@ export class UIElement implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Enable or disable this UIElement.
-     * 
+     *
      */
     public get active(): boolean {
         return this.container.visible;
@@ -83,7 +82,6 @@ export class UIElement implements Destroyable {
     public set active(val: boolean) {
         this.container.visible = val;
     }
-
 
     // public abstract get font(): UIFont;
     // public abstract set font(val: UIFont);
@@ -109,18 +107,17 @@ export class UIElement implements Destroyable {
     /**
      *
      * The background image of this UIElement.
-     * 
+     *
      */
     public get background(): Asset | undefined {
         return this._background;
     }
     public set background(val: Asset | undefined) {
-        if (val?.type !== AssetType.Image) throw new Error('Asset.type !== AssetType.Image');
+        if (val?.type !== AssetType.Image) throw new Error("Asset.type !== AssetType.Image");
 
         const s = val.getPIXISprite();
 
         if (!s) throw new Error(`Can't create PIXI.Sprite from Asset`);
-
 
         if (this._backgroundSprite) this.container.removeChild(this._backgroundSprite);
 
@@ -138,15 +135,21 @@ export class UIElement implements Destroyable {
         if (this._backgroundSprite) this._backgroundSprite.visible = false; // ignore background in getLocalBounds()
 
         const bounds = this.container.getLocalBounds();
-        this._scaledPadding.copy(this.padding.clone.scale(new Vector2(Client.resolution.y / Client.resolution.x, 1)));
+        this._scaledPadding.copy(
+            this.padding.clone.scale(new Vector2(Client.resolution.y / Client.resolution.x, 1))
+        );
         this.aabb.setHalfExtents(new Vector2(bounds.width / 2, bounds.height / 2).add(this._scaledPadding));
 
-        const topLeft = this.position.clone.sub(new Vector2(this.alignH * (bounds.width + this._scaledPadding.x * 2), this.alignV * (bounds.height + this._scaledPadding.y * 2)));
+        const topLeft = this.position.clone.sub(
+            new Vector2(
+                this.alignH * (bounds.width + this._scaledPadding.x * 2),
+                this.alignV * (bounds.height + this._scaledPadding.y * 2)
+            )
+        );
 
         this.container.position.copyFrom(topLeft);
 
         this.aabb.setPosition(topLeft.add(this.aabb.halfExtents));
-
 
         if (this._backgroundSprite) {
             this._backgroundSprite.visible = true;
@@ -156,9 +159,9 @@ export class UIElement implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Update down and click properties, position the content and scale background.
-     * 
+     *
      */
     public update(updateBounds = true): void {
         if (!this.active) return;
@@ -167,7 +170,7 @@ export class UIElement implements Destroyable {
 
         if (this.type === UIElementType.Text) return;
 
-        const trigger = Input.getButton('Trigger');
+        const trigger = Input.getButton("Trigger");
 
         if (!trigger.down) {
             (<Mutable<UIElement>>this).hover = false;
@@ -175,7 +178,7 @@ export class UIElement implements Destroyable {
             (<Mutable<UIElement>>this).down = false;
             (<Mutable<UIElement>>this).downPosition = undefined;
         } else {
-            const p = Input.getAxis('PointerPosition');
+            const p = Input.getAxis("PointerPosition");
 
             (<Mutable<UIElement>>this).downPosition = Vector2.divide(p.v2, Client.resolution).scale(100);
 
@@ -190,9 +193,9 @@ export class UIElement implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Remove UIElement from menu.
-     * 
+     *
      */
     public remove(): void {
         this._menu.removeUIElement(this.name);

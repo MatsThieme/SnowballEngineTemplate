@@ -12,8 +12,7 @@ import { Component } from "./Component";
 export class AudioListener extends Component<AudioListenerEventTypes> {
     public static readonly context: AudioContext = new AudioContext();
 
-    public static readonly node: AudioDestinationNode =
-        AudioListener.context.destination;
+    public static readonly node: AudioDestinationNode = AudioListener.context.destination;
 
     public readonly node: GainNode;
     public volume: number;
@@ -27,8 +26,7 @@ export class AudioListener extends Component<AudioListenerEventTypes> {
         this.volume = 1;
 
         for (const c of Component.components) {
-            if (c.type === ComponentType.AudioSource)
-                (<AudioSource>c).connect();
+            if (c.type === ComponentType.AudioSource) (<AudioSource>c).connect();
         }
     }
 
@@ -38,9 +36,7 @@ export class AudioListener extends Component<AudioListenerEventTypes> {
 
     static {
         AudioListener.context.addEventListener("statechange", () => {
-            Debug.log(
-                `audio context state change: ${AudioListener.context.state}`
-            );
+            Debug.log(`audio context state change: ${AudioListener.context.state}`);
         });
 
         if (AudioListener.context.state === "suspended") {
@@ -60,23 +56,17 @@ export class AudioListener extends Component<AudioListenerEventTypes> {
         const globalTransform = this.gameObject.transform.toGlobal();
 
         for (const source of Component.components) {
-            if (
-                source.type === ComponentType.AudioSource &&
-                (<AudioSource>source).node
-            ) {
+            if (source.type === ComponentType.AudioSource && (<AudioSource>source).node) {
                 if (!(<AudioSource>source).playing) continue;
 
-                const sourceGlobalTransform =
-                    source.gameObject.transform.toGlobal();
+                const sourceGlobalTransform = source.gameObject.transform.toGlobal();
 
                 if ((<AudioSource>source).playGlobally) {
                     (<AudioSource>source).position = globalTransform.position;
                 } else {
                     (<AudioSource>source).position = new Vector2(
-                        sourceGlobalTransform.position.x -
-                            globalTransform.position.x,
-                        sourceGlobalTransform.position.y -
-                            globalTransform.position.y
+                        sourceGlobalTransform.position.x - globalTransform.position.x,
+                        sourceGlobalTransform.position.y - globalTransform.position.y
                     );
                 }
             }
@@ -87,8 +77,7 @@ export class AudioListener extends Component<AudioListenerEventTypes> {
 
     public override destroy(): void {
         for (const c of Component.components) {
-            if (c.type === ComponentType.AudioSource)
-                (<AudioSource>c).disconnect();
+            if (c.type === ComponentType.AudioSource) (<AudioSource>c).disconnect();
         }
 
         this.gameObject.scene.audioListener = undefined;

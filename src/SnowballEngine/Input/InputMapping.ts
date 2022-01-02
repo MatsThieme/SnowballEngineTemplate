@@ -1,11 +1,11 @@
-import { GamepadAxis } from './Devices/Gamepad/GamepadAxis';
-import { GamepadButton } from './Devices/Gamepad/GamepadButton';
-import { KeyboardAxis } from './Devices/Keyboard/KeyboardAxis';
-import { KeyboardButton } from './Devices/Keyboard/KeyboardButton';
-import { MouseAxis } from './Devices/Mouse/MouseAxis';
-import { MouseButton } from './Devices/Mouse/MouseButton';
-import { TouchAxis } from './Devices/Touch/TouchAxis';
-import { TouchButton } from './Devices/Touch/TouchButton';
+import { GamepadAxis } from "./Devices/Gamepad/GamepadAxis";
+import { GamepadButton } from "./Devices/Gamepad/GamepadButton";
+import { KeyboardAxis } from "./Devices/Keyboard/KeyboardAxis";
+import { KeyboardButton } from "./Devices/Keyboard/KeyboardButton";
+import { MouseAxis } from "./Devices/Mouse/MouseAxis";
+import { MouseButton } from "./Devices/Mouse/MouseButton";
+import { TouchAxis } from "./Devices/Touch/TouchAxis";
+import { TouchButton } from "./Devices/Touch/TouchButton";
 
 /** @category Input */
 export interface InputMapping {

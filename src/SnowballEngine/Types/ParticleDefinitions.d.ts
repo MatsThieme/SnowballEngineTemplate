@@ -1,11 +1,11 @@
-import { Angle } from 'Utility/Angle';
-import { Color } from 'Utility/Color';
-import { Range } from 'Utility/Range';
-import { Vector2 } from 'Utility/Vector2';
-import { Asset } from '../Assets/Asset';
+import { Angle } from "Utility/Angle";
+import { Color } from "Utility/Color";
+import { Range } from "Utility/Range";
+import { Vector2 } from "Utility/Vector2";
+import { Asset } from "../Assets/Asset";
 
 declare global {
-    type ParticleAsset = Asset | { readonly assets: Asset[], readonly swapTime: number };
+    type ParticleAsset = Asset | { readonly assets: Asset[]; readonly swapTime: number };
 
     interface ParticleSettings {
         /** relative to the ParticleSystem */
@@ -35,7 +35,7 @@ declare global {
         /** sprite tint */
         tint: Color | Range<Color>;
 
-        rotationDirection: 'random' | 'right' | 'left';
+        rotationDirection: "random" | "right" | "left";
     }
 
     interface EmissionSettings {

@@ -1,15 +1,15 @@
-import projectConfig from 'Config';
-import { default as cloneDeep } from 'lodash.clonedeep';
+import projectConfig from "Config";
+import { default as cloneDeep } from "lodash.clonedeep";
 
 export class Debug {
     static {
-        window.addEventListener('error', (e: ErrorEvent) => {
+        window.addEventListener("error", (e: ErrorEvent) => {
             e.preventDefault();
 
             Debug.error(e.error);
         });
 
-        window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
+        window.addEventListener("unhandledrejection", (e: PromiseRejectionEvent) => {
             e.preventDefault();
 
             Debug.error(e.reason);
@@ -19,7 +19,7 @@ export class Debug {
     public static log(msg: string | number | boolean | Record<string, unknown>, logstack = false): void {
         if (!projectConfig.build.debugMode) return;
 
-        const o = Debug.formatMessage('log', msg, logstack ? Debug.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage("log", msg, logstack ? Debug.formatStack(Error().stack) : "");
 
         console.log(...o);
     }
@@ -27,7 +27,7 @@ export class Debug {
     public static warn(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
         if (!projectConfig.build.debugMode) return;
 
-        const o = Debug.formatMessage('warning', msg, logstack ? Debug.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage("warning", msg, logstack ? Debug.formatStack(Error().stack) : "");
 
         console.warn(...o);
     }
@@ -35,71 +35,103 @@ export class Debug {
     public static error(msg: string | number | boolean | Record<string, unknown>, logstack = true): void {
         if (!projectConfig.build.debugMode) return;
 
-        if (typeof msg === 'object' && 'name' in msg && 'message' in msg && 'stack' in msg) return console.warn(msg);
+        if (typeof msg === "object" && "name" in msg && "message" in msg && "stack" in msg)
+            return console.warn(msg);
 
-        const o = Debug.formatMessage('error', msg, logstack ? Debug.formatStack(Error().stack) : '');
+        const o = Debug.formatMessage("error", msg, logstack ? Debug.formatStack(Error().stack) : "");
 
         console.warn(...o);
     }
 
-    private static formatStack(stack = ''): string {
-        return Debug.formatStackFirefox(stack) || Debug.formatStackChromium(stack) || Debug.formatStackCordovaAndroid(stack) || stack.replace(/error[:]?/i, '');
+    private static formatStack(stack = ""): string {
+        return (
+            Debug.formatStackFirefox(stack) ||
+            Debug.formatStackChromium(stack) ||
+            Debug.formatStackCordovaAndroid(stack) ||
+            stack.replace(/error[:]?/i, "")
+        );
     }
 
     private static formatStackFirefox(stack: string): string {
-        return stack.split('\n').slice(1).map(line => {
-            const match = line.match(/^(.*?)@http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)$/);
+        return stack
+            .split("\n")
+            .slice(1)
+            .map((line) => {
+                const match = line.match(/^(.*?)@http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)$/);
 
-            return Debug.formatStackLine(match);
-        }).filter(Boolean).join('\n');
+                return Debug.formatStackLine(match);
+            })
+            .filter(Boolean)
+            .join("\n");
     }
 
     private static formatStackChromium(stack: string): string {
-        return stack.split('\n').slice(2).map(line => {
-            const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
+        return stack
+            .split("\n")
+            .slice(2)
+            .map((line) => {
+                const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
 
-            return Debug.formatStackLine(match);
-        }).filter(Boolean).join('\n');
+                return Debug.formatStackLine(match);
+            })
+            .filter(Boolean)
+            .join("\n");
     }
 
     private static formatStackCordovaAndroid(stack: string): string {
-        return stack.split('\n').slice(2).map(line => {
-            const match = line.trim().match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
+        return stack
+            .split("\n")
+            .slice(2)
+            .map((line) => {
+                const match = line
+                    .trim()
+                    .match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
 
-            return Debug.formatStackLine(match);
-        }).filter(Boolean).join('\n');
+                return Debug.formatStackLine(match);
+            })
+            .filter(Boolean)
+            .join("\n");
     }
 
     private static formatStackLine(match: RegExpMatchArray | null): string {
-        if (!match) return '';
+        if (!match) return "";
 
         const info = {
             functionName: match[1],
             filePath: match[2],
             line: match[3],
-            position: match[4]
+            position: match[4],
         };
 
-        if (!info.filePath || !info.functionName) return '';
+        if (!info.filePath || !info.functionName) return "";
 
         return `at ${info.functionName} (/${info.filePath}:${info.line})`;
     }
 
-    private static formatMessage(type: 'log' | 'warning' | 'error', msg: string | number | boolean | Record<string, unknown> | (string | number | boolean | Record<string, unknown>)[], stack: string): (string | number | boolean | Record<string, unknown>)[] {
+    private static formatMessage(
+        type: "log" | "warning" | "error",
+        msg:
+            | string
+            | number
+            | boolean
+            | Record<string, unknown>
+            | (string | number | boolean | Record<string, unknown>)[],
+        stack: string
+    ): (string | number | boolean | Record<string, unknown>)[] {
         const ret: (string | number | boolean | Record<string, unknown>)[] = [];
 
-        if (type === 'warning') {
-            ret.push(`Warning${!stack ? ': ' : ''}`);
-        } else if (type === 'error') {
-            ret.push(`Error${!stack ? ': ' : ''}`);
+        if (type === "warning") {
+            ret.push(`Warning${!stack ? ": " : ""}`);
+        } else if (type === "error") {
+            ret.push(`Error${!stack ? ": " : ""}`);
         }
 
-        if (ret[0]) ret.push('\n');
+        if (ret[0]) ret.push("\n");
 
         if (Array.isArray(msg)) ret.push(...cloneDeep(msg));
         else ret.push(cloneDeep(msg));
 
-        if (stack) ret.push('\n\n' + stack);
+        if (stack) ret.push("\n\n" + stack);
 
         return ret;
     }

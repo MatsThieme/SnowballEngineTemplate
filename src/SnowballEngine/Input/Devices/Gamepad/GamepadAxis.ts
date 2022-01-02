@@ -8,5 +8,5 @@ export const enum GamepadAxis {
     LeftTrigger,
     RightTrigger,
     LeftStick,
-    RightStick
+    RightStick,
 }

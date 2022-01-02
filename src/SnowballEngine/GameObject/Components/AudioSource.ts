@@ -1,17 +1,17 @@
-import { Asset } from 'Assets/Asset';
-import { AudioMixer } from 'SnowballEngine/Audio/AudioMixer';
-import { Client } from 'SnowballEngine/Client';
-import { Debug } from 'SnowballEngine/Debug';
-import { EventHandler } from 'Utility/Events/EventHandler';
-import { AudioSourceEventTypes } from 'Utility/Events/EventTypes';
-import { Vector2 } from 'Utility/Vector2';
-import { ComponentType } from '../ComponentType';
-import { GameObject } from '../GameObject';
-import { AudioListener } from './AudioListener';
-import { Component } from './Component';
+import { Asset } from "Assets/Asset";
+import { AudioMixer } from "SnowballEngine/Audio/AudioMixer";
+import { Client } from "SnowballEngine/Client";
+import { Debug } from "SnowballEngine/Debug";
+import { EventHandler } from "Utility/Events/EventHandler";
+import { AudioSourceEventTypes } from "Utility/Events/EventTypes";
+import { Vector2 } from "Utility/Vector2";
+import { ComponentType } from "../ComponentType";
+import { GameObject } from "../GameObject";
+import { AudioListener } from "./AudioListener";
+import { Component } from "./Component";
 
 /** @category Component */
-export class AudioSource extends Component<AudioSourceEventTypes>  {
+export class AudioSource extends Component<AudioSourceEventTypes> {
     public readonly node: PannerNode;
 
     public playGlobally: boolean;
@@ -60,44 +60,46 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this._zPosition = 10;
         this._position = new Vector2();
 
-
         this.playGlobally = false;
 
         this.node = AudioListener.context.createPanner();
         this.renewNode();
 
-        this.node.panningModel = 'HRTF';
-        this.node.distanceModel = 'linear';
+        this.node.panningModel = "HRTF";
+        this.node.distanceModel = "linear";
         this.node.maxDistance = this._maxDistance;
         this.zPosition = this._zPosition;
 
         this._connected = false;
 
-        const listeneradd = new EventHandler(listener => {
+        const listeneradd = new EventHandler((listener) => {
             this.connect();
-            console.log('listener add');
+            console.log("listener add");
         });
 
-        const listenerremove = new EventHandler(listener => {
+        const listenerremove = new EventHandler((listener) => {
             this.disconnect();
         });
 
-        this.gameObject.scene.addListener('audiolisteneradd', listeneradd);
-        this.gameObject.scene.addListener('audiolistenerremove', listenerremove);
+        this.gameObject.scene.addListener("audiolisteneradd", listeneradd);
+        this.gameObject.scene.addListener("audiolistenerremove", listenerremove);
 
-        this.addListener('destroy', new EventHandler(() => {
-            this.gameObject.scene.removeListener('audiolisteneradd', listeneradd);
-            this.gameObject.scene.removeListener('audiolistenerremove', listenerremove);
-        }));
+        this.addListener(
+            "destroy",
+            new EventHandler(() => {
+                this.gameObject.scene.removeListener("audiolisteneradd", listeneradd);
+                this.gameObject.scene.removeListener("audiolistenerremove", listenerremove);
+            })
+        );
 
         this.connect();
     }
 
     /**
-     * 
+     *
      * Playback will be stopped when switching Asset.
      * startTime is set to 0 and endTime to duration.
-     * 
+     *
      */
     public get asset(): Asset | undefined {
         return this._asset;
@@ -156,7 +158,9 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
     }
     public set rate(val: number) {
         if (this.playing) {
-            this._startedAt = AudioListener.context.currentTime - (AudioListener.context.currentTime - this._startedAt) * this._rate / val;
+            this._startedAt =
+                AudioListener.context.currentTime -
+                ((AudioListener.context.currentTime - this._startedAt) * this._rate) / val;
         }
 
         if (this._audioBufferNode) {
@@ -167,10 +171,10 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
     }
 
     /**
-     * 
+     *
      * The current playback time in seconds.
      * if not playing return -1
-     * 
+     *
      */
     public get currentTime(): number {
         if (this._ended || this._stopped) return -1;
@@ -194,7 +198,6 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
     public get playing(): boolean {
         return !this._ended && !this._stopped && !this.paused;
     }
-
 
     public get paused(): boolean {
         return this._paused !== -1 && !this._ended;
@@ -231,7 +234,6 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         }
     }
 
-
     protected override onEnable(): void {
         this.connect();
     }
@@ -240,18 +242,16 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this.disconnect();
     }
 
-
     /**
-     * 
+     *
      * Connect to mixer? or listener
-     * 
+     *
      */
 
     public connect(): void {
         const listener = this.gameObject.scene.audioListener;
 
-        if (!listener) return Debug.warn('No AudioListener');
-
+        if (!listener) return Debug.warn("No AudioListener");
 
         if (this._connected) this.disconnect();
 
@@ -269,25 +269,23 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this._connected = false;
     }
 
-
     /**
-     * 
+     *
      * Play the audio clip.
-     * 
+     *
      */
     public play(): void {
-        if (!this.asset) return Debug.warn('No audio clip set');
-        if (!Client.hasMediaPlayPermission) return Debug.warn('Need permission to play media first');
+        if (!this.asset) return Debug.warn("No audio clip set");
+        if (!Client.hasMediaPlayPermission) return Debug.warn("Need permission to play media first");
 
         if (this.playing) this.stop();
-
 
         const start = Math.max(this._paused, this._startTime);
         const duration = this._endTime - start;
 
-        if (this._endTime - this._startTime <= 0) return Debug.warn('endTime - startTime <= 0; must be greater than 0');
+        if (this._endTime - this._startTime <= 0)
+            return Debug.warn("endTime - startTime <= 0; must be greater than 0");
         if (duration <= 0) return;
-
 
         this.renewNode();
 
@@ -296,7 +294,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
 
             if (!this.paused) {
                 this._paused = -1;
-                this.dispatchEvent('end');
+                this.dispatchEvent("end");
                 this._ended = true;
                 this._stopped = false;
             }
@@ -306,9 +304,12 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
 
         if (this.paused) this._startedAt -= this._paused;
 
-
-        this._audioBufferNode!.start(AudioListener.context.currentTime, start, this._loop ? undefined : duration);
-        this.dispatchEvent('play');
+        this._audioBufferNode!.start(
+            AudioListener.context.currentTime,
+            start,
+            this._loop ? undefined : duration
+        );
+        this.dispatchEvent("play");
 
         this._ended = false;
         this._stopped = false;
@@ -327,7 +328,7 @@ export class AudioSource extends Component<AudioSourceEventTypes>  {
         this._ended = false;
         this._stopped = true;
 
-        this.dispatchEvent('pause');
+        this.dispatchEvent("pause");
 
         this._audioBufferNode.stop();
     }

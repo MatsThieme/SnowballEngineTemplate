@@ -1,4 +1,4 @@
-import { Interval } from './Interval/Interval';
+import { Interval } from "./Interval/Interval";
 
 /** @category Utility */
 export class AsyncWorker {
@@ -14,14 +14,14 @@ export class AsyncWorker {
     /**
      *
      * Milliseconds a worker should be destroyed after it finished a task.
-     * 
+     *
      */
     public expirationTime: number;
 
     /**
-     * 
+     *
      * postMessage in a webworker has to use this signature for the returned object: { status: 'failed' | 'finished' | 'progress', data: any }
-     * 
+     *
      */
     public constructor(url: string, maxWorkers = 1, expirationTime = 1000) {
         this._url = url;
@@ -36,16 +36,24 @@ export class AsyncWorker {
     }
 
     /**
-     * 
+     *
      * The resolved Promise will return the data returned by the worker.
-     * 
+     *
      * @param data Data to pass to the worker.
      * @param progress progress will be called when the worker sends a progress message: { status: 'progress', data: any }
-     * 
+     *
      */
-    public task<T>(data: Record<string, unknown>, progress?: (data: Record<string, unknown>) => void): Promise<T> {
+    public task<T>(
+        data: Record<string, unknown>,
+        progress?: (data: Record<string, unknown>) => void
+    ): Promise<T> {
         return new Promise((resolve, reject) => {
-            this._queue.push({ data, progress, resolve: <(value?: Record<string, unknown>) => void>resolve, reject });
+            this._queue.push({
+                data,
+                progress,
+                resolve: <(value?: Record<string, unknown>) => void>resolve,
+                reject,
+            });
             this.work();
         });
     }
@@ -61,8 +69,8 @@ export class AsyncWorker {
         let p = 0;
 
         worker.onerror = reject;
-        worker.onmessage = async e => {
-            if (e.data.status === 'progress') {
+        worker.onmessage = async (e) => {
+            if (e.data.status === "progress") {
                 if (progress) {
                     p++;
                     await progress(e.data?.data);
@@ -73,8 +81,8 @@ export class AsyncWorker {
             }
 
             if (p !== 0) {
-                await new Promise<void>(resolve => {
-                    new Interval(i => {
+                await new Promise<void>((resolve) => {
+                    new Interval((i) => {
                         if (p === 0) {
                             i.clear();
                             resolve();
@@ -83,10 +91,9 @@ export class AsyncWorker {
                 });
             }
 
+            if (e.data.status === "failed") reject(e.data?.data);
 
-            if (e.data.status === 'failed') reject(e.data?.data);
-
-            if (e.data.status === 'finished') resolve(e.data?.data);
+            if (e.data.status === "finished") resolve(e.data?.data);
 
             this.workerFinished(worker);
         };
@@ -95,7 +102,7 @@ export class AsyncWorker {
     }
 
     private async getWorker(): Promise<Worker | undefined> {
-        const w = this._workers.filter(w => !w.isBusy);
+        const w = this._workers.filter((w) => !w.isBusy);
 
         if (w.length > 0) return w[0];
 
@@ -105,7 +112,7 @@ export class AsyncWorker {
     }
 
     private removeWorker(id: number): void {
-        const i = this._workers.findIndex(v => v.id === id);
+        const i = this._workers.findIndex((v) => v.id === id);
         if (i === -1) return;
         this._workers.splice(i, 1)[0].terminate();
     }
@@ -127,14 +134,13 @@ export class AsyncWorker {
         worker.onmessage = worker.onerror = null;
         worker.isBusy = false;
 
-        const finished = worker.finished = performance.now();
+        const finished = (worker.finished = performance.now());
 
         setTimeout(() => {
             if (!worker.isBusy && worker.finished === finished) {
                 this.removeWorker(worker.id);
             }
         }, this.expirationTime);
-
 
         if (work) {
             for (let i = 0; i < Math.min(this._queue.length, this.maxWorkers); i++) {
@@ -169,5 +175,5 @@ interface QueueEntry {
     data: Record<string, unknown>;
     progress?: (data: Record<string, unknown>) => void;
     resolve: (value?: Record<string, unknown>) => void;
-    reject: (value?: unknown) => void
+    reject: (value?: unknown) => void;
 }

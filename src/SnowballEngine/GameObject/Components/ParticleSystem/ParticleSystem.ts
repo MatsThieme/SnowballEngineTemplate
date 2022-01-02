@@ -1,18 +1,18 @@
-import { Container } from '@pixi/display';
-import { ComponentType } from 'GameObject/ComponentType';
-import { Dispose } from 'GameObject/Dispose';
-import { GameObject } from 'GameObject/GameObject';
-import { GameTime } from 'SnowballEngine/GameTime';
-import { Angle } from 'Utility/Angle';
-import { Color } from 'Utility/Color';
-import { ParticleSystemEventTypes } from 'Utility/Events/EventTypes';
-import { Range } from 'Utility/Range';
-import { Vector2 } from 'Utility/Vector2';
-import { Renderable } from '../Renderable';
-import { Particle } from './Particle';
+import { Container } from "@pixi/display";
+import { ComponentType } from "GameObject/ComponentType";
+import { Dispose } from "GameObject/Dispose";
+import { GameObject } from "GameObject/GameObject";
+import { GameTime } from "SnowballEngine/GameTime";
+import { Angle } from "Utility/Angle";
+import { Color } from "Utility/Color";
+import { ParticleSystemEventTypes } from "Utility/Events/EventTypes";
+import { Range } from "Utility/Range";
+import { Vector2 } from "Utility/Vector2";
+import { Renderable } from "../Renderable";
+import { Particle } from "./Particle";
 
 /** @category Component */
-export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
+export class ParticleSystem extends Renderable<ParticleSystemEventTypes> {
     public readonly particleSettings: ParticleSettings;
     public readonly emissionSettings: EmissionSettings;
     public timeScale: number;
@@ -35,14 +35,14 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
             startSpeed: 1,
             endSpeed: 1,
             tint: Color.white,
-            rotationDirection: 'random'
+            rotationDirection: "random",
         };
 
         this.emissionSettings = {
             emit: true,
             emission: 10,
             angle: Angle.max,
-            maxParticles: 10
+            maxParticles: 10,
         };
 
         this.timeScale = 1;
@@ -63,15 +63,14 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
     }
 
     /**
-     * 
+     *
      * Move and emit particles.
-     * 
+     *
      */
     protected override update(): void {
         if (!this.active || !this._asset) return;
 
         this._timer += GameTime.deltaTimeSeconds;
-
 
         for (let i = this._particles.length - 1; i >= 0; i--) {
             if (this._particles[i].endTime <= GameTime.gameTimeSinceStart) {
@@ -93,7 +92,7 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes>  {
     }
 
     public override destroy(): void {
-        this.particles.forEach(p => Dispose(p));
+        this.particles.forEach((p) => Dispose(p));
 
         super.destroy();
     }

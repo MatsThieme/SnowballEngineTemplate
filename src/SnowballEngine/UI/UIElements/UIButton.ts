@@ -1,6 +1,6 @@
-import { UIElementType } from 'UI/UIElementType';
-import { UIMenu } from 'UI/UIMenu';
-import { UIText } from './UIText';
+import { UIElementType } from "UI/UIElementType";
+import { UIMenu } from "UI/UIMenu";
+import { UIText } from "./UIText";
 
 /** @category UI */
 export class UIButton extends UIText {

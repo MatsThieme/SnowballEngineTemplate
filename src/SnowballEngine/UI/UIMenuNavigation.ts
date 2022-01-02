@@ -1,20 +1,19 @@
 /** @category UI */
 export class UIMenuNavigation {
     /**
-     * 
+     *
      * UIMenuNavigation.navigationHistory stores the names of previously activated menus.
-     * UIMenuNavigation.navigationHistory[0] is the last activated menu. 
-     * 
+     * UIMenuNavigation.navigationHistory[0] is the last activated menu.
+     *
      */
     public readonly navigationHistory: UIMenuName[];
 
     /**
-     * 
+     *
      * Max length of UIMenuNavigation.navigationHistory.
-     * 
+     *
      */
     public navigationHistoryMaxSize: number;
-
 
     public currentIndex: number;
 
@@ -25,13 +24,22 @@ export class UIMenuNavigation {
     }
 
     public onEnableMenu(name: UIMenuName): void {
-        if (this.currentIndex !== -1 && this.currentIndex + 1 < this.navigationHistory.length && this.navigationHistory[this.currentIndex + 1] === name) {
+        if (
+            this.currentIndex !== -1 &&
+            this.currentIndex + 1 < this.navigationHistory.length &&
+            this.navigationHistory[this.currentIndex + 1] === name
+        ) {
             this.currentIndex++;
-        } else if (this.currentIndex !== -1 && this.currentIndex - 1 > 0 && this.navigationHistory[this.currentIndex - 1] === name) {
+        } else if (
+            this.currentIndex !== -1 &&
+            this.currentIndex - 1 > 0 &&
+            this.navigationHistory[this.currentIndex - 1] === name
+        ) {
             this.currentIndex--;
         } else {
             this.navigationHistory.unshift(name);
-            if (this.navigationHistory.length > this.navigationHistoryMaxSize) this.navigationHistory.splice(this.navigationHistoryMaxSize);
+            if (this.navigationHistory.length > this.navigationHistoryMaxSize)
+                this.navigationHistory.splice(this.navigationHistoryMaxSize);
         }
     }
 

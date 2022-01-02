@@ -23,9 +23,9 @@ export class Client {
 
     public static monitorRefreshRate = 60;
 
-    public static aspectRatio: IVector2 = (<IVector2>(
-        Client.resolution
-    )).clone.setLength(new IVector2(16, 9).magnitude);
+    public static aspectRatio: IVector2 = (<IVector2>Client.resolution).clone.setLength(
+        new IVector2(16, 9).magnitude
+    );
 
     public static readonly hasMediaPlayPermission: boolean;
 
@@ -34,9 +34,7 @@ export class Client {
      * Measure the refresh rate of the active monitor for ms.
      *
      */
-    private static async measureMonitorRefreshRate(
-        ms: number
-    ): Promise<number> {
+    private static async measureMonitorRefreshRate(ms: number): Promise<number> {
         let frames = 0;
         let handle = requestAnimationFrame(update);
 
@@ -88,8 +86,7 @@ export class Client {
     private static _resizeInterval?: Interval;
 
     public static async init(): Promise<void> {
-        const el =
-            (Scene.currentScene && Scene.currentScene.domElement) ?? window;
+        const el = (Scene.currentScene && Scene.currentScene.domElement) ?? window;
 
         if (Client._resizeListener) {
             el.removeEventListener("resize", Client._resizeListener);
@@ -97,22 +94,17 @@ export class Client {
         }
 
         Client._resizeListener = () => {
-            const boundingClientRect =
-                Scene.currentScene.domElement.getBoundingClientRect();
+            const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
 
             (<IVector2>Client.resolution).x =
-                (boundingClientRect?.width || window.innerWidth) *
-                window.devicePixelRatio;
+                (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
             (<IVector2>Client.resolution).y =
-                (boundingClientRect?.height || window.innerHeight) *
-                window.devicePixelRatio;
+                (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
 
             (<Vector2>Client.resolution).round();
 
             Client.aspectRatio.copy(
-                (<IVector2>Client.resolution).clone.setLength(
-                    new IVector2(16, 9).magnitude
-                )
+                (<IVector2>Client.resolution).clone.setLength(new IVector2(16, 9).magnitude)
             );
         };
 
@@ -120,10 +112,7 @@ export class Client {
 
         Client._resizeInterval = new Interval(
             () => {
-                if (
-                    window.innerWidth !== Client.resolution.x ||
-                    window.innerHeight !== Client.resolution.y
-                ) {
+                if (window.innerWidth !== Client.resolution.x || window.innerHeight !== Client.resolution.y) {
                     window.dispatchEvent(new Event("resize"));
                 }
             },
@@ -132,8 +121,7 @@ export class Client {
         );
 
         if (!document.onfullscreenchange)
-            document.onfullscreenchange = () =>
-                window.dispatchEvent(new Event("resize"));
+            document.onfullscreenchange = () => window.dispatchEvent(new Event("resize"));
 
         if (!(<Mutable<typeof Client>>Client).hasMediaPlayPermission) {
             (<Mutable<typeof Client>>Client).hasMediaPlayPermission =
@@ -148,8 +136,6 @@ export class Client {
         }
 
         Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(100);
-        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(
-            1000
-        );
+        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
     }
 }

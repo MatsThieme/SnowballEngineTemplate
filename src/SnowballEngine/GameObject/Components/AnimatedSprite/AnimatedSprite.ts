@@ -1,9 +1,9 @@
-import { Container } from '@pixi/display';
-import { ComponentType } from 'GameObject/ComponentType';
-import { GameObject } from 'GameObject/GameObject';
-import { AnimatedSpriteEventTypes } from 'Utility/Events/EventTypes';
-import { Renderable } from '../Renderable';
-import { SpriteAnimation } from './SpriteAnimation';
+import { Container } from "@pixi/display";
+import { ComponentType } from "GameObject/ComponentType";
+import { GameObject } from "GameObject/GameObject";
+import { AnimatedSpriteEventTypes } from "Utility/Events/EventTypes";
+import { Renderable } from "../Renderable";
+import { SpriteAnimation } from "./SpriteAnimation";
 
 /** @category Component */
 export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
@@ -18,7 +18,7 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
 
         this.spriteAnimations = {};
 
-        this._activeAnimation = '';
+        this._activeAnimation = "";
     }
 
     protected override update(): void {
@@ -29,9 +29,9 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     }
 
     /**
-     * 
+     *
      * Set the active animation by name.
-     * 
+     *
      */
     public set activeAnimation(val: string) {
         if (this._activeAnimation in this.spriteAnimations) {
@@ -49,7 +49,7 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
             }
 
             this.spriteAnimations[this._activeAnimation].container.visible = true;
-        } else this._activeAnimation = '';
+        } else this._activeAnimation = "";
     }
     public get activeAnimation(): string {
         return this._activeAnimation;

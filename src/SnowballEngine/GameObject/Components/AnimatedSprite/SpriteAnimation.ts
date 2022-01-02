@@ -1,26 +1,26 @@
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { Asset } from 'Assets/Asset';
-import { AssetType } from 'Assets/AssetType';
-import { Disposable } from 'GameObject/Dispose';
-import { BlendModes as BlendMode } from 'SnowballEngine/Camera/BlendModes';
-import { GameTime } from 'SnowballEngine/GameTime';
-import { Color } from 'Utility/Color';
-import { Vector2 } from 'Utility/Vector2';
+import { Container } from "@pixi/display";
+import { Sprite } from "@pixi/sprite";
+import { Asset } from "Assets/Asset";
+import { AssetType } from "Assets/AssetType";
+import { Disposable } from "GameObject/Dispose";
+import { BlendModes as BlendMode } from "SnowballEngine/Camera/BlendModes";
+import { GameTime } from "SnowballEngine/GameTime";
+import { Color } from "Utility/Color";
+import { Vector2 } from "Utility/Vector2";
 
 export class SpriteAnimation implements Disposable {
     /**
-     * 
+     *
      * Milliseconds a sprite is shown until it is replaced by another one.
-     * 
+     *
      */
     public swapTime: number;
     public readonly container: Container;
 
     /**
-     * 
+     *
      * Currently visible Sprite
-     * 
+     *
      */
     public readonly sprite!: Sprite;
 
@@ -29,7 +29,7 @@ export class SpriteAnimation implements Disposable {
     private _timer: number;
 
     public constructor(assets: readonly Asset[] = [], swapTime = 500) {
-        if (assets.length === 0) throw new Error('no assets specified');
+        if (assets.length === 0) throw new Error("no assets specified");
 
         this.swapTime = swapTime;
 
@@ -46,7 +46,7 @@ export class SpriteAnimation implements Disposable {
         return this._assets;
     }
     public set assets(val: readonly Asset[]) {
-        if (val.length === 0) throw new Error('no assets specified');
+        if (val.length === 0) throw new Error("no assets specified");
 
         for (const a of val) {
             if (a.type !== AssetType.Image) {
@@ -58,24 +58,27 @@ export class SpriteAnimation implements Disposable {
 
         this._assets = val;
 
-        this._sprites = val.map(a => a.getPIXISprite()!).filter(Boolean).map(s => {
-            const size = new Vector2(s.width, s.height).setLength(new Vector2(1, 1).magnitude);
-            s.width = size.x;
-            s.height = size.y;
+        this._sprites = val
+            .map((a) => a.getPIXISprite()!)
+            .filter(Boolean)
+            .map((s) => {
+                const size = new Vector2(s.width, s.height).setLength(new Vector2(1, 1).magnitude);
+                s.width = size.x;
+                s.height = size.y;
 
-            s.anchor.set(0.5);
+                s.anchor.set(0.5);
 
-            this.container.addChild(s);
+                this.container.addChild(s);
 
-            return s;
-        });
+                return s;
+            });
     }
 
     /**
-     * 
+     *
      * Get the first sprites size.
      * Set the magnitude of sprites size.
-     * 
+     *
      */
     public get size(): Vector2 {
         return new Vector2(this._sprites[0].width, this._sprites[0].height);
@@ -110,9 +113,9 @@ export class SpriteAnimation implements Disposable {
     }
 
     /**
-     * 
+     *
      * Adds the deltaTime to timer property.
-     * 
+     *
      */
     public update(): void {
         const visibleIndex = Math.round(this._timer / (this.swapTime || 1)) % (this._sprites.length || 1);
@@ -126,9 +129,9 @@ export class SpriteAnimation implements Disposable {
     }
 
     /**
-     * 
+     *
      * Reset the animation timer.
-     * 
+     *
      */
     public reset(): void {
         this._timer = 0;

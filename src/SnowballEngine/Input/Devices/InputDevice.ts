@@ -1,5 +1,5 @@
-import { InputAxis } from '../InputAxis';
-import { InputButton } from '../InputButton';
+import { InputAxis } from "../InputAxis";
+import { InputButton } from "../InputButton";
 
 /** @category Input */
 export interface InputDevice {

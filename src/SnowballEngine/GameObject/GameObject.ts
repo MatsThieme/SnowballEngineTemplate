@@ -3,10 +3,7 @@ import { Debug } from "SnowballEngine/Debug";
 import { Scene } from "SnowballEngine/Scene";
 import { EventHandler } from "Utility/Events/EventHandler";
 import { EventTarget } from "Utility/Events/EventTarget";
-import {
-    ComponentEventTypes,
-    GameObjectEventTypes,
-} from "Utility/Events/EventTypes";
+import { ComponentEventTypes, GameObjectEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
 import { Component } from "./Components/Component";
 import { Transform } from "./Components/Transform/Transform";
@@ -19,10 +16,7 @@ import { Destroy, Destroyable } from "./Destroy";
  * @category Scene
  *
  */
-export class GameObject
-    extends EventTarget<GameObjectEventTypes>
-    implements Destroyable
-{
+export class GameObject extends EventTarget<GameObjectEventTypes> implements Destroyable {
     private static _nextID = 0;
 
     public static readonly gameObjects: GameObject[];
@@ -36,9 +30,7 @@ export class GameObject
 
     public drawPriority: number;
 
-    private readonly _components: Partial<
-        Record<ComponentType, Component<ComponentEventTypes>[]>
-    >;
+    private readonly _components: Partial<Record<ComponentType, Component<ComponentEventTypes>[]>>;
     private _active: boolean;
     private _parent?: GameObject;
 
@@ -51,13 +43,10 @@ export class GameObject
     public constructor(name: string, initialize = true) {
         super();
 
-        if (name.includes("/"))
-            throw new Error("GameObject name must not include /");
+        if (name.includes("/")) throw new Error("GameObject name must not include /");
 
         if (!Scene.currentScene)
-            throw new Error(
-                "No Scene loaded! Load a Scene before creating a gameObject"
-            );
+            throw new Error("No Scene loaded! Load a Scene before creating a gameObject");
         this.scene = Scene.currentScene;
 
         this.id = GameObject._nextID++;
@@ -81,25 +70,21 @@ export class GameObject
 
         this.connectCamera();
 
-        const transformListener = new EventHandler(
-            (transform, posDiff, rotDiff, scaleDiff) => {
-                const globalTransform = this.transform.toGlobal();
+        const transformListener = new EventHandler((transform, posDiff, rotDiff, scaleDiff) => {
+            const globalTransform = this.transform.toGlobal();
 
-                if (posDiff) {
-                    this.container.position.copyFrom(
-                        globalTransform.position.scale(new Vector2(1, -1))
-                    );
-                }
-
-                if (rotDiff) {
-                    this.container.rotation = globalTransform.rotation.radian;
-                }
-
-                if (scaleDiff) {
-                    this.container.scale.copyFrom(globalTransform.scale);
-                }
+            if (posDiff) {
+                this.container.position.copyFrom(globalTransform.position.scale(new Vector2(1, -1)));
             }
-        );
+
+            if (rotDiff) {
+                this.container.rotation = globalTransform.rotation.radian;
+            }
+
+            if (scaleDiff) {
+                this.container.scale.copyFrom(globalTransform.scale);
+            }
+        });
 
         this.transform.addListener("change", transformListener);
         this.transform.addListener("parentchange", transformListener);
@@ -155,9 +140,7 @@ export class GameObject
             .map((component) => component.dispatchEvent("start"));
 
         const globalTransform = this.transform.toGlobal();
-        this.container.position.copyFrom(
-            globalTransform.position.scale(new Vector2(1, -1))
-        );
+        this.container.position.copyFrom(globalTransform.position.scale(new Vector2(1, -1)));
         this.container.rotation = globalTransform.rotation.radian;
         this.container.scale.copyFrom(globalTransform.scale);
 
@@ -192,23 +175,17 @@ export class GameObject
                 !GameObject.componentInParents(this, ComponentType.Collider)) ||
             (component.type === ComponentType.Transform &&
                 this.getComponents(ComponentType.Transform).length === 0) ||
-            (component.type === ComponentType.AudioListener &&
-                !this.scene.audioListener) ||
+            (component.type === ComponentType.AudioListener && !this.scene.audioListener) ||
             (component.type === ComponentType.TilemapRenderer &&
-                this.getComponents(ComponentType.TilemapRenderer).length ===
-                    0) ||
+                this.getComponents(ComponentType.TilemapRenderer).length === 0) ||
             (component.type === ComponentType.TilemapCollider &&
-                this.getComponents(ComponentType.TilemapCollider).length ===
-                    0) ||
+                this.getComponents(ComponentType.TilemapCollider).length === 0) ||
             (component.type === ComponentType.TerrainRenderer &&
-                this.getComponents(ComponentType.TerrainRenderer).length ===
-                    0) ||
+                this.getComponents(ComponentType.TerrainRenderer).length === 0) ||
             (component.type === ComponentType.TerrainCollider &&
-                this.getComponents(ComponentType.TerrainCollider).length ===
-                    0) ||
+                this.getComponents(ComponentType.TerrainCollider).length === 0) ||
             (component.type === ComponentType.ParallaxBackground &&
-                this.getComponents(ComponentType.ParallaxBackground).length ===
-                    0)
+                this.getComponents(ComponentType.ParallaxBackground).length === 0)
         ) {
             const components = this._components[component.type] || [];
             components.push(component);
@@ -216,12 +193,9 @@ export class GameObject
         } else {
             const type = component.type;
             if (component.prepareDestroy) component.prepareDestroy();
-            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ =
-                true;
+            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ = true;
             component.destroy();
-            throw new Error(
-                `Can't add component(type: ${ComponentType[type]})`
-            );
+            throw new Error(`Can't add component(type: ${ComponentType[type]})`);
         }
 
         if (initializer) {
@@ -244,18 +218,14 @@ export class GameObject
      * Component will be destroyed by default.
      *
      */
-    public removeComponent<T extends Component<ComponentEventTypes>>(
-        component: T
-    ): void {
+    public removeComponent<T extends Component<ComponentEventTypes>>(component: T): void {
         if (!component) return Debug.warn("Component undefined");
 
         const components = this._components[component.type];
 
         if (!components) return Debug.warn("Component not found on gameObject");
 
-        const i = components.findIndex(
-            (c) => c.componentID === component.componentID
-        );
+        const i = components.findIndex((c) => c.componentID === component.componentID);
 
         if (i === -1) return Debug.warn("Component not found on gameObject");
 
@@ -264,8 +234,7 @@ export class GameObject
         components.splice(i, 1)[0];
 
         if (!component.__destroyed__) {
-            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ =
-                true;
+            (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ = true;
             Destroy(component);
         }
     }
@@ -279,10 +248,8 @@ export class GameObject
         type: Constructor<T> | AbstractConstructor<T> | ComponentType
     ): T[] {
         if (typeof type === "number") {
-            if (this._components[type] !== undefined)
-                return <T[]>this._components[type]!.slice();
-            if (type === ComponentType.Component)
-                return <T[]>Object.values(this._components).flat();
+            if (this._components[type] !== undefined) return <T[]>this._components[type]!.slice();
+            if (type === ComponentType.Component) return <T[]>Object.values(this._components).flat();
             if (type === ComponentType.Renderable)
                 return <T[]>[
                     ...this.getComponents(ComponentType.AnimatedSprite),
@@ -320,8 +287,7 @@ export class GameObject
         type: Constructor<T> | AbstractConstructor<T> | ComponentType
     ): T | undefined {
         if (typeof type === "number") {
-            if (this._components[type] !== undefined)
-                return <T>this._components[type]![0];
+            if (this._components[type] !== undefined) return <T>this._components[type]![0];
             if (type === ComponentType.Component) {
                 for (const components of Object.values(this._components)) {
                     if (components[0]) return <T>components[0];
@@ -349,8 +315,7 @@ export class GameObject
         }
 
         for (const c of Object.values(this._components).flat(1)) {
-            if (c.constructor.name === type.name || c instanceof type)
-                return <T>c;
+            if (c.constructor.name === type.name || c instanceof type) return <T>c;
         }
 
         return undefined;
@@ -425,9 +390,7 @@ export class GameObject
         this.connectCamera();
 
         this.dispatchEvent("parentchanged", gameObject);
-        this.children.forEach((c) =>
-            c.dispatchEvent("parentchanged", gameObject)
-        );
+        this.children.forEach((c) => c.dispatchEvent("parentchanged", gameObject));
     }
 
     /**
@@ -527,9 +490,10 @@ export class GameObject
      * @internal
      *
      */
-    public static componentsInChildren<
-        T extends Component<ComponentEventTypes>
-    >(gameObject: GameObject, type: ComponentType): T[] {
+    public static componentsInChildren<T extends Component<ComponentEventTypes>>(
+        gameObject: GameObject,
+        type: ComponentType
+    ): T[] {
         const c = gameObject.getComponentsInChildren<T>(type);
 
         for (const child of gameObject.children) {
@@ -545,13 +509,9 @@ export class GameObject
      *
      */
     public prepareDestroy(): void {
-        const destroyables: Destroyable[] = [
-            ...Object.values(this._components).flat(),
-            ...this.children,
-        ];
+        const destroyables: Destroyable[] = [...Object.values(this._components).flat(), ...this.children];
 
-        const destroyInFrames =
-            this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
+        const destroyInFrames = this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
 
         for (const d of destroyables) {
             d.__destroyInFrames__ = destroyInFrames;
@@ -559,19 +519,13 @@ export class GameObject
         }
     }
 
-    private getMaxDestroyInFrames(
-        gameObject: GameObject = this,
-        max?: number
-    ): number | undefined {
+    private getMaxDestroyInFrames(gameObject: GameObject = this, max?: number): number | undefined {
         const components = Object.values(gameObject._components).flat();
 
         max = Math.max(
             max || 0,
             components.reduce((p, c) => {
-                if (
-                    c.__destroyInFrames__ !== undefined &&
-                    p < c.__destroyInFrames__
-                )
+                if (c.__destroyInFrames__ !== undefined && p < c.__destroyInFrames__)
                     return c.__destroyInFrames__;
                 else return p;
             }, 0)
@@ -591,8 +545,7 @@ export class GameObject
      *
      */
     public destroy(): void {
-        if (this.parent && this.parent.removeChild)
-            this.parent.removeChild(this);
+        if (this.parent && this.parent.removeChild) this.parent.removeChild(this);
 
         this.container.destroy({
             children: false,
@@ -611,12 +564,8 @@ export class GameObject
      * @param gameObjects
      *
      */
-    public static find(
-        query: string,
-        gameObjects?: GameObject[]
-    ): GameObject | undefined {
-        if (!/^\/?[^/]+(?:\/[^/]+)*$/.test(query))
-            throw new Error("Wrong query format");
+    public static find(query: string, gameObjects?: GameObject[]): GameObject | undefined {
+        if (!/^\/?[^/]+(?:\/[^/]+)*$/.test(query)) throw new Error("Wrong query format");
 
         if (!gameObjects) {
             if (query[0] === "/") {
@@ -693,6 +642,4 @@ export class GameObject
     }
 }
 
-export interface GameObject
-    extends EventTarget<GameObjectEventTypes>,
-        Destroyable {}
+export interface GameObject extends EventTarget<GameObjectEventTypes>, Destroyable {}

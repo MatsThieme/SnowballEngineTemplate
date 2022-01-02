@@ -1,11 +1,12 @@
-import { Debug } from '../Debug';
+import { Debug } from "../Debug";
 
 /**
- * 
+ *
  * Clamps a number between min and max.
- * 
+ *
  */
-export const clamp = (min: number, max: number, val: number): number => val < min ? min : val > max ? max : val;
+export const clamp = (min: number, max: number, val: number): number =>
+    val < min ? min : val > max ? max : val;
 
 /**
  *
@@ -15,24 +16,27 @@ export const clamp = (min: number, max: number, val: number): number => val < mi
 export const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 
 /**
- * 
+ *
  * Calculate the average of numbers.
- * 
+ *
  */
 export const average = (...numbers: number[]): number => numbers.reduce((t, c) => t + c, 0) / numbers.length;
 
 /**
- * 
+ *
  * Execute code that may only be executed in a user event triggered context, e.g. fullscreen api or pointerlock api.
- * 
+ *
  * @param cb Call on user event.
  * @param params Parameters to pass the callback on user event.
- * 
+ *
  * @returns Returns Promise which resolves as result of callback.
- * 
+ *
  */
-export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<T> = <any>(() => { }), ...params: U[]): Promise<T> {
-    return new Promise(resolve => {
+export function triggerOnUserInputEvent<T, U>(
+    cb: (...args: U[]) => T | Promise<T> = <any>(() => {}),
+    ...params: U[]
+): Promise<T> {
+    return new Promise((resolve) => {
         async function end(e: MouseEvent | KeyboardEvent | TouchEvent) {
             if (!e.isTrusted) return;
 
@@ -43,56 +47,59 @@ export function triggerOnUserInputEvent<T, U>(cb: (...args: U[]) => T | Promise<
                 Debug.warn(error + "");
             }
 
-            window.removeEventListener('mousedown', end);
-            window.removeEventListener('mouseup', end);
-            window.removeEventListener('keypress', end);
-            window.removeEventListener('keyup', end);
-            window.removeEventListener('touchstart', end);
+            window.removeEventListener("mousedown", end);
+            window.removeEventListener("mouseup", end);
+            window.removeEventListener("keypress", end);
+            window.removeEventListener("keyup", end);
+            window.removeEventListener("touchstart", end);
         }
 
-        window.addEventListener('mousedown', end);
-        window.addEventListener('mouseup', end);
-        window.addEventListener('keypress', end);
-        window.addEventListener('touchstart', end);
-        window.addEventListener('touchmove', end);
+        window.addEventListener("mousedown", end);
+        window.addEventListener("mouseup", end);
+        window.addEventListener("keypress", end);
+        window.addEventListener("touchstart", end);
+        window.addEventListener("touchmove", end);
     });
 }
 
 /**
- * 
+ *
  * Deletes properties and prototype to remove references and allow garbage collection.
- * 
+ *
  * @param setnull if true, properties will be set to null instead of deletion
  */
 export function clearObject(object: Record<string, any>, setnull = false): void {
     Object.setPrototypeOf(object, null);
 
     for (const key of Object.keys(object)) {
-        if (setnull) object[key] = null
+        if (setnull) object[key] = null;
         else delete object[key];
     }
 }
 
 /**
- * 
+ *
  * @returns Returns a number greater than or equal to min but less than max.
- * 
+ *
  */
 export function random(min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
 
 /**
- * 
+ *
  * @returns Returns an integer greater than or equal to min but less than max.
- * 
+ *
  */
 export function randomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-export function randomString(length = 10, characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'): string {
-    let str = '';
+export function randomString(
+    length = 10,
+    characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+): string {
+    let str = "";
 
     for (let i = 0; i < length; i++) {
         str += characters[randomInt(0, characters.length)];
