@@ -41,12 +41,12 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
 
         this.id = Transform._nextID++;
 
-        this.addListener('change', new EventHandler(this.onChange.bind(this)));
-        this.addListener('parentchange', new EventHandler(this.onChange.bind(this)));
-        this.addListener('modified', new EventHandler(this.onModified.bind(this)));
-        this.addListener('parentmodified', new EventHandler(this.onModified.bind(this)));
-        this.addListener('modifiedinternal', new EventHandler(this.onModifiedInternal.bind(this)));
-        this.addListener('parentmodifiedinternal', new EventHandler(this.onModifiedInternal.bind(this)));
+        this.addListener('change', new EventHandler(this.onChange, this));
+        this.addListener('parentchange', new EventHandler(this.onChange, this));
+        this.addListener('modified', new EventHandler(this.onModified, this));
+        this.addListener('parentmodified', new EventHandler(this.onModified, this));
+        this.addListener('modifiedinternal', new EventHandler(this.onModifiedInternal, this));
+        this.addListener('parentmodifiedinternal', new EventHandler(this.onModifiedInternal, this));
     }
 
     public get children(): Transform[] {
