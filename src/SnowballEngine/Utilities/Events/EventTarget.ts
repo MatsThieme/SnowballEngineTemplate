@@ -1,22 +1,24 @@
-import { EventHandler } from './EventHandler';
-import { EventType } from './EventType';
+import { EventHandler } from "./EventHandler";
+import { EventType } from "./EventType";
 
 /** @category Utility */
 export class EventTarget<T extends EventType> {
-    private readonly _events: { [U in keyof T]?: { [id: number]: EventHandler<T[U]> } };
+    private readonly _events: {
+        [U in keyof T]?: { [id: string]: EventHandler<T[U]> };
+    };
 
     public constructor() {
         this._events = {};
     }
 
     /**
-     * 
+     *
      * @param eventName A case-sensitive string representing the event type to listen for.
-     * 
+     *
      */
     public addListener<U extends keyof T>(eventName: U, handler: EventHandler<T[U]>): void {
         if (!this._events[eventName]) this._events[eventName] = {};
-        this._events[eventName]![handler.id] = handler;
+        (this._events[eventName] as any)[handler.id] = handler;
     }
 
     public removeListener<U extends keyof T>(eventName: U, handler: EventHandler<T[U]>): void {
@@ -26,18 +28,22 @@ export class EventTarget<T extends EventType> {
         }
     }
 
-    public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void | Promise<void> {
-        if (this._events[eventName]) return <any>Promise.all(Object.keys(this._events[eventName]!).map(id => this._events[eventName]![<any>id].handler(...args)));
+    public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void {
+        if (this._events[eventName]) {
+            Object.keys(this._events[eventName]!).map((id) =>
+                this._events[eventName]![<any>id].handler(...args)
+            );
+        }
     }
 
     /**
-     * 
+     *
      * Creates a promise wrapper for an eventhandler.
      * Returns a promise which will resolve when the event is dispatched.
-     *  
+     *
      */
     public getEventPromise<U extends keyof T>(eventName: U): Promise<T[U]> {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const handler = new EventHandler<T[U]>((...args) => {
                 this.removeListener(eventName, handler);
                 resolve(args);
@@ -59,14 +65,18 @@ export class EventTarget<T extends EventType> {
 
         try {
             while (true) {
-                yield await new Promise(r => resolve = r);
+                yield await new Promise((r) => (resolve = r));
             }
         } finally {
             this.removeListener(eventName, handler);
         }
     }
 
-    public getEvents(): { readonly [U in keyof T]?: { readonly [id: number]: Readonly<EventHandler<T[U]>> } } {
+    public getEvents(): {
+        readonly [U in keyof T]?: {
+            readonly [id: number]: Readonly<EventHandler<T[U]>>;
+        };
+    } {
         return this._events;
     }
 }
