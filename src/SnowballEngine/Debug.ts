@@ -2,7 +2,7 @@ import projectConfig from 'Config';
 import { default as cloneDeep } from 'lodash.clonedeep';
 
 export class Debug {
-    public static init(): void {
+    static {
         window.addEventListener('error', (e: ErrorEvent) => {
             e.preventDefault();
 
