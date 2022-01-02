@@ -1,11 +1,11 @@
-import { Container } from '@pixi/display';
-import { Sprite } from '@pixi/sprite';
-import { Asset } from 'Assets/Asset';
-import { AssetType } from 'Assets/AssetType';
-import { Destroy, Destroyable } from 'GameObject/Destroy';
-import { Scene } from 'SnowballEngine/Scene';
-import { Vector2 } from 'Utility/Vector2';
-import { UIElement } from './UIElements/UIElement';
+import { Container } from "@pixi/display";
+import { Sprite } from "@pixi/sprite";
+import { Asset } from "Assets/Asset";
+import { AssetType } from "Assets/AssetType";
+import { Destroy, Destroyable } from "GameObject/Destroy";
+import { Scene } from "SnowballEngine/Scene";
+import { Vector2 } from "Utility/Vector2";
+import { UIElement } from "./UIElements/UIElement";
 
 /** @category UI */
 export class UIMenu implements Destroyable {
@@ -13,9 +13,9 @@ export class UIMenu implements Destroyable {
     public readonly container: Container;
     public readonly name: UIMenuName;
     /**
-     * 
+     *
      * if true and this.active the scene will be paused.
-     * 
+     *
      */
     public pauseScene: boolean;
 
@@ -23,9 +23,9 @@ export class UIMenu implements Destroyable {
     public onDisable?: () => void;
 
     /**
-     * 
+     *
      * if true the menu is visible and responsive to user interaction.
-     * 
+     *
      */
     private _active: boolean;
     private _background?: Asset;
@@ -62,14 +62,15 @@ export class UIMenu implements Destroyable {
         return this._background;
     }
     public set background(val: Asset | undefined) {
-        if (val?.type !== AssetType.Image) throw new Error('Asset.type !== AssetType.Image');
+        if (val?.type !== AssetType.Image)
+            throw new Error("Asset.type !== AssetType.Image");
 
         const s = val.getPIXISprite();
 
         if (!s) throw new Error(`Can't create PIXI.Sprite from Asset`);
 
-
-        if (this._backgroundSprite) this.container.removeChild(this._backgroundSprite);
+        if (this._backgroundSprite)
+            this.container.removeChild(this._backgroundSprite);
 
         this.container.addChild(s);
 
@@ -82,9 +83,9 @@ export class UIMenu implements Destroyable {
     }
 
     /**
-     * 
+     *
      * The higher the value (compared to other menus), the later it will be rendered.
-     * 
+     *
      */
     public get zIndex(): number {
         return this.container.zIndex;
@@ -102,11 +103,15 @@ export class UIMenu implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Add a UIElement to this. The newly created UIElement can be adjusted within the callback.
-     * 
+     *
      */
-    public addUIElement<T extends UIElement>(name: string, type: Constructor<T>, ...initializer: ((uiElement: T) => void)[]): T {
+    public addUIElement<T extends UIElement>(
+        name: string,
+        type: Constructor<T>,
+        ...initializer: ((uiElement: T) => void)[]
+    ): T {
         const e = new type(this);
 
         this._uiElements[name] = e;
@@ -127,9 +132,9 @@ export class UIMenu implements Destroyable {
     }
 
     /**
-     * 
+     *
      * Removes the UIElement with the given name if present.
-     * 
+     *
      */
     public removeUIElement(name: string): void {
         const el = this._uiElements[name];
@@ -141,14 +146,13 @@ export class UIMenu implements Destroyable {
         }
     }
 
-
     /**
-     * 
+     *
      * Adjusts canvas size to AABB and draws UIElements to it.
-     * 
+     *
      */
-    public async update(): Promise<void> {
-        await Promise.all(Object.values(this._uiElements).map(e => e.update()));
+    public update(): void {
+        Object.values(this._uiElements).map((e) => e.update());
     }
 
     public prepareDestroy(): void {

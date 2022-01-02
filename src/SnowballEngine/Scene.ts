@@ -1,26 +1,26 @@
-import { AudioMixer } from 'Audio/AudioMixer';
-import { AudioListener } from 'GameObject/Components/AudioListener';
-import { Behaviour } from 'GameObject/Components/Behaviour';
-import { Collider } from 'GameObject/Components/Collider';
-import { Component } from 'GameObject/Components/Component';
-import { Rigidbody } from 'GameObject/Components/Rigidbody';
-import { Destroy, Destroyable } from 'GameObject/Destroy';
-import { Dispose } from 'GameObject/Dispose';
-import { GameObject } from 'GameObject/GameObject';
-import { Input } from 'Input/Input';
-import { UI } from 'UI/UI';
-import { UIFonts } from 'UI/UIFonts';
-import { EventTarget } from 'Utility/Events/EventTarget';
-import { SceneEventTypes } from 'Utility/Events/EventTypes';
-import { clearObject } from 'Utility/Helpers';
-import { Interval } from 'Utility/Interval/Interval';
-import { Stopwatch } from 'Utility/Stopwatch';
-import { CameraManager } from './Camera/CameraManager';
-import { Client } from './Client';
-import { Framedata } from './Framedata';
-import { GameTime } from './GameTime';
-import { Physics } from './Physics/Physics';
-import { SceneManager } from './SceneManager';
+import { AudioMixer } from "Audio/AudioMixer";
+import { AudioListener } from "GameObject/Components/AudioListener";
+import { Behaviour } from "GameObject/Components/Behaviour";
+import { Collider } from "GameObject/Components/Collider";
+import { Component } from "GameObject/Components/Component";
+import { Rigidbody } from "GameObject/Components/Rigidbody";
+import { Destroy, Destroyable } from "GameObject/Destroy";
+import { Dispose } from "GameObject/Dispose";
+import { GameObject } from "GameObject/GameObject";
+import { Input } from "Input/Input";
+import { UI } from "UI/UI";
+import { UIFonts } from "UI/UIFonts";
+import { EventTarget } from "Utility/Events/EventTarget";
+import { SceneEventTypes } from "Utility/Events/EventTypes";
+import { clearObject } from "Utility/Helpers";
+import { Interval } from "Utility/Interval/Interval";
+import { Stopwatch } from "Utility/Stopwatch";
+import { CameraManager } from "./Camera/CameraManager";
+import { Client } from "./Client";
+import { Framedata } from "./Framedata";
+import { GameTime } from "./GameTime";
+import { Physics } from "./Physics/Physics";
+import { SceneManager } from "./SceneManager";
 
 /** @category Scene */
 export class Scene extends EventTarget<SceneEventTypes> {
@@ -34,9 +34,9 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public static readonly currentScene: Scene;
 
     /**
-     * 
+     *
      * If true, GameObjects and components are not updated.
-     * 
+     *
      */
     public pause: boolean;
 
@@ -44,19 +44,19 @@ export class Scene extends EventTarget<SceneEventTypes> {
     private _updateComplete?: boolean;
 
     /**
-     * 
+     *
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
-     * 
+     *
      */
-    private readonly _destroyables: Destroyable[];
+    private readonly _destroyables: (Destroyable | undefined)[];
 
     private _audioListener?: AudioListener;
-
 
     public constructor(sceneManager: SceneManager, name: string) {
         super();
 
-        if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
+        if (!(<any>Scene).sceneManager)
+            (<any>Scene).sceneManager = sceneManager;
         (<any>Scene).currentScene = this;
 
         this.name = name;
@@ -79,7 +79,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.domElement.id = this.name;
         document.body.appendChild(this.domElement);
 
-
         this.pause = false;
 
         this.physics = new Physics();
@@ -87,46 +86,46 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.update = this.update.bind(this);
     }
 
-
     /**
-     * 
+     *
      * Returns true while this.start() is running.
-     * 
+     *
      */
     public get isStarting(): boolean {
         return this._requestAnimationFrameHandle === -1;
     }
 
     /**
-     * 
+     *
      * Returns true if animation loop is running.
-     * 
+     *
      */
     public get isRunning(): boolean {
-        return !!this._requestAnimationFrameHandle;
+        return Boolean(this._requestAnimationFrameHandle);
     }
 
     public get audioListener(): AudioListener | undefined {
         return this._audioListener;
     }
+
     public set audioListener(val: AudioListener | undefined) {
-        if (this.audioListener && val || !this.audioListener && !val) return;
+        if ((this.audioListener && val) || (!this.audioListener && !val))
+            return;
 
         if (val) {
-            this.dispatchEvent('audiolisteneradd', val);
-        } else {
-            this.dispatchEvent('audiolistenerremove', this._audioListener!);
+            this.dispatchEvent("audiolisteneradd", val);
+        } else if (this._audioListener) {
+            this.dispatchEvent("audiolistenerremove", this._audioListener);
         }
 
         this._audioListener = val;
     }
 
-
     /**
      * @internal
-     * 
+     *
      * Update and render loop
-     * 
+     *
      * Updates...
      * GameTime
      * Input
@@ -134,9 +133,9 @@ export class Scene extends EventTarget<SceneEventTypes> {
      * gameObjects
      * ui
      * cameraManager
-     * 
+     *
      */
-    private async update(time: number): Promise<void> {
+    private update(time: number): void {
         if (!this._requestAnimationFrameHandle) return;
 
         this._updateComplete = false;
@@ -149,54 +148,54 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Input.update();
 
-        const scenePaused = this.pause || Object.values(this.ui.menus).some(m => m.active && m.pauseScene);
+        const scenePaused =
+            this.pause ||
+            Object.values(this.ui.menus).some((m) => m.active && m.pauseScene);
 
         if (!scenePaused) {
-            await Behaviour.earlyupdate();
-            await Component.earlyupdate();
-
+            Behaviour.earlyupdate();
+            Component.earlyupdate();
 
             Rigidbody.updateBody();
             Collider.updateBody();
             this.physics.update();
             Rigidbody.updateTransform();
 
+            Behaviour.update();
+            Component.update();
 
-            await Behaviour.update();
-            await Component.update();
-
-            await Behaviour.lateupdate();
-            await Component.lateupdate();
+            Behaviour.lateupdate();
+            Component.lateupdate();
         }
 
-
-        await this.ui.update();
+        this.ui.update();
 
         this.cameraManager.update();
 
-
         this.destroyDestroyables();
 
-
-        if (this._requestAnimationFrameHandle) this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
+        if (this._requestAnimationFrameHandle)
+            this._requestAnimationFrameHandle = requestAnimationFrame(
+                this.update
+            );
 
         this._updateComplete = true;
     }
 
     /**
-     * 
+     *
      * Start scene.
      * @internal
-     * 
+     *
      */
-    public async start(): Promise<void> {
+    public start(): void {
         if (this._requestAnimationFrameHandle !== undefined) return;
 
-        await this.dispatchEvent('start');
+        this.dispatchEvent("start");
 
         this._requestAnimationFrameHandle = -1; // set isStarting true
 
-        await Promise.all(GameObject.gameObjects.map(g => g.start()));
+        GameObject.gameObjects.forEach((g) => g.start());
 
         this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
     }
@@ -210,12 +209,12 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public async stop(): Promise<void> {
         if (!this._requestAnimationFrameHandle) return;
 
-        await this.dispatchEvent('stop');
+        await this.dispatchEvent("stop");
 
         this._requestAnimationFrameHandle = undefined;
 
-        await new Promise<void>(resolve => {
-            new Interval(i => {
+        await new Promise<void>((resolve) => {
+            new Interval((i) => {
                 if (this._updateComplete) {
                     i.clear();
                     resolve();
@@ -225,13 +224,15 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     * 
+     *
      * Register a Destroyable to destroy at the end of the current frame. Used by Destroy(destroyable: Destroyable)
      * @internal
-     * 
+     *
      */
     public addDestroyable(destroyable: Destroyable): boolean {
-        const i = this._destroyables.findIndex(d => d.__destroyID__ === destroyable.__destroyID__);
+        const i = this._destroyables.findIndex(
+            (d) => d && d.__destroyID__ === destroyable.__destroyID__
+        );
 
         if (i === -1) {
             this._destroyables.push(destroyable);
@@ -242,28 +243,38 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     * 
+     *
      * Destroy all destroyables
-     * 
+     *
      */
     private destroyDestroyables(force?: boolean): void {
         for (let i = this._destroyables.length - 1; i >= 0; i--) {
-            if (!this._destroyables[i].__destroyInFrames__ || force) {
-                this._destroyables[i].destroy();
-                Dispose(this._destroyables.splice(i, 1)[0]);
-            } else (<number>this._destroyables[i].__destroyInFrames__)--;
+            if (
+                (this._destroyables[i] &&
+                    !(this._destroyables[i] as Destroyable)
+                        .__destroyInFrames__) ||
+                force
+            ) {
+                (this._destroyables[i] as Destroyable).destroy();
+                Dispose(this._destroyables[i] as Destroyable);
+                this._destroyables[i] = undefined;
+            } else if (this._destroyables[i])
+                ((this._destroyables[i] as Destroyable)
+                    .__destroyInFrames__ as number)--;
         }
     }
 
     /**
-     * 
+     *
      * @internal
-     * 
+     *
      */
-    public async unload(): Promise<void> {
-        await this.dispatchEvent('unload');
+    public unload(): void {
+        Interval.clearAll();
 
-        await this.stop();
+        this.dispatchEvent("unload");
+
+        this.stop();
 
         GameObject.prepareDestroy();
 
@@ -273,16 +284,13 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.destroyDestroyables(true);
 
-
         Destroy(this.cameraManager);
-
 
         this.destroyDestroyables();
 
         this.domElement.remove();
 
-
-        await this.dispatchEvent('unloaded');
+        this.dispatchEvent("unloaded");
 
         clearObject(this, true);
     }
