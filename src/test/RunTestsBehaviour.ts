@@ -45,7 +45,7 @@ export class RunTestsBehaviour extends Behaviour {
 
         let failed = 0;
 
-        for (let Test of this.tests) {
+        for (const Test of this.tests) {
             const test = await this.gameObject.addComponent(Test);
 
             console.log('%cRun test: ' + test.name + '\n%c' + test.description + '\n%ctest duration: ' + (test.duration?.toFixed(3) + 's' || 'not specified'), css.heading, css.description, css.description);
@@ -55,7 +55,7 @@ export class RunTestsBehaviour extends Behaviour {
                 console.log('%cDone', css.done);
             } catch (e) {
                 const m = ((<Error>e)?.message || e + '').trim();
-                console.log(m && e?.message !== '' && e !== '' ? '%cTest failed: ' + m : '%cTest failed', css.failed);
+                console.log(m && (<Error>e)?.message !== '' && e !== '' ? '%cTest failed: ' + m : '%cTest failed', css.failed);
                 failed++;
             }
 
