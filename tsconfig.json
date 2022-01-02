@@ -10,9 +10,9 @@
         "outDir": "dist",
         "sourceMap": true,
         "strict": true,
-        "noImplicitAny": true,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
+        "importHelpers": true,
         "noImplicitOverride": false,
         "baseUrl": "src",
         "paths": {
