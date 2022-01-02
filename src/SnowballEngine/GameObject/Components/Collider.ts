@@ -75,7 +75,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
      * 
      */
     public get isTrigger(): boolean {
-        return this.body?.isSensor! ?? this._bodyOptions.isSensor;
+        return (this.body?.isSensor as boolean) ?? this._bodyOptions.isSensor;
     }
     public set isTrigger(val: boolean) {
         if (this.body) if (!this._rigidBody) this.body.isSensor = val;
@@ -83,7 +83,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get friction(): number {
-        return this.body?.friction! ?? this._bodyOptions.friction;
+        return (this.body?.friction as number) ?? this._bodyOptions.friction;
     }
     public set friction(val: number) {
         if (this.body) this.body.friction = val;
@@ -91,7 +91,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get restitution(): number {
-        return this.body?.restitution! ?? this._bodyOptions.restitution;
+        return (this.body?.restitution as number) ?? this._bodyOptions.restitution;
     }
     public set restitution(val: number) {
         if (this.body) this.body.restitution = val;
@@ -99,7 +99,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get frictionAir(): number {
-        return this.body?.frictionAir! ?? this._bodyOptions.frictionAir;
+        return (this.body?.frictionAir as number) ?? this._bodyOptions.frictionAir;
     }
     public set frictionAir(val: number) {
         if (this.body) this.body.frictionAir = val;
@@ -107,7 +107,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get density(): number {
-        return this.body?.density! ?? this._bodyOptions.density;
+        return (this.body?.density as number) ?? this._bodyOptions.density;
     }
     public set density(val: number) {
         if (this.body) Body.setDensity(this.body, val);
@@ -115,7 +115,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get inertia(): number {
-        return this.body?.inertia! ?? this._bodyOptions.inertia;
+        return (this.body?.inertia as number) ?? this._bodyOptions.inertia;
     }
     public set inertia(val: number) {
         if (this.body) Body.setInertia(this.body, val);
@@ -123,7 +123,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get mass(): number {
-        return this.body?.mass! ?? this._bodyOptions.mass;
+        return (this.body?.mass as number) ?? this._bodyOptions.mass;
     }
     public set mass(val: number) {
         if (this.body) Body.setMass(this.body, val);
@@ -131,7 +131,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
     }
 
     public get slop(): number {
-        return this.body?.slop! ?? this._bodyOptions.slop;
+        return (this.body?.slop as number) ?? this._bodyOptions.slop;
     }
     public set slop(val: number) {
         if (this.body) this.body.slop = val
