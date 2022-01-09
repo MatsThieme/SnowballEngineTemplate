@@ -3,7 +3,6 @@ import { CameraPrefab } from "Prefabs/CameraPrefab";
 import { ColliderTest } from "Prefabs/ColliderTest";
 import { ExampleGameObjectPrefab } from "Prefabs/ExampleGameObjectPrefab";
 import { FloorColliderTest as FloorCollider } from "Prefabs/FloorCollider";
-import { FPSDisplayPrefab } from "Prefabs/FPSDisplayPrefab";
 import { ComponentType, EventHandler, GameObject, Input, Instantiate, Scene, Vector2 } from "SE";
 
 export function MainScene(scene: Scene): void {
@@ -12,8 +11,6 @@ export function MainScene(scene: Scene): void {
 
     // add a camera
     Instantiate("Camera", CameraPrefab);
-
-    scene.ui.addMenu("FPS Display", FPSDisplayPrefab);
 
     Instantiate("floor", FloorCollider);
 

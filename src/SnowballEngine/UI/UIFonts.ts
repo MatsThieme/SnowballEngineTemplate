@@ -8,7 +8,7 @@ export class UIFonts {
     private static readonly _fonts: Partial<
         Record<UIFont, { style: BitmapTextStyle; font: BitmapFont; bytes: number }>
     >;
-    private static lastInnerHeight: number = 0;
+    private static lastInnerHeight = 0;
 
     public static init(): void {
         (<any>UIFonts)._fonts = new Map();
@@ -58,7 +58,7 @@ export class UIFonts {
     public static add(
         name: UIFont,
         style: BitmapTextStyle,
-        chars: string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:-/\\&%$"!.,() '
+        chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789;:-/\\&%$"!.,() '
     ): void {
         if (UIFonts._fonts[name]) throw new Error(`Font with name ${name} exists`);
 

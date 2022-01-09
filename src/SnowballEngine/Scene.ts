@@ -8,7 +8,6 @@ import { Destroy, Destroyable } from "GameObject/Destroy";
 import { Dispose } from "GameObject/Dispose";
 import { GameObject } from "GameObject/GameObject";
 import { Input } from "Input/Input";
-import { UI } from "UI/UI";
 import { UIFonts } from "UI/UIFonts";
 import { EventTarget } from "Utility/Events/EventTarget";
 import { SceneEventTypes } from "Utility/Events/EventTypes";
@@ -23,7 +22,6 @@ import { Physics } from "./Physics/Physics";
 /** @category Scene */
 export class Scene extends EventTarget<SceneEventTypes> {
     public readonly cameraManager: CameraManager;
-    public readonly ui: UI;
     public readonly framedata: Framedata;
     public readonly name: SceneName;
     public readonly physics: Physics;
@@ -59,6 +57,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.ui = new UI();
         this.cameraManager = new CameraManager(domElement);
+        this.cameraManager = new CameraManager();
         this.framedata = new Framedata();
         this._destroyables = [];
 
@@ -70,18 +69,14 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * Returns true while this.start() is running.
-     *
      */
     public get isStarting(): boolean {
         return this._requestAnimationFrameHandle === -1;
     }
 
     /**
-     *
      * Returns true if animation loop is running.
-     *
      */
     public get isRunning(): boolean {
         return Boolean(this._requestAnimationFrameHandle);
@@ -103,20 +98,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this._audioListener = val;
     }
 
-    /**
-     * @internal
-     *
-     * Update and render loop
-     *
-     * Updates...
-     * GameTime
-     * Input
-     * framedata
-     * gameObjects
-     * ui
-     * cameraManager
-     *
-     */
     private update(time: number): void {
         if (!this._requestAnimationFrameHandle) return;
 
@@ -130,9 +111,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Input.update();
 
-        const scenePaused = this.pause || Object.values(this.ui.menus).some((m) => m.active && m.pauseScene);
-
-        if (!scenePaused) {
+        if (!this.pause) {
             Behaviour.earlyupdate();
             Component.earlyupdate();
 
@@ -148,8 +127,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
             Component.lateupdate();
         }
 
-        this.ui.update();
-
         this.cameraManager.update();
 
         this.destroyDestroyables();
@@ -161,10 +138,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * Start scene.
      * @internal
-     *
      */
     public start(): void {
         if (this._requestAnimationFrameHandle !== undefined) return;
@@ -179,10 +154,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * Stop scene.
      * @internal
-     *
      */
     public async stop(): Promise<void> {
         if (!this._requestAnimationFrameHandle) return;
@@ -202,10 +175,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * Register a Destroyable to destroy at the end of the current frame. Used by Destroy(destroyable: Destroyable)
      * @internal
-     *
      */
     public addDestroyable(destroyable: Destroyable): boolean {
         const i = this._destroyables.findIndex((d) => d && d.__destroyID__ === destroyable.__destroyID__);
@@ -219,9 +190,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * Destroy all destroyables
-     *
      */
     private destroyDestroyables(force?: boolean): void {
         for (let i = this._destroyables.length - 1; i >= 0; i--) {
@@ -238,9 +207,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
     }
 
     /**
-     *
      * @internal
-     *
      */
     public unload(): void {
         Interval.clearAll();
@@ -250,8 +217,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.stop();
 
         GameObject.prepareDestroy();
-
-        Destroy(this.ui);
 
         Destroy(this.physics);
 
