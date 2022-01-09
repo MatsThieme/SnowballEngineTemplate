@@ -1,18 +1,15 @@
 import { LoadingScreenScene } from "Scenes/LoadingScreenScene";
 import { MainScene } from "Scenes/MainScene";
-import { Assets, Color, GameObject, SceneManager, Shape, Timeout } from "SE";
-import { RunTestsBehaviour } from "test/RunTestsBehaviour";
-import { TestScene } from "test/TestScene";
+import { Assets, Color, SceneManager, Shape, Timeout } from "SE";
 
 export class Game {
-    async initialize(sceneManager: SceneManager): Promise<void> {
+    async initialize(): Promise<void> {
         // register scenes
-        sceneManager.add("Loading Screen Scene", LoadingScreenScene);
-        sceneManager.add("Main Scene", MainScene);
-        sceneManager.add("Test Scene", TestScene);
+        SceneManager.add("Loading Screen Scene", LoadingScreenScene);
+        SceneManager.add("Main Scene", MainScene);
 
         // load scene
-        await sceneManager.load("Loading Screen Scene");
+        await SceneManager.load("Loading Screen Scene");
 
         /**
          * load from asset database:
@@ -28,13 +25,6 @@ export class Game {
         // timeout to show example loadingscreen
         await new Timeout(1000);
 
-        RunTestsBehaviour;
-        GameObject; // keep references to not remove their imports when imports are organized
-        // uncomment to run tests
-        // await Assets.loadFromAssetDB();
-        // await sceneManager.load("Test Scene");
-        // await GameObject.find("run tests")!.getComponent(RunTestsBehaviour)!.getEventPromise("destroy");
-
-        await sceneManager.load("Main Scene");
+        await SceneManager.load("Main Scene");
     }
 }

@@ -20,7 +20,6 @@ import { Client } from "./Client";
 import { Framedata } from "./Framedata";
 import { GameTime } from "./GameTime";
 import { Physics } from "./Physics/Physics";
-import { SceneManager } from "./SceneManager";
 
 /** @category Scene */
 export class Scene extends EventTarget<SceneEventTypes> {
@@ -28,15 +27,12 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public readonly ui: UI;
     public readonly framedata: Framedata;
     public readonly domElement: HTMLCanvasElement;
-    public readonly name: string;
+    public readonly name: SceneName;
     public readonly physics: Physics;
-    public static readonly sceneManager: SceneManager;
     public static readonly currentScene: Scene;
 
     /**
-     *
      * If true, GameObjects and components are not updated.
-     *
      */
     public pause: boolean;
 
@@ -44,19 +40,14 @@ export class Scene extends EventTarget<SceneEventTypes> {
     private _updateComplete?: boolean;
 
     /**
-     *
      * Callbacks pushed by gameobject.destroy() and executed after update before render.
-     *
      */
     private readonly _destroyables: (Destroyable | undefined)[];
 
     private _audioListener?: AudioListener;
 
-    public constructor(sceneManager: SceneManager, name: string) {
+    public constructor(name: SceneName) {
         super();
-
-        if (!(<any>Scene).sceneManager) (<any>Scene).sceneManager = sceneManager;
-        (<any>Scene).currentScene = this;
 
         this.name = name;
 
