@@ -6,7 +6,6 @@ import { Common } from "matter-js";
 import * as PIXI from "pixi.js";
 import { Ticker } from "pixi.js";
 import * as poly_decomp from "poly-decomp";
-import { UIFonts } from "UI/UIFonts";
 import { Game } from "../Game";
 import { Scene } from "./Scene";
 import { SceneManager } from "./SceneManager";
@@ -26,8 +25,6 @@ if (projectConfig.build.debugMode) {
 Common.setDecomp(poly_decomp);
 
 Input.start(); // listen for user input
-
-UIFonts.init(); // create default fonts
 
 if (window.cordova) {
     document.addEventListener("deviceready", () => startGame());

@@ -68,7 +68,6 @@ export * from "./Input/InputMapping";
 export * from "./Physics/Physics";
 export * from "./Scene";
 export * from "./SceneManager";
-export * from "./UI/UIFonts";
 export * from "./Utilities/AABB";
 export * from "./Utilities/Angle";
 export * from "./Utilities/AsyncWorker";

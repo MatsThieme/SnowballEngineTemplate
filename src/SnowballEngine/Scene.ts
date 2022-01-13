@@ -8,7 +8,6 @@ import { Destroy, Destroyable } from "GameObject/Destroy";
 import { Dispose } from "GameObject/Dispose";
 import { GameObject } from "GameObject/GameObject";
 import { Input } from "Input/Input";
-import { UIFonts } from "UI/UIFonts";
 import { EventTarget } from "Utility/Events/EventTarget";
 import { SceneEventTypes } from "Utility/Events/EventTypes";
 import { clearObject } from "Utility/Helpers";
@@ -25,7 +24,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public readonly framedata: Framedata;
     public readonly name: SceneName;
     public readonly physics: Physics;
-    public static readonly currentScene: Scene;
 
     /**
      * If true, GameObjects and components are not updated.
@@ -53,11 +51,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
         Stopwatch.reset();
         AudioMixer.reset();
 
-        if (!(<any>UIFonts)._fonts) UIFonts.init();
-
-        this.ui = new UI();
         this.cameraManager = new CameraManager(domElement);
-        this.cameraManager = new CameraManager();
         this.framedata = new Framedata();
         this._destroyables = [];
 
