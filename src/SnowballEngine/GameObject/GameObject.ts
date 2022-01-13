@@ -1,4 +1,5 @@
 import { Container } from "@pixi/display";
+import { SceneManager } from "SE";
 import { Debug } from "SnowballEngine/Debug";
 import { Scene } from "SnowballEngine/Scene";
 import { EventHandler } from "Utility/Events/EventHandler";
@@ -45,9 +46,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         if (name.includes("/")) throw new Error("GameObject name must not include /");
 
-        if (!Scene.currentScene)
-            throw new Error("No Scene loaded! Load a Scene before creating a gameObject");
-        this.scene = Scene.currentScene;
+        const scene = SceneManager.getInstance()?.getCurrentScene();
+
+        if (!scene) throw new Error("No Scene loaded! Load a Scene before creating a gameObject");
+        this.scene = scene;
 
         this.id = GameObject._nextID++;
         this.name = name;
@@ -135,9 +137,15 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         if (this._initialized) return;
         this._initialized = true;
 
-        Object.values(this._components)
-            .flat()
-            .map((component) => component.dispatchEvent("start"));
+        for (const components in this._components) {
+            const component_ = this._components[components as unknown as ComponentType];
+
+            if (!component_) continue;
+
+            for (const component of component_) {
+                component.dispatchEvent("start");
+            }
+        }
 
         const globalTransform = this.transform.toGlobal();
         this.container.position.copyFrom(globalTransform.position.scale(new Vector2(1, -1)));

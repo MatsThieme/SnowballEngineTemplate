@@ -1,4 +1,4 @@
-import { Scene } from "SnowballEngine/Scene";
+import { SceneManager } from "SE";
 import { Disposable } from "./Dispose";
 
 let nextID = 0;
@@ -18,7 +18,7 @@ export function Destroy(destroyable: Destroyable, inFrames?: number): void {
         destroyable.__destroyInFrames__ = inFrames;
     }
 
-    Scene.currentScene.addDestroyable(destroyable);
+    SceneManager.getInstance()!.getCurrentScene()!.addDestroyable(destroyable);
 
     if (destroyable.prepareDestroy) destroyable.prepareDestroy();
 }

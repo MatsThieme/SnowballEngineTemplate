@@ -47,11 +47,9 @@ export class UIMenu implements Destroyable {
     public set active(val: boolean) {
         if (val && !this._active) {
             this.container.visible = true;
-            Scene.currentScene.ui.onEnableMenu(this.name);
             if (this.onEnable) this.onEnable();
         } else if (!val && this._active) {
             this.container.visible = false;
-            Scene.currentScene.ui.onDisableMenu(this.name);
             if (this.onDisable) this.onDisable();
         }
 

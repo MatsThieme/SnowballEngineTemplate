@@ -1,4 +1,4 @@
-import { Scene } from "SnowballEngine/Scene";
+import { SceneManager } from "SE";
 import { EventTarget } from "Utility/Events/EventTarget";
 import { InputEventTypes } from "Utility/Events/EventTypes";
 import { Input } from "../../Input";
@@ -25,6 +25,8 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
         this._positions = [];
         this._fireListener = false;
 
+        const scene = SceneManager.getInstance()?.getCurrentScene()!;
+
         this._onTouchEvent = ((e: TouchEvent) => {
             e.preventDefault();
 
@@ -33,12 +35,8 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
             for (let i = 0; i < e.touches.length; i++) {
                 const item = e.touches[i];
                 this._positions[i] = new InputAxis([
-                    Math.round(
-                        item.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                    ),
-                    Math.round(
-                        item.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                    ),
+                    Math.round(item.clientX * window.devicePixelRatio * scene.cameraManager.renderScale),
+                    Math.round(item.clientY * window.devicePixelRatio * scene.cameraManager.renderScale),
                 ]);
             }
 

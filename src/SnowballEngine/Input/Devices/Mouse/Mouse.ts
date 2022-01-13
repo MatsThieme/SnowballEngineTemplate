@@ -1,5 +1,5 @@
 import projectConfig from "Config";
-import { Scene } from "SnowballEngine/Scene";
+import { SceneManager } from "SE";
 import { EventTarget } from "Utility/Events/EventTarget";
 import { InputEventTypes } from "Utility/Events/EventTypes";
 import { Input } from "../../Input";
@@ -36,15 +36,13 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
         this._prevPosition = new InputAxis();
         this._fireListener = false;
 
+        const getScene = () => SceneManager.getInstance()?.getCurrentScene()!;
+
         this._onMouseMove = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
             this._position.values = [
-                Math.round(
-                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
-                Math.round(
-                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
+                Math.round(e.clientX * window.devicePixelRatio * getScene().cameraManager.renderScale),
+                Math.round(e.clientY * window.devicePixelRatio * getScene().cameraManager.renderScale),
             ];
 
             this._fireListener = true;
@@ -53,12 +51,8 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
         this._onMouseUp = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
             this._position.values = [
-                Math.round(
-                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
-                Math.round(
-                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
+                Math.round(e.clientX * window.devicePixelRatio * getScene().cameraManager.renderScale),
+                Math.round(e.clientY * window.devicePixelRatio * getScene().cameraManager.renderScale),
             ];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();
@@ -71,12 +65,8 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
         this._onMouseDown = ((e: MouseEvent) => {
             this._prevPosition.values = this._position.values;
             this._position.values = [
-                Math.round(
-                    e.clientX * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
-                Math.round(
-                    e.clientY * window.devicePixelRatio * Scene.currentScene.cameraManager.renderScale
-                ),
+                Math.round(e.clientX * window.devicePixelRatio * getScene().cameraManager.renderScale),
+                Math.round(e.clientY * window.devicePixelRatio * getScene().cameraManager.renderScale),
             ];
 
             if (!this._buttons[e.button]) this._buttons[e.button] = new InputButton();

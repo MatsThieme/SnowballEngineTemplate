@@ -1,7 +1,7 @@
 import { TextStyleAlign } from "@pixi/text";
 import { BitmapText } from "@pixi/text-bitmap";
+import { SceneManager } from "SE";
 import { Client } from "SnowballEngine/Client";
-import { Scene } from "SnowballEngine/Scene";
 import { Color } from "Utility/Color";
 import { UIElementType } from "../UIElementType";
 import { UIFonts } from "../UIFonts";
@@ -18,7 +18,8 @@ export class UIText extends UIElement {
     public constructor(menu: UIMenu, name: string, type: UIElementType = UIElementType.Text) {
         super(menu, name, type);
 
-        this._bitmapText = new BitmapText("", { fontName: menu.font || Scene.currentScene.ui.font });
+        const scene = SceneManager.getInstance()?.getCurrentScene()!;
+        this._bitmapText = new BitmapText("", { fontName: menu.font || scene.ui.font });
 
         this._lines = 0;
 

@@ -1,14 +1,18 @@
 import { AudioListener } from "GameObject/Components/AudioListener";
+import { SceneManager } from "SE";
 import { Interval } from "Utility/Interval/Interval";
 import { Timeout } from "Utility/Timeout/Timeout";
 import AssetDB from "../../../Assets/AssetDB.json";
 import { Asset } from "./Asset";
 import { AssetType } from "./AssetType";
 
-type ADB = typeof AssetDB;
+type AssetDBType = typeof AssetDB;
 
 declare global {
-    type AssetID = keyof ADB | AssetName | Exclude<{ [K in keyof ADB]: keyof ADB[K] }[keyof ADB], "">;
+    type AssetID =
+        | keyof AssetDBType
+        | AssetName
+        | Exclude<{ [K in keyof AssetDBType]: keyof AssetDBType[K] }[keyof AssetDBType], "">;
 }
 
 /** @category Asset Management */
@@ -20,18 +24,15 @@ export class Assets {
     }
 
     /**
-     *
      * Removes the Asset from the DB.
      * Does not destroy the Asset.
-     *
      */
     public static delete(id: AssetID): void {
         delete Assets._assets[id];
     }
 
     public static set(name: AssetID, asset: Asset): Asset {
-        Assets._assets[name] = asset;
-        return asset;
+        return (Assets._assets[name] = asset);
     }
 
     public static async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
@@ -108,7 +109,7 @@ export class Assets {
     }
 
     private static loadFont(url: string, name: string): Promise<void> {
-        if (Assets.canCheckFont()) return Assets.fontLoadPromise(name);
+        if (Assets.fontFaceApiAvailable()) return Assets.fontFaceAPI(url, name);
 
         const e =
             document.head.querySelector("style") ||
@@ -120,7 +121,13 @@ export class Assets {
         p.style.fontFamily = "serif";
         p.style.visibility = "hidden";
         p.style.fontSize = "10000px";
-        document.body.appendChild(p);
+        p.style.position = "fixed";
+
+        const domElement = SceneManager.getInstance()?.domElement;
+
+        if (!domElement) throw new Error();
+
+        domElement.appendChild(p);
 
         const initialSize = p.offsetWidth * p.offsetHeight;
 
@@ -134,33 +141,33 @@ export class Assets {
         }, 10);
     }
 
-    private static checkFont(name: string): boolean {
-        return (<any>document).fonts.check(`10px ${name}`);
+    private static async fontFaceAPI(url: string, fontName: string): Promise<void> {
+        await new FontFace(fontName, url).loaded;
     }
 
-    private static canCheckFont(): boolean {
-        return !!(<any>document).fonts?.check;
-    }
-
-    private static fontLoadPromise(name: string): Promise<void> {
-        return new Interval((i) => {
-            if (Assets.checkFont(name)) {
-                i.clear();
-            }
-        }, 10);
+    private static fontFaceApiAvailable(): boolean {
+        return !!document.fonts;
     }
 
     public static async loadFromAssetDB(): Promise<void> {
-        const p: Promise<Asset>[] = [];
+        const assetPromises: Promise<Asset>[] = [];
 
         for (const path in AssetDB) {
-            const name = Object.keys(<AssetID>(<any>AssetDB)[path])[0];
-            p.push(Assets.load(path, (<any>AssetDB)[path][name], <AssetID>name || undefined));
+            const name = Object.keys(AssetDB[path as unknown as keyof AssetDBType])[0];
+
+            assetPromises.push(
+                Assets.load(
+                    path,
+                    AssetDB[path as unknown as keyof AssetDBType][
+                        name as keyof AssetDBType[keyof AssetDBType]
+                    ],
+                    name as AssetID
+                )
+            );
         }
 
-        for (const ap of p) {
-            await ap;
-            await new Timeout(1); // allow execution of other tasks
+        for (const assetPromise of assetPromises) {
+            await assetPromise.then(() => new Timeout(1));
         }
     }
 }

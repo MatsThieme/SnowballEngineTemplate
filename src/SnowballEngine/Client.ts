@@ -1,10 +1,9 @@
 import isMobile from "ismobilejs";
 import { triggerOnUserInputEvent } from "Utility/Helpers";
-import { Interval } from "Utility/Interval/Interval";
 import { Timeout } from "Utility/Timeout/Timeout";
 import { Vector2 as IVector2, Vector2 } from "Utility/Vector2";
 import { AudioListener } from "./GameObject/Components/AudioListener";
-import { Scene } from "./Scene";
+import { SceneManager } from "./SceneManager";
 
 export class Client {
     public static platform: "android" | "ios" | "browser" | "windows" | "osx" =
@@ -20,8 +19,6 @@ export class Client {
         window.innerWidth * window.devicePixelRatio,
         window.innerHeight * window.devicePixelRatio
     ).round();
-
-    public static monitorRefreshRate = 60;
 
     public static aspectRatio: IVector2 = (<IVector2>Client.resolution).clone.setLength(
         new IVector2(16, 9).magnitude
@@ -54,15 +51,15 @@ export class Client {
         await triggerOnUserInputEvent(async () => {
             if (element.requestFullscreen) {
                 await element.requestFullscreen();
-            } else if ((<any>element).mozRequestFullScreen) {
+            } else if ((element as any).mozRequestFullScreen) {
                 /* Firefox */
-                await (<any>element).mozRequestFullScreen();
-            } else if ((<any>element).webkitRequestFullscreen) {
+                await (element as any).mozRequestFullScreen();
+            } else if ((element as any).webkitRequestFullscreen) {
                 /* Chrome, Safari and Opera */
-                await (<any>element).webkitRequestFullscreen();
-            } else if ((<any>element).msRequestFullscreen) {
+                await (element as any).webkitRequestFullscreen();
+            } else if ((element as any).msRequestFullscreen) {
                 /* IE/Edge */
-                await (<any>element).msRequestFullscreen();
+                await (element as any).msRequestFullscreen();
             }
         });
     }
@@ -70,72 +67,41 @@ export class Client {
     public static async exitFullscreen(): Promise<void> {
         if (document.exitFullscreen) {
             await document.exitFullscreen();
-        } else if ((<any>document).mozCancelFullScreen) {
+        } else if ((document as any).mozCancelFullScreen) {
             /* Firefox */
-            await (<any>document).mozCancelFullScreen();
-        } else if ((<any>document).webkitExitFullscreen) {
+            await (document as any).mozCancelFullScreen();
+        } else if ((document as any).webkitExitFullscreen) {
             /* Chrome, Safari and Opera */
-            await (<any>document).webkitExitFullscreen();
-        } else if ((<any>document).msExitFullscreen) {
+            await (document as any).webkitExitFullscreen();
+        } else if ((document as any).msExitFullscreen) {
             /* IE/Edge */
-            await (<any>document).msExitFullscreen();
+            await (document as any).msExitFullscreen();
         }
     }
 
-    private static _resizeListener?: () => void;
-    private static _resizeInterval?: Interval;
+    private static _resizeListener(): void {
+        const boundingClientRect = SceneManager.getInstance()?.canvasElement.getBoundingClientRect();
+        (<IVector2>Client.resolution).x =
+            (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
+        (<IVector2>Client.resolution).y =
+            (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
+        (<Vector2>Client.resolution).round();
+        Client.aspectRatio.copy((<IVector2>Client.resolution).clone.setLength(new IVector2(16, 9).magnitude));
+    }
 
-    public static async init(): Promise<void> {
-        const el = (Scene.currentScene && Scene.currentScene.domElement) ?? window;
+    static {
+        window.addEventListener("resize", Client._resizeListener);
 
-        if (Client._resizeListener) {
-            el.removeEventListener("resize", Client._resizeListener);
-            if (Client._resizeInterval) Client._resizeInterval.clear();
-        }
-
-        Client._resizeListener = () => {
-            const boundingClientRect = Scene.currentScene.domElement.getBoundingClientRect();
-
-            (<IVector2>Client.resolution).x =
-                (boundingClientRect?.width || window.innerWidth) * window.devicePixelRatio;
-            (<IVector2>Client.resolution).y =
-                (boundingClientRect?.height || window.innerHeight) * window.devicePixelRatio;
-
-            (<Vector2>Client.resolution).round();
-
-            Client.aspectRatio.copy(
-                (<IVector2>Client.resolution).clone.setLength(new IVector2(16, 9).magnitude)
-            );
-        };
-
-        el.addEventListener("resize", Client._resizeListener);
-
-        Client._resizeInterval = new Interval(
-            () => {
-                if (window.innerWidth !== Client.resolution.x || window.innerHeight !== Client.resolution.y) {
-                    window.dispatchEvent(new Event("resize"));
-                }
-            },
-            1000,
-            false
-        );
-
-        if (!document.onfullscreenchange)
-            document.onfullscreenchange = () => window.dispatchEvent(new Event("resize"));
+        document.addEventListener("fullscreenchange", () => window.dispatchEvent(new Event("resize")));
 
         if (!(<Mutable<typeof Client>>Client).hasMediaPlayPermission) {
             (<Mutable<typeof Client>>Client).hasMediaPlayPermission =
                 AudioListener.context.state === "running";
 
-            AudioListener.context.addEventListener(
-                "statechange",
-                (e) =>
-                    ((<Mutable<typeof Client>>Client).hasMediaPlayPermission =
-                        AudioListener.context.state === "running")
-            );
+            AudioListener.context.addEventListener("statechange", () => {
+                (<Mutable<typeof Client>>Client).hasMediaPlayPermission =
+                    AudioListener.context.state === "running";
+            });
         }
-
-        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(100);
-        Client.monitorRefreshRate = await Client.measureMonitorRefreshRate(1000);
     }
 }

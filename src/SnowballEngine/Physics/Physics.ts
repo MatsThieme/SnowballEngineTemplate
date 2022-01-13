@@ -3,9 +3,9 @@ import { Behaviour } from "GameObject/Components/Behaviour";
 import { ComponentType } from "GameObject/ComponentType";
 import { Destroyable } from "GameObject/Destroy";
 import { Composite, Engine, Events, IEventCollision } from "matter-js";
+import { SceneManager } from "SE";
 import { Client } from "SnowballEngine/Client";
 import { GameTime } from "SnowballEngine/GameTime";
-import { Scene } from "SnowballEngine/Scene";
 import { Canvas } from "Utility/Canvas/Canvas";
 import { Vector2 } from "Utility/Vector2";
 
@@ -41,6 +41,8 @@ export class Physics implements Destroyable {
 
         this._canvas = new Canvas(innerWidth, innerHeight);
         this._canvas.style.zIndex = "1";
+        this._canvas.style.position = "absolute";
+        this._canvas.style.top = "0";
 
         if (projectConfig.build.debugMode) {
             document.body.appendChild(this._canvas);
@@ -134,7 +136,7 @@ export class Physics implements Destroyable {
                 contacts: event.contacts,
                 friction: pair.friction,
                 frictionStatic: pair.frictionStatic,
-                matterPairID: <string>(<unknown>pair.id),
+                matterPairID: pair.id.toString(),
                 inverseMass: pair.inverseMass,
                 restitution: pair.restitution,
                 separation: pair.separation,
@@ -226,7 +228,9 @@ export class Physics implements Destroyable {
         if (!projectConfig.build.debugMode) return;
 
         if (this.drawDebug) {
-            const camera = Scene.currentScene.cameraManager.cameras[0];
+            const scene = SceneManager.getInstance()?.getCurrentScene();
+
+            const camera = scene?.cameraManager.cameras[0];
 
             if (camera) this.debugDraw(camera.gameObject.transform.position, camera.size);
 

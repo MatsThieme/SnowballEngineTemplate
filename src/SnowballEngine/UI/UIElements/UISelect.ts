@@ -1,7 +1,7 @@
 import { BitmapText } from "@pixi/text-bitmap";
+import { SceneManager } from "SE";
 import { Client } from "SnowballEngine/Client";
 import { Input } from "SnowballEngine/Input/Input";
-import { Scene } from "SnowballEngine/Scene";
 import { UIElementType } from "UI/UIElementType";
 import { UIFonts } from "UI/UIFonts";
 import { UIMenu } from "UI/UIMenu";
@@ -57,7 +57,8 @@ export class UISelect extends UIElement {
     }
 
     public get font(): UIFont {
-        return this._font || this._menu.font || Scene.currentScene.ui.font;
+        const scene = SceneManager.getInstance()?.getCurrentScene()!;
+        return this._font || this._menu.font || scene.ui.font;
     }
     public set font(val: UIFont) {
         this._bitmapText.fontName = this._font = val;

@@ -2,8 +2,8 @@ import { Sprite } from "@pixi/sprite";
 import { BitmapText } from "@pixi/text-bitmap";
 import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
+import { SceneManager } from "SE";
 import { Client } from "SnowballEngine/Client";
-import { Scene } from "SnowballEngine/Scene";
 import { UIElementType } from "UI/UIElementType";
 import { UIFonts } from "UI/UIFonts";
 import { UIMenu } from "UI/UIMenu";
@@ -30,7 +30,8 @@ export class UICheckbox extends UIElement {
 
         this._checked = true;
 
-        this._bitmapText = new BitmapText("", { fontName: menu.font || Scene.currentScene.ui.font });
+        const scene = SceneManager.getInstance()?.getCurrentScene()!;
+        this._bitmapText = new BitmapText("", { fontName: menu.font || scene.ui.font });
 
         this.container.addChild(this._bitmapText);
 

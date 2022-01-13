@@ -3,13 +3,13 @@ import { MainScene } from "Scenes/MainScene";
 import { Assets, Color, SceneManager, Shape, Timeout } from "SE";
 
 export class Game {
-    async initialize(): Promise<void> {
+    async initialize(sceneManager: SceneManager): Promise<void> {
         // register scenes
-        SceneManager.add("Loading Screen Scene", LoadingScreenScene);
-        SceneManager.add("Main Scene", MainScene);
+        sceneManager.add("Loading Screen Scene", LoadingScreenScene);
+        sceneManager.add("Main Scene", MainScene);
 
         // load scene
-        await SceneManager.load("Loading Screen Scene");
+        await sceneManager.load("Loading Screen Scene");
 
         /**
          * load from asset database:
@@ -25,6 +25,6 @@ export class Game {
         // timeout to show example loadingscreen
         await new Timeout(1000);
 
-        await SceneManager.load("Main Scene");
+        await sceneManager.load("Main Scene");
     }
 }

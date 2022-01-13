@@ -16,7 +16,6 @@ import { clearObject } from "Utility/Helpers";
 import { Interval } from "Utility/Interval/Interval";
 import { Stopwatch } from "Utility/Stopwatch";
 import { CameraManager } from "./Camera/CameraManager";
-import { Client } from "./Client";
 import { Framedata } from "./Framedata";
 import { GameTime } from "./GameTime";
 import { Physics } from "./Physics/Physics";
@@ -26,7 +25,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public readonly cameraManager: CameraManager;
     public readonly ui: UI;
     public readonly framedata: Framedata;
-    public readonly domElement: HTMLCanvasElement;
     public readonly name: SceneName;
     public readonly physics: Physics;
     public static readonly currentScene: Scene;
@@ -46,13 +44,12 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
     private _audioListener?: AudioListener;
 
-    public constructor(name: SceneName) {
+    public constructor(name: SceneName, domElement: HTMLCanvasElement) {
         super();
 
         this.name = name;
 
         Input.reset();
-        Client.init();
         GameObject.reset();
         Component.reset();
         Stopwatch.reset();
@@ -61,13 +58,9 @@ export class Scene extends EventTarget<SceneEventTypes> {
         if (!(<any>UIFonts)._fonts) UIFonts.init();
 
         this.ui = new UI();
-        this.cameraManager = new CameraManager();
+        this.cameraManager = new CameraManager(domElement);
         this.framedata = new Framedata();
         this._destroyables = [];
-
-        this.domElement = this.cameraManager.canvas;
-        this.domElement.id = this.name;
-        document.body.appendChild(this.domElement);
 
         this.pause = false;
 
@@ -267,8 +260,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         Destroy(this.cameraManager);
 
         this.destroyDestroyables();
-
-        this.domElement.remove();
 
         this.dispatchEvent("unloaded");
 

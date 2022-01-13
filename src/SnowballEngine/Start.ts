@@ -8,8 +8,8 @@ import { Ticker } from "pixi.js";
 import * as poly_decomp from "poly-decomp";
 import { UIFonts } from "UI/UIFonts";
 import { Game } from "../Game";
-import { Client } from "./Client";
 import { Scene } from "./Scene";
+import { SceneManager } from "./SceneManager";
 
 window.AudioContext = window.AudioContext || (<any>window).webkitAudioContext; // support safari
 
@@ -25,8 +25,6 @@ if (projectConfig.build.debugMode) {
 
 Common.setDecomp(poly_decomp);
 
-Client.init();
-
 Input.start(); // listen for user input
 
 UIFonts.init(); // create default fonts
@@ -38,5 +36,5 @@ if (window.cordova) {
 }
 
 function startGame() {
-    new Game().initialize();
+    new Game().initialize(new SceneManager("se-root"));
 }

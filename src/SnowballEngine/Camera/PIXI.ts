@@ -6,14 +6,12 @@ import { Sprite } from "@pixi/sprite";
 import projectConfig from "Config";
 import { Client } from "SnowballEngine/Client";
 import { Debug } from "SnowballEngine/Debug";
-import { Canvas } from "Utility/Canvas/Canvas";
 
 export class PIXI {
     public readonly renderer: Renderer;
     public readonly container: Container;
-    public uiContainer!: Container;
 
-    public constructor(width: number, height: number) {
+    public constructor(domElement: HTMLCanvasElement, width: number, height: number) {
         this.renderer = new Renderer({
             width,
             height,
@@ -22,12 +20,12 @@ export class PIXI {
             backgroundAlpha: projectConfig.settings.transparentBackgroundAlpha,
             powerPreference: "low-power" || Client.isMobile ? "low-power" : "high-performance",
             clearBeforeRender: false,
-            view: new Canvas(innerWidth, innerHeight),
+            view: domElement,
         });
 
         this.renderer.textureGC.maxIdle = 60;
 
-        // this.renderer.plugins.interaction.destroy();
+        this.renderer.plugins.interaction.destroy();
 
         this.renderer.textureGC.mode = GC_MODES.AUTO;
 
@@ -59,12 +57,7 @@ export class PIXI {
         this.renderer.render(this.container);
     }
 
-    public renderUI(): void {
-        this.renderer.render(this.uiContainer);
-    }
-
     public destroy(): void {
-        this.uiContainer.destroy(true);
         this.container.destroy(true);
         this.renderer.destroy();
     }

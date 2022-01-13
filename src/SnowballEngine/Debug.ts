@@ -1,5 +1,4 @@
 import projectConfig from "Config";
-import { default as cloneDeep } from "lodash.clonedeep";
 
 export class Debug {
     static {
@@ -128,8 +127,8 @@ export class Debug {
 
         if (ret[0]) ret.push("\n");
 
-        if (Array.isArray(msg)) ret.push(...cloneDeep(msg));
-        else ret.push(cloneDeep(msg));
+        if (Array.isArray(msg)) ret.push(...JSON.parse(JSON.stringify(msg)));
+        else ret.push(JSON.parse(JSON.stringify(msg)));
 
         if (stack) ret.push("\n\n" + stack);
 

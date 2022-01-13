@@ -3,7 +3,6 @@ import { Component } from "GameObject/Components/Component";
 import { GameObject } from "GameObject/GameObject";
 import { Client } from "SnowballEngine/Client";
 import { Debug } from "SnowballEngine/Debug";
-import { Scene } from "SnowballEngine/Scene";
 import { Color } from "Utility/Color";
 import { Vector2 } from "Utility/Vector2";
 import { PIXI } from "./PIXI";
@@ -16,16 +15,14 @@ export class CameraManager {
     private readonly _gameObjects: Partial<Record<number, GameObject>>;
     private readonly _PIXI: PIXI;
 
-    public constructor() {
+    public constructor(domElement: HTMLCanvasElement) {
         this.cameras = [];
 
         this.renderScale = 1;
 
-        this._PIXI = new PIXI(Client.resolution.x, Client.resolution.y);
+        this._PIXI = new PIXI(domElement, Client.resolution.x, Client.resolution.y);
 
         this._gameObjects = {};
-
-        this._PIXI.uiContainer = Scene.currentScene.ui.container;
 
         this.backgroundColor = Color.deepskyblue;
     }
@@ -121,10 +118,6 @@ export class CameraManager {
                 }
             }
         }
-
-        this._PIXI.uiContainer.scale.set(canvasSize.x / 100, canvasSize.y / 100);
-
-        this._PIXI.renderUI();
     }
 
     public destroy(): void {
