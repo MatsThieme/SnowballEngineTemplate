@@ -163,10 +163,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * Returns a Promise resolving the created component or null if the component cant be created
      *
      */
-    public async addComponent<T extends Component<ComponentEventTypes>>(
+    public addComponent<T extends Component<ComponentEventTypes>>(
         type: Constructor<T>,
-        ...initializer: ((component: T) => void | Promise<void>)[]
-    ): Promise<T> {
+        ...initializer: ((component: T) => void)[]
+    ): T {
         const component = new type(this);
 
         if (
@@ -208,13 +208,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
 
         if (initializer) {
             for (const c of initializer) {
-                await c(component);
+                c(component);
             }
         }
 
-        await component.dispatchEvent("awake");
-        if (this._initialized) await component.dispatchEvent("start");
-
+        component.dispatchEvent("awake");
+        this._initialized && component.dispatchEvent("start");
         this.dispatchEvent("componentadd", component);
 
         return component;
@@ -291,9 +290,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * Returns the first component of type.
      *
      */
-    public getComponent<T extends Component<ComponentEventTypes>>(
-        type: Constructor<T> | AbstractConstructor<T> | ComponentType
-    ): T | undefined {
+    public getComponent<T extends Component<ComponentEventTypes>>(type: ComponentType): T | undefined {
         if (typeof type === "number") {
             if (this._components[type] !== undefined) return <T>this._components[type]![0];
             if (type === ComponentType.Component) {
@@ -322,10 +319,6 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
             return undefined;
         }
 
-        for (const c of Object.values(this._components).flat(1)) {
-            if (c.constructor.name === type.name || c instanceof type) return <T>c;
-        }
-
         return undefined;
     }
 
@@ -346,11 +339,14 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      *
      */
     public getComponentInChildren<T extends Component<ComponentEventTypes>>(
-        type: Constructor<T> | AbstractConstructor<T> | ComponentType
+        type: ComponentType
     ): T | undefined {
         for (const child of this.children) {
-            const c = child.getComponent(type);
-            if (c) return c;
+            const c = child.getComponent<T>(type);
+
+            if (c) {
+                return c;
+            }
         }
 
         return undefined;

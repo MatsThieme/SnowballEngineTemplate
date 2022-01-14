@@ -42,5 +42,5 @@ export function MainScene(scene: Scene): void {
         })
     );
 
-    scene.physics.drawDebug = true;
+    scene.physics.drawDebug = false;
 }

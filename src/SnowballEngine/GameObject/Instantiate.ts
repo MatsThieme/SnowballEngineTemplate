@@ -3,13 +3,11 @@ import { GameObject } from "./GameObject";
 /**
  * @category Scene
  * @param name GameObject's name
- * @param initializer initializer function, gameObject is the newly instantiated gameObject
- * @param moreInitializer optional rest parameter for more initializer functions
+ * @param initializer initializer functions with the newly instantiated gameObject as parameter.
  */
 export function Instantiate(
     name: string,
-    initializer: (gameObject: GameObject) => unknown,
-    ...moreInitializer: ((gameObject: GameObject) => unknown)[]
+    ...initializer: [(gameObject: GameObject) => void, ...((gameObject: GameObject) => void)[]]
 ): GameObject {
     name = name.trim();
 
@@ -17,13 +15,11 @@ export function Instantiate(
 
     const gameObject = new GameObject(name, false);
 
-    initializer(gameObject);
-
-    moreInitializer.forEach((initializer) => initializer(gameObject));
-
-    if (gameObject.scene.isRunning) {
-        gameObject.start();
+    for (const init of initializer) {
+        init(gameObject);
     }
+
+    gameObject.scene.isRunning && gameObject.start();
 
     return gameObject;
 }
