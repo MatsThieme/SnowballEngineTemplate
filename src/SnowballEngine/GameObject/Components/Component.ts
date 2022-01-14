@@ -233,6 +233,3 @@ export abstract class Component<EventTypes extends ComponentEventTypes>
      */
     protected onDestroy?(): void;
 }
-
-// export interface Component<EventTypes extends ComponentEventTypes> extends Destroyable {
-// }

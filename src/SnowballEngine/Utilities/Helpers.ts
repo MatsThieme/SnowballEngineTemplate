@@ -63,17 +63,21 @@ export function triggerOnUserInputEvent<T, U>(
 }
 
 /**
- *
  * Deletes properties and prototype to remove references and allow garbage collection.
- *
- * @param setnull if true, properties will be set to null instead of deletion
+ * @param setnull if true, properties will be set to null instead of beeing deleted.
  */
-export function clearObject(object: Record<string, any>, setnull = false): void {
+export function clearObject<T extends string | number | symbol>(
+    object: Partial<Record<T, unknown>>,
+    setnull = false
+): void {
     Object.setPrototypeOf(object, null);
 
-    for (const key of Object.keys(object)) {
-        if (setnull) object[key] = null;
-        else delete object[key];
+    for (const key in object) {
+        if (setnull) {
+            object[key] = null;
+        } else {
+            delete object[key];
+        }
     }
 }
 

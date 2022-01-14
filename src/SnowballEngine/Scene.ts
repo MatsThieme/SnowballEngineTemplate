@@ -4,8 +4,7 @@ import { Behaviour } from "GameObject/Components/Behaviour";
 import { Collider } from "GameObject/Components/Collider";
 import { Component } from "GameObject/Components/Component";
 import { Rigidbody } from "GameObject/Components/Rigidbody";
-import { Destroy, Destroyable } from "GameObject/Destroy";
-import { Dispose } from "GameObject/Dispose";
+import { Destroy, Destroyable, Destroyer } from "GameObject/Destroy";
 import { GameObject } from "GameObject/GameObject";
 import { Input } from "Input/Input";
 import { EventTarget } from "Utility/Events/EventTarget";
@@ -33,10 +32,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
     private _requestAnimationFrameHandle?: number;
     private _updateComplete?: boolean;
 
-    /**
-     * Callbacks pushed by gameobject.destroy() and executed after update before render.
-     */
-    private readonly _destroyables: (Destroyable | undefined)[];
+    private readonly _destroyer: Destroyer;
 
     private _audioListener?: AudioListener;
 
@@ -53,7 +49,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.cameraManager = new CameraManager(domElement);
         this.framedata = new Framedata();
-        this._destroyables = [];
+        this._destroyer = new Destroyer();
 
         this.pause = false;
 
@@ -123,7 +119,7 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         this.cameraManager.update();
 
-        this.destroyDestroyables();
+        this._destroyer.destroyDestroyables();
 
         if (this._requestAnimationFrameHandle)
             this._requestAnimationFrameHandle = requestAnimationFrame(this.update);
@@ -168,36 +164,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
         });
     }
 
-    /**
-     * Register a Destroyable to destroy at the end of the current frame. Used by Destroy(destroyable: Destroyable)
-     * @internal
-     */
-    public addDestroyable(destroyable: Destroyable): boolean {
-        const i = this._destroyables.findIndex((d) => d && d.__destroyID__ === destroyable.__destroyID__);
-
-        if (i === -1) {
-            this._destroyables.push(destroyable);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Destroy all destroyables
-     */
-    private destroyDestroyables(force?: boolean): void {
-        for (let i = this._destroyables.length - 1; i >= 0; i--) {
-            if (
-                (this._destroyables[i] && !(this._destroyables[i] as Destroyable).__destroyInFrames__) ||
-                force
-            ) {
-                (this._destroyables[i] as Destroyable).destroy();
-                Dispose(this._destroyables[i] as Destroyable);
-                this._destroyables[i] = undefined;
-            } else if (this._destroyables[i])
-                ((this._destroyables[i] as Destroyable).__destroyInFrames__ as number)--;
-        }
+    public destroySomething(destroyable: Destroyable): boolean {
+        return this._destroyer.addDestroyable(destroyable);
     }
 
     /**
@@ -214,11 +182,11 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
         Destroy(this.physics);
 
-        this.destroyDestroyables(true);
+        this._destroyer.destroyDestroyables(true);
 
         Destroy(this.cameraManager);
 
-        this.destroyDestroyables();
+        this._destroyer.destroyDestroyables();
 
         this.dispatchEvent("unloaded");
 

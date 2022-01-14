@@ -1,11 +1,3 @@
-import {
-    TextStyleFill,
-    TextStyleFontVariant,
-    TextStyleFontWeight,
-    TextStyleLineJoin,
-    TextStyleTextBaseline,
-    TEXT_GRADIENT,
-} from "@pixi/text";
 import { Collider } from "GameObject/Components/Collider";
 import { GameObject } from "GameObject/GameObject";
 import { Angle } from "Utility/Angle";
@@ -77,27 +69,6 @@ declare global {
         scale: IVector2;
         parent?: ITransformable;
         readonly id: number;
-    }
-
-    interface BitmapTextStyle {
-        dropShadow?: boolean;
-        dropShadowAngle?: number;
-        dropShadowBlur?: number;
-        dropShadowColor?: string | number;
-        dropShadowDistance?: number;
-        fill?: TextStyleFill;
-        fillGradientType?: TEXT_GRADIENT;
-        fillGradientStops?: number[];
-        fontFamily?: string | string[];
-        fontSize?: number | string;
-        fontVariant?: TextStyleFontVariant;
-        fontWeight?: TextStyleFontWeight;
-        letterSpacing?: number;
-        lineJoin?: TextStyleLineJoin;
-        miterLimit?: number;
-        stroke?: string | number;
-        strokeThickness?: number;
-        textBaseline?: TextStyleTextBaseline;
     }
 
     interface Contact {
