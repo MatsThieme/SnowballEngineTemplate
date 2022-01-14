@@ -1,21 +1,25 @@
 import { ExampleBehaviour } from "Behaviours/ExampleBehaviour";
 import { AlignV, Assets, GameObject, Text, Texture } from "SE";
 
-export async function ExampleGameObjectPrefab(gameObject: GameObject) {
-    const text = await gameObject.addComponent(Text, (text) => {
+export function ExampleGameObjectPrefab(gameObject: GameObject) {
+    const text = gameObject.addComponent(Text, (text) => {
+        text.setStyle({
+            fontFamily: "arial",
+            align: "center",
+            fontSize: 0.03 * innerHeight,
+        });
+
         text.text = "Move me with\nW/A/S/D or\nusing a Gamepad";
-        text.textAlign = "center";
 
         text.alignV = AlignV.Center;
 
         text.zIndex = 1;
     });
 
-    await gameObject.addComponent(Texture, (texture) => {
+    gameObject.addComponent(Texture, (texture) => {
         texture.asset = Assets.get("some image");
         texture.size = text.size;
     });
 
-    // adding a behaviour will execute it's "Awake" method which is asynchronous
-    await gameObject.addComponent(ExampleBehaviour);
+    gameObject.addComponent(ExampleBehaviour);
 }

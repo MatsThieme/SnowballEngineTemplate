@@ -1,6 +1,5 @@
 import { Container } from "@pixi/display";
-import { TextStyleAlign } from "@pixi/text";
-import { BitmapText } from "@pixi/text-bitmap";
+import { ITextStyle, Text as PixiText } from "@pixi/text";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Debug } from "SnowballEngine/Debug";
@@ -11,62 +10,43 @@ import { Renderable } from "./Renderable";
 
 /** @category Component */
 export class Text extends Renderable<TextEventTypes> {
-    private _bitmapText: BitmapText;
+    private _text: PixiText;
 
-    private readonly _resizeListener: () => void;
+    private static readonly _defaultStyle: Partial<ITextStyle> = {
+        fontFamily: "arial",
+    };
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Text);
 
-        this._bitmapText = new BitmapText("", { fontName: "Default-Normal" });
-
+        this._text = new PixiText("", Text._defaultStyle);
         this.sprite = new Container();
-        this.sprite.addChild(this._bitmapText);
+        this.sprite.addChild(this._text);
 
         this._size.set(0, 1);
-
-        this._resizeListener = (() => this._bitmapText.updateText()).bind(this);
-        window.addEventListener("resize", this._resizeListener);
     }
 
-    public get font(): UIFont {
-        return <UIFont>this._bitmapText.fontName;
-    }
-    public set font(val: UIFont) {
-        this._bitmapText.fontName = val;
-        this._bitmapText.updateText();
-        this.size = this._size;
+    public setStyle(style: Partial<ITextStyle>): void {
+        this._text.style = style;
     }
 
     public get text(): string {
-        return this._bitmapText.text;
+        return this._text.text;
     }
     public set text(val: string) {
-        this._bitmapText.text = val;
+        this._text.text = val;
         this.size = this._size;
     }
 
     public get tint(): Color {
         const color = new Color();
 
-        color.rgb = this._bitmapText.tint;
+        color.rgb = this._text.tint;
 
         return color;
     }
     public set tint(val: Color) {
-        this._bitmapText.tint = val.rgb;
-    }
-
-    /**
-     *
-     * Multiline text align.
-     *
-     */
-    public get textAlign(): TextStyleAlign {
-        return <TextStyleAlign>this._bitmapText.align;
-    }
-    public set textAlign(val: TextStyleAlign) {
-        this._bitmapText.align = val;
+        this._text.tint = val.rgb;
     }
 
     /**
@@ -81,30 +61,26 @@ export class Text extends Renderable<TextEventTypes> {
     public override set size(val: Vector2) {
         if (val.x === 0 && val.y === 0) Debug.warn("size === (0, 0)");
 
-        this._bitmapText.scale.set(1, 1);
+        this._text.width = this._text.canvas.width;
+        this._text.height = this._text.canvas.height;
+        this._text.scale.set(1, 1);
 
         if (val.x > 0 && val.y > 0) {
-            this._bitmapText.width = val.x;
-            this._bitmapText.height = val.y;
+            this._text.width = val.x;
+            this._text.height = val.y;
         } else if (val.y > 0) {
-            const ratio = this._bitmapText.width / this._bitmapText.height;
+            const ratio = this._text.width / this._text.height;
 
-            this._bitmapText.height = val.y;
-            this._bitmapText.width = ratio * val.y;
+            this._text.height = val.y;
+            this._text.width = ratio * val.y;
         } else if (val.x > 0) {
-            const ratio = this._bitmapText.height / this._bitmapText.width;
+            const ratio = this._text.height / this._text.width;
 
-            this._bitmapText.height = ratio * val.x;
-            this._bitmapText.width = val.x;
+            this._text.height = ratio * val.x;
+            this._text.width = val.x;
         }
 
-        this._size.x = this._bitmapText.width;
-        this._size.y = this._bitmapText.height;
-    }
-
-    public override destroy(): void {
-        window.removeEventListener("resize", this._resizeListener);
-
-        super.destroy();
+        this._size.x = this._text.width;
+        this._size.y = this._text.height;
     }
 }

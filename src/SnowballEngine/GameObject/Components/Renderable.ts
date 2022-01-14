@@ -125,7 +125,6 @@ export abstract class Renderable<EventTypes extends RenderableEventTypes> extend
         this._sprite = val;
 
         if (val) {
-            val.interactive = true;
             val.name = this.constructor.name + " (" + this.componentID + ")";
 
             if (val.width + val.height !== 0 && this._size.x + this._size.y === 0)
