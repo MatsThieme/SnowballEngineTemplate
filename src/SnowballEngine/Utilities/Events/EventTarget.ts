@@ -12,9 +12,7 @@ export class EventTarget<T extends EventType> {
     }
 
     /**
-     *
      * @param eventName A case-sensitive string representing the event type to listen for.
-     *
      */
     public addListener<U extends keyof T>(eventName: U, handler: EventHandler<T[U]>): void {
         if (!this._events[eventName]) this._events[eventName] = {};
@@ -37,10 +35,8 @@ export class EventTarget<T extends EventType> {
     }
 
     /**
-     *
      * Creates a promise wrapper for an eventhandler.
      * Returns a promise which will resolve when the event is dispatched.
-     *
      */
     public getEventPromise<U extends keyof T>(eventName: U): Promise<T[U]> {
         return new Promise((resolve) => {

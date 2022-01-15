@@ -1,2 +1,2 @@
 /** @category Utility */
-export type EventType = { [name: string]: unknown[] };
+export type EventType = { [key: string]: unknown[] };

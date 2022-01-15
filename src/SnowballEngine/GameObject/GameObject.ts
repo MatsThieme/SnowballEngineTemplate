@@ -137,12 +137,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
         if (this._initialized) return;
         this._initialized = true;
 
-        for (const components in this._components) {
-            const component_ = this._components[components as unknown as ComponentType];
+        for (const componentsOfType in this._components) {
+            const components = this._components[componentsOfType as unknown as ComponentType];
 
-            if (!component_) continue;
+            if (!components) continue;
 
-            for (const component of component_) {
+            for (const component of components) {
                 component.dispatchEvent("start");
             }
         }
@@ -203,14 +203,10 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
             if (component.prepareDestroy) component.prepareDestroy();
             (<Mutable<Component<ComponentEventTypes>>>component).__destroyed__ = true;
             component.destroy();
-            throw new Error(`Can't add component(type: ${ComponentType[type]})`);
+            throw new Error(`Can't add component(type: ${type})`);
         }
 
-        if (initializer) {
-            for (const c of initializer) {
-                c(component);
-            }
-        }
+        initializer.forEach((i) => i(component));
 
         component.dispatchEvent("awake");
         this._initialized && component.dispatchEvent("start");
@@ -251,38 +247,45 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * Returns all components of type.
      *
      */
-    public getComponents<T extends Component<ComponentEventTypes>>(
-        type: Constructor<T> | AbstractConstructor<T> | ComponentType
-    ): T[] {
-        if (typeof type === "number") {
-            if (this._components[type] !== undefined) return <T[]>this._components[type]!.slice();
-            if (type === ComponentType.Component) return <T[]>Object.values(this._components).flat();
-            if (type === ComponentType.Renderable)
-                return <T[]>[
-                    ...this.getComponents(ComponentType.AnimatedSprite),
-                    ...this.getComponents(ComponentType.ParallaxBackground),
-                    ...this.getComponents(ComponentType.ParticleSystem),
-                    ...this.getComponents(ComponentType.Texture),
-                    ...this.getComponents(ComponentType.TilemapRenderer),
-                    ...this.getComponents(ComponentType.Video),
-                ];
-            if (type === ComponentType.Collider)
-                return <T[]>[
-                    ...this.getComponents(ComponentType.CircleCollider),
-                    ...this.getComponents(ComponentType.PolygonCollider),
-                    ...this.getComponents(ComponentType.TilemapCollider),
-                    ...this.getComponents(ComponentType.TerrainCollider),
-                    ...this.getComponents(ComponentType.RectangleCollider),
-                ];
-
-            return [];
+    public getComponents<T extends Component<ComponentEventTypes>>(type: ComponentType): T[] {
+        if (this._components[type] !== undefined) {
+            return this._components[type]!.slice() as T[];
         }
 
-        return <T[]>Object.values(this._components)
-            .flat(1)
-            .filter((c: Component<ComponentEventTypes>) => {
-                return c.constructor.name === type.name || c instanceof type;
-            });
+        if (type === ComponentType.Component) {
+            const components = [];
+
+            for (const componentType in this._components) {
+                for (const component of this._components[componentType as ComponentType]!) {
+                    components.push(component);
+                }
+            }
+
+            return components as T[];
+        }
+
+        if (type === ComponentType.Renderable) {
+            return [
+                ...this.getComponents(ComponentType.AnimatedSprite),
+                ...this.getComponents(ComponentType.ParallaxBackground),
+                ...this.getComponents(ComponentType.ParticleSystem),
+                ...this.getComponents(ComponentType.Texture),
+                ...this.getComponents(ComponentType.TilemapRenderer),
+                ...this.getComponents(ComponentType.Video),
+            ] as T[];
+        }
+
+        if (type === ComponentType.Collider) {
+            return [
+                ...this.getComponents(ComponentType.CircleCollider),
+                ...this.getComponents(ComponentType.PolygonCollider),
+                ...this.getComponents(ComponentType.TilemapCollider),
+                ...this.getComponents(ComponentType.TerrainCollider),
+                ...this.getComponents(ComponentType.RectangleCollider),
+            ] as T[];
+        }
+
+        return [];
     }
 
     /**
@@ -291,33 +294,31 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      *
      */
     public getComponent<T extends Component<ComponentEventTypes>>(type: ComponentType): T | undefined {
-        if (typeof type === "number") {
-            if (this._components[type] !== undefined) return <T>this._components[type]![0];
-            if (type === ComponentType.Component) {
-                for (const components of Object.values(this._components)) {
-                    if (components[0]) return <T>components[0];
+        if (this._components[type] !== undefined) return <T>this._components[type]![0];
+        if (type === ComponentType.Component) {
+            for (const componentType in this._components) {
+                if (this._components[componentType as ComponentType]![0]) {
+                    return <T>this._components[componentType as ComponentType]![0];
                 }
             }
-            if (type === ComponentType.Renderable)
-                return (
-                    this.getComponent(ComponentType.AnimatedSprite) ||
-                    this.getComponent(ComponentType.ParallaxBackground) ||
-                    this.getComponent(ComponentType.ParticleSystem) ||
-                    this.getComponent(ComponentType.Texture) ||
-                    this.getComponent(ComponentType.TilemapRenderer) ||
-                    this.getComponent(ComponentType.Video)
-                );
-            if (type === ComponentType.Collider)
-                return (
-                    this.getComponent(ComponentType.CircleCollider) ||
-                    this.getComponent(ComponentType.PolygonCollider) ||
-                    this.getComponent(ComponentType.TilemapCollider) ||
-                    this.getComponent(ComponentType.TerrainCollider) ||
-                    this.getComponent(ComponentType.RectangleCollider)
-                );
-
-            return undefined;
         }
+        if (type === ComponentType.Renderable)
+            return (
+                this.getComponent(ComponentType.AnimatedSprite) ||
+                this.getComponent(ComponentType.ParallaxBackground) ||
+                this.getComponent(ComponentType.ParticleSystem) ||
+                this.getComponent(ComponentType.Texture) ||
+                this.getComponent(ComponentType.TilemapRenderer) ||
+                this.getComponent(ComponentType.Video)
+            );
+        if (type === ComponentType.Collider)
+            return (
+                this.getComponent(ComponentType.CircleCollider) ||
+                this.getComponent(ComponentType.PolygonCollider) ||
+                this.getComponent(ComponentType.TilemapCollider) ||
+                this.getComponent(ComponentType.TerrainCollider) ||
+                this.getComponent(ComponentType.RectangleCollider)
+            );
 
         return undefined;
     }
@@ -327,9 +328,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
      * Get components of type of direct children
      *
      */
-    public getComponentsInChildren<T extends Component<ComponentEventTypes>>(
-        type: Constructor<T> | AbstractConstructor<T> | ComponentType
-    ): T[] {
+    public getComponentsInChildren<T extends Component<ComponentEventTypes>>(type: ComponentType): T[] {
         return this.children.flatMap((c) => c.getComponents(type));
     }
 
@@ -398,9 +397,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentInTree<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -414,9 +411,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentInParents<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -434,9 +429,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentInChildren<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -454,9 +447,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentsInTree<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -470,9 +461,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentsInParents<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -490,9 +479,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public static componentsInChildren<T extends Component<ComponentEventTypes>>(
         gameObject: GameObject,
@@ -508,12 +495,12 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     /**
-     *
      * @internal
-     *
      */
     public prepareDestroy(): void {
-        const destroyables: Destroyable[] = [...Object.values(this._components).flat(), ...this.children];
+        const destroyables: Destroyable[] = (
+            this.getComponents(ComponentType.Component) as Destroyable[]
+        ).concat(this.children);
 
         const destroyInFrames = this.parent?.__destroyInFrames__ || this.getMaxDestroyInFrames();
 
@@ -524,29 +511,28 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     private getMaxDestroyInFrames(gameObject: GameObject = this, max?: number): number | undefined {
-        const components = Object.values(gameObject._components).flat();
+        const components = this.getComponents(ComponentType.Component);
 
         max = Math.max(
             max || 0,
-            components.reduce((p, c) => {
-                if (c.__destroyInFrames__ !== undefined && p < c.__destroyInFrames__)
+            components.reduce((max, c) => {
+                if (c.__destroyInFrames__ !== undefined && max < c.__destroyInFrames__) {
                     return c.__destroyInFrames__;
-                else return p;
+                } else {
+                    return max;
+                }
             }, 0)
         );
 
-        return gameObject.children
-            .map((c) => c.getMaxDestroyInFrames(c, max))
-            .filter(Boolean)
-            .sort((a, b) => b! - a!)[0];
+        return (
+            gameObject.children.map((c) => c.getMaxDestroyInFrames(c, max)).filter(Boolean) as number[]
+        ).sort((a, b) => b - a)[0];
     }
 
     /**
-     *
      * Remove this from scene and delete all references.
      * All components, children and their components will be destroyed.
      * @internal
-     *
      */
     public destroy(): void {
         if (this.parent && this.parent.removeChild) this.parent.removeChild(this);

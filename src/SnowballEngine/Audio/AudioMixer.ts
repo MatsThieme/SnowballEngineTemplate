@@ -220,8 +220,8 @@ export class AudioMixer implements Disposable {
     }
 
     public static reset(): void {
-        for (const mixer of Object.values(this._mixers)) {
-            Dispose(mixer);
+        for (const mixer in this._mixers) {
+            Dispose(this._mixers[mixer]);
         }
     }
 }
