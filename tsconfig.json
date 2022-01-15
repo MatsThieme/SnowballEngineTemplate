@@ -15,7 +15,6 @@
         "paths": {
             "SE": ["SnowballEngine/SnowballEngine.ts"],
             "Config": ["../SnowballEngineConfig.json"],
-            "UI/*": ["SnowballEngine/UI/*"],
             "Utility/*": ["SnowballEngine/Utilities/*"],
             "Input/*": ["SnowballEngine/Input/*"],
             "Assets/*": ["SnowballEngine/Assets/*"],
