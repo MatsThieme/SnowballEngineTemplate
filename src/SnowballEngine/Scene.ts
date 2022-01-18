@@ -1,4 +1,5 @@
 import { AudioMixer } from "Audio/AudioMixer";
+import { AudioMixerManager } from "Audio/AudioMixerManager";
 import { AudioListener } from "GameObject/Components/AudioListener";
 import { Behaviour } from "GameObject/Components/Behaviour";
 import { Collider } from "GameObject/Components/Collider";
@@ -36,6 +37,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
 
     private _audioListener?: AudioListener;
 
+    public audioMixerManager: AudioMixerManager<string>;
+
     public constructor(name: SceneName, domElement: HTMLCanvasElement) {
         super();
 
@@ -45,7 +48,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
         GameObject.reset();
         Component.reset();
         Stopwatch.reset();
-        AudioMixer.reset();
+
+        this.audioMixerManager = new AudioMixerManager();
 
         this.cameraManager = new CameraManager(domElement);
         this.framedata = new Framedata();
@@ -150,18 +154,15 @@ export class Scene extends EventTarget<SceneEventTypes> {
     public async stop(): Promise<void> {
         if (!this._requestAnimationFrameHandle) return;
 
-        await this.dispatchEvent("stop");
+        this.dispatchEvent("stop");
 
         this._requestAnimationFrameHandle = undefined;
 
-        await new Promise<void>((resolve) => {
-            new Interval((i) => {
-                if (this._updateComplete) {
-                    i.clear();
-                    resolve();
-                }
-            }, 10);
-        });
+        await new Interval((i) => {
+            if (this._updateComplete) {
+                i.clear();
+            }
+        }, 10);
     }
 
     public destroySomething(destroyable: Destroyable): boolean {
@@ -177,6 +178,8 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this.dispatchEvent("unload");
 
         this.stop();
+
+        this.audioMixerManager.reset();
 
         GameObject.prepareDestroy();
 

@@ -1,13 +1,11 @@
 import { AudioListener } from "GameObject/Components/AudioListener";
 import { AudioSource } from "GameObject/Components/AudioSource";
-import { Disposable, Dispose } from "GameObject/Dispose";
+import { Disposable } from "GameObject/Dispose";
 import { clamp } from "Utility/Helpers";
 import { AudioEffect } from "./AudioEffect";
 
 /** @category Audio */
 export class AudioMixer implements Disposable {
-    private static _mixers: Record<string, AudioMixer> = {};
-    private static _nextID = 0;
     private readonly _id: number;
     private readonly _name: string;
 
@@ -15,9 +13,7 @@ export class AudioMixer implements Disposable {
     private _destination?: AudioNode;
 
     /**
-     *
      * Effects are applied in ascending index order.
-     *
      */
     private readonly _effects: AudioEffect[];
     private readonly _sources: AudioSource[];
@@ -26,15 +22,10 @@ export class AudioMixer implements Disposable {
     private _connected: boolean;
 
     /**
-     *
-     * Mixers are stored and can be accessed with AudioMixer.get(name);
-     *
+     * @internal
      */
-    public constructor(name: string) {
-        if (AudioMixer._mixers[name]) throw new Error(`Mixer exists: ${name}`);
-        AudioMixer._mixers[name] = this;
-
-        this._id = AudioMixer._nextID++;
+    public constructor(name: string, id: number) {
+        this._id = id;
         this._name = name;
         this._node = AudioListener.context.createGain();
 
@@ -45,10 +36,6 @@ export class AudioMixer implements Disposable {
         this._connected = false;
 
         this.connect();
-    }
-
-    public static get(name: string): AudioMixer | undefined {
-        return AudioMixer._mixers[name];
     }
 
     private get node(): AudioNode {
@@ -74,9 +61,7 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     *
      * @param mixer AudioMixer instance or instance._id
-     *
      */
     public removeChild(mixer: AudioMixer | number): AudioMixer | undefined {
         const id =
@@ -109,9 +94,7 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     *
      * @param effect AudioEffect instance
-     *
      */
     public removeEffect(effect: AudioEffect): void {
         const i = this._effects.findIndex((s) => s.id === effect.id);
@@ -166,9 +149,7 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     *
      * @internal
-     *
      */
     public addSource(source: AudioSource): void {
         this._sources.push(source);
@@ -176,9 +157,7 @@ export class AudioMixer implements Disposable {
     }
 
     /**
-     *
      * @param source AudioSource instance
-     *
      */
     public removeSource(source: AudioSource): void {
         const i = this._sources.findIndex((s) => s.componentID === source.componentID);
@@ -200,8 +179,6 @@ export class AudioMixer implements Disposable {
     }
 
     public dispose(): void {
-        delete AudioMixer._mixers[this._name];
-
         this.disconnect();
         this.disconnectEffects();
         this.disconnectSources();
@@ -216,12 +193,6 @@ export class AudioMixer implements Disposable {
 
         for (const m of this._mixers) {
             this.removeChild(m);
-        }
-    }
-
-    public static reset(): void {
-        for (const mixer in this._mixers) {
-            Dispose(this._mixers[mixer]);
         }
     }
 }
