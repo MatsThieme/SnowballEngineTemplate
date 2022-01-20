@@ -22,15 +22,22 @@ export class EventTarget<T extends EventType> {
     public removeListener<U extends keyof T>(eventName: U, handler: EventHandler<T[U]>): void {
         if (this._events[eventName]) {
             delete this._events[eventName]![handler.id];
-            if (Object.keys(this._events[eventName]!).length === 0) delete this._events[eventName];
+
+            let counter = 0;
+
+            for (const key in this._events) {
+                counter++;
+            }
+
+            if (counter === 0) delete this._events[eventName];
         }
     }
 
     public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void {
         if (this._events[eventName]) {
-            Object.keys(this._events[eventName]!).map((id) =>
-                this._events[eventName]![<any>id].handler(...args)
-            );
+            for (const id in this._events) {
+                this._events[eventName]![id].handler(...args);
+            }
         }
     }
 

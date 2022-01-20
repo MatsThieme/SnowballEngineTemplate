@@ -41,50 +41,7 @@ export type TextEventTypes = {} & ComponentEventTypes;
 export type TextureEventTypes = {} & RenderableEventTypes;
 export type TerrainRendererEventTypes = {} & RenderableEventTypes;
 export type TilemapRendererEventTypes = {} & RenderableEventTypes;
-export type TransformEventTypes = {
-    /** Triggered when position, rotation or scale were modified by the engine */
-    modifiedinternal: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-    /** Triggered when position, rotation or scale of the parent transform were modified by the engine */
-    parentmodifiedinternal: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-    /** Triggered when position, rotation or scale were modified, excluding changes made by the engine */
-    modified: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-    /** Triggered when position, rotation or scale of the parent transform were modified, excluding changes made by the engine */
-    parentmodified: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-    /** Triggered when position, rotation or scale were modified */
-    change: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-    /** Triggered when position, rotation or scale of the parent transform were modified */
-    parentchange: [
-        transform: Transform,
-        positionDifference?: Readonly<IVector2>,
-        rotationDifference?: Readonly<IAngle>,
-        scaleDifference?: Readonly<IVector2>
-    ];
-} & ComponentEventTypes;
+
 export type VideoEventTypes = { play: []; pause: []; end: [] } & RenderableEventTypes;
 
 export type GameObjectEventTypes = {
@@ -93,15 +50,6 @@ export type GameObjectEventTypes = {
     childadd: [child: GameObject];
     childremove: [child: GameObject];
     parentchanged: [newParent: GameObject | undefined];
-};
-
-export type SceneEventTypes = {
-    audiolisteneradd: [listener: AudioListener];
-    audiolistenerremove: [listener: AudioListener];
-    start: [];
-    stop: [];
-    unload: [];
-    unloaded: [];
 };
 
 export type DisposableEventTypes = {

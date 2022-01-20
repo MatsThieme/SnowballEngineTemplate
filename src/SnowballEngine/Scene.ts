@@ -9,7 +9,6 @@ import { Destroy, Destroyable, Destroyer } from "GameObject/Destroy";
 import { GameObject } from "GameObject/GameObject";
 import { Input } from "Input/Input";
 import { EventTarget } from "Utility/Events/EventTarget";
-import { SceneEventTypes } from "Utility/Events/EventTypes";
 import { clearObject } from "Utility/Helpers";
 import { Interval } from "Utility/Interval/Interval";
 import { Stopwatch } from "Utility/Stopwatch";
@@ -17,6 +16,15 @@ import { CameraManager } from "./Camera/CameraManager";
 import { Framedata } from "./Framedata";
 import { GameTime } from "./GameTime";
 import { Physics } from "./Physics/Physics";
+
+export type SceneEventTypes = {
+    audiolisteneradd: [listener: AudioListener];
+    audiolistenerremove: [listener: AudioListener];
+    start: [];
+    stop: [];
+    unload: [];
+    unloaded: [];
+};
 
 /** @category Scene */
 export class Scene extends EventTarget<SceneEventTypes> {

@@ -3,10 +3,54 @@ import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Angle } from "Utility/Angle";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { TransformEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
-import { Component } from "../Component";
+import { Component, ComponentEventTypes } from "../Component";
 import { TransformRelation } from "./TransformRelation";
+
+export type TransformEventTypes = {
+    /** Triggered when position, rotation or scale were modified by the engine */
+    modifiedinternal: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+    /** Triggered when position, rotation or scale of the parent transform were modified by the engine */
+    parentmodifiedinternal: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+    /** Triggered when position, rotation or scale were modified, excluding changes made by the engine */
+    modified: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+    /** Triggered when position, rotation or scale of the parent transform were modified, excluding changes made by the engine */
+    parentmodified: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+    /** Triggered when position, rotation or scale were modified */
+    change: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+    /** Triggered when position, rotation or scale of the parent transform were modified */
+    parentchange: [
+        transform: Transform,
+        positionDifference?: Readonly<IVector2>,
+        rotationDifference?: Readonly<IAngle>,
+        scaleDifference?: Readonly<IVector2>
+    ];
+} & ComponentEventTypes;
 
 /** @category Component */
 export class Transform extends Component<TransformEventTypes> implements Transformable {

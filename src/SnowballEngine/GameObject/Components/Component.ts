@@ -4,8 +4,20 @@ import { GameObject } from "GameObject/GameObject";
 import { Debug } from "SnowballEngine/Debug";
 import { EventHandler } from "Utility/Events/EventHandler";
 import { EventTarget } from "Utility/Events/EventTarget";
-import { ComponentEventTypes } from "Utility/Events/EventTypes";
 import { Camera } from "./Camera";
+
+export type ComponentEventTypes = {
+    awake: [];
+    start: [];
+    enable: [];
+    disable: [];
+    destroy: [];
+    prerender: [camera: Camera];
+    postrender: [camera: Camera];
+    earlyupdate: [];
+    update: [];
+    lateupdate: [];
+};
 
 /** @category Component */
 export abstract class Component<EventTypes extends ComponentEventTypes>
