@@ -11,7 +11,7 @@ export class AudioMixerManager<Name extends string> {
     }
 
     public getMixer(name: Name): AudioMixer {
-        return this._mixers[name] ?? (this._mixers[name] = new AudioMixer(name, this._nextID++));
+        return this._mixers[name] ?? (this._mixers[name] = new AudioMixer(this._nextID++));
     }
 
     public reset(): void {

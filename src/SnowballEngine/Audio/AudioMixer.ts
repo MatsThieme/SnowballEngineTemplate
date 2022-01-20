@@ -7,7 +7,6 @@ import { AudioEffect } from "./AudioEffect";
 /** @category Audio */
 export class AudioMixer implements Disposable {
     private readonly _id: number;
-    private readonly _name: string;
 
     private readonly _node: GainNode;
     private _destination?: AudioNode;
@@ -24,9 +23,8 @@ export class AudioMixer implements Disposable {
     /**
      * @internal
      */
-    public constructor(name: string, id: number) {
+    public constructor(id: number) {
         this._id = id;
-        this._name = name;
         this._node = AudioListener.context.createGain();
 
         this._effects = [];
