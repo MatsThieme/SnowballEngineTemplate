@@ -1,7 +1,12 @@
+import { EventTarget } from "./Utilities/Events/EventTarget";
 import { Scene } from "./Scene";
 
+export type SceneManagerEventTypes = {
+    loaded: [scene: Scene];
+};
+
 /** @category Scene */
-export class SceneManager {
+export class SceneManager extends EventTarget<SceneManagerEventTypes> {
     public readonly canvasElement: HTMLCanvasElement;
     public readonly domElement: HTMLElement;
 
@@ -11,6 +16,8 @@ export class SceneManager {
     private static _instance: SceneManager;
 
     constructor(id: string) {
+        super();
+
         SceneManager._instance = this;
 
         this.domElement = document.getElementById(id) || document.body;
@@ -33,6 +40,8 @@ export class SceneManager {
         this._scene = new Scene(name, this.canvasElement);
         await initializer(this._scene);
         this._scene.start();
+
+        this.dispatchEvent("loaded", this._scene);
 
         return this._scene;
     }
