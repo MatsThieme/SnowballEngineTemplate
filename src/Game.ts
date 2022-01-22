@@ -17,9 +17,6 @@ export class Game {
          */
         Assets.set("some image", Shape.createSprite("Rect", Color.orange));
 
-        // timeout to show example loadingscreen
-        await new Timeout(1000);
-
         await sceneManager.load("Main Scene");
     }
 }
