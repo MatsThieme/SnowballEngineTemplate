@@ -7,7 +7,6 @@ import { KeyboardButton } from "./KeyboardButton";
 /** @category Input */
 export class Keyboard implements InputDevice {
     private _keys: Map<KeyboardButton, InputButton>;
-    private _fireListener: Map<KeyboardButton, boolean>;
     private _axesKeys: Map<KeyboardAxis, KeyboardButton[]>;
 
     private _onKeyDown: (e: KeyboardEvent) => void;
@@ -15,7 +14,6 @@ export class Keyboard implements InputDevice {
 
     public constructor() {
         this._keys = new Map();
-        this._fireListener = new Map();
         this._axesKeys = new Map();
 
         this._onKeyDown = ((e: KeyboardEvent) => {
@@ -27,8 +25,6 @@ export class Keyboard implements InputDevice {
             }
 
             btn.down = true;
-
-            if (!btn.clicked) this._fireListener.set(<KeyboardButton>e.code, true);
         }).bind(this);
 
         this._onKeyUp = ((e: KeyboardEvent) => {
@@ -40,8 +36,6 @@ export class Keyboard implements InputDevice {
             }
 
             btn.down = false;
-
-            this._fireListener.set(<KeyboardButton>e.code, true);
         }).bind(this);
 
         this.addListeners();

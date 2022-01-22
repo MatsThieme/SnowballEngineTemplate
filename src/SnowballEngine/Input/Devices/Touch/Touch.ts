@@ -9,19 +9,16 @@ import { TouchButton } from "./TouchButton";
 export class Touch implements InputDevice {
     private _positions: InputAxis[];
     private _button: InputButton;
-    private _fireListener: boolean;
 
     private _onTouchEvent: (e: TouchEvent) => void;
 
     public constructor() {
         this._button = new InputButton();
         this._positions = [];
-        this._fireListener = false;
-
-        const scene = SceneManager.getInstance()?.getCurrentScene()!;
 
         this._onTouchEvent = ((e: TouchEvent) => {
             e.preventDefault();
+            const scene = SceneManager.getInstance()?.getCurrentScene()!;
 
             this._positions.splice(0);
 
@@ -34,8 +31,6 @@ export class Touch implements InputDevice {
             }
 
             this._button.down = !!e.touches.length;
-
-            this._fireListener = true;
         }).bind(this);
 
         this.addListeners();
