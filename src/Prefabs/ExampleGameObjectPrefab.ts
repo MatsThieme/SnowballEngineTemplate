@@ -17,8 +17,8 @@ export function ExampleGameObjectPrefab(gameObject: GameObject) {
     });
 
     gameObject.addComponent(Texture, (texture) => {
+        texture.setSize(text.size);
         texture.asset = Assets.get("some image");
-        texture.size = text.size;
     });
 
     gameObject.addComponent(ExampleBehaviour);

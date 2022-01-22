@@ -3,11 +3,12 @@ import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Renderable, RenderableEventTypes } from "./Renderable";
+import { RenderableSprite } from "./RenderableSprite";
 
 export type TextureEventTypes = {} & RenderableEventTypes;
 
 /** @category Component */
-export class Texture extends Renderable<TextureEventTypes> {
+export class Texture extends RenderableSprite<TextureEventTypes> {
     private _asset?: Asset;
 
     public constructor(gameObject: GameObject) {
@@ -20,7 +21,9 @@ export class Texture extends Renderable<TextureEventTypes> {
     public set asset(val: Asset | undefined) {
         if (val?.type === AssetType.Image) {
             this._asset = val;
-            this.sprite = val.getPIXISprite();
-        } else this.sprite = this._asset = undefined;
+            this.setSprite(val.getPIXISprite());
+        } else {
+            this.setSprite((this._asset = undefined));
+        }
     }
 }
