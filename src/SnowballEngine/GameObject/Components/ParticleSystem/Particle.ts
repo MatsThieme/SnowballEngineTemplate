@@ -139,7 +139,7 @@ export class Particle implements Disposable {
         }
 
         this._container.angle = Math.random() * 360;
-        particleSystem.sprite!.addChild(this._container);
+        particleSystem.getContainer().addChild(this._container);
     }
 
     public get sprite(): Sprite {

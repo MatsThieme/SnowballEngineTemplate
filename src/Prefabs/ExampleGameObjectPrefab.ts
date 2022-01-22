@@ -6,7 +6,7 @@ export function ExampleGameObjectPrefab(gameObject: GameObject) {
         text.setStyle({
             fontFamily: "arial",
             align: "center",
-            fontSize: 0.03 * innerHeight,
+            fontSize: 0.05 * innerHeight,
         });
 
         text.text = "Move me with\nW/A/S/D or\nusing a Gamepad";

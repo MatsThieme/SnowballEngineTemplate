@@ -24,7 +24,7 @@ interface SpriteValues {
 export abstract class RenderableSprite<
     EventTypes extends RenderableSpriteEventTypes
 > extends Component<EventTypes> {
-    protected _sprite?: Sprite;
+    private _sprite?: Sprite;
 
     private _spriteValues: SpriteValues;
     private _visible: boolean;

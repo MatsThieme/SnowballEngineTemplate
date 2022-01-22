@@ -19,7 +19,7 @@ interface ContainerValues {
 export abstract class RenderableContainer<
     EventTypes extends RenderableContainerEventTypes
 > extends Component<EventTypes> {
-    protected _container?: Container;
+    private _container?: Container;
 
     private _containerValues: ContainerValues;
     private _visible: boolean;

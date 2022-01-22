@@ -1,11 +1,11 @@
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { Renderable, RenderableEventTypes } from "./Renderable";
+import { RenderableContainer, RenderableContainerEventTypes } from "./RenderableContainer";
 
-export type TerrainRendererEventTypes = {} & RenderableEventTypes;
+export type TerrainRendererEventTypes = {} & RenderableContainerEventTypes;
 
 /** @category Component */
-export class TerrainRenderer extends Renderable<TerrainRendererEventTypes> {
+export class TerrainRenderer extends RenderableContainer<TerrainRendererEventTypes> {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.TerrainRenderer);
 

@@ -1,13 +1,13 @@
 import { Container } from "@pixi/display";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { Renderable, RenderableEventTypes } from "../Renderable";
+import { RenderableContainer, RenderableContainerEventTypes } from "../RenderableContainer";
 import { SpriteAnimation } from "./SpriteAnimation";
 
-export type AnimatedSpriteEventTypes = {} & RenderableEventTypes;
+export type AnimatedSpriteEventTypes = {} & RenderableContainerEventTypes;
 
 /** @category Component */
-export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
+export class AnimatedSprite extends RenderableContainer<AnimatedSpriteEventTypes> {
     public readonly spriteAnimations: { [key: string]: SpriteAnimation };
 
     private _activeAnimation: string;
@@ -15,7 +15,7 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.AnimatedSprite);
 
-        this.sprite = new Container();
+        this.setContainer(new Container());
 
         this.spriteAnimations = {};
 
@@ -23,7 +23,7 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
     }
 
     protected override update(): void {
-        if (!this.active || !this.sprite) return;
+        if (!this.active || !this.getContainer()) return;
         if (!this._activeAnimation) this.activeAnimation = Object.keys(this.spriteAnimations)[0];
 
         this.spriteAnimations[this._activeAnimation].update();
@@ -36,14 +36,14 @@ export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {
      */
     public set activeAnimation(val: string) {
         if (this._activeAnimation in this.spriteAnimations) {
-            this.sprite!.removeChild(this.spriteAnimations[this._activeAnimation].container);
+            this.getContainer().removeChild(this.spriteAnimations[this._activeAnimation].container);
         }
 
         if (val in this.spriteAnimations) {
             this._activeAnimation = val;
             this.spriteAnimations[this._activeAnimation].reset();
 
-            this.sprite!.addChild(this.spriteAnimations[this._activeAnimation].container);
+            this.getContainer().addChild(this.spriteAnimations[this._activeAnimation].container);
 
             for (const anim in this.spriteAnimations) {
                 this.spriteAnimations[anim].container.visible = false;

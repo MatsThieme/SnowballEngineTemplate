@@ -2,9 +2,9 @@ import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { Renderable, RenderableEventTypes } from "./Renderable";
+import { RenderableSprite, RenderableSpriteEventTypes } from "./RenderableSprite";
 
-export type VideoEventTypes = { play: []; pause: []; end: [] } & RenderableEventTypes;
+export type VideoEventTypes = { play: []; pause: []; end: [] } & RenderableSpriteEventTypes;
 
 /**
  *
@@ -12,7 +12,7 @@ export type VideoEventTypes = { play: []; pause: []; end: [] } & RenderableEvent
  * @category Component
  *
  */
-export class Video extends Renderable<VideoEventTypes> {
+export class Video extends RenderableSprite<VideoEventTypes> {
     private _asset?: Asset;
     private _el?: HTMLVideoElement;
 
@@ -38,7 +38,7 @@ export class Video extends Renderable<VideoEventTypes> {
     public set asset(val: Asset | undefined) {
         if (val?.type === AssetType.Video) {
             this._asset = val;
-            this.sprite = val.getPIXISprite();
+            this.setSprite(val.getPIXISprite());
 
             this._el = <HTMLVideoElement>val.data;
             this._el.addEventListener("end", this._endListener);
@@ -47,7 +47,7 @@ export class Video extends Renderable<VideoEventTypes> {
             this._el.currentTime = this._currentTime;
         } else if (!val) {
             if (this._el) this._el.removeEventListener("end", this._endListener);
-            this.sprite = this._asset = this._el = undefined;
+            this.setSprite((this._asset = this._el = undefined));
         } else {
             throw new Error("asset.type !== AssetType.Video");
         }

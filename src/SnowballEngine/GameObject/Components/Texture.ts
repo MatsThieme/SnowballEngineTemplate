@@ -2,10 +2,9 @@ import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { RenderableEventTypes } from "./Renderable";
-import { RenderableSprite } from "./RenderableSprite";
+import { RenderableSprite, RenderableSpriteEventTypes } from "./RenderableSprite";
 
-export type TextureEventTypes = {} & RenderableEventTypes;
+export type TextureEventTypes = {} & RenderableSpriteEventTypes;
 
 /** @category Component */
 export class Texture extends RenderableSprite<TextureEventTypes> {

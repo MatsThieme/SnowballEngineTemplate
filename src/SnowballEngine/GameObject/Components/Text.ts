@@ -5,10 +5,9 @@ import { GameObject } from "GameObject/GameObject";
 import { Debug } from "SnowballEngine/Debug";
 import { Color } from "Utility/Color";
 import { Vector2 } from "Utility/Vector2";
-import { ComponentEventTypes } from "GameObject/Components/Component";
-import { RenderableContainer } from "./RenderableContainer";
+import { RenderableContainer, RenderableContainerEventTypes } from "./RenderableContainer";
 
-export type TextEventTypes = {} & ComponentEventTypes;
+export type TextEventTypes = {} & RenderableContainerEventTypes;
 
 /** @category Component */
 export class Text extends RenderableContainer<TextEventTypes> {

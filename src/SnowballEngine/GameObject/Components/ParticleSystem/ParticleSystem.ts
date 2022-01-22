@@ -7,13 +7,13 @@ import { Angle } from "Utility/Angle";
 import { Color } from "Utility/Color";
 import { Range } from "Utility/Range";
 import { Vector2 } from "Utility/Vector2";
-import { Renderable, RenderableEventTypes } from "../Renderable";
+import { RenderableContainer, RenderableContainerEventTypes } from "../RenderableContainer";
 import { Particle } from "./Particle";
 
-export type ParticleSystemEventTypes = {} & RenderableEventTypes;
+export type ParticleSystemEventTypes = {} & RenderableContainerEventTypes;
 
 /** @category Component */
-export class ParticleSystem extends Renderable<ParticleSystemEventTypes> {
+export class ParticleSystem extends RenderableContainer<ParticleSystemEventTypes> {
     public readonly particleSettings: ParticleSettings;
     public readonly emissionSettings: EmissionSettings;
     public timeScale: number;
@@ -25,7 +25,7 @@ export class ParticleSystem extends Renderable<ParticleSystemEventTypes> {
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.ParticleSystem);
 
-        this.sprite = new Container();
+        this.setContainer(new Container());
 
         this.particleSettings = {
             startSize: new Vector2(0.1, 0.1),

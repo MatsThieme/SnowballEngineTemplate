@@ -4,20 +4,21 @@ import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { Dispose } from "GameObject/Dispose";
 import { GameObject } from "GameObject/GameObject";
+import { MaskData } from "pixi.js";
 import { AABB } from "Utility/AABB";
 import { Angle } from "Utility/Angle";
 import { EventHandler } from "Utility/Events/EventHandler";
 import { Vector2 } from "Utility/Vector2";
 import { Camera } from "../Camera";
-import { Renderable, RenderableEventTypes } from "../Renderable";
+import { RenderableContainer, RenderableContainerEventTypes } from "../RenderableContainer";
 import { Transform, TransformEventTypes } from "../Transform/Transform";
 import { BackgroundLayer } from "./BackgroundLayer";
 import { BackgroundLayerAsset } from "./BackgroundLayerAsset";
 
-export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
+export type ParallaxBackgroundEventTypes = {} & RenderableContainerEventTypes;
 
 /** @category Component */
-export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes> {
+export class ParallaxBackground extends RenderableContainer<ParallaxBackgroundEventTypes> {
     public scrollSpeed: number;
 
     private readonly _backgroundLayers: BackgroundLayer[];
@@ -33,7 +34,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
      */
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.ParallaxBackground);
-        this.sprite = new Container();
+        this.setContainer(new Container());
 
         this.scrollSpeed = 1;
 
@@ -41,8 +42,8 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
 
         this._backgroundLayers = [];
 
-        this.sprite!.mask = new Graphics();
-        this.sprite!.addChild(this.sprite!.mask);
+        this.getContainer().mask = new Graphics();
+        this.getContainer().addChild(this.getContainer().mask as Container);
 
         this._transformListener = new EventHandler((t, p, r, s) => {
             this.recalculateAABB();
@@ -95,13 +96,13 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
         if (asset.asset?.type !== AssetType.Image)
             throw new Error(`Could not add background: Asset is not of type Image (${asset.asset?.name})`);
 
-        this._backgroundLayers.push(new BackgroundLayer(speed, asset, this.sprite!, this));
+        this._backgroundLayers.push(new BackgroundLayer(speed, asset, this.getContainer(), this));
 
-        this.sprite!.sortChildren();
+        this.getContainer().sortChildren();
 
         this.recalculateAABB();
 
-        (<Graphics>this.sprite!.mask)
+        (<Graphics>this.getContainer().mask)
             .clear()
             .beginFill(0)
             .drawRect(this._aabb.left, this._aabb.bottom, this._aabb.width, this._aabb.height)
