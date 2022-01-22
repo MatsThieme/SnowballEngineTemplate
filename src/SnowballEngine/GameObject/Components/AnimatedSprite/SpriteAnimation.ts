@@ -3,6 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
 import { Disposable } from "GameObject/Dispose";
+import { BLEND_MODES } from "pixi.js";
 import { BlendModes as BlendMode } from "SnowballEngine/Camera/BlendModes";
 import { GameTime } from "SnowballEngine/GameTime";
 import { Color } from "Utility/Color";
@@ -104,11 +105,11 @@ export class SpriteAnimation implements Disposable {
     }
 
     public get blendMode(): BlendMode {
-        return <any>this._sprites[0].blendMode;
+        return this._sprites[0].blendMode as unknown as BlendMode;
     }
     public set blendMode(val: BlendMode) {
         for (const s of this._sprites) {
-            s.blendMode = <any>val;
+            s.blendMode = val as unknown as BLEND_MODES;
         }
     }
 

@@ -11,7 +11,8 @@ export type AudioListenerEventTypes = {} & ComponentEventTypes;
 
 /** @category Component */
 export class AudioListener extends Component<AudioListenerEventTypes> {
-    public static readonly context: AudioContext = new AudioContext();
+    public static readonly context: AudioContext = new (window.AudioContext ??
+        (window as any).webkitAudioContext)();
 
     public static readonly node: AudioDestinationNode = AudioListener.context.destination;
 

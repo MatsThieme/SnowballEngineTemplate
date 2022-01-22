@@ -188,7 +188,7 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
     }
 
     public hasCollider(collider: Collider): boolean {
-        return <any>collider.body && this.body.parts.findIndex((p) => p.id === collider.body!.id) !== -1;
+        return Boolean(collider.body) && this.body.parts.findIndex((p) => p.id === collider.body!.id) !== -1;
     }
 
     public removeCollider(collider: Collider): void {
@@ -214,7 +214,7 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
         if (this.body.parts.length > 1) this.connect();
     }
 
-    private transformBody(f: () => any): void {
+    private transformBody(f: () => void): void {
         const angle = this.body.angle;
         Body.setAngle(this.body, 0);
 

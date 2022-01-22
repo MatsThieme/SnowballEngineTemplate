@@ -10,16 +10,14 @@ import { Game } from "../Game";
 import { Scene } from "./Scene";
 import { SceneManager } from "./SceneManager";
 
-window.AudioContext = window.AudioContext || (<any>window).webkitAudioContext; // support safari
-
 PIXI.utils.skipHello(); // don't show PIXIs hello in console
 Ticker.system.autoStart = false;
 
 if (projectConfig.build.debugMode) {
-    (<any>window).PIXI = PIXI; // for the chrome pixijs developer tools
-    (<any>window).GameObject = GameObject;
-    (<any>window).Component = Component;
-    (<any>window).Scene = Scene;
+    (window as any).PIXI = PIXI; // for the chrome pixijs developer tools
+    (window as any).GameObject = GameObject;
+    (window as any).Component = Component;
+    (window as any).Scene = Scene;
 }
 
 Common.setDecomp(poly_decomp);

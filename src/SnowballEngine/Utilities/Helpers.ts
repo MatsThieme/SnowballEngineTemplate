@@ -32,7 +32,7 @@ export const average = (...numbers: number[]): number => numbers.reduce((t, c) =
  *
  */
 export function triggerOnUserInputEvent<T, U>(
-    cb: (...args: U[]) => T | Promise<T> = <any>(() => {}),
+    cb: (...args: U[]) => T | Promise<T> = () => undefined as unknown as T,
     ...params: U[]
 ): Promise<T> {
     return new Promise((resolve) => {

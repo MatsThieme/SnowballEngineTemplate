@@ -102,3 +102,9 @@ declare module "matter-js" {
         collider: Collider;
     }
 }
+
+declare module "@pixi/display" {
+    interface DisplayObject {
+        __transformID__?: number;
+    }
+}

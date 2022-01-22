@@ -478,9 +478,7 @@ export class Transform extends Component<TransformEventTypes> implements Transfo
             rotation: new Angle(pixiObject.rotation),
             scale: Vector2.from(pixiObject.scale),
             parent,
-            id:
-                (<any>pixiObject).__transformID__ ||
-                ((<any>pixiObject).__transformID__ = Transform._nextID++),
+            id: pixiObject.__transformID__ || (pixiObject.__transformID__ = Transform._nextID++),
         };
     }
 

@@ -634,7 +634,7 @@ export class GameObject extends EventTarget<GameObjectEventTypes> implements Des
     }
 
     public static reset(): void {
-        (<any>GameObject)._nextID = 0;
+        GameObject._nextID = 0;
         (<Mutable<typeof GameObject>>GameObject).gameObjects = [];
     }
 }

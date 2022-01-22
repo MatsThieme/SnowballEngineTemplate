@@ -46,7 +46,6 @@ export class Physics implements Destroyable {
 
         if (projectConfig.build.debugMode) {
             document.body.appendChild(this._canvas);
-            (<any>window).physics = this;
         }
     }
 

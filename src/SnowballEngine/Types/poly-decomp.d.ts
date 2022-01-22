@@ -1,10 +1,10 @@
 declare module "poly-decomp" {
     export interface x {
-        decomp: any;
-        quickDecomp: any;
-        isSimple: any;
-        removeCollinearPoints: any;
-        removeDuplicatePoints: any;
-        makeCCW: any;
+        decomp: unknown;
+        quickDecomp: unknown;
+        isSimple: unknown;
+        removeCollinearPoints: unknown;
+        removeDuplicatePoints: unknown;
+        makeCCW: unknown;
     }
 }

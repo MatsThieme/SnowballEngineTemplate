@@ -5,9 +5,10 @@ import { Vector2 as IVector2, Vector2 } from "Utility/Vector2";
 import { AudioListener } from "./GameObject/Components/AudioListener";
 import { SceneManager } from "./SceneManager";
 
+type Platform = "android" | "ios" | "browser" | "windows" | "osx";
+
 export class Client {
-    public static platform: "android" | "ios" | "browser" | "windows" | "osx" =
-        <any>(window.cordova || {}).platformId || "browser";
+    public static platform: Platform = ((window.cordova || {}).platformId as Platform) ?? "browser";
     public static isMobile: boolean = isMobile(navigator).any;
 
     /**

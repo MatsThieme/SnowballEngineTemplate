@@ -8,13 +8,13 @@ export class CircleCollider extends Collider {
         super(gameObject, ComponentType.CircleCollider);
     }
 
-    protected buildBody(options: IChamferableBodyDefinition): Body {
+    protected buildBody(options: IChamferableBodyDefinition & Record<keyof Body, Body[keyof Body]>): Body {
         return this.addPropertiesToBody(
-            Bodies.polygon(0, 0, 50, 0.5, <any>{
+            Bodies.polygon(0, 0, 50, 0.5, {
                 ...options,
                 circleRadius: 1,
                 slop: 0.05 * this.gameObject.scene.physics.worldScale,
-            })
+            } as Body)
         );
     }
 }

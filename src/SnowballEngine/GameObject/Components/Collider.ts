@@ -18,7 +18,9 @@ export abstract class Collider extends Component<ColliderEventTypes> {
 
     protected readonly _onTransformChange: EventHandler<TransformEventTypes["modified"]>;
     protected readonly _onTransformParentChange: EventHandler<TransformEventTypes["parentmodified"]>;
-    protected readonly _onGameObjectParentComponentChange: EventHandler<any>;
+    protected readonly _onGameObjectParentComponentChange: EventHandler<
+        GameObjectEventTypes["parentchanged"] | GameObjectEventTypes["componentadd"]
+    >;
 
     protected _rigidBody?: Rigidbody;
 
@@ -301,7 +303,7 @@ export abstract class Collider extends Component<ColliderEventTypes> {
         this._positionNeedUpdate = this._rotationNeedUpdate = this._scaleNeedUpdate = false;
     }
 
-    private transformBody(f: () => any): void {
+    private transformBody(f: () => void): void {
         if (!this.body) return Debug.warn("this.body === undefined");
 
         const connected = this._isConnected;
@@ -324,8 +326,9 @@ export abstract class Collider extends Component<ColliderEventTypes> {
      *
      */
     protected addPropertiesToBody(body: Body): Body {
-        (<any>body).gameObject = this.gameObject;
-        (<any>body).collider = this;
+        body.gameObject = this.gameObject;
+        body.collider = this;
+
         return body;
     }
 
