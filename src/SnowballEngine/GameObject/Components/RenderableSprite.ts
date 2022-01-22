@@ -2,8 +2,9 @@ import { Sprite } from "@pixi/sprite";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { BLEND_MODES } from "pixi.js";
-import { BlendModes, Vector2 } from "SE";
 import { Color } from "Utility/Color";
+import { Vector2 } from "Utility/Vector2";
+import { BlendModes } from "../../Camera/BlendModes";
 import { Component, ComponentEventTypes } from "./Component";
 
 export type RenderableSpriteEventTypes = {} & ComponentEventTypes;
@@ -151,11 +152,19 @@ export abstract class RenderableSprite<
 
         return this._spriteValues.tint;
     }
-    public setTint(tint: Readonly<Color>): void {
+    public setTint(tint: Readonly<Color> | undefined): void {
         if (this._sprite) {
-            this._sprite.tint = tint.rgb;
+            if (tint) {
+                this._sprite.tint = tint.rgb;
+            } else {
+                this._sprite.tint = 0xffffff;
+            }
         } else {
-            this._spriteValues.tint.rgb = tint.rgb;
+            if (tint) {
+                this._spriteValues.tint.rgb = tint.rgb;
+            } else {
+                this._spriteValues.tint.rgb = 0xffffff;
+            }
         }
     }
 

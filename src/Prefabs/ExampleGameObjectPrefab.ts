@@ -1,5 +1,5 @@
 import { ExampleBehaviour } from "Behaviours/ExampleBehaviour";
-import { AlignV, Assets, GameObject, Text, Texture } from "SE";
+import { Assets, GameObject, Text, Texture } from "SE";
 
 export function ExampleGameObjectPrefab(gameObject: GameObject) {
     const text = gameObject.addComponent(Text, (text) => {
@@ -11,13 +11,11 @@ export function ExampleGameObjectPrefab(gameObject: GameObject) {
 
         text.text = "Move me with\nW/A/S/D or\nusing a Gamepad";
 
-        text.alignV = AlignV.Center;
-
-        text.zIndex = 1;
+        text.setZIndex(1);
     });
 
     gameObject.addComponent(Texture, (texture) => {
-        texture.setSize(text.size);
+        texture.setSize(text.getSize());
         texture.asset = Assets.get("some image");
     });
 

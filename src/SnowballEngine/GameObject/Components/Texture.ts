@@ -2,7 +2,7 @@ import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { Renderable, RenderableEventTypes } from "./Renderable";
+import { RenderableEventTypes } from "./Renderable";
 import { RenderableSprite } from "./RenderableSprite";
 
 export type TextureEventTypes = {} & RenderableEventTypes;
