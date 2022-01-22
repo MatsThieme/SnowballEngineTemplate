@@ -35,7 +35,7 @@ export class EventTarget<T extends EventType> {
 
     public dispatchEvent<U extends keyof T>(eventName: U, ...args: T[U]): void {
         if (this._events[eventName]) {
-            for (const id in this._events) {
+            for (const id in this._events[eventName]) {
                 this._events[eventName]![id].handler(...args);
             }
         }
