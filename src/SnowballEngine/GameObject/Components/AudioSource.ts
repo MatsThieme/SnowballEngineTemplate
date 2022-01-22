@@ -3,12 +3,13 @@ import { AudioMixer } from "SnowballEngine/Audio/AudioMixer";
 import { Client } from "SnowballEngine/Client";
 import { Debug } from "SnowballEngine/Debug";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { AudioSourceEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";
 import { AudioListener } from "./AudioListener";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
+
+export type AudioSourceEventTypes = { play: []; pause: []; end: [] } & ComponentEventTypes;
 
 /** @category Component */
 export class AudioSource extends Component<AudioSourceEventTypes> {

@@ -1,16 +1,11 @@
-import { Input } from "SnowballEngine/Input/Input";
 import { InputAxis } from "SnowballEngine/Input/InputAxis";
 import { InputButton } from "SnowballEngine/Input/InputButton";
-import { InputEvent } from "SnowballEngine/Input/InputEvent";
-import { EventTarget } from "Utility/Events/EventTarget";
-import { InputEventTypes } from "Utility/Events/EventTypes";
 import { InputDevice } from "../InputDevice";
-import { InputDeviceType } from "../InputDeviceType";
 import { KeyboardAxis } from "./KeyboardAxis";
 import { KeyboardButton } from "./KeyboardButton";
 
 /** @category Input */
-export class Keyboard extends EventTarget<InputEventTypes> implements InputDevice {
+export class Keyboard implements InputDevice {
     private _keys: Map<KeyboardButton, InputButton>;
     private _fireListener: Map<KeyboardButton, boolean>;
     private _axesKeys: Map<KeyboardAxis, KeyboardButton[]>;
@@ -19,8 +14,6 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
     private _onKeyUp: (e: KeyboardEvent) => void;
 
     public constructor() {
-        super();
-
         this._keys = new Map();
         this._fireListener = new Map();
         this._axesKeys = new Map();
@@ -99,41 +92,6 @@ export class Keyboard extends EventTarget<InputEventTypes> implements InputDevic
     public update(): void {
         for (const btn of Array.from(this._keys.values())) {
             btn.update();
-        }
-
-        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
-            const btn = <KeyboardButton | undefined>Input.inputMappingButtons.keyboard[type];
-            const ax = <KeyboardAxis | undefined>Input.inputMappingAxes.keyboard[type];
-
-            if ((btn === undefined && ax === undefined) || (btn && !this._fireListener.get(btn) && !ax))
-                continue;
-
-            if (ax) {
-                const keys = this.axisToKeys(ax);
-
-                if (
-                    keys &&
-                    keys[0] &&
-                    !this._fireListener.get(keys[0]) &&
-                    keys[1] &&
-                    !this._fireListener.get(keys[1])
-                )
-                    continue;
-            }
-
-            const e: InputEvent = {
-                type,
-                deviceType: InputDeviceType.Keyboard,
-                axis: ax !== undefined ? this.getAxis(ax) : undefined,
-                button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this,
-            };
-
-            if (!e.axis && !e.button) continue;
-
-            this.dispatchEvent(type, e);
-
-            if (btn) this._fireListener.set(btn, false);
         }
     }
 

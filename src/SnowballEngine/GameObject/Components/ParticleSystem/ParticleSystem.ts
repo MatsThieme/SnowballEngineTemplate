@@ -5,11 +5,12 @@ import { GameObject } from "GameObject/GameObject";
 import { GameTime } from "SnowballEngine/GameTime";
 import { Angle } from "Utility/Angle";
 import { Color } from "Utility/Color";
-import { ParticleSystemEventTypes } from "Utility/Events/EventTypes";
 import { Range } from "Utility/Range";
 import { Vector2 } from "Utility/Vector2";
-import { Renderable } from "../Renderable";
+import { Renderable, RenderableEventTypes } from "../Renderable";
 import { Particle } from "./Particle";
+
+export type ParticleSystemEventTypes = {} & RenderableEventTypes;
 
 /** @category Component */
 export class ParticleSystem extends Renderable<ParticleSystemEventTypes> {

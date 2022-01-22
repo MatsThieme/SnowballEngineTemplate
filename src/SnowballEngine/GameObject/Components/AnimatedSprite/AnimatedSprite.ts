@@ -1,9 +1,10 @@
 import { Container } from "@pixi/display";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { AnimatedSpriteEventTypes } from "Utility/Events/EventTypes";
-import { Renderable } from "../Renderable";
+import { Renderable, RenderableEventTypes } from "../Renderable";
 import { SpriteAnimation } from "./SpriteAnimation";
+
+export type AnimatedSpriteEventTypes = {} & RenderableEventTypes;
 
 /** @category Component */
 export class AnimatedSprite extends Renderable<AnimatedSpriteEventTypes> {

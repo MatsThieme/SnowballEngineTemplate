@@ -5,14 +5,13 @@ import { InputButton } from "SnowballEngine/Input/InputButton";
 import { InputEvent } from "SnowballEngine/Input/InputEvent";
 import { EventHandler } from "Utility/Events/EventHandler";
 import { EventTarget } from "Utility/Events/EventTarget";
-import { InputEventTypes } from "Utility/Events/EventTypes";
 import { InputDevice } from "../InputDevice";
 import { InputDeviceType } from "../InputDeviceType";
 import { GamepadAxis } from "./GamepadAxis";
 import { GamepadButton } from "./GamepadButton";
 
 /** @category Input */
-export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice {
+export class Gamepad implements InputDevice {
     private static _gamepads: (Gamepad | undefined)[] = [];
 
     public readonly gamepad: globalThis.Gamepad;
@@ -21,8 +20,6 @@ export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice
     private readonly _buttons: InputButton[];
 
     public constructor(gamepad: globalThis.Gamepad) {
-        super();
-
         this.gamepad = gamepad;
         this.id = gamepad.index;
 
@@ -67,25 +64,6 @@ export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice
             this._buttons[i].down = this.gamepad.buttons[i].pressed;
 
             this._buttons[i].update();
-        }
-
-        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
-            const btn = <GamepadButton | undefined>Input.inputMappingButtons.gamepad[type];
-            const ax = <GamepadAxis | undefined>Input.inputMappingAxes.gamepad[type];
-
-            if (btn === undefined && ax === undefined) continue;
-
-            const e: InputEvent = {
-                type,
-                deviceType: InputDeviceType.Gamepad,
-                axis: ax !== undefined ? this.getAxis(ax) : undefined,
-                button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this,
-            };
-
-            if (!e.axis && !e.button) continue;
-
-            this.dispatchEvent(type, e);
         }
     }
 
@@ -150,27 +128,5 @@ export class Gamepad extends EventTarget<InputEventTypes> implements InputDevice
     private static removeListeners(): void {
         window.removeEventListener(<any>"gamepadconnected", Gamepad.onGamepadConnected);
         window.removeEventListener(<any>"gamepaddisconnected", Gamepad.onGamepadDisconnected);
-    }
-
-    public static addListener<U extends keyof InputEventTypes>(
-        eventName: U,
-        handler: EventHandler<InputEventTypes[U]>
-    ): void {
-        for (const g of Gamepad._gamepads) {
-            if (g) {
-                g.addListener(eventName, handler);
-            }
-        }
-    }
-
-    public static removeListener<U extends keyof InputEventTypes>(
-        eventName: U,
-        handler: EventHandler<InputEventTypes[U]>
-    ): void {
-        for (const g of Gamepad._gamepads) {
-            if (g) {
-                g.removeListener(eventName, handler);
-            }
-        }
     }
 }

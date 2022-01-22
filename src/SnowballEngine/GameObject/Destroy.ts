@@ -1,11 +1,11 @@
-import { SceneManager } from "SE";
 import { Disposable, Dispose } from "./Dispose";
+import { SceneManager } from "../SceneManager";
 
 let nextID = 0;
 
 /**
  *
- * Destroy will execute prepareDestroy(if exists) and add it to the current Scenes destroyables. The Scene will execute destroy on each destroyable and Dispose it. The result is an empty object.
+ * Destroy will execute prepareDestroy(if exists) and add it to the current Scenes destroyables. The Scene will execute destroy on each destroyable and Dispose it.
  * @category Scene
  *
  */

@@ -1,12 +1,13 @@
 import { Debug } from "SnowballEngine/Debug";
 import { Scene } from "SnowballEngine/Scene";
-import { AudioListenerEventTypes } from "Utility/Events/EventTypes";
 import { triggerOnUserInputEvent } from "Utility/Helpers";
 import { Vector2 } from "Utility/Vector2";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";
 import { AudioSource } from "./AudioSource";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
+
+export type AudioListenerEventTypes = {} & ComponentEventTypes;
 
 /** @category Component */
 export class AudioListener extends Component<AudioListenerEventTypes> {

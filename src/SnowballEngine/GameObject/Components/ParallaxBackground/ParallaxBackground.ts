@@ -7,13 +7,14 @@ import { GameObject } from "GameObject/GameObject";
 import { AABB } from "Utility/AABB";
 import { Angle } from "Utility/Angle";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { ParallaxBackgroundEventTypes, TransformEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
 import { Camera } from "../Camera";
-import { Renderable } from "../Renderable";
-import { Transform } from "../Transform/Transform";
+import { Renderable, RenderableEventTypes } from "../Renderable";
+import { Transform, TransformEventTypes } from "../Transform/Transform";
 import { BackgroundLayer } from "./BackgroundLayer";
 import { BackgroundLayerAsset } from "./BackgroundLayerAsset";
+
+export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
 
 /** @category Component */
 export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes> {

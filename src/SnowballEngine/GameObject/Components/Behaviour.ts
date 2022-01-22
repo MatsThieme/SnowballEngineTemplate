@@ -1,9 +1,17 @@
 import { Scene } from "SnowballEngine/Scene";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { BehaviourEventTypes } from "Utility/Events/EventTypes";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
+
+export type BehaviourEventTypes = {
+    collisionenter: [collision: CollisionEvent];
+    collisionactive: [collision: CollisionEvent];
+    collisionexit: [collision: CollisionEvent];
+    triggerenter: [collision: CollisionEvent];
+    triggeractive: [collision: CollisionEvent];
+    triggerexit: [collision: CollisionEvent];
+} & ComponentEventTypes;
 
 /** @category Component */
 export class Behaviour extends Component<BehaviourEventTypes> {

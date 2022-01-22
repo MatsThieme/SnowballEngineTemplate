@@ -3,12 +3,13 @@ import { PIXI } from "SnowballEngine/Camera/PIXI";
 import { Client } from "SnowballEngine/Client";
 import { Debug } from "SnowballEngine/Debug";
 import { AABB } from "Utility/AABB";
-import { CameraEventTypes } from "Utility/Events/EventTypes";
 import { clamp } from "Utility/Helpers";
 import { Vector2 } from "Utility/Vector2";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
+
+export type CameraEventTypes = {} & ComponentEventTypes;
 
 /**
  * @category Component

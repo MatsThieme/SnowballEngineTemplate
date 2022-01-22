@@ -1,13 +1,14 @@
 import { ComponentType } from "GameObject/ComponentType";
-import { GameObject } from "GameObject/GameObject";
+import { GameObject, GameObjectEventTypes } from "GameObject/GameObject";
 import { Body, Bounds, Composite, IChamfer, IChamferableBodyDefinition } from "matter-js";
 import { Debug } from "SnowballEngine/Debug";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { ColliderEventTypes, GameObjectEventTypes, TransformEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
 import { Rigidbody } from "./Rigidbody";
-import { Transform } from "./Transform/Transform";
+import { Transform, TransformEventTypes } from "./Transform/Transform";
+
+export type ColliderEventTypes = {} & ComponentEventTypes;
 
 export abstract class Collider extends Component<ColliderEventTypes> {
     public body?: Body;

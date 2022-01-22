@@ -1,18 +1,13 @@
 import projectConfig from "Config";
 import { SceneManager } from "SE";
-import { EventTarget } from "Utility/Events/EventTarget";
-import { InputEventTypes } from "Utility/Events/EventTypes";
-import { Input } from "../../Input";
 import { InputAxis } from "../../InputAxis";
 import { InputButton } from "../../InputButton";
-import { InputEvent } from "../../InputEvent";
 import { InputDevice } from "../InputDevice";
-import { InputDeviceType } from "../InputDeviceType";
 import { MouseAxis } from "./MouseAxis";
 import { MouseButton } from "./MouseButton";
 
 /** @category Input */
-export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
+export class Mouse implements InputDevice {
     /**
      *
      * Pointer position on canvas.
@@ -29,8 +24,6 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
     private _onContextMenu: (e: MouseEvent) => void;
 
     public constructor() {
-        super();
-
         this._buttons = [];
         this._position = new InputAxis();
         this._prevPosition = new InputAxis();
@@ -120,29 +113,6 @@ export class Mouse extends EventTarget<InputEventTypes> implements InputDevice {
 
     public update(): void {
         this._buttons.forEach((b) => b.update());
-
-        if (!this._fireListener) return;
-
-        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
-            const btn = <MouseButton | undefined>Input.inputMappingButtons.mouse[type];
-            const ax = <MouseAxis | undefined>Input.inputMappingAxes.mouse[type];
-
-            if (btn === undefined && ax === undefined) continue;
-
-            const e: InputEvent = {
-                type,
-                deviceType: InputDeviceType.Mouse,
-                axis: ax !== undefined ? this.getAxis(ax) : undefined,
-                button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this,
-            };
-
-            if (!e.axis && !e.button) continue;
-
-            this.dispatchEvent(type, e);
-        }
-
-        this._fireListener = false;
     }
 
     private addListeners(): void {

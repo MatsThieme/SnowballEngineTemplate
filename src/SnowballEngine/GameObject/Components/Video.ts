@@ -2,8 +2,9 @@ import { Asset } from "Assets/Asset";
 import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
-import { VideoEventTypes } from "Utility/Events/EventTypes";
-import { Renderable } from "./Renderable";
+import { Renderable, RenderableEventTypes } from "./Renderable";
+
+export type VideoEventTypes = { play: []; pause: []; end: [] } & RenderableEventTypes;
 
 /**
  *
@@ -19,7 +20,7 @@ export class Video extends Renderable<VideoEventTypes> {
     private _currentTime: number;
     private _rate: number;
     private _muted: boolean;
-    private readonly _endListener: () => any;
+    private readonly _endListener: () => void;
 
     public constructor(gameObject: GameObject) {
         super(gameObject, ComponentType.Video);

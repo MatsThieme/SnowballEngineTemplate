@@ -1,6 +1,4 @@
 import { Dispose } from "GameObject/Dispose";
-import { EventHandler } from "Utility/Events/EventHandler";
-import { InputEventTypes } from "Utility/Events/EventTypes";
 import InputMappingAxes from "../../../Assets/InputMappingAxes.json";
 import InputMappingButtons from "../../../Assets/InputMappingButtons.json";
 import { Gamepad } from "./Devices/Gamepad/Gamepad";
@@ -153,38 +151,6 @@ export class Input {
         if (Input.mouse) Input.mouse.update();
         if (Input.keyboard) Input.keyboard.update();
         if (Input.gamepad) Input.gamepad.update();
-    }
-
-    /**
-     *
-     * Listener will only be added to existing devices.
-     * If Input.devices changes afterwards, existing listeners won't be added to new devices, but removed from removed devices
-     * A GamePad is connected
-     *
-     */
-    public static addListener<U extends keyof InputEventTypes>(
-        eventName: U,
-        handler: EventHandler<InputEventTypes[U]>,
-        devices: InputDeviceType = 0b1111
-    ): void {
-        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.addListener(eventName, handler);
-        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.addListener(eventName, handler);
-        if (devices & InputDeviceType.Keyboard && Input.keyboard)
-            Input.keyboard.addListener(eventName, handler);
-        if (devices & InputDeviceType.Gamepad && Input.gamepad) Input.gamepad.addListener(eventName, handler);
-    }
-
-    public static removeListener<U extends keyof InputEventTypes>(
-        eventName: U,
-        handler: EventHandler<InputEventTypes[U]>,
-        devices: InputDeviceType = 0b1111
-    ): void {
-        if (devices & InputDeviceType.Touch && Input.touch) Input.touch.removeListener(eventName, handler);
-        if (devices & InputDeviceType.Mouse && Input.mouse) Input.mouse.removeListener(eventName, handler);
-        if (devices & InputDeviceType.Keyboard && Input.keyboard)
-            Input.keyboard.removeListener(eventName, handler);
-        if (devices & InputDeviceType.Gamepad && Input.gamepad)
-            Input.gamepad.removeListener(eventName, handler);
     }
 
     public static reset(): void {

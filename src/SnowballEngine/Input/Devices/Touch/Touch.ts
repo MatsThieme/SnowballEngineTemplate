@@ -1,17 +1,12 @@
-import { SceneManager } from "SE";
-import { EventTarget } from "Utility/Events/EventTarget";
-import { InputEventTypes } from "Utility/Events/EventTypes";
-import { Input } from "../../Input";
+import { SceneManager } from "../../../SceneManager";
 import { InputAxis } from "../../InputAxis";
 import { InputButton } from "../../InputButton";
-import { InputEvent } from "../../InputEvent";
 import { InputDevice } from "../InputDevice";
-import { InputDeviceType } from "../InputDeviceType";
 import { TouchAxis } from "./TouchAxis";
 import { TouchButton } from "./TouchButton";
 
 /** @category Input */
-export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
+export class Touch implements InputDevice {
     private _positions: InputAxis[];
     private _button: InputButton;
     private _fireListener: boolean;
@@ -19,8 +14,6 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
     private _onTouchEvent: (e: TouchEvent) => void;
 
     public constructor() {
-        super();
-
         this._button = new InputButton();
         this._positions = [];
         this._fireListener = false;
@@ -60,29 +53,6 @@ export class Touch extends EventTarget<InputEventTypes> implements InputDevice {
 
     public update(): void {
         this._button.update();
-
-        if (!this._fireListener) return;
-
-        for (const type of <InputAction[]>Object.keys(this.getEvents())) {
-            const btn = <TouchButton | undefined>Input.inputMappingButtons.touch[type];
-            const ax = <TouchAxis | undefined>Input.inputMappingAxes.touch[type];
-
-            if (btn === undefined && ax === undefined) continue;
-
-            const e: InputEvent = {
-                type,
-                deviceType: InputDeviceType.Touch,
-                axis: ax !== undefined ? this.getAxis(ax) : undefined,
-                button: btn !== undefined ? this.getButton(btn) : undefined,
-                device: this,
-            };
-
-            if (!e.axis && !e.button) continue;
-
-            this.dispatchEvent(type, e);
-        }
-
-        this._fireListener = false;
     }
 
     private addListeners(): void {

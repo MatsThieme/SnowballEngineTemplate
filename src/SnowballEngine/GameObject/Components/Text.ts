@@ -4,9 +4,11 @@ import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Debug } from "SnowballEngine/Debug";
 import { Color } from "Utility/Color";
-import { TextEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
 import { Renderable } from "./Renderable";
+import { ComponentEventTypes } from "GameObject/Components/Component";
+
+export type TextEventTypes = {} & ComponentEventTypes;
 
 /** @category Component */
 export class Text extends Renderable<TextEventTypes> {

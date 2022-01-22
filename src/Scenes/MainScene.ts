@@ -16,31 +16,5 @@ export function MainScene(scene: Scene): void {
 
     Instantiate("collider", ColliderTest);
 
-    Input.addListener(
-        "Trigger",
-        new EventHandler((e) => {
-            if (e.button?.click) {
-                scene.physics.drawDebug = !scene.physics.drawDebug;
-            }
-        })
-    );
-
-    Input.addListener(
-        "Jump",
-        new EventHandler((e) => {
-            if (e.button?.click) {
-                const rect = GameObject.find("collider");
-
-                if (!rect) return;
-
-                const rb = rect.getComponent<Rigidbody>(ComponentType.Rigidbody);
-
-                if (!rb) return;
-
-                rb.applyForce(new Vector2(0, 0.000005));
-            }
-        })
-    );
-
     scene.physics.drawDebug = false;
 }

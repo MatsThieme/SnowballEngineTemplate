@@ -3,11 +3,12 @@ import { GameObject } from "GameObject/GameObject";
 import { Body, Composite, Events, IBodyDefinition } from "matter-js";
 import { Angle } from "Utility/Angle";
 import { EventHandler } from "Utility/Events/EventHandler";
-import { RigidbodyEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
 import { Collider } from "./Collider";
-import { Component } from "./Component";
-import { Transform } from "./Transform/Transform";
+import { Component, ComponentEventTypes } from "./Component";
+import { Transform, TransformEventTypes } from "./Transform/Transform";
+
+export type RigidbodyEventTypes = {} & ComponentEventTypes;
 
 export class Rigidbody extends Component<RigidbodyEventTypes> {
     public body: Body;
@@ -30,7 +31,7 @@ export class Rigidbody extends Component<RigidbodyEventTypes> {
 
         this._bodyNeedUpdate = true;
 
-        const listener = new EventHandler((t, p, r, s) => {
+        const listener = new EventHandler<TransformEventTypes["modified"]>((t, p, r, s) => {
             if (r || p) this._bodyNeedUpdate = true;
         }, this);
 

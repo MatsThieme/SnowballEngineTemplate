@@ -4,9 +4,10 @@ import { AlignH, AlignV } from "GameObject/Align";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Color } from "Utility/Color";
-import { RenderableEventTypes } from "Utility/Events/EventTypes";
 import { Vector2 } from "Utility/Vector2";
-import { Component } from "./Component";
+import { Component, ComponentEventTypes } from "./Component";
+
+export type RenderableEventTypes = {} & ComponentEventTypes;
 
 /** @category Component */
 export abstract class Renderable<EventTypes extends RenderableEventTypes> extends Component<EventTypes> {
