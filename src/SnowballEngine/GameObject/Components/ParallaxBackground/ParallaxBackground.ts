@@ -18,7 +18,6 @@ export type ParallaxBackgroundEventTypes = {} & RenderableEventTypes;
 
 /** @category Component */
 export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes> {
-    public cameras: Camera[];
     public scrollSpeed: number;
 
     private readonly _backgroundLayers: BackgroundLayer[];
@@ -36,7 +35,6 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
         super(gameObject, ComponentType.ParallaxBackground);
         this.sprite = new Container();
 
-        this.cameras = [...gameObject.scene.cameraManager.cameras];
         this.scrollSpeed = 1;
 
         this._aabb = new AABB(new Vector2(), new Vector2());
@@ -55,9 +53,7 @@ export class ParallaxBackground extends Renderable<ParallaxBackgroundEventTypes>
     }
 
     protected override onPreRender(camera: Camera): void {
-        const i = this.cameras.findIndex((c) => c.componentID === camera.componentID);
-
-        if (i === -1 || !this._aabb.intersects(camera.aabb)) return;
+        if (!this._aabb.intersects(camera.aabb)) return;
 
         this.calculateBackgroundForCamera(camera);
     }
