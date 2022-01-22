@@ -5,8 +5,7 @@ import { Debug } from "../Debug";
  * Clamps a number between min and max.
  *
  */
-export const clamp = (min: number, max: number, val: number): number =>
-    val < min ? min : val > max ? max : val;
+export const clamp = (min: number, max: number, val: number): number => Math.max(min, Math.min(max, val));
 
 /**
  *
