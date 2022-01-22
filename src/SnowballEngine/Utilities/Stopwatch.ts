@@ -2,70 +2,58 @@ import { Destroyable } from "GameObject/Destroy";
 import { GameTime } from "SnowballEngine/GameTime";
 
 /** @category Utility */
-export class Stopwatch implements Destroyable {
-    public static stopwatches: Stopwatch[] = [];
-    private static _nextID: number = 0;
-
-    public milliseconds: number;
-    private _running: boolean;
-    private _id: number;
+export class Stopwatch {
+    /**
+     * performance.now() when started
+     */
+    private _start: number;
 
     /**
-     *
-     * A Stopwatch utility using GameTime.deltaTime
-     *
+     * time progress at pause
      */
-    public constructor(start = true) {
-        this.milliseconds = 0;
-        this._running = false;
-        this._id = Stopwatch._nextID++;
+    private _pause?: number;
 
-        if (start) this.start();
+    /**
+     * A Stopwatch utility using performance.now().
+     * The accuracy is dependent on the executing browser.
+     * Firefox currently has a reduced precision of 1ms (https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
+     *
+     * @param {boolean} [run=true] Start the stopwatch on instantiation
+     */
+    public constructor(run: boolean = true) {
+        this._start = 0;
 
-        Stopwatch.stopwatches.push(this);
-    }
-
-    public get seconds(): number {
-        return this.milliseconds / 1000;
-    }
-    public set seconds(val: number) {
-        this.milliseconds = val * 1000;
-    }
-
-    public get running(): boolean {
-        return this._running;
-    }
-
-    public start(): void {
-        this._running = true;
-    }
-
-    public stop(): void {
-        this._running = false;
-    }
-
-    public reset(): void {
-        this.milliseconds = 0;
-    }
-
-    public update(): void {
-        if (this._running) this.milliseconds += GameTime.deltaTime;
-    }
-
-    public static update(): void {
-        for (const sw of Stopwatch.stopwatches) {
-            sw.update();
+        if (run) {
+            this.start();
         }
     }
 
-    public destroy(): void {
-        Stopwatch.stopwatches.splice(
-            Stopwatch.stopwatches.findIndex((sw) => sw._id === this._id),
-            1
-        );
+    public getMilliseconds(): number {
+        if (this._pause) {
+            return this._pause;
+        }
+
+        if (this._start === 0) {
+            return 0;
+        }
+
+        return performance.now() - this._start;
     }
 
-    public static reset(): void {
-        Stopwatch.stopwatches = [];
+    public start(): void {
+        if (this._pause) {
+            this._start = performance.now() - this._pause;
+            this._pause = undefined;
+            return;
+        }
+
+        if (this._start === 0) {
+            this._start = performance.now();
+        }
+    }
+
+    public stop(): void {
+        this._pause = this.getMilliseconds();
+        this._start = 0;
     }
 }

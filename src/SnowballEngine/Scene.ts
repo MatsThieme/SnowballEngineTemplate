@@ -55,7 +55,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         Input.reset();
         GameObject.reset();
         Component.reset();
-        Stopwatch.reset();
 
         this.audioMixerManager = new AudioMixerManager();
 
@@ -106,8 +105,6 @@ export class Scene extends EventTarget<SceneEventTypes> {
         this._updateComplete = false;
 
         GameTime.update(time);
-
-        Stopwatch.update();
 
         this.framedata.update();
 
