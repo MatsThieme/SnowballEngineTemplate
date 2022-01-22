@@ -147,7 +147,16 @@ export class Asset implements Destroyable {
 
         const thing = this.image! || this.video!;
 
-        if (!x && !y && !width && !height && !thing.x && !thing.y && !thing.width && !thing.height) {
+        if (
+            x === undefined &&
+            y === undefined &&
+            width === undefined &&
+            height === undefined &&
+            thing.x === undefined &&
+            thing.y === undefined &&
+            thing.width === undefined &&
+            thing.height === undefined
+        ) {
             return new Texture(<BaseTexture>thing.baseTexture);
         } else {
             return new Texture(
