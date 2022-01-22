@@ -1,8 +1,8 @@
+import { EventHandler } from "@snowballengine/events";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Body, Composite, Events, IBodyDefinition } from "matter-js";
 import { Angle } from "Utility/Angle";
-import { EventHandler } from "Utility/Events/EventHandler";
 import { Vector2 } from "Utility/Vector2";
 import { Collider } from "./Collider";
 import { Component, ComponentEventTypes } from "./Component";

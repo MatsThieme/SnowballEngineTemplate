@@ -2,7 +2,7 @@ import { DisplayObject } from "@pixi/display";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject } from "GameObject/GameObject";
 import { Angle } from "Utility/Angle";
-import { EventHandler } from "Utility/Events/EventHandler";
+import { EventHandler } from "@snowballengine/events";
 import { Vector2 } from "Utility/Vector2";
 import { Component, ComponentEventTypes } from "../Component";
 import { TransformRelation } from "./TransformRelation";

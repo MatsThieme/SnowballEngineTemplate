@@ -1,5 +1,5 @@
+import { EventHandler } from "@snowballengine/events";
 import { Scene } from "SnowballEngine/Scene";
-import { EventHandler } from "Utility/Events/EventHandler";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";
 import { Component, ComponentEventTypes } from "./Component";

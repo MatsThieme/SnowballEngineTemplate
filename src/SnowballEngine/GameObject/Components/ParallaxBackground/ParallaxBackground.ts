@@ -1,13 +1,12 @@
 import { Container } from "@pixi/display";
 import { Graphics } from "@pixi/graphics";
+import { EventHandler } from "@snowballengine/events";
 import { AssetType } from "Assets/AssetType";
 import { ComponentType } from "GameObject/ComponentType";
 import { Dispose } from "GameObject/Dispose";
 import { GameObject } from "GameObject/GameObject";
-import { MaskData } from "pixi.js";
 import { AABB } from "Utility/AABB";
 import { Angle } from "Utility/Angle";
-import { EventHandler } from "Utility/Events/EventHandler";
 import { Vector2 } from "Utility/Vector2";
 import { Camera } from "../Camera";
 import { RenderableContainer, RenderableContainerEventTypes } from "../RenderableContainer";

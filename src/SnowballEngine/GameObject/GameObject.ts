@@ -1,14 +1,13 @@
 import { Container } from "@pixi/display";
-import { Component, ComponentEventTypes } from "./Components/Component";
+import { EventHandler, EventTarget } from "@snowballengine/events";
 import { Debug } from "SnowballEngine/Debug";
 import { Scene } from "SnowballEngine/Scene";
-import { EventHandler } from "Utility/Events/EventHandler";
-import { EventTarget } from "Utility/Events/EventTarget";
 import { Vector2 } from "Utility/Vector2";
+import { SceneManager } from "../SceneManager";
+import { Component, ComponentEventTypes } from "./Components/Component";
 import { Transform } from "./Components/Transform/Transform";
 import { ComponentType } from "./ComponentType";
 import { Destroy, Destroyable } from "./Destroy";
-import { SceneManager } from "../SceneManager";
 
 export type GameObjectEventTypes = {
     componentadd: [component: Component<ComponentEventTypes>];

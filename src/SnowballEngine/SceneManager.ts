@@ -1,4 +1,4 @@
-import { EventTarget } from "./Utilities/Events/EventTarget";
+import { EventTarget } from "@snowballengine/events";
 import { Scene } from "./Scene";
 
 export type SceneManagerEventTypes = {

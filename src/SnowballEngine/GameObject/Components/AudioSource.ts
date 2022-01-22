@@ -1,8 +1,8 @@
+import { EventHandler } from "@snowballengine/events";
 import { Asset } from "Assets/Asset";
 import { AudioMixer } from "SnowballEngine/Audio/AudioMixer";
 import { Client } from "SnowballEngine/Client";
 import { Debug } from "SnowballEngine/Debug";
-import { EventHandler } from "Utility/Events/EventHandler";
 import { Vector2 } from "Utility/Vector2";
 import { ComponentType } from "../ComponentType";
 import { GameObject } from "../GameObject";

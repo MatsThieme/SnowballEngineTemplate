@@ -1,12 +1,7 @@
 import { Dispose } from "GameObject/Dispose";
-import { Input } from "SnowballEngine/Input/Input";
 import { InputAxis } from "SnowballEngine/Input/InputAxis";
 import { InputButton } from "SnowballEngine/Input/InputButton";
-import { InputEvent } from "SnowballEngine/Input/InputEvent";
-import { EventHandler } from "Utility/Events/EventHandler";
-import { EventTarget } from "Utility/Events/EventTarget";
 import { InputDevice } from "../InputDevice";
-import { InputDeviceType } from "../InputDeviceType";
 import { GamepadAxis } from "./GamepadAxis";
 import { GamepadButton } from "./GamepadButton";
 

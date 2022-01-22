@@ -1,8 +1,8 @@
+import { EventHandler } from "@snowballengine/events";
 import { ComponentType } from "GameObject/ComponentType";
 import { GameObject, GameObjectEventTypes } from "GameObject/GameObject";
 import { Body, Bounds, Composite, IChamfer, IChamferableBodyDefinition } from "matter-js";
 import { Debug } from "SnowballEngine/Debug";
-import { EventHandler } from "Utility/Events/EventHandler";
 import { Vector2 } from "Utility/Vector2";
 import { Component, ComponentEventTypes } from "./Component";
 import { Rigidbody } from "./Rigidbody";

@@ -1,9 +1,8 @@
-import { Rigidbody } from "GameObject/Components/Rigidbody";
 import { CameraPrefab } from "Prefabs/CameraPrefab";
 import { ColliderTest } from "Prefabs/ColliderTest";
 import { ExampleGameObjectPrefab } from "Prefabs/ExampleGameObjectPrefab";
 import { FloorColliderTest as FloorCollider } from "Prefabs/FloorCollider";
-import { ComponentType, EventHandler, GameObject, Input, Instantiate, Scene, Vector2 } from "SE";
+import { Instantiate, Scene } from "SE";
 
 export function MainScene(scene: Scene): void {
     // add gameobjects to scene

@@ -27,6 +27,7 @@
         "xmlbuilder2": "^2.4.1"
     },
     "dependencies": {
+        "@snowballengine/events": "^1.0.0",
         "matter-js": "^0.18.0",
         "pixi.js": "^6.2.1",
         "poly-decomp": "^0.3.0",

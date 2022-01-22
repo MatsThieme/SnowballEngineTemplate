@@ -1,3 +1,4 @@
+export * from "@snowballengine/events";
 export * from "./Assets/Asset";
 export * from "./Assets/Assets";
 export * from "./Assets/AssetType";
@@ -71,12 +72,8 @@ export * from "./Scene";
 export * from "./SceneManager";
 export * from "./Utilities/AABB";
 export * from "./Utilities/Angle";
-export * from "./Utilities/AsyncWorker";
 export * from "./Utilities/Canvas/Canvas";
 export * from "./Utilities/Color";
-export * from "./Utilities/Events/EventHandler";
-export * from "./Utilities/Events/EventTarget";
-export * from "./Utilities/Events/EventType";
 export * from "./Utilities/Helpers";
 export * from "./Utilities/Interval/Interval";
 export * from "./Utilities/Noise";

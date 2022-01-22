@@ -2,8 +2,7 @@ import { ComponentType } from "GameObject/ComponentType";
 import { Destroyable } from "GameObject/Destroy";
 import { GameObject } from "GameObject/GameObject";
 import { Debug } from "SnowballEngine/Debug";
-import { EventHandler } from "Utility/Events/EventHandler";
-import { EventTarget } from "Utility/Events/EventTarget";
+import { EventHandler, EventTarget } from "@snowballengine/events";
 import { Camera } from "./Camera";
 
 export type ComponentEventTypes = {

@@ -266,6 +266,11 @@
     eventemitter3 "^3.1.0"
     url "^0.11.0"
 
+"@snowballengine/events@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@snowballengine/events/-/events-1.0.0.tgz#2b6a4801df6a22a38359af9cf802ef5802e7ff1d"
+  integrity sha512-mFT8rMKhOlxnTmoGzLhO3seu/Ge5QXmlZuxBHU8+7cbAJHFvJ0b/YCyvOnJ+hdg5EUS6C9XbxO+8Ss1mJ19H3w==
+
 "@types/cordova@^0.0.34":
   version "0.0.34"
   resolved "https://registry.yarnpkg.com/@types/cordova/-/cordova-0.0.34.tgz#ea7addf74ecec3d7629827a0c39e2c9addc73d04"
