@@ -2,24 +2,24 @@
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "Node",
+
         "target": "ES6",
-        "lib": ["ESNext", "DOM"],
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+
+        "baseUrl": "src",
         "outDir": "dist",
-        "sourceMap": true,
+
         "strict": true,
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
+        "allowJs": false,
+        "sourceMap": true,
+        "declaration": true,
+
         "importHelpers": true,
         "noImplicitOverride": false,
-        "baseUrl": "src",
-        "paths": {
-            "SE": ["SnowballEngine/SnowballEngine.ts"],
-            "Config": ["../SnowballEngineConfig.json"],
-            "Utility/*": ["SnowballEngine/Utilities/*"],
-            "Input/*": ["SnowballEngine/Input/*"],
-            "Assets/*": ["SnowballEngine/Assets/*"],
-            "Audio/*": ["SnowballEngine/Audio/*"],
-            "GameObject/*": ["SnowballEngine/GameObject/*"]
-        }
+
+        "allowSyntheticDefaultImports": true
     }
 }
