@@ -5,9 +5,16 @@ import { Timeout } from "Utility/Timeout/Timeout";
 import { Asset } from "./Asset";
 import { AssetType } from "./AssetType";
 
+type AssetDBSignature = { [path: string]: { [optionalAssetName: string]: AssetType } };
+
 /** @category Asset Management */
-export class Assets<AssetID extends string = string> {
-    private readonly _assets: Partial<Record<string, Asset>> = {};
+export class Assets<
+    AssetDB extends AssetDBSignature = AssetDBSignature,
+    AssetID extends (keyof AssetDB & string) | (keyof AssetDB[keyof AssetDB] & string) =
+        | (keyof AssetDB & string)
+        | (keyof AssetDB[keyof AssetDB] & string)
+> {
+    private readonly _assets: Partial<Record<AssetID, Asset>> = {};
 
     public get(id: AssetID): Asset | undefined {
         return this._assets[id];
@@ -25,13 +32,13 @@ export class Assets<AssetID extends string = string> {
         return (this._assets[name] = asset);
     }
 
-    public async load(path: string, type: AssetType, name?: AssetID): Promise<Asset> {
+    public async load(path: AssetID, type: AssetType, name?: AssetID): Promise<Asset> {
         if ((name && this._assets[name]) || (!name && this.get(<AssetID>path))) {
             throw new Error("Asset not loaded: Asset with name/path exists");
         }
 
         try {
-            const asset = await this.urlToAsset(`./Assets/${path}`, type, name);
+            const asset = await this.urlToAsset("./" + path, type, name);
             this._assets[path] = asset;
             if (name) this._assets[name] = asset;
 
@@ -41,7 +48,7 @@ export class Assets<AssetID extends string = string> {
         }
     }
 
-    private urlToAsset(url: string, type: AssetType, name?: string): Promise<Asset> {
+    private urlToAsset(url: string, type: AssetType, name?: AssetID): Promise<Asset> {
         return new Promise(async (resolve, reject) => {
             if (type === AssetType.Image) {
                 const img = new Image();
@@ -139,17 +146,17 @@ export class Assets<AssetID extends string = string> {
         return !!document.fonts;
     }
 
-    // public async loadFromAssetDB<T extends Record<string, string>>(assetDB: T): Promise<void> {
-    //     const assetPromises: Promise<Asset>[] = [];
+    public async loadFromAssetDB(assetDB: AssetDB): Promise<void> {
+        const assetPromises: Promise<Asset>[] = [];
 
-    //     for (const path in assetDB) {
-    //         const name = Object.keys(assetDB[path])[0];
+        for (const path in assetDB) {
+            const name = Object.keys(assetDB[path])[0] as AssetID;
 
-    //         assetPromises.push(Assets.load(path, assetDB[path][name], name as AssetID));
-    //     }
+            assetPromises.push(this.load(path as unknown as AssetID, assetDB[path][name], name));
+        }
 
-    //     for (const assetPromise of assetPromises) {
-    //         await assetPromise.then(() => new Timeout(1));
-    //     }
-    // }
+        for (const assetPromise of assetPromises) {
+            await assetPromise.then(() => new Timeout(1));
+        }
+    }
 }
