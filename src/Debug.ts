@@ -44,7 +44,6 @@ export class Debug {
         return (
             Debug.formatStackFirefox(stack) ||
             Debug.formatStackChromium(stack) ||
-            Debug.formatStackCordovaAndroid(stack) ||
             stack.replace(/error[:]?/i, "")
         );
     }
@@ -68,21 +67,6 @@ export class Debug {
             .slice(2)
             .map((line) => {
                 const match = line.trim().match(/^at (.*?) \(http[s]?:\/\/.*?\/(.*?):(\d+):(\d+)\)$/);
-
-                return Debug.formatStackLine(match);
-            })
-            .filter(Boolean)
-            .join("\n");
-    }
-
-    private static formatStackCordovaAndroid(stack: string): string {
-        return stack
-            .split("\n")
-            .slice(2)
-            .map((line) => {
-                const match = line
-                    .trim()
-                    .match(/^at (.*?) \(file:\/\/\/android_asset\/www\/(.*?):(\d+):(\d+)\)$/);
 
                 return Debug.formatStackLine(match);
             })

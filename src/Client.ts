@@ -8,7 +8,6 @@ import { SceneManager } from "./SceneManager";
 type Platform = "android" | "ios" | "browser" | "windows" | "osx";
 
 export class Client {
-    public static platform: Platform = ((window.cordova || {}).platformId as Platform) ?? "browser";
     public static isMobile: boolean = isMobile(navigator).any;
 
     /**
