@@ -33,7 +33,7 @@ declare global {
         fadeOut: number | Range<number>;
 
         /** sprite tint */
-        tint: Color | Range<Color>;
+        tint: Readonly<Color> | Range<Color>;
 
         rotationDirection: "random" | "right" | "left";
     }

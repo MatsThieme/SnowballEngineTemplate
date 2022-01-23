@@ -15,7 +15,7 @@ export class Shape {
      */
     public static createSprite(
         shape: ShapeType | ((context: CanvasRenderingContext2D, canvas: Canvas) => void),
-        color: Color = Color.orange,
+        color: Readonly<Color> = Color.orange,
         size: Vector2 = new Vector2(100, 100),
         lineWidth = 2,
         fill = true
@@ -42,7 +42,7 @@ export class Shape {
     }
 
     public static createRect(
-        color: Color = Color.orange,
+        color: Readonly<Color> = Color.orange,
         size: Vector2 = new Vector2(1, 1),
         lineWidth = 2,
         fill = true
@@ -65,7 +65,7 @@ export class Shape {
      *
      */
     public static createCheckmark(
-        color: Color = Color.orange,
+        color: Readonly<Color> = Color.orange,
         size: Vector2 = new Vector2(100, 100),
         lineWidth = 2,
         fill = false
@@ -86,7 +86,7 @@ export class Shape {
     }
 
     public static createCircle(
-        color: Color = Color.orange,
+        color: Readonly<Color> = Color.orange,
         size: Vector2 = new Vector2(100, 100),
         lineWidth = 2,
         fill = true

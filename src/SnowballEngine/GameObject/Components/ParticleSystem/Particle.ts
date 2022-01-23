@@ -84,7 +84,7 @@ export class Particle implements Disposable {
         this.tint =
             "min" in this._particleSettings.tint && "max" in this._particleSettings.tint
                 ? Color.randomRange(this._particleSettings.tint)
-                : this._particleSettings.tint;
+                : this._particleSettings.tint.clone;
         this.rotationDirection =
             this._particleSettings.rotationDirection === "left"
                 ? -1

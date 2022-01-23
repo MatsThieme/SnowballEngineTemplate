@@ -15,6 +15,8 @@ export class CameraManager {
     private readonly _gameObjects: Partial<Record<number, GameObject>>;
     private readonly _PIXI: PIXI;
 
+    private readonly _backgroundColor: Color;
+
     public constructor(domElement: HTMLCanvasElement) {
         this.cameras = [];
 
@@ -24,26 +26,24 @@ export class CameraManager {
 
         this._gameObjects = {};
 
-        this.backgroundColor = Color.deepskyblue;
+        this._backgroundColor = this.backgroundColor = Color.deepskyblue.clone;
     }
 
     public get canvas(): HTMLCanvasElement {
         return this._PIXI.canvas;
     }
 
-    public get backgroundColor(): Color {
-        const color = new Color();
+    public get backgroundColor(): Readonly<Color> {
+        this._backgroundColor.rgb = this._PIXI.renderer.backgroundColor;
 
-        color.rgb = this._PIXI.renderer.backgroundColor;
-
-        return color;
+        return this._backgroundColor;
     }
-    public set backgroundColor(val: Color) {
+    public set backgroundColor(val: Readonly<Color>) {
         this._PIXI.renderer.backgroundColor = val.rgb;
     }
 
     public getRenderResolution(): Vector2 {
-        return (<Vector2>Client.resolution).clone.scale(this.renderScale).round();
+        return Client.resolution.clone.scale(this.renderScale).round();
     }
 
     /**
